@@ -23,7 +23,7 @@ class Application {
                 }
             };
 
-            img.src = `../src/asset/GoldenCage/videoIntro${String(i).padStart(4, '0')}.png`;
+            img.src = `./asset/GoldenCage/videoIntro${String(i).padStart(4, '0')}.png`;
             this.images.push(img);
         }
     }
