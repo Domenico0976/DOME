@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dome|design</title>
+    <link rel="icon" href="">
+    <link rel="stylesheet" href="style.css">
+
+    <script src="./js/Spline1.js" type="module"></script>
+
+</head>
+<body>
+
+ <div class="off-screen-menu" >
+        <div class="btn">
+            <div class="logo" id="logo">DESIGN
+            <h2 id="revealType1">PORTFOLIO</h2>
+        </div>
+            <ul>
+                <a href="#" id="revealType1">Home</a>
+                <a href="./about.html" id="revealType1">About</a>
+            </ul>
+
+            <div class="social">
+                <div class="email">
+                    <h3 id="revealType1" class="copy">click to copy</h3>
+                    <a onclick="copyEmail()" id="revealType1" class="emailC">domenicofusto55@gmail.com</a>
+                </div>
+                <a target="_blank" href="https://www.linkedin.com/in/domenico-fusto-a74273189/" id="revealType1">&nwarhk; Linkedin</a>
+                <a target="_blank" href="https://www.instagram.com/thereisdomenico/" id="revealType1">&nwarhk; Instagram</a>
+                <a target="_blank" href="https://www.behance.net/domenicofusto" id="revealType1">&nwarhk; Behance</a>
+            </div>
+        </div>
+    </div>
+    
+    <nav>
+        <a class="logo" href="#">dome</a>
+        <div class="ham-menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+<main >
+
+    <div class="Intro" id="items">
+        <canvas id="paper"></canvas>
+        <div id="control-bar-wrapper">
+            <div id="control-bar">
+              <button id="sound-toggle" class="toggle" type="button" data-toggled="false" onClick="handleSoundToggle()" title="Toggle Pulse">
+                Click to listen
+              </button>
+            </div>
+          
+          </div>
+        <div class="container-txt">
+            <h1>Hello i am Domenico,<br> UX/UI
+            <span>designer</span> based in Italy. <br>
+                I'm passionate about Design and <span>digital services</span>,
+                my goal is to craft exceptional experiences that elevate everyday life. <br>
+               and i like <span>generative</span> thinghs.</h1>
+            </div>
+        </div>
+
+
+    <div class="wrapper">
+
+        <div class="Anicontainer" id="items">
+
+            <section>
+                <canvas id="canvas3d"></canvas>
+                <div class="leftText">
+                    <h1>education <sup>02</sup></h1>
+                    <div class="textCont">
+                        <h2>Bachelor Degree</h2>
+                        <h3>Graphic Design 1°Level</h3>
+                        <p>Accademia di Belle Arti di Catanzaro <span>-Catanzaro 2018/2021</span></p>
+                        </div>
+    
+                    <div class="textCont">
+                        <h2>Master's Degree</h2>
+                        <h3>User Experience Design</h3>
+                        <p><span>(NABA)</span> Nuova Accademia di Belle Arti <span>-Milano 2021/2024</span></p>
+                    </div>
+                </div>
+            </section>
+
+            <section >
+                <div class="leftText">
+                    <h1 class="anim">Awards <sup>02</sup></h1>
+                    <div class="textCont">
+                        <h4 class="anim">>finalist</h4>
+                        <h2 class="anim">UX AWARDS 2021</h2>
+                        <p class="anim">AlFly </p>                   
+                        </div>
+
+                    <div class="textCont">
+                        <h4 class="anim">>contest</h4>
+                        <h2 class="anim">SISALFUNCLUB</h2>
+                        <p class="anim">Winning project </p>
+                    </div>
+            </section>
+
+            <section>
+                <canvas id="canvas3d-2"></canvas>
+
+                <div class="leftText">
+                    <h1 class="anim">Experience <sup>02</sup></h1>
+                    <div class="textCont">
+                        <h4 class="anim">>intership</h4>
+                        <h2 class="anim">UX/UI Designer</h2>
+                        <p class="anim">Rawfish Milano 2023 </p>
+                        </div>
+
+                    <div class="textCont">
+                        <h4 class="anim">>intership</h4>
+                        <h2 class="anim">Graphic Designer</h2>
+                        <p class="anim">VitamineD Milano 2023</p>
+                    </div>
+            </section>
+        </div>
+    </div>
+
+
+
+  <section class="sticky" id="items">
+    <div class="sticky-header">
+        <h1>&nwarhk; UX/UI PROJECTS</h1>
+    </div>
+
+    <div class="card">
+        <div class="card-img"><img src="./asset/Alfly/Copertina Alfly.png" alt="Alfly UX/UI" draggable="false">
+        </div>
+            <div class="card-content">
+                <div class="card-title"><h2>AlFly</h2></div>
+                    <div class="card-description">
+                        <p>AlFly is a new prototype app for metro ticketing, designed to save you time by displaying the remaining minutes on your ticket (for cities with time-based metro tickets).
+                            <br> This project was a finalist in the 2021 UX Awards Berlin.</p>
+                    </div>    
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-img"><img src="./asset/iTour/copertina Itour.png" alt="itour UX/UI" draggable="false">
+            </div>
+                <div class="card-content">
+                    <div class="card-title"><h2>iTour</h2></div>
+                        <div class="card-description">
+                            <p>This is my Master's thesis project. Book your smart home, customize it for your arrival, and discover everything you want.
+                                Don't worry if you're traveling with family, many experiences are family-friendly.</p>
+                        </div>    
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-img"><img src="./asset/POLICLINICO/copertina policlinico.png" alt="Poli Milano UX/UI" draggable="false">
+                </div>
+                    <div class="card-content">
+                        <div class="card-title"><h2>amici del policlinico</h2></div>
+                            <div class="card-description">
+                                <p>We create a comunication way to discover the fake news and the truth for your donation,
+                                    more efficiently and closer to new generation with website, app and werable.</p>
+                            </div>    
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-img"><img src="./asset/SisalFunClub/Copertina SisalFunClub.png" alt="SISALFUNCLUB UX/UI" draggable="false">
+                    </div>
+                        <div class="card-content">
+                            <div class="card-title"><h2>sisalfunclub</h2></div>
+                                <div class="card-description">
+                                    <p>SISALFUNCLUB partnered with NABA University to create a contest due to issues with their app-game and social media accounts.
+                                        We worked on redesigning the communication plan and developing a new marketing strategy for new experience.</p>
+                                </div>    
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-img"><img src="./asset/Twitch redesign/Copertina.png" alt="Twitch UX/UI" draggable="false">
+                        </div>
+                            <div class="card-content">
+                                <div class="card-title"><h2>twitch redesign</h2></div>
+                                    <div class="card-description">
+                                        <p>Redesigned the top streaming app with a fresh look, simplified the website architecture,
+                                            zero dead zones and architectural issues. Introduce preview and control center.</p>
+                                    </div>    
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-img"><img src="./asset/uBank/Copertina UBANK.png" alt="uBank UX/UI" draggable="false">
+                            </div>
+                                <div class="card-content">
+                                    <div class="card-title"><h2>ubank</h2></div>
+                                        <div class="card-description">
+                                            <p>uBank the new home banking app that allows users to earn money through investments in cryptocurrency and stock markets.
+                                                The app enables users to follow verified brokers and automates their periodic contributions.</p>
+                                        </div>    
+                                </div>
+                            </div>
+  </section>
+
+  <section class="sticky" id="items">
+    <div class="sticky-header">
+        <h1>&nwarhk; GENERATIVE PROJECTS</h1>
+    </div>
+
+    <div class="card">
+        <div class="card-img"><video autoplay controls loop muted src="./asset/TouchDesinger/genArt/ShapeGen.mp4" draggable="false"></video>
+        </div>
+            <div class="card-content">
+                <div class="card-title"><h2>SHAPE</h2></div>
+                    <div class="card-description">
+                        <p>Use touchdesigner to create abstract image, it' procedural generative so he can work with music, key, video, image and all you can think.</p>
+                    </div>    
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-img"><video controls loop muted src="./asset/TouchDesinger/genArt/noise-yellow.mp4" draggable="false"></video>
+            </div>
+                <div class="card-content">
+                    <div class="card-title"><h2>only Math</h2></div>
+                        <div class="card-description">
+                            <p>Interactive visual based on noise and fractal movement. This is only maths functions.</p>
+                        </div>    
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-img"><video controls loop muted src="./asset/TouchDesinger/genArt/PixelMusic.mp4" draggable="false"></video>
+                </div>
+                    <div class="card-content">
+                        <div class="card-title"><h2>pixel melted</h2></div>
+                            <div class="card-description">
+                                <p>Use touchdesigner to recreate visual in this case how pixel can be melted and rythm movement with music.</p>
+                            </div>    
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-img"><video controls loop muted src="./asset/TouchDesinger/genArt/Particles-gen.mp4" draggable="false"></video>
+                    </div>
+                        <div class="card-content">
+                            <div class="card-title"><h2>points.</h2></div>
+                                <div class="card-description">
+                                    <p>Points cloud movement and scale based on rythm of music.</p>
+                                </div>    
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-img"><video controls loop muted src="./asset/TouchDesinger/BANANA!.mp4" draggable="false"></video>
+                        </div>
+                            <div class="card-content">
+                                <div class="card-title"><h2>banana!</h2></div>
+                                    <div class="card-description">
+                                        <p>Use touchdesigner to recreate visual with generative content like noise, displacement and maths functions. <br> This is a BANANA! </p>
+                                    </div>    
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-img"><video controls loop muted src="./asset/TouchDesinger/BUTTERFLY!.mp4" draggable="false"></video>
+                            </div>
+                                <div class="card-content">
+                                    <div class="card-title"><h2>butterfly!</h2></div>
+                                        <div class="card-description">
+                                            <p>Use touchdesigner to recreate visual with generative content like noise, displacement and maths functions. <br> This is a BUTTERFLY! </p>
+                                        </div>    
+                                </div>
+                            </div>
+  </section>
+
+
+</main>
+
+
+
+
+
+
+<script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/+esm"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" integrity="sha512-onMTRKJBKz8M1TnqqDuGBlowlH0ohFzMXYRNebz+yOcc5TQr/zAKsthzhuv0hiyUKEiQEQXEynnXCvNTOk50dg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/split-type@0.3.4/umd/index.min.js"></script>
+
+<script src="./js/soundIntro.js"></script>
+<script src="./js/header.js"></script>
+<script src="./js/textLeft.js"></script> 
+
+<script>
+
+document.addEventListener("DOMContentLoaded", () => {
+    // Seleziona tutte le sezioni sticky
+    const stickySections = document.querySelectorAll(".sticky");
+
+    stickySections.forEach(stickySection => {
+        const stickyHeader = stickySection.querySelector(".sticky-header");
+        const cards = stickySection.querySelectorAll(".card");
+        const stickyHeight = window.innerHeight * 3;
+
+        const trasforms = [
+            [[10, 50, -10, 10], [20, -10, -45, 20]],
+            [[0, 47.5, -10, 15], [-25, 15, -45, 30]],
+            [[0, 52.5, -10, 5], [15, -5, 40, 60]],
+            [[0, 50, 30, -80], [20, -10, 60, 5]],
+            [[0, 55, -15, 30], [25, -15, 60, 95]],
+            [[10, 50, -10, 10], [20, -10, -45, 20]],
+            [[0, 47.5, -10, 15], [-25, 15, -45, 30]],
+            [[0, 52.5, -10, 5], [15, -5, 40, 60]],
+            [[0, 50, 30, -80], [20, -10, 60, 5]],
+            [[0, 55, -15, 30], [25, -15, 60, 95]],
+        ];
+
+        ScrollTrigger.create({
+            trigger: stickySection,
+            start: "top top",
+            end: `+=${stickyHeight}px`,
+            pin: true,
+            pinSpacing: true,
+            onUpdate: (self) => {
+                const progress = self.progress;
+
+                const maxTranslate = stickyHeader.offsetWidth - window.innerWidth;
+                const translateX = -progress * maxTranslate;
+                gsap.set(stickyHeader, { x: translateX });
+
+                cards.forEach((card, index) => {
+                    const delay = index * 0.1125;
+                    const cardProgress = Math.max(0, Math.min((progress - delay) * 2, 1));
+
+                    if (cardProgress > 0) {
+                        const cardStartX = 25;
+                        const cardEndX = -650;
+                        const yPos = trasforms[index][0];
+                        const rotations = trasforms[index][1]
+
+                        const cardX = gsap.utils.interpolate(cardStartX, cardEndX, cardProgress);
+
+                        const yProgress = cardProgress * 3;
+                        const yIndex = Math.min(Math.floor(yProgress), yPos.length - 2);
+                        const yInterpolation = yProgress - yIndex;
+                        const cardY = gsap.utils.interpolate(yPos[yIndex], yPos[yIndex + 1], yInterpolation);
+
+                        const cardRotation = gsap.utils.interpolate(rotations[yIndex], rotations[yIndex + 1], yInterpolation);
+
+                        gsap.set(card, {
+                            xPercent: cardX,
+                            yPercent: cardY,
+                            rotation: cardRotation,
+                            opacity: 1,
+                        });
+                    }
+                });
+            }
+        });
+    });
+
+    
+});
+
+
+</script>
+</body>
+
+
+</html>
