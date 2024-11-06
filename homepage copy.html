@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+
+    <head>
+        <title>dome | Design</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="./style2.css">
+        <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    </head>
+    <body>
+        <div class="off-screen-menu" >
+            <div class="btn">
+                <div class="logo" id="logo">DESIGN
+                <h2 id="revealType1">PORTFOLIO</h2>
+            </div>
+                <ul>
+                    <a href="#" id="revealType1">Home</a>
+                    <a href="#" id="revealType1">About</a>
+                </ul>
+
+                <div class="social">
+                    <div class="email">
+                        <h3 id="revealType1">click to copy</h3>
+                        <a href="#" id="revealType1">domenicofusto55@gmail.com &plus;</a>
+                    </div>
+                    <a href="#" id="revealType1">&nwarhk; Linkedin</a>
+                    <a href="#" id="revealType1">&nwarhk; Instagram</a>
+                    <a href="https://www.behance.net/domenicofusto" id="revealType1">&nwarhk; Behance</a>
+                </div>
+            </div>
+        </div>
+        
+        <nav>
+            <a class="logo" href="#">dome</a>
+            <div class="ham-menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+
+    <div class="Intro">
+
+        <div id="control-bar-wrapper">
+            <div id="control-bar">
+              <button id="sound-toggle" class="toggle" type="button" data-toggled="false" onClick="handleSoundToggle()" title="Toggle Pulse">
+                Click to listen
+              </button>
+            </div>
+          
+          </div>
+        <canvas id="paper"></canvas>
+        <div class="container-txt">
+            <h1>Hello i am Domenico,<br> UX/UI
+            <span>designer</span> based in Italy. <br>
+                I'm passionate about Design and <span>digital services</span>,
+                my goal is to craft exceptional experiences that elevate everyday life.
+               and i like <span>generative</span> thinghs.</h1>
+            </div>
+        </div>
+
+    <div class="wrapper">
+        <div class="Anicontainer">
+            <canvas id="canvas3d"></canvas>
+
+                <section>
+                    <div class="leftText">
+                        <h1>education <sup>02</sup></h1>
+                        <div class="textCont">
+                            <h2>Bachelor Degree</h2>
+                            <h3>Graphic Design 1°Level</h3>
+                            <p>Accademia di Belle Arti di Catanzaro <span>-Catanzaro 2018/2021</span></p>
+                            </div>
+        
+                        <div class="textCont">
+                            <h2>Master's Degree</h2>
+                            <h3>User Experience Design</h3>
+                            <p><span>(NABA)</span> Nuova Accademia di Belle Arti <span>-Milano 2021/2024</span></p>
+                        </div>
+                    </div>
+                </section>
+
+            <section>
+                <div class="leftText">
+                    <h1 class="anim">Awards <sup>02</sup></h1>
+                    <div class="textCont">
+                        <h2 class="anim">UX AWARDS 2021</h2>
+                        <p class="anim">AlFly Finalist </p>                   
+                        </div>
+
+                    <div class="textCont">
+                        <h2 class="anim">SISALFUNCLUB</h2>
+                        <p class="anim">Winning project context</p>
+                    </div>
+            </section>
+
+            <section>
+                <div class="leftText">
+                    <h1 class="anim">Experience <sup>02</sup></h1>
+                    <div class="textCont">
+                        <h4 class="anim">>intership</h4>
+                        <h2 class="anim">UX/UI Designer</h2>
+                        <p class="anim">Rawfish Milano 2023 </p>
+                        </div>
+
+                    <div class="textCont">
+                        <h4 class="anim">>intership</h4>
+                        <h2 class="anim">Graphic Designer</h2>
+                        <p class="anim">VitamineD Milano 2023</p>
+                </section>
+
+        </div>
+    </div>
+
+    
+
+    <div class="wrapper">
+        <div class="Anicontainer-rigth">
+                <section>
+                    <div class="centerText">
+                        <h1 class="animR">Dome is my personality</h1>
+                        
+                    </div>
+                </section>
+
+                <section>
+                    <div class="centerText">
+                        <h2 class="animR" data-text="Love">LOVE</h2>
+                        <h2 class="animR" data-text="LIVE">LIVE</h2>
+                        <h2 class="animR" data-text="LOOK">LOOK</h2>
+                        <h2 class="animR" data-text="LEARN">LEARN</h2>
+                        <h2 class="animR" data-text="LOOP">LOOP</h2>
+                    </div>
+                </section>
+        </div>
+        
+    </div>
+
+<!--     
+    <div id="container"></div> -->
+
+<div class="canvas-img">
+<div class="hint">touch everywhere or move mouse</div>
+    <div class="text-container" style="top: 250px;"> <!-- Aggiunto un contenitore per il testo -->
+        <h1 class="dynamic-title"></h1>
+        <p class="dynamic-description"></p>
+    </div>
+    <img class="image" data-index="0" data-title="AlFly" data-description="AlFly is a new prototype app for metro ticketing, designed to save you time by displaying the remaining minutes on your ticket (for cities with time-based metro tickets). This project was a finalist in the 2021 UX Awards Berlin." data-status="inactive" src="../src/asset/Alfly/Copertina Alfly.png" draggable="false">
+    <img class="image" data-index="1" data-title="iTour" data-description="This is my Master's thesis project. Book your smart home, customize it for your arrival, and discover everything you want. Don’t worry if you're traveling with family, many experiences are family-friendly." data-status="inactive" src="../src/asset/iTour/copertina Itour.png" draggable="false">
+    <img class="image" data-index="2" data-title="Policlinico di Milano" data-description="We create a comunication way to discover the fake news and the truth for your donation, more efficiently and closer to new generation with website, app and werable." data-status="inactive" src="../src/asset/POLICLINICO/copertina policlinico.png" draggable="false">
+    <img class="image" data-index="4" data-title="SisalFunClub" data-description="SISALFUNCLUB partnered with NABA University to create a contest due to issues with their app-game and social media accounts. We worked on redesigning the communication plan and developing a new marketing strategy for new experience." data-status="inactive" src="../src/asset/SisalFunClub/Copertina SisalFunClub.png" draggable="false">
+    <img class="image" data-index="5" data-title="Twitch Redesign" data-description="Redesigned the top streaming app with a fresh look, simplified the website architecture, eliminates dead zones and architectural issues. Introduce preview and control center." data-status="inactive" src="../src/asset/Twitch redesign/Copertina.png" draggable="false">
+    <img class="image" data-index="6" data-title="ubank" data-description="Crete the new home banking app that allows users to earn money through investments in cryptocurrency and stock markets. The app enables users to follow verified brokers and automates their periodic contributions." data-status="inactive" src="../src/asset/uBank/Copertina UBANK.png" draggable="false">
+
+    <video muted autoplay loop class="image" data-index="7" data-title="Visual Generator" data-description="Use touchdesigner to recreate visual with generative content like noise, displacement and maths functions. This is a BANANA! " data-status="inactive" src="../src/asset/TouchDesinger/BANANA!.mp4" draggable="false"></video>
+    <video muted autoplay loop class="image" data-index="8" data-title="Visual Generator" data-description="Use touchdesigner to recreate visual with generative content like noise, displacement and maths functions. This is a BUTTERFLY! " data-status="inactive" src="../src/asset/TouchDesinger/STELLA!.mp4" draggable="false"></video>
+    <video muted autoplay loop class="image" data-index="9" data-title="Visual Generator" data-description="Use touchdesigner to recreate visual with generative content like noise, displacement and maths functions. This is a STARFISH!" data-status="inactive" src="../src/asset/TouchDesinger/BUTTERFLY!.mp4" draggable="false"></video>
+    <video muted autoplay loop class="image" data-index="10" data-title="Music and Art" data-description="Use touchdesigner to recreate visual in this case how pixel can be melted and rythm movement with music." data-status="inactive" src="../src/asset/TouchDesinger/genArt/PixelMusic.mp4" draggable="false"></video>
+    <video muted autoplay loop class="image" data-index="11" data-title="Music and Art" data-description="Points cloud movement and scale based on rythm of music." data-status="inactive" src="../src/asset/TouchDesinger/genArt/Particles-gen.mp4" draggable="false"></video>
+    <video muted autoplay loop class="image" data-index="12" data-title="Generative Art" data-description="Interactive visual based on noise and fractal movement. This is only maths functions." data-status="inactive" src="../src/asset/TouchDesinger/genArt/noise-yellow.mp4" draggable="false"></video>
+    <video muted autoplay loop class="image" data-index="13" data-title="Shape Generator" data-description="Use touchdesigner to create abstract image, it' procedural generative so he can work with music, key, video, image and all you can think." data-status="inactive" src="../src/asset/TouchDesinger/genArt/ShapeGen.mp4" draggable="false"></video>
+</div>
+
+<footer>
+    <div class="footerContainer">
+        <a class="logo" href="#">dome</a>
+        <div class="footerButton">
+            <h1>&nwarhk; Behance</h1>
+            <h1>&nwarhk; Linkedin</h1>
+            <h1>&nwarhk; Instagram</h1>
+
+        </div>
+        <div class="footerButton">
+            <h1>domenicofusto55@gmail.com</h1>
+            <h1>&nwarhk; linkedin</h1>
+        </div>
+    </div>
+    <div class="info">
+        <p>designed with love</p>
+        <p>domenico-fusto-copyrigth</p>
+</div>
+
+</footer>
+<script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/+esm"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" integrity="sha512-onMTRKJBKz8M1TnqqDuGBlowlH0ohFzMXYRNebz+yOcc5TQr/zAKsthzhuv0hiyUKEiQEQXEynnXCvNTOk50dg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/split-type@0.3.4/umd/index.min.js"></script>
+<!-- <script src="./js/gravityText.js" defer></script> -->
+<script src="./js/header.js"></script>
+<script src="./js/textLeft.js"></script>
+<script src="./js/btnContainer.js"></script>
+<script src="./js/soundIntro.js"></script>
+<script src="./js/canvas-img.js"></script>
+<script src="./js/textRigth.js"></script>
+<!-- <script src="./js/Spline1.js" type=""></script> -->
+
+
+
+
+</body> 
+</html>

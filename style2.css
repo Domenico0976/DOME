@@ -1,0 +1,630 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url("https://use.typekit.net/etd8ezx.css");
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    
+    scroll-behavior: smooth;
+}
+
+
+
+:root{
+    --bgBlack: #000004;
+    --bgPurple: #7e2e96;
+    --bgYellow: #aaaa22;
+    --text_PrimaryColor: #000004;
+    --text_SecondaryColor: #bbbb48;
+    --text_ThirdColor: #2e0a39;
+    --bgText-Gradient: -webkit-linear-gradient( #5a871b, #bbbb48);
+    --bgText-Gradient2: -webkit-linear-gradient(#000004, #bbbb48);
+}
+
+html,body{
+    /* overflow-x: hidden; */
+    width: 100vw;
+    height: 100vh;
+   font-family: "Poppins";
+    transition: .5s ease;
+   
+}
+
+.btn{
+    position: relative;
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    padding-top: 30vh;
+    padding: clamp( .1rem, 7vw, 2rem);
+
+    justify-content: space-between;
+    align-items: flex-start;
+    pointer-events: fill;
+    z-index: 11;
+    pointer-events: fill;
+
+    h2{
+        font-family: "Poppins";
+        font-size: clamp( 1rem, 7vw, 1rem);
+        letter-spacing: .60rem;
+        color: var(--text_PrimaryColor);
+        font-weight: 600;
+    }
+   }
+
+
+.off-screen-menu {
+    overflow: hidden;
+    background-color: white;
+    height: 100vh;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    transform: translateY(-100vh);
+    display: flex;
+    flex-direction: column;
+    transition: 1s ease;
+    z-index: 10;
+}
+
+
+.off-screen-menu ul{
+    display: flex;
+    position: relative;
+    font-weight: 800;
+    width: auto;
+    font-family: "am-majella";
+    text-transform: uppercase;
+    justify-content: center;
+    font-size: clamp( 2rem, 16vw, 5rem);
+    gap: clamp( .5rem, 7vw, 2rem);
+    flex-direction: column;
+    pointer-events: fill;
+
+}
+
+.off-screen-menu a:hover{
+    border-bottom: 3px solid var(--text_SecondaryColor);
+}
+
+
+.off-screen-menu a{
+    color: var(--text_PrimaryColor);
+    text-decoration: none;
+    overflow: hidden;
+}
+
+nav{
+    backdrop-filter: blur(8px);
+    padding: clamp( .8rem, 7vw, 1.5rem);
+    mix-blend-mode: difference;
+    flex-direction: row;
+    position: fixed;
+    box-sizing: border-box;
+    width: 100%;
+    height: max-content;
+    display: flex;
+    align-items: center;
+    background-color: white;
+    justify-content: center;
+    z-index: 100;
+}
+.logo{
+    font-size: clamp( 2rem, 7vw, 3rem);
+    height: min-content;
+    font-family: "am-majella";
+    font-weight: 800;
+    text-decoration: none;
+    color: var(--text_PrimaryColor);
+}
+
+.ham-menu{
+    overflow: hidden;
+    cursor: pointer;
+    height: 3rem;
+    margin-left: auto;
+    width: 50px;
+    position: relative;
+}
+
+.ham-menu span{
+    height: 4px;
+    width: 80%;
+    background-color: var(--bgBlack);
+    border-radius: 25px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: .45s ease-in-out;
+}
+
+.ham-menu span:nth-child(1){
+    top: 25%;
+}
+
+.ham-menu span:nth-child(3){
+    top: 75%;
+}
+
+.ham-menu.active span:nth-child(1){
+    top: 50%;
+    transform: translate(-50%, .50%) rotate(45deg);
+}
+
+.ham-menu.active span:nth-child(3){
+    top: 50%;
+    transform: translate(-50%, .50%) rotate(-45deg);
+}
+
+.ham-menu.active span:nth-child(2){
+    top: 50%;
+    opacity: .2;
+    transform: translate(-110%, .50%) rotate(90deg);
+}
+
+.social{
+    overflow: hidden;
+    width: 100%;
+    flex-wrap: wrap;
+    display: flex;
+    flex-direction: column;
+    padding: .35rem;
+    position: relative;
+    gap: .65rem;
+    align-content: center;
+    justify-content: flex-end;
+    transition: .25 ease;
+}
+
+.social a{
+    font-family: "Poppins";
+    width: fit-content;
+    font-weight: 500;
+    font-size: clamp( 1.4rem, 7vw, 1.6rem);
+    color: var(--text_PrimaryColor);
+}
+
+.email{
+    overflow: hidden;
+    width: 100%;
+    position: relative;
+}
+
+.email a{
+    font-family: "Poppins";
+    font-weight: 500;
+    width: fit-content;
+    font-size: clamp( .8rem, 5vw, 1.5rem);
+    color: var(--text_PrimaryColor);
+}
+
+.email h3{
+    font-family: "Poppins";
+    font-size: clamp( .75rem, 8vw, .85rem);
+    font-weight: 400;
+    letter-spacing: .2rem;
+    color:rgb(89, 88, 88);
+}
+
+canvas {
+    height: 100vh;
+    opacity: 0.5;
+    width: 100%;
+    position: absolute;
+    z-index: 1;
+  }
+  
+  #control-bar-wrapper {
+    width: 100%;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    position: absolute;
+    bottom: 4vmin;
+    z-index: 10;
+  }
+  
+  .toggle {
+    background-color: rgba(93, 93, 93, 0.1);
+    opacity: 0.3;
+    backdrop-filter: blur(5px);
+    padding: 1rem;
+    border-radius: 0.25rem;
+    height: fit-content;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    color: white;
+    font-family: "Poppins";
+    font-size: 1rem;
+    transition: 0.5s ease-in;
+
+    &:hover{
+     background-color: var(--bgYellow);   
+     color: var(--bgBlack);
+    }
+
+  }
+  
+  body:has(#sound-toggle[data-toggled="true"]) #sound-toggle {
+    opacity: .7;
+    color: var(--text_SecondaryColor);
+    background-color: transparent;
+  }
+
+  body:has(#sound-toggle[data-toggled="true"]) .container-txt{
+    opacity: 0.1;
+    scale: .3;
+  }
+  
+  body:has(#sound-toggle[data-toggled="true"]) canvas{
+    opacity: 1;
+  }
+
+.container-txt{
+    position: absolute;
+    width: 100%;
+    bottom: 8vmin;
+    padding: clamp(1.25rem, 7vh, 3.5rem);
+    z-index: 2;
+    transition: all .65s ease-in-out;    
+
+    h1{
+        pointer-events: none;
+        text-align: start;
+        text-align: center;
+        width: 100%;
+        color: white;
+        font-family: "am-majella";
+        font-size: clamp( 1rem, 6vw, 2rem);
+        font-weight: 500;
+        text-transform: uppercase;
+    }
+    
+    span{
+        pointer-events: none;
+        color: var(--text_SecondaryColor);
+        font-family: "am-majella";
+        font-size: clamp( 1rem, 6vw, 2rem);
+        text-transform: none;
+        font-weight: 400;
+    }
+    
+}
+
+.Intro{
+    display: flex;
+    height: 100%;
+    width: 100%;
+    background-color:var(--bgBlack);
+}
+
+.wrapper{
+    box-sizing: border-box;
+    overflow-x: hidden;
+    z-index: 1;
+    background-color: white;
+}
+
+.Anicontainer{
+    display: flex;
+    pointer-events: none;
+    width: 300vw;
+    overflow-x: hidden;
+}
+
+#canvas3d {
+    width: 100%;  /* Dimensione fissa per il canvas */
+    height: 100%; /* Dimensione fissa per il canvas */
+    position: absolute; /* Permette al canvas di muoversi */
+    top: 0; /* Inizio in alto */
+    left: 0; /* Inizio a sinistra */
+    z-index: 200;
+    overflow: hidden;
+    display: block; /* Assicura che il canvas non si espanda */
+}
+
+.Anicontainer section{
+    position: relative;
+    pointer-events: none;
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background-color:transparent;
+}
+
+.leftText {
+    gap: clamp( 1.5rem, 7vw, 2.25rem);
+    box-sizing: border-box;
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    
+    h1{
+        font-family: "am-majella";
+        text-transform: lowercase;
+        font-size: clamp( 3rem, 8vw, 7rem);
+        font-weight: 800;
+        color: var(--text_PrimaryColor);
+    }
+
+    sup{
+        font-weight: 600;
+        font-size: clamp( 1rem, 6vw, 2.5rem);
+    }
+}
+
+.centerText {
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+    overflow: hidden;
+
+    h1{
+        font-family: "am-majella";
+        text-transform: lowercase;
+        font-size: clamp( 3rem, 8vw, 7rem);
+        font-weight: 800;
+        color: var(--text_ThirdColor);
+    }
+
+    
+    h2{
+        font-family: "am-majella";
+        font-size: clamp( 3rem, 8vw, 9rem);
+        font-weight: 500;
+        color: var(--text_ThirdColor);
+        
+    }
+    
+}
+
+.anim{
+    display: flex;
+    width: 100%;
+
+}
+
+.Anicontainer-rigth{
+    display: flex;
+    pointer-events: none;
+    animation: background-pan 13s linear infinite;
+    background: linear-gradient(
+      to right,
+      var(--text_PrimaryColor),
+      var(--text_ThirdColor),
+      var(--text_PrimaryColor)
+    );
+    background-size: 200%;
+    width: 300vw;
+    flex-direction: row;
+    overflow: hidden;
+    transform: translateX(-100%, -100%);
+
+}
+
+@keyframes background-pan {
+    from {
+      background-position: 0% top;
+    }
+    
+    to {
+      background-position: -400% bottom;
+    }
+  }
+
+.Anicontainer-rigth section{
+    position: relative;
+    pointer-events: none;
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    padding: clamp( 3rem, 8vw, 7rem);
+    justify-content: center;
+    flex-direction: row-reverse;
+    align-items: center;
+}
+
+.textCont{
+    
+    width: 100%;
+    height: fit-content;
+    overflow: hidden;
+    gap: clamp( 1.25rem, 8vw, 2rem);
+
+    h2{
+        font-family: "am-majella";
+        font-weight:500;
+        font-size: clamp( 1.75rem, 8vw, 2rem);
+        text-transform: uppercase;
+
+    }
+
+    h3{
+        font-size: clamp( 1rem, 5vw, 1.25rem);
+        font-family: "Poppins";
+        font-weight: 500;
+        text-transform: none;
+    }
+
+    h4{
+        font-size: clamp( .5rem, 8vw, 1.25rem);
+        font-family: "Poppins";
+        font-weight: 500;
+        text-transform: none;
+        font-style: oblique;
+        
+    }
+
+    p{
+        text-transform: uppercase;
+        font-family: "Poppins";
+        font-weight: 600;
+        font-size: clamp( 1rem, 5vw, 1rem);
+        color: grey;
+    }
+
+    span{
+        text-transform: uppercase;
+        font-family: "Poppins";
+        font-style: oblique;
+        font-weight: 700;
+        font-size: clamp( .85rem, 5vw, 1rem);
+    }
+
+}
+
+
+.text-container {
+    pointer-events: none;
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.9);
+    border-radius: .3em;
+    border: 1px solid var(--bgYellow);
+    backdrop-filter: blur(2px);
+    display: flex;
+    opacity: 0;
+    max-width: 80vw;
+    flex-direction: column;
+    padding: 2em;
+    z-index: 10;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+
+    
+    h1{
+        font-size: clamp( 2rem, 7vw, 4rem);
+        font-family: "am-majella";
+        font-style: oblique;
+        text-transform: uppercase;
+    }
+
+    p{
+        font-size: clamp( 1rem, 5vw, 1.2rem);
+        color: var(--text_SecondaryColor);
+        word-spacing: .1rem;
+    }
+
+}
+
+
+#container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: var(--bgPurple);
+  }
+  .text-box {
+    position: absolute;
+    font-size: 30px;
+    color: #FFF;
+    border: 2px solid white;
+    border-radius: 2vw;
+    padding: 3vw;
+    white-space: nowrap;
+    text-align: center;
+    user-select: none;
+    font-family: "am-majella";
+    transition: transform 0.1s ease-in-out; 
+    opacity: 0;
+  }
+
+
+.canvas-img{
+    border-top: 5px solid var(--text_ThirdColor);
+    width: 100%;
+    cursor: crosshair;
+    overflow: hidden;
+    position: relative;
+    height: 100%;
+    background-color: var(--bgBlack);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    gap: 1vh;
+    justify-content: center;
+    align-items: center;
+    transition: all .5s ease;
+
+    img, video{
+        box-shadow: rgba(71, 26, 66, 0.25) 0px 50px 100px -20px, rgba(43, 25, 39, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+
+        width: clamp(35vmin, 6vw, 50vmin);
+        position: absolute;
+        border-radius: .3em;
+        transform: translate(-50%, -50%);
+  }
+
+  video{
+    border: 3px dotted var(--bgYellow);
+  }
+
+}
+
+.hint{
+    color: rgba(138, 138, 138, .4);
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    bottom: 2vh;
+    left: 0;
+    font-weight: 300;
+    pointer-events: none;
+}
+
+  .image{
+    z-index: 1;
+    will-change: transform, opacity;
+  }
+
+
+  .image[data-status="inactive"]{
+    display: none;
+  }
+
+  .image[data-status="active"]{
+    display: block;
+
+}
+
+footer{
+    position: relative;
+    height: fit-content;
+    padding: clamp(2rem, 8vw, 3rem);
+    display: flex;
+    flex-direction: column;
+    z-index: -10;
+    
+}
+
+.footerContainer{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.footerButton{
+    display: flex;
+    flex-direction: column;
+    gap: 1vh;
+
+    h1{
+        font-size: clamp( 1rem, 5vw, 1.25rem);
+    }
+}
+.info{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2vw;
+}

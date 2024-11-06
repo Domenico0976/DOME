@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.0-beta.30/bundled/lenis.min.js"></script>
+    <style>
+
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+        @import url("https://use.typekit.net/etd8ezx.css");
+
+       *{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+       }
+
+       :root{
+        --bgBlack: #000004;
+        --bgPurple: #7e2e96;
+        --bgYellow: #aaaa22;
+        --text_PrimaryColor: #000004;
+        --text_SecondaryColor: rgb(187, 187, 72);
+        --text_ThirdColor: #2e0a39;
+        --bgText-Gradient: -webkit-linear-gradient( #5a871b, #bbbb48);
+        --bgText-Gradient2: -webkit-linear-gradient(#000004, #bbbb48);
+        --H1-fontSize: clamp(1.3rem, 8vw, 2.3rem);
+        --H2-fontSize: clamp(1rem, 8vw, 1.6rem);
+        --H3-fontSize: clamp(.7rem, 8vw, 1.2rem);
+        --A-fontSize: clamp(.75rem, 8vw, .9rem);
+        --H1-HugefontSize: clamp(2.3rem, 8vw, 4rem);
+    }
+
+
+        body{
+            margin: 0;
+            padding: 0%;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            color: var(--text_PrimaryColor);
+    
+        }
+
+        .video{
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            transform: translate(-50%, -50%);     
+        }
+
+        section{
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        #canvas-video{
+            height: 100vh;
+            width: 100%;         
+            z-index: -1;
+        }
+
+        .container{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 90%;
+            z-index: 3;
+        }
+
+    .outro{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 3;
+            text-decoration: none;
+            color: var(--text_PrimaryColor);
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.696);
+            padding: 1em;
+            border-radius: .5em;
+            backdrop-filter: blur(1px);
+            border: 2px solid var(--bgBlack);
+            
+            h2{
+                font-size: var(--H1-HugefontSize);
+                font-family: "am-majella";
+                text-transform: uppercase;
+                margin: 2vh;
+            }
+
+            p{color: var(--text_SecondaryColor);}
+
+            h3{
+                font-size: var(--H3-fontSize);
+                font-family: "Poppins";
+                font-weight: 600;
+            }
+
+            img{
+                width: 25vw;
+                height: 100%;
+                border-radius: 1em;
+                object-fit: cover;
+            }
+            
+        }
+
+        .infoContainer{
+            display: flex;
+            max-width: 90%;
+            gap: 2vw;
+            border-radius: .5em;
+            
+        }
+
+        .info{
+            border-radius: .5em;
+            color: white;
+            width: 50vw;
+            gap: 20%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
+
+            h4{
+                font-size: var(--A-fontSize);
+                font-family: "Poppins";
+                color: white;
+            }
+
+        }
+
+        .infoText{
+            background-color: var(--bgBlack);
+            min-height: 40%;
+            align-items: center;
+            padding: 1rem;
+            display: flex;
+            cursor: pointer;
+            border-radius: 1em;
+            justify-content: space-between;
+        }
+
+        .listContainer{
+            pointer-events: none;
+            display: flex;
+            width: 90vw;
+            gap: 10vh;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        a{
+                text-decoration: none;
+            }
+
+
+        .list{
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            background-color: rgba(255, 255, 255, 0.696);
+            border-radius: .5em;
+            padding: 1em .5em;
+            padding-top: 1em;
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--bgBlack);
+            align-items: center;
+
+        }
+
+        .listTitle{
+            font-family: "am-majella";
+            text-transform: uppercase;
+            width: 100%;
+
+            h1{
+                font-size: var(--H1-fontSize);
+                margin: 0.3em;
+                text-align: center;
+                color: var(--bgYellow);
+            }
+        }
+
+        .textList{
+            overflow: hidden;
+            display: flex;
+            width: 100%;
+            justify-content: space-evenly;
+            align-items: center;
+            margin: 1em;
+
+            h3{
+                text-align: center;
+                padding: .5em;
+                font-family: "poppins";
+                font-weight: 700;
+                text-align: center;
+                font-size: var(--A-fontSize);
+            }
+        }
+
+        #anim{
+            width: 100%;
+ 
+        }
+
+        .line{
+            width: 80%;
+            height: 1px;
+            border: 1px solid var(--bgBlack);
+        }
+
+        .email{
+            cursor: pointer;
+            position: relative;
+            height: fit-content;
+            border-radius: .5em;
+            margin: 3vh;
+            text-align: center;
+            transition: 1s ease;
+
+            h3{
+                border-radius: .5em;
+                font-size: var(--H2-fontSize);
+                font-weight: 300;
+                font-family: "am-majella";
+                text-transform: uppercase;
+                padding: .4em;
+                width: 100%;
+                color: var(--bgBlack);
+
+                &:hover{
+                background-color: var(--bgBlack);
+                color: var(--bgYellow);
+            
+                font-style: oblique;
+                padding: 1rem;
+            }
+        }
+
+            h1{
+                font-size: var(--H2-fontSize);
+                font-weight: 400;
+                font-family: "poppins";
+                padding: .4em;
+                color: var(--bgBlack);
+                
+                &:hover{
+                background-color: var(--bgBlack);
+                color: var(--bgYellow);
+                border-radius: .1em;
+                font-style: oblique;
+                padding: 1rem;
+            }
+            }
+        }
+
+        .outroStatic{
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 3;
+            text-decoration: none;
+            color: white;
+            background-color: rgba(0, 0, 0, 1);
+            padding: 1em;
+            border-radius: .5em;
+            backdrop-filter: blur(4px);
+            
+            h2{
+                font-size: var(--H1-fontSize);
+                font-family: "am-majella";
+                text-transform: uppercase;
+                margin: 2vh;
+            }
+
+        }
+
+    </style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@40,400,0,0&icon_names=arrow_back_ios_new,download" />
+</head>
+<body>
+    <div class="video">
+    <canvas id="canvas-video"></canvas>
+    </div>
+
+<div class="container">
+
+
+    <section >
+        <a class="outroStatic" href="./homepage.html">
+            <span class="material-symbols-rounded">arrow_back_ios_new</span>
+            <h2>Return to home</h2></a>
+
+    <div class="outro">
+        <h2>Hello, this is my <span>website</span>,
+        maked to do something in this <span>full world</span>.</h2>
+            <div class="infoContainer">
+            <div class="info">
+                
+                <div class="infoText"><a href="./asset/download/PORTFOLIO_DOMENICO_FUSTO-.pdf" download="Portfolio Domenico-Fusto.pdf"><h4>DOWNLOAD MY PORTFOLIO</h4></a>
+                    <span class="material-symbols-rounded">
+                        download    
+                    </span>
+
+                </div>
+                <div class="infoText"><a href="./asset/download/CV_DOMENICO-FUSTO.pdf" download="CV Domenico-Fusto.pdf"><h4>DOWNLOAD MY CV</h4></a>
+                    <span class="material-symbols-rounded">
+                        download
+                        </span>
+                </div>
+            </div>
+            <img src="../src/asset/FOTO_DOMENICOFUSTO.jpg" alt="">
+        </div>
+
+    </div>
+</section>
+
+</div>
+
+<section>
+
+    <div class="listContainer">
+    <div class="listTitle">
+        <div class="list" id="anim">
+        <h1>my skills</h1>
+  
+    
+        <div class="line"></div>
+            <div class="textList" >
+                <h3 id="anim">USER <br> EXPERIENCE DESIGN</h3>
+                <h3 id="anim">GRAPHIC DESIGN</h3>
+                <h3 id="anim">SERVICE DESIGN</h3>
+                
+            </div>
+            <div class="line"></div>
+
+            <div class="textList">
+                <h3 id="anim">TEAMWORK</h3>
+                <h3 id="anim">COMUNICATIONS</h3>
+                <h3 id="anim">PROBLEM SOLVING</h3>
+                
+            </div>
+            <div class="line"></div>
+
+            <div class="textList">
+                <h3 id="anim">3D DESIGN</h3>
+                <h3 id="anim">EMPHATY</h3>
+            </div>
+    </div>
+</div>
+
+    <div class="listTitle">
+        <div class="list" id="anim">
+        <h1>my software skills</h1>
+        <div class="line"></div>
+            <div class="textList" >
+                <h3 id="anim">ADOBE <br>PREMIERE</h3>
+                <h3 id="anim">ADOBE <br>ILLUSTRATOR</h3>
+                <h3 id="anim">ADOBE <br>PHOTOSHOP</h3>
+            </div>
+            <div class="line"></div>
+
+            <div class="textList">
+                <h3 id="anim">BLENDER</h3>
+                <h3 id="anim">FIGMA</h3>
+                <h3 id="anim">TOUCHDESIGNER</h3>
+            </div>
+    </div>
+    </div>
+
+    <div class="listTitle">
+        <div class="list" id="anim">
+        <h1>my code skills</h1>
+
+
+        <div class="line"></div>
+            <div class="textList" >
+                <h3 id="anim">HTML5</h3>
+                <h3 id="anim">JavaScript</h3>
+                <h3 id="anim">CSS</h3>
+            </div>
+            <div class="line"></div>
+
+            <div class="textList">
+                <h3 id="anim">Gsap</h3>
+                <h3 id="anim">three.js</h3>
+            </div>
+    </div>
+</div>
+
+</section>
+
+<section></section>
+
+
+<section>
+    <div class="container">
+    <a class="outroStatic" href="./homepage.html">
+        <span class="material-symbols-rounded">arrow_back_ios_new</span>
+        <h2>Return to home</h2></a>
+    <div class="email">
+        <h1 id="email" onclick="copyEmail()">domenicofusto55@gmail.com</h1>
+        <a target="_blank" href="https://www.linkedin.com/in/domenico-fusto-a74273189/"><h3>linkedin</h3></a>
+        <a target="_blank" href="https://www.instagram.com/thereisdomenico/"><h3>instagram</h3></a>
+        <a target="_blank" href="https://www.behance.net/domenicofusto"><h3>behance</h3></a>
+    </div>
+</div>
+
+</section>
+
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" integrity="sha512-onMTRKJBKz8M1TnqqDuGBlowlH0ohFzMXYRNebz+yOcc5TQr/zAKsthzhuv0hiyUKEiQEQXEynnXCvNTOk50dg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    
+    <script>
+        class Application {
+    constructor() {
+        this.canvas = document.querySelector('#canvas-video');
+        this.ctx = this.canvas.getContext('2d');
+        this.images = [];
+        this.loadedImages = 0;
+        this.totalImages = 143;
+        this.currentFrameIndex = 1;
+
+        // Imposta le dimensioni iniziali del canvas
+        this.resizeCanvas();
+        window.addEventListener('resize', this.resizeCanvas.bind(this));
+
+        for (let i = 0; i < this.totalImages; i++) {
+            const img = new Image();
+            img.onload = () => {
+                this.loadedImages++;
+                if (this.loadedImages === this.totalImages) {
+                    this.addEventListeners();
+                    this.render();
+                    this.initGSAP();  // Inizializza GSAP dopo il caricamento delle immagini
+                    // Inizializza animazione di uscita del canvas
+                }
+            };
+
+            img.src = `../src/asset/GoldenCage/videoIntro${String(i).padStart(4, '0')}.png`;
+            this.images.push(img);
+        }
+    }
+
+    resizeCanvas() {
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
+        this.render();
+    }
+
+    addEventListeners() {
+        window.addEventListener('scroll', () => {
+            const scrollTop = document.documentElement.scrollTop;
+            const maxScrollTop = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollFraction = scrollTop / maxScrollTop;
+            const frameCount = this.totalImages;
+            const frameIndex = Math.min(
+                frameCount - 1,
+                Math.floor(scrollFraction * frameCount)
+            );
+            this.currentFrameIndex = frameIndex;
+            this.render();
+        });
+    }
+
+    render() {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+        const img = this.images[this.currentFrameIndex];
+        if (!img) return;
+
+        const canvasRatio = this.canvas.width / this.canvas.height;
+        const imgRatio = img.width / img.height;
+
+        let drawWidth, drawHeight, offsetX = 0, offsetY = 0;
+
+        if (canvasRatio > imgRatio) {
+            drawWidth = this.canvas.width;
+            drawHeight = drawWidth / imgRatio;
+            offsetY = (this.canvas.height - drawHeight) / 2;
+        } else {
+            drawHeight = this.canvas.height;
+            drawWidth = drawHeight * imgRatio;
+            offsetX = (this.canvas.width - drawWidth) / 2;
+        }
+
+        this.ctx.save();
+        // GESTIONE ALPHA
+        if (this.totalImages - this.currentFrameIndex < 40) {
+            this.ctx.globalAlpha = (this.totalImages - this.currentFrameIndex) / 10;
+        }
+        this.ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
+        this.ctx.restore();
+    }
+
+    initGSAP() {
+        const sections = document.querySelectorAll('.outro');
+        const animElements = document.querySelectorAll('#anim');
+        const container = document.querySelectorAll('.list');
+
+        gsap.set(sections, { opacity: 2, y: 100 });
+
+        sections.forEach((section, index) => {
+            gsap.to(section, {
+                scrollTrigger: {
+                    trigger: section,
+                    start: "top 15%",
+                    end: "bottom bottom",
+                    // markers: true,
+                    toggleActions: "play none none reverse",
+             
+                },
+                opacity: 0,
+                y: -300,
+                duration: 0.6,
+                stagger: 0.3,
+                ease: "ease",
+                scale:1.3
+            },"<");
+        });
+
+        gsap.set(animElements, { opacity: 0, x:-100, y: 250, scale: 0.2 });
+
+        animElements.forEach((element, index) => {
+            gsap.to(element, {
+                scrollTrigger: {
+                    trigger: element,
+                    start: "center 65%",  // Inizio dell'animazione quando l'elemento è nella parte superiore della viewport
+                    end: "bottom 85%", // Fine dell'animazione quando l'elemento raggiunge la fine della viewport
+                    // markers: true,
+                    scrub: 2,
+                    toggleActions: "play none none reverse",
+
+                },
+                opacity: 1,
+                y: 0,
+                x: 0,
+                scale: 1,               
+            }, "<");
+        });
+        
+}
+
+
+
+initLenis() {
+    // Inizializza Lenis
+    const lenis = new Lenis({
+        duration: 1.2,
+        smooth: true,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t))
+    });
+
+    lenis.on('scroll', ({ scroll }) => {
+        const maxScrollTop = document.documentElement.scrollHeight - window.innerHeight;
+        const scrollFraction = scroll / maxScrollTop;
+        const frameIndex = Math.min(
+            this.totalImages - 1,
+            Math.floor(scrollFraction * this.totalImages)
+        );
+        this.currentFrameIndex = frameIndex;
+        this.render();
+    });
+
+    // Usa requestAnimationFrame per aggiornare Lenis ad ogni frame
+    const animate = () => {
+        lenis.raf();
+        requestAnimationFrame(animate);
+    };
+    requestAnimationFrame(animate);
+}
+}
+
+
+window.onload = () => {
+    window.app = new Application();
+};
+
+function copyEmail() {
+  const emailElement = document.getElementById("email");
+  const originalText = emailElement.innerText;
+
+  navigator.clipboard.writeText(originalText)
+    .then(() => {
+      emailElement.innerText = "Copied!";
+      setTimeout(() => {
+        emailElement.innerText = originalText;
+      }, 6000); // Torna al testo originale dopo 2 secondi
+    })
+    .catch((err) => {
+      console.error("Errore nella copia: ", err);
+    });
+}
+
+// Ripristina il testo originale all'apertura o al refresh della pagina
+document.addEventListener("DOMContentLoaded", () => {
+  const emailElement = document.getElementById("email");
+  emailElement.innerText = "domenicofusto55@gmail.com"; // Sostituisci con l'email originale
+});
+        
+    </script>
+</body>
+</html>
