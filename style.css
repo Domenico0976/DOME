@@ -36,15 +36,13 @@ html,body{
 .btn{
     position: relative;
     display: flex;
-    height: 100vh;
     flex-direction: column;
     padding: clamp( .8rem, 7vw, 1.5rem);
-    margin-top: 6vh;
-    justify-content: space-between;
+    height: 100%;
+    justify-content: space-evenly;
     align-items: flex-start;
     pointer-events: fill;
     z-index: 11;
-    pointer-events: fill;
 
     h2{
         font-family: "Poppins";
@@ -240,7 +238,6 @@ canvas {
     backdrop-filter: blur(5px);
     padding: 1rem;
     border-radius: 0.25rem;
-    height: fit-content;
     border: none;
     outline: none;
     cursor: pointer;
@@ -276,7 +273,6 @@ canvas {
     display: flex;
     justify-content: center;
     background-color:var(--bgBlack);
-
 }
 
 #paper {
@@ -287,10 +283,9 @@ canvas {
 
 .container-txt{
     position: absolute;
-    bottom: 8vmin;
-    padding: clamp(1rem, 7vw, 3em);
+    bottom: 15vmin;
+    padding: 1em;
     z-index: 2;
-    max-width: 95%;
     transition: all .65s ease-in-out;    
 
     h1{
@@ -330,10 +325,9 @@ canvas {
 #canvas3d,
 #canvas3d-2,
 #canvas3d-3{
-    width: 100vw;
-    left: 0;
-    opacity: 1;
+    opacity: .75;
     z-index: -1;
+
 }
 
 .Anicontainer section{
@@ -343,15 +337,16 @@ canvas {
     width: 100%;
     height: 100vh;
     flex-direction: row;
-    justify-content: center;
-    align-items: center;
+    justify-content: first baseline;
+    align-items: flex-end;
     background-color:transparent;
 }
 
 .leftText {
     box-sizing: border-box;
-    width: 80%;
     display: flex;
+    padding: 3em 3em;
+
     flex-direction: column;
     pointer-events: none;
     
@@ -360,7 +355,6 @@ canvas {
         text-transform: lowercase;
         font-size: var(--H1-HugefontSize);
         font-weight: 800;
-        padding: .2em;
         color: var(--text_PrimaryColor);
     }
 
@@ -371,13 +365,8 @@ canvas {
 }
 
 .textCont{
-    background-color: rgba(255, 255, 255, 40%);
-    padding: 2em;
-    backdrop-filter: blur(3px);
-    border-radius: 1em;
-    width: fit-content;
-    height: fit-content;
     overflow: hidden;
+    padding: 1em 0;
     gap: clamp( .5rem, 8vw, 1rem);
 
     h2{
@@ -409,7 +398,7 @@ canvas {
         text-transform: uppercase;
         font-family: "Poppins";
         font-weight: 600;
-        font-size: var(--H3-fontSize);
+        font-size: var(--A-fontSize);
         color: var(--text_PrimaryColor);
     }
 
@@ -418,7 +407,7 @@ canvas {
         font-family: "am-majella";
         font-style: oblique;
         font-weight: 400;
-        font-size: var(--H3-fontSize);
+        font-size: var(--A-fontSize);
     }
 
 }
@@ -467,10 +456,8 @@ img, video{
 
 .card{
     position: absolute;
-    top: 10%;
     left: 100%;
-    width: 350px;
-    height: fit-content;
+    min-width: 350px;
     background-color: var(--bgBlack);
     border-radius: 1em;
     padding: 0.5em;

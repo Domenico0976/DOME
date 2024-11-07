@@ -22,9 +22,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         })
         .to(spherePlanet.scale, {
-            x: 0.8,
-            y: 0.8,
-            z: 0.8
+            x: 2,
+            y: 2,
+            z: 2
         })
 
         .to(spherePlanet.position, {
@@ -41,4 +41,9 @@ const app2 = new Application(canvas2);
 const trigger = document.getElementById('part2')
 
     app2
-        .load('https://prod.spline.design/5VUtouFw1z8sBvvz/scene.splinecode');
+        .load('https://prod.spline.design/5VUtouFw1z8sBvvz/scene.splinecode')
+        .then(() => {
+            const all = app2.findObjectByName('ALL');
+            gsap.set(all.scale, {x:2, y:2, z:2})
+            gsap.set(all.position,{ x: -50, y: 0 });
+        })
