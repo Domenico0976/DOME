@@ -1,3 +1,5 @@
+document.addEventListener("DOMContentLoaded", () =>{
+    
 const hamMenu = document.querySelector('.ham-menu');
 const offScreenMenu = document.querySelector('.off-screen-menu');
 const items = document.querySelectorAll('#items');
@@ -14,9 +16,9 @@ splitTypes.forEach((char,i) => {
         .to(items, {y: 300, opacity: 1, duration: 0.7}, "<")
         .to (offScreenMenu, {
             y: 0,
-            duration: 0.15,
+            duration: 0.25,
             ease: 'back.in'
-        }, "<")
+        },"<")
 
             .from(text.chars, 
             {
@@ -77,3 +79,4 @@ splitTypes.forEach((char,i) => {
       });
 
 
+    } )

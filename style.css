@@ -25,7 +25,6 @@
 }
 
 html,body{
-
     font-family: "Poppins";
     transition: 2s ease;
     overflow-x: hidden;
@@ -37,8 +36,9 @@ html,body{
     position: relative;
     display: flex;
     flex-direction: column;
-    padding: clamp( .8rem, 7vw, 1.5rem);
     height: 100%;
+    gap: 20%;
+    padding-top: 3em;
     justify-content: space-evenly;
     align-items: flex-start;
     pointer-events: fill;
@@ -56,8 +56,9 @@ html,body{
 
 .off-screen-menu {
     overflow: hidden;
+    padding: clamp( .8rem, 7vw, 1.5rem);
     background-color: white;
-    height: 100vh;
+    height: 100%;
     width: 100%;
     position: fixed;
     top: 0;
@@ -74,7 +75,6 @@ html,body{
     display: flex;
     position: relative;
     font-weight: 800;
-    width: auto;
     font-family: "am-majella";
     text-transform: uppercase;
     justify-content: center;
@@ -114,7 +114,6 @@ nav{
 .logo{
 
     font-size: var(--H1-fontSize);
-    height: min-content;
     font-family: "am-majella";
     text-transform: uppercase;
     font-weight: 800;
@@ -270,6 +269,7 @@ canvas {
 
   
 .Intro{
+    height: 100svh;
     display: flex;
     justify-content: center;
     background-color:var(--bgBlack);
@@ -325,7 +325,7 @@ canvas {
 #canvas3d,
 #canvas3d-2,
 #canvas3d-3{
-    opacity: .75;
+    opacity: 1;
     z-index: -1;
 
 }
@@ -335,10 +335,10 @@ canvas {
     z-index: 2;
     display: flex;
     width: 100%;
-    height: 100vh;
+    height: 100svh;
     flex-direction: row;
-    justify-content: first baseline;
-    align-items: flex-end;
+    align-items: self-end;
+    justify-content: flex-start;
     background-color:transparent;
 }
 
@@ -412,43 +412,31 @@ canvas {
 
 }
 
-section{
-    width: 100%;
-    height: 100vh;
-}
+
 
 .sticky{
-    position: relative;
     background-color: white;
-    overflow: hidden;
-    box-sizing: border-box;
-    width: 100%;
-    
 }
 
 img, video{
     width: 100%;
-    height: 100%;
     object-fit: cover;
 
 }
 
 .sticky-header{
-    position: absolute;
-    top: 0;
+    position: relative;
+    top: calc(100% - 80vh);
+    width: 100%;
     left: 0;
-    width: 250vw;
-    height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    will-change: transform;
     pointer-events: none;
 
     h1{
-        margin: 0;
         color: var(--bgBlack);
-        font-size: 20vw;
+        font-size: var(--H1-HugefontSize);
         font-family: "am-majella";
         font-weight: 600;
     }
@@ -456,32 +444,31 @@ img, video{
 
 .card{
     position: absolute;
-    left: 100%;
-    min-width: 350px;
+    top: -2svh;
+    left: 120%;
+    width: calc(100% - 500px);
     background-color: var(--bgBlack);
     border-radius: 1em;
     padding: 0.5em;
-    will-change: transform;
+    opacity: 0;
     z-index: 2;
-
-    .card-img{
-        height: 300px;
-        border-radius: 0.5em;
-        overflow: hidden;
-    }
 }
 
+.card-img{
+    border-radius: .5em;
+    overflow: hidden;
+}
+
+
 .card-content{
-
-    margin-top: 2%;
-    height: fit-content;
     pointer-events: none;
-
+    
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     color: white;
     padding: 1em;
+    /* max-width: calc(100% - 30svh); */
     border-radius: 0.5em;
     border: 2px solid var(--bgYellow);
 
@@ -501,12 +488,7 @@ img, video{
     font-weight: 300;
 }
 
-.outro{
-    height: 30vw;
-}
-
 #paper{
-    width: 100%;
     left: 0;
 
 }

@@ -1,3 +1,6 @@
+document.addEventListener("DOMContentLoaded", () =>{
+
+
 const paper = document.getElementById("paper"),
       pen = paper.getContext("2d");
 
@@ -201,3 +204,4 @@ const draw = () => {
 init();
 
 draw();
+})
