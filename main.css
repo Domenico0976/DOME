@@ -80,11 +80,10 @@ html, body{
 
 h1{
     mix-blend-mode: difference;
-   white-space: nowrap;
     margin: 0;
     text-align: center;
     color: white;
-    font-size: 45pt;
+    font-size: var(--H1-HugefontSize);
     text-transform: uppercase;
     
 }
@@ -95,7 +94,7 @@ h3{
     margin: 0;
     text-align: center;
 
-    font-size: 25pt;
+    font-size: var(--H3-fontSize);
     
     font-family:"poppins";
 

@@ -26,19 +26,12 @@
 
 html,body{
 
-    height: 100vh;
     font-family: "Poppins";
-    transition: .5s ease;
+    transition: 2s ease;
+    overflow-x: hidden;
 
 }
-main{
-    height: 100%;
-    width: 100%;
-}
 
-.pin-spacer{
-    width: 100vw;
-}
 
 .btn{
     position: relative;
@@ -281,19 +274,16 @@ canvas {
   
 .Intro{
     display: flex;
-    height: 100%;
-    width: 100%;
     justify-content: center;
     background-color:var(--bgBlack);
 
-    #paper {
-        height: 100vh;
-        opacity: 0.5;
-        width: 100%;
-        position: absolute;
-        z-index: 1;
-      }
 }
+
+#paper {
+    opacity: 0.5;
+    position: absolute;
+    z-index: 1;
+  }
 
 .container-txt{
     position: absolute;
@@ -328,6 +318,7 @@ canvas {
 .wrapper{
     width: 100%;
     overflow: hidden;
+    position: relative;
     z-index: 1;
     background-color: white;
 }
@@ -340,7 +331,6 @@ canvas {
 #canvas3d-2,
 #canvas3d-3{
     width: 100vw;
-    position: absolute;
     left: 0;
     opacity: 1;
     z-index: -1;

@@ -21,6 +21,7 @@ box-sizing: border-box;
 --H2-fontSize: clamp(1rem, 8vw, 1.6rem);
 --H3-fontSize: clamp(.7rem, 8vw, 1.2rem);
 --A-fontSize: clamp(.75rem, 8vw, .9rem);
+--button-fontSize: clamp(.5rem, 5vw, 1rem);
 --H1-HugefontSize: clamp(2.3rem, 8vw, 4rem);
 }
 
@@ -66,7 +67,8 @@ section{
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 90%;
+    overflow: hidden;
+    width: 100%;
     z-index: 3;
 }
 
@@ -76,14 +78,15 @@ section{
     justify-content: center;
     align-items: center;
     z-index: 3;
+    padding: 1em;
     text-decoration: none;
     color: var(--text_PrimaryColor);
+    min-height: 50%;
     width: 90%;
     background-color: rgba(255, 255, 255, 0.696);
-    padding: 1em;
     border-radius: .5em;
     backdrop-filter: blur(1px);
-    border: 2px solid var(--bgBlack);
+    border: 3px solid var(--bgBlack);
     
     h2{
         font-size: var(--H1-HugefontSize);
@@ -100,50 +103,58 @@ section{
         font-weight: 600;
     }
 
+    
+}
+
+.infoContainer{
+    display: flex;
+    height: 100%;
+    width: 100%;
+    justify-content: space-between;
+    gap: 4px;
+
+    
     img{
         width: 25vw;
         height: 100%;
         border-radius: 1em;
         object-fit: cover;
     }
-    
-}
-
-.infoContainer{
-    display: flex;
-    max-width: 100%;
-    gap: 2vw;
-    border-radius: .5em;
-    
 }
 
 .info{
     border-radius: .5em;
     color: white;
-    width: 50vw;
-    gap: 20%;
-    height: 100%;
+    width: 100%;
+    min-height: fit-content;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 
     h4{
-        font-size: var(--A-fontSize);
+        font-size: var(--button-fontSize);
         font-family: "Poppins";
-        color: white;
     }
 
 }
 
 .infoText{
-    background-color: var(--bgBlack);
-    min-height: 40%;
+    border: 3px solid var(--bgBlack);
+    min-height: 45%;
+    max-width: 95%;
     align-items: center;
+    color: var(--text_PrimaryColor);
     padding: 1rem;
     display: flex;
-    cursor: pointer;
     border-radius: 1em;
     justify-content: space-between;
+    transition: all .4s cubic-bezier(1, 0.3, 0.8, 1);
+
+    &:hover{
+        color: white;
+        background-color: var(--bgBlack);
+    }
+
 }
 
 .listContainer{

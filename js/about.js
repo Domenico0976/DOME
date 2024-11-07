@@ -84,13 +84,12 @@ class Application {
         const animElements = document.querySelectorAll('#anim');
         const container = document.querySelectorAll('.list');
 
-        gsap.set(sections, { opacity: 2, y: 100 });
 
         sections.forEach((section, index) => {
             gsap.to(section, {
                 scrollTrigger: {
                     trigger: section,
-                    start: "center 15%",
+                    start: "bottom 15%",
                     end: "bottom bottom",
                     // markers: true,
                     toggleActions: "play none none reverse",
@@ -111,9 +110,9 @@ class Application {
             gsap.to(element, {
                 scrollTrigger: {
                     trigger: element,
-                    start: "center 65%",  // Inizio dell'animazione quando l'elemento è nella parte superiore della viewport
+                    start: "bottom 84%",  // Inizio dell'animazione quando l'elemento è nella parte superiore della viewport
                     end: "bottom 85%", // Fine dell'animazione quando l'elemento raggiunge la fine della viewport
-                    markers: true,
+                    // markers: true,
                     scrub: 2,
                     toggleActions: "play none none reverse",
 
@@ -125,36 +124,7 @@ class Application {
             }, "<");
         });
         
-}
-
-
-
-initLenis() {
-    // Inizializza Lenis
-    const lenis = new Lenis({
-        duration: 1.2,
-        smooth: true,
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t))
-    });
-
-    lenis.on('scroll', ({ scroll }) => {
-        const maxScrollTop = document.documentElement.scrollHeight - window.innerHeight;
-        const scrollFraction = scroll / maxScrollTop;
-        const frameIndex = Math.min(
-            this.totalImages - 1,
-            Math.floor(scrollFraction * this.totalImages)
-        );
-        this.currentFrameIndex = frameIndex;
-        this.render();
-    });
-
-    // Usa requestAnimationFrame per aggiornare Lenis ad ogni frame
-    const animate = () => {
-        lenis.raf();
-        requestAnimationFrame(animate);
-    };
-    requestAnimationFrame(animate);
-}
+    }
 }
 
 

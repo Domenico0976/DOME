@@ -34,8 +34,12 @@ function startLoader() {
         
             ease: "power1.inOut",
         })
-
- setTimeout(function() {
-
-    window.location.href = "./homepage.html";
-}, 5500);
+        gsap.to("#items",{
+            x:-500,
+            delay: 5,
+            opacity: 0,
+            onComplete: ()=>{
+                window.location.href = "./homepage.html";
+            }
+            }
+        )
