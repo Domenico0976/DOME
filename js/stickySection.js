@@ -6,18 +6,18 @@ document.addEventListener("DOMContentLoaded", () => {
     stickySections.forEach(stickySection => {
         const stickyHeader = stickySection.querySelector(".sticky-header");
         const cards = stickySection.querySelectorAll(".card");
-        const stickyHeight = window.innerHeight * 2.5;
+        const stickyHeight = window.innerHeight * 3;
 
         const trasforms = [
-            [[10, 50, -10, 10], [10, 50, -10, 10]],
-            [[10, 50, -10, 10], [10, 50, -10, 10]],
-            [[10, 50, -10, 10], [10, 50, -10, 10]],
-            [[10, 50, -10, 10], [10, 50, -10, 10]],
-            [[10, 50, -10, 10], [10, 50, -10, 10]],
-            [[10, 50, -10, 10], [10, 50, -10, 10]],
-            [[10, 50, -10, 10], [10, 50, -10, 10]],
-            [[10, 50, -10, 10], [10, 50, -10, 10]],
-            [[10, 50, -10, 10], [10, 50, -10, 10]],
+            [[10, 10, 25, -10], [10, 10, 25, -10]],
+            [[10, 10, 25, -10], [10, 10, 25, -10]],
+            [[10, 10, 25, -10], [10, 10, 25, -10]],
+            [[10, 10, 25, -10], [10, 10, 25, -10]],
+            [[10, 15, 25, -10], [10, 10, 25, -10]],
+            [[10, 10, 25, -10], [10, 10, 25, -10]],
+            [[10, 10, 25, -10], [10, 10, 25, -10]],
+            [[10, 10, 25, -10], [10, 10, 25, -10]],
+            [[10, 10, 25, -10], [10, 50, -10, 10]],
         ];
 
         ScrollTrigger.create({
@@ -25,6 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
             start: "top top",
             end: `+=${stickyHeight}px`,
             pin: true,
+            // markers: true,
             pinSpacing: true,
             onUpdate: (self) => {
                 const progress = self.progress;
@@ -32,6 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const maxTranslate = stickyHeader.offsetWidth - window.innerWidth;
                 const translateX = -progress * maxTranslate;
                 gsap.set(stickyHeader, { x: translateX });
+                
 
                 cards.forEach((card, index) => {
                     const delay = index * 0.1125;
@@ -52,16 +54,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
                         const cardRotation = gsap.utils.interpolate(rotations[yIndex], rotations[yIndex + 1], yInterpolation);
 
-                        gsap.set(card, {
+                        gsap.to(card, {
                             xPercent: cardX,
                             yPercent: cardY,
                             opacity: 1,
                         });
                     }
+                    return true;
                 });
             }
         });
-        return true;
+        
     });
 
     
