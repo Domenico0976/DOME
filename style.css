@@ -427,7 +427,7 @@ img, video{
 .sticky-header{
     position: relative;
     top: calc(100% - 80vh);
-    width: 100%;
+    min-height: 100vh;
     left: 0;
     display: flex;
     justify-content: center;
