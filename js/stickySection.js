@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
     stickySections.forEach(stickySection => {
         const stickyHeader = stickySection.querySelector(".sticky-header");
         const cards = stickySection.querySelectorAll(".card");
-        const stickyHeight = window.innerHeight * 4;
+        const stickyHeight = window.innerHeight * 2.5;
 
         const trasforms = [
             [[10, 50, -10, 10], [10, 50, -10, 10]],

@@ -446,7 +446,7 @@ img, video{
     position: absolute;
     top: -2svh;
     left: 120%;
-    width: calc(100% - 500px);
+    width: min(calc(110% - 100px), 500px);
     background-color: var(--bgBlack);
     border-radius: 1em;
     padding: 0.5em;
