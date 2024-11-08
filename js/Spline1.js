@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         .to(spherePlanet.position, {
             x: -800,
-            y: 150,
+            y: -200,
         }, "<")
     })
 
@@ -44,6 +44,9 @@ const trigger = document.getElementById('part2')
         .load('https://prod.spline.design/5VUtouFw1z8sBvvz/scene.splinecode')
         .then(() => {
             const all = app2.findObjectByName('ALL');
+            const camera = app2.findObjectByName('Camera');
             gsap.set(all.scale, {x:2, y:2, z:2})
-            gsap.set(all.position,{ x: -50, y: 0 });
+            gsap.set(all.position,{ x: 0, y: -180 });
+            gsap.set(camera.position,{ z: 910 });
+
         })

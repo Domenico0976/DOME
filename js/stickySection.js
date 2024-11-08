@@ -52,12 +52,14 @@ document.addEventListener("DOMContentLoaded", () => {
                         const yInterpolation = yProgress - yIndex;
                         const cardY = gsap.utils.interpolate(yPos[yIndex], yPos[yIndex + 1], yInterpolation);
 
-                        const cardRotation = gsap.utils.interpolate(rotations[yIndex], rotations[yIndex + 1], yInterpolation);
+                        // const cardRotation = gsap.utils.interpolate(rotations[yIndex], rotations[yIndex + 1], yInterpolation);
 
                         gsap.to(card, {
                             xPercent: cardX,
                             yPercent: cardY,
                             opacity: 1,
+
+                            
                         });
                     }
                     return true;

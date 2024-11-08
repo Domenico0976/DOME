@@ -27,7 +27,7 @@
 html,body{
     font-family: "Poppins";
     transition: 2s ease;
-
+    overflow-x: hidden;
 }
 
 
@@ -211,11 +211,8 @@ nav{
 }
 
 canvas {
-    height: 100%;
-    opacity: 0.5;
-    width: 100%;
-    position: absolute;
-    z-index: 1;
+    isolation: isolate;
+    /* position: absolute; */
   }
   
   #control-bar-wrapper {
@@ -322,8 +319,9 @@ canvas {
 #canvas3d,
 #canvas3d-2,
 #canvas3d-3{
-    opacity: 1;
+    opacity: .71;
     z-index: -1;
+    position: absolute;
 
 }
 
@@ -363,7 +361,7 @@ canvas {
 
 .textCont{
     overflow: hidden;
-    padding: 1em 0;
+    padding: 1em .2em;
     gap: clamp( .5rem, 8vw, 1rem);
 
     h2{
@@ -375,26 +373,19 @@ canvas {
     }
 
     h3{
-        font-size: var(--H3-fontSize);
-        font-family: "Poppins";
-        font-weight: 500;
-        color: rgb(115, 114, 114);
-        text-transform: none;
-    }
-
-    h4{
         font-size: var(--A-fontSize);
         font-family: "Poppins";
-        font-weight: 500;
+        font-weight: 600;
+        padding: .3em;
+        color: var(--text_PrimaryColor);
+        border-radius: .2em;
         text-transform: none;
-        font-style: oblique;
-        
     }
 
     p{
         text-transform: uppercase;
         font-family: "Poppins";
-        font-weight: 600;
+        font-weight: 400;
         font-size: var(--A-fontSize);
         color: var(--text_PrimaryColor);
     }
