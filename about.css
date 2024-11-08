@@ -49,15 +49,14 @@ body{
 }
 
 section{
-    height: 100vh;
+    height: 100svh;
     display: flex;
     align-items: center;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-around;
 }
 
 #canvas-video{
-    height: 100vh;
     width: 100%;         
     z-index: -1;
 }
@@ -68,7 +67,6 @@ section{
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    width: 100%;
     z-index: 3;
 }
 
@@ -78,11 +76,11 @@ section{
     justify-content: center;
     align-items: center;
     z-index: 3;
+    width: calc(100svw - 20%);
     padding: 1em;
     text-decoration: none;
     color: var(--text_PrimaryColor);
     min-height: 50%;
-    width: 90%;
     background-color: rgba(255, 255, 255, 0.696);
     border-radius: .5em;
     backdrop-filter: blur(1px);
@@ -130,18 +128,14 @@ section{
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    overflow: hidden;
 
-    h4{
-        font-size: var(--button-fontSize);
-        font-family: "Poppins";
-    }
 
 }
 
 .infoText{
     border: 3px solid var(--bgBlack);
     min-height: 45%;
-    max-width: 95%;
     align-items: center;
     color: var(--text_PrimaryColor);
     padding: 1rem;
@@ -150,6 +144,12 @@ section{
     justify-content: space-between;
     transition: all .4s cubic-bezier(1, 0.3, 0.8, 1);
 
+    
+    h4{
+        font-size: var(--button-fontSize);
+        font-family: "Poppins";
+    }
+
     &:hover{
         color: white;
         background-color: var(--bgBlack);
@@ -157,6 +157,19 @@ section{
 
 }
 
+.infoText::after{
+    font-family: 'Material Symbols Rounded';
+    content: "download";
+    font-size: var(--H1-fontSize);
+    display: none;
+    transition: 2.4s ease-out;
+    animation: arrowD 1s ease;
+}
+
+.infoText:hover::after {
+    display: block;
+    
+}
 .listContainer{
     pointer-events: none;
     display: flex;
@@ -246,6 +259,7 @@ a{
         padding: .4em;
         width: 100%;
         color: var(--bgBlack);
+        transition: .5s ease;
 
         &:hover{
         background-color: var(--bgBlack);
@@ -257,40 +271,77 @@ a{
 }
 
     h1{
-        font-size: var(--H2-fontSize);
+        border-radius: .5em;
+        font-size: var(--H3-fontSize);
         font-weight: 400;
         font-family: "poppins";
         padding: .4em;
         color: var(--bgBlack);
+        transition: .5s ease;
         
         &:hover{
         background-color: var(--bgBlack);
         color: var(--bgYellow);
-        border-radius: .1em;
         font-style: oblique;
         padding: 1rem;
     }
     }
 }
 
-.outroStatic{
+.outroStatic {
     display: flex;
+    overflow: hidden;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
     z-index: 3;
     text-decoration: none;
-    color: white;
-    background-color: rgba(0, 0, 0, 1);
+    color: var(--text_PrimaryColor);
     padding: 1em;
     border-radius: .5em;
     backdrop-filter: blur(4px);
-    
-    h2{
-        font-size: var(--H1-fontSize);
-        font-family: "am-majella";
-        text-transform: uppercase;
-        margin: 2vh;
-    }
+    transition: 1s ease;
+}
 
+.outroStatic h2 {
+    font-size: var(--H1-fontSize);
+    font-family: "am-majella";
+    text-transform: uppercase;
+    margin: 2vh;
+}
+
+.outroStatic::before {
+    font-family: 'Material Symbols Rounded';
+    content: "arrow_back_ios_new";
+    font-size: var(--H1-fontSize);
+    display: none;
+    transition: 2.4s ease-out;
+    animation: arrow 1s ease;
+    
+}
+
+.outroStatic:hover {
+    background-color: var(--bgBlack);
+    color: white;
+}
+
+.outroStatic:hover::before {
+    display: block;
+    
+}
+
+@keyframes arrow {
+    from{transform: translateY(-100px);}
+    to{
+        transform: translateY(0px);
+    }
+   
+}
+
+@keyframes arrowD {
+    from{transform: translateX(100px);}
+    to{
+        transform: translateX(0px);
+    }
+   
 }

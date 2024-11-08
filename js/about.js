@@ -1,3 +1,5 @@
+document.addEventListener("DOMContentLoaded", () =>{
+
 class Application {
     constructor() {
         this.canvas = document.querySelector('#canvas-video');
@@ -80,29 +82,7 @@ class Application {
     }
 
     initGSAP() {
-        const sections = document.querySelectorAll('.outro');
         const animElements = document.querySelectorAll('#anim');
-        const container = document.querySelectorAll('.list');
-
-
-        sections.forEach((section, index) => {
-            gsap.to(section, {
-                scrollTrigger: {
-                    trigger: section,
-                    start: "bottom 15%",
-                    end: "bottom bottom",
-                    // markers: true,
-                    toggleActions: "play none none reverse",
-             
-                },
-                opacity: 0,
-                y: -300,
-                duration: 0.6,
-                stagger: 0.3,
-                ease: "ease",
-                scale:1.3
-            },"<");
-        });
 
         gsap.set(animElements, { opacity: 0, x:-10, y: 250, scale: 0.2 });
 
@@ -131,6 +111,7 @@ class Application {
 window.onload = () => {
     window.app = new Application();
 };
+})
 
 function copyEmail() {
   const emailElement = document.getElementById("email");

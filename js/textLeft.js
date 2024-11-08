@@ -10,7 +10,7 @@ let scrollTween = gsap
         trigger: container,
         pin: true,
         scrub: 1,
-        end: "+=3000",
+        end: "+=4000",
         // markers: true,
     }
 })

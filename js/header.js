@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", () =>{
     
+
 const hamMenu = document.querySelector('.ham-menu');
 const offScreenMenu = document.querySelector('.off-screen-menu');
 const items = document.querySelectorAll('#items');
@@ -15,68 +16,60 @@ splitTypes.forEach((char,i) => {
         tl
         .to(items, {y: 300, opacity: 1, duration: 0.7}, "<")
         .to (offScreenMenu, {
-            y: 0,
+            y: 120,
             duration: 0.25,
             ease: 'back.in'
         },"<")
 
-            .from(text.chars, 
+        .from(text.chars, 
+        {
+            y: 30,
+            opacity: 0,
+            stagger: 0.1,
+            duration: .7,
+            ease: "back.out"
+        }, "<")
+        
+        .to(["#logo, .logo"],
             {
-                y: 30,
-                opacity: 0,
-                stagger: 0.1,
-                duration: .7,
-                ease: "back.out"
-            }, "<")
-            
-            .to(["#logo, .logo"],
-                {
-                    y:20,
-                    x: 15,
-                    stagger: .9,
-                    duration: 1,
-                    ease: "back.out"
-                }, "<")
-
-            
-            });
-            
+                y:20,
+                x: 15,
+                stagger: .9,
+                duration: 1,
+                ease: "back.out",
+            }, "<")          
+  });
 
     hamMenu.addEventListener('click', function() {
         this.classList.toggle('active');
-
+        
         if (this.classList.contains('active')) {
+            document.body.classList.add('no-scroll');
             tl.timeScale(1).play();
         } else {
             tl.timeScale(2).reverse();
+            tl.eventCallback("onReverseComplete", () => {
+                document.body.classList.remove('no-scroll');});
         }
+    });
+});
 
-        
-    })
+function copyEmail() {
+    const copyButton = document.querySelector('.copy');
+    const originalText = copyButton.textContent; 
+    const emailToCopy = "domenicofusto55@gmail.com";
+    const originalStyle = copyButton.style.cssText;
 
-    function copyEmail() {
-        const copy = document.querySelector(".copy")
-        const originalText = copy.innerText;
- 
-      
-        navigator.clipboard.writeText(originalText)
-          .then(() => {
-            copy.style.color = '#008000'
-            copy.innerText = "Copied!";
-            setTimeout(() => {
-              copy.innerText = originalText;
-              copy.style.color = '#595858'
-            }, 6000); // Torna al testo originale dopo 2 secondi
-          })
-          .catch((err) => {
-            console.error("Errore nella copia: ", err);
-          });
-      }
-      
-      document.addEventListener("DOMContentLoaded", () => {
-        const copy = document.querySelector(".copy");
-        copy.innerText = "click to copy"; // Sostituisci con l'email originale
-      });
+    navigator.clipboard.writeText(emailToCopy).then(() => {
+        copyButton.textContent = "Copied!";
+        copyButton.style.color = "#006400";
+        copyButton.style.fontWeight = "700";
 
-
-    } )
+        setTimeout(() => {
+            copyButton.textContent = originalText;
+            copyButton.style.cssText = originalStyle;
+        }, 2000);
+    }).catch(err => {
+        console.error("somebody goes wrong! copy this   domenicofusto55@gmail.com", err);
+    });
+}

@@ -21,7 +21,7 @@
     --H2-fontSize: clamp(1rem, 8vw, 1.6rem);
     --H3-fontSize: clamp(.7rem, 8vw, 1.2rem);
     --A-fontSize: clamp(.5rem, 8vw, .9rem);
-    --H1-HugefontSize: clamp(1.6rem, 8vw, 3rem);
+    --H1-HugefontSize: clamp(3rem, 7vw, 6rem);
 }
 
 html,body{
@@ -30,13 +30,19 @@ html,body{
     overflow-x: hidden;
 }
 
+.no-scroll{
+    position: fixed;
+    overflow: hidden;
+    width: 100%;
+}
+
 
 .btn{
+    border-top: 3px solid var(--bgBlack);
     position: relative;
     display: flex;
     flex-direction: column;
-    height: 100%;
-    margin-top: calc(100% - 80svh);
+    height: calc(100svh - 19svh);
     justify-content: space-between;
     align-items: flex-start;
     pointer-events: fill;
@@ -45,7 +51,7 @@ html,body{
     h2{
         font-family: "Poppins";
         font-size: var(--H3-fontSize);
-        letter-spacing: .60rem;
+        letter-spacing: .3rem;
         color: var(--text_PrimaryColor);
         font-weight: 600;
     }
@@ -54,15 +60,13 @@ html,body{
 
 .off-screen-menu {
     overflow: hidden;
-    padding: clamp( .8rem, 7vw, 1.5rem);
+    padding: clamp( 1rem, 7vw, 3em);
     background-color: white;
     height: 100%;
     width: 100%;
     position: fixed;
     top: 0;
-    transform: translateY(-100svh);
-    display: flex;
-    flex-direction: column;
+    transform: translateY(-100vh);
     transition: 1s ease;
     z-index: 10;
     border-bottom: 2px solid black;
@@ -95,8 +99,8 @@ html,body{
 }
 
 nav{
-    backdrop-filter: blur(8px);
-    padding: clamp( .8rem, 7vw, 1.5rem);
+    backdrop-filter: blur(10px) contrast(90%);
+    padding: clamp( .8rem, 7vw, .8rem) clamp( 1rem, 7vw, 2rem);
     mix-blend-mode: difference;
     flex-direction: row;
     position: fixed;
@@ -196,7 +200,7 @@ nav{
         font-family: "Poppins";
         font-size: var(--A-fontSize);
         font-weight: 400;
-        letter-spacing: .2rem;
+        letter-spacing: .05rem;
         color:#595858;
     }
 
@@ -213,6 +217,11 @@ nav{
 canvas {
     isolation: isolate;
     /* position: absolute; */
+  }
+
+  #paper{
+    width: 100%;
+    height: 100%;
   }
   
   #control-bar-wrapper {
@@ -237,6 +246,7 @@ canvas {
     color: white;
     font-family: "Poppins";
     font-size: var(--A-fontSize);
+    z-index: 10;
     transition: 0.5s ease-in;
 
     &:hover{
@@ -305,7 +315,6 @@ canvas {
 }
 
 .wrapper{
-    width: 100%;
     overflow: hidden;
     position: relative;
     z-index: 1;
@@ -319,9 +328,9 @@ canvas {
 #canvas3d,
 #canvas3d-2,
 #canvas3d-3{
-    opacity: .71;
-    z-index: -1;
+    opacity: 1;
     position: absolute;
+    z-index: -1;
 
 }
 
@@ -333,7 +342,7 @@ canvas {
     height: 100svh;
     flex-direction: row;
     align-items: self-end;
-    justify-content: flex-start;
+    justify-content: flex-end;
     background-color:transparent;
 }
 
@@ -341,16 +350,17 @@ canvas {
     box-sizing: border-box;
     display: flex;
     padding: 3em 3em;
-
+    background-color: var(--bgBlack);
+    color: white;
     flex-direction: column;
     pointer-events: none;
+    border-radius: 1em;
     
     h1{
         font-family: "am-majella";
         text-transform: lowercase;
         font-size: var(--H1-HugefontSize);
         font-weight: 800;
-        color: var(--text_PrimaryColor);
     }
 
     sup{
@@ -377,7 +387,6 @@ canvas {
         font-family: "Poppins";
         font-weight: 600;
         padding: .3em;
-        color: var(--text_PrimaryColor);
         border-radius: .2em;
         text-transform: none;
     }
@@ -387,7 +396,6 @@ canvas {
         font-family: "Poppins";
         font-weight: 400;
         font-size: var(--A-fontSize);
-        color: var(--text_PrimaryColor);
     }
 
     span{
