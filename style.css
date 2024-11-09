@@ -75,7 +75,6 @@ html,body{
 
 .off-screen-menu ul{
     display: flex;
-    position: relative;
     font-weight: 800;
     font-family: "am-majella";
     text-transform: uppercase;
@@ -288,6 +287,7 @@ canvas {
 .container-txt{
     position: absolute;
     bottom: 15vmin;
+    width: 85svw;
     padding: 1em;
     z-index: 2;
     transition: all .65s ease-in-out;    
@@ -323,7 +323,7 @@ canvas {
 
 .Anicontainer{
     display: flex;
-    width: 300vw;
+    position: relative;
 }
 #canvas3d,
 #canvas3d-2,
@@ -334,24 +334,24 @@ canvas {
 
 }
 
-.Anicontainer section{
+.Anicontainer > section{
     position: relative;
     z-index: 2;
     display: flex;
-    width: 100%;
+    width: 100svw;
     height: 100svh;
     flex-direction: row;
-    align-items: self-end;
+    align-items: flex-end;
     justify-content: flex-end;
     background-color:transparent;
 }
 
 .leftText {
-    box-sizing: border-box;
     display: flex;
-    padding: 3em 3em;
     background-color: var(--bgBlack);
     color: white;
+    padding: 10svw;
+
     flex-direction: column;
     pointer-events: none;
     border-radius: 1em;
@@ -359,13 +359,13 @@ canvas {
     h1{
         font-family: "am-majella";
         text-transform: lowercase;
-        font-size: var(--H1-HugefontSize);
+        font-size: var(--H1-fontSize);
         font-weight: 800;
     }
 
     sup{
         font-weight: 600;
-        font-size: var(--H1-fontSize);
+        font-size: var(--H3-fontSize);
     }
 }
 
@@ -373,6 +373,10 @@ canvas {
     overflow: hidden;
     padding: 1em .2em;
     gap: clamp( .5rem, 8vw, 1rem);
+
+    h4{
+        font-weight: 400;
+    }
 
     h2{
         font-family: "am-majella";
@@ -417,15 +421,22 @@ canvas {
 
 img, video{
     width: 100%;
+    pointer-events: visible;
+    height: 100%;
     object-fit: cover;
+    border-radius: .5em;
+
 
 }
 
 .sticky-header{
     position: relative;
-    height: calc(100svh - 1px);
+    height: calc(100lvh - 1vh);
+    text-align: center;
     left: 0;
+    font-family: "am-majella";
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     pointer-events: none;
@@ -433,16 +444,25 @@ img, video{
     h1{
         color: var(--bgBlack);
         font-size: var(--H1-HugefontSize);
-        font-family: "am-majella";
+
         font-weight: 600;
+    }
+
+    h2{
+        color: var(--bgBlack);
+        font-size: var(--H3-fontSize);
+     
+        font-weight: 400;
     }
 }
 
 .card{
     position: absolute;
-    top: calc(100% - 90vh);
+    pointer-events: none;
+
+    top: clamp(3%, 7vw, 35%);
     left: 120%;
-    width: min(calc(100% - 85px), 500px);
+    width: min(calc(100% - 30px), 400px);
     background-color: var(--bgBlack);
     border-radius: 1em;
     padding: 0.5em;
@@ -450,15 +470,9 @@ img, video{
     z-index: 2;
 }
 
-.card-img{
-    border-radius: .5em;
-    overflow: hidden;
-}
-
-
 .card-content{
     pointer-events: none;
-    
+   
     display: flex;
     flex-direction: column;
     justify-content: space-between;

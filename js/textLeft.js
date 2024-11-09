@@ -1,3 +1,5 @@
+document.addEventListener("DOMContentLoaded", () =>{
+
 const container = document.querySelector('.Anicontainer')
 const sections = gsap.utils.toArray('.Anicontainer section')
 
@@ -15,7 +17,7 @@ let scrollTween = gsap
     }
 })
 
-sections.forEach(section => {
+    sections.forEach(section => {
     let text = section.querySelectorAll('.anim')
 
     let animation = gsap.from(text, {
@@ -35,7 +37,7 @@ sections.forEach(section => {
         toggleActions: "play none none reverse",
         onLeaveBack: () => animation.reverse()
     });
-});
-
+    });
+})
 
    

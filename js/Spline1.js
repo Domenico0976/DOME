@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
             x: -800,
             y: -200,
         }, "<")
-    })
+    });
 
 });
 
@@ -46,7 +46,7 @@ const trigger = document.getElementById('part2')
             const all = app2.findObjectByName('ALL');
             const camera = app2.findObjectByName('Camera');
             gsap.set(all.scale, {x:2, y:2, z:2})
-            gsap.set(all.position,{ x: 0, y: -180 });
+            gsap.set(all.position,{ x: 0, y: 100 });
             gsap.set(camera.position,{ z: 910 });
 
-        })
+        });
