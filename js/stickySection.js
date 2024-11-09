@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     const delay = index * 0.1125;
                     const cardProgress = Math.max(0, Math.min((progress - delay) * 2, 1));
 
-                    if (cardProgress > 0) {
+                    if (cardProgress >= 0) {
                         const cardStartX = 25;
                         const cardEndX = -450;
                         const yPos = trasforms[index][0];

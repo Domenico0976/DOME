@@ -42,7 +42,7 @@ html,body{
     position: relative;
     display: flex;
     flex-direction: column;
-    height: calc(100svh - 19svh);
+    height: calc(100svh - 25%);
     justify-content: space-between;
     align-items: flex-start;
     pointer-events: fill;
@@ -60,7 +60,7 @@ html,body{
 
 .off-screen-menu {
     overflow: hidden;
-    padding: clamp( 1rem, 7vw, 3em);
+    padding: 1em;
     background-color: white;
     height: 100%;
     width: 100%;
@@ -87,7 +87,7 @@ html,body{
 }
 
 .off-screen-menu a:hover{
-    border-bottom: 3px solid var(--text_SecondaryColor);
+    border-bottom: 3px solid var(--bgYellow);
 }
 
 
@@ -111,8 +111,7 @@ nav{
     justify-content: center;
     z-index: 100;
 }
-.logo{
-
+.logo, .logoStatic{
     font-size: var(--H1-fontSize);
     font-family: "am-majella";
     text-transform: uppercase;
@@ -175,11 +174,8 @@ nav{
     padding: .35rem;
     position: relative;
     gap: .65rem;
-    align-content: center;
-    justify-content: flex-end;
-    transition: .25 ease;
     cursor: pointer;
-    transform: all .5 ease;
+    transform: all .5s ease;
 
     a{
         font-family: "Poppins";
@@ -189,6 +185,12 @@ nav{
         color: var(--text_PrimaryColor);
     }
 }
+
+.navTitle{
+    padding: .35rem;
+
+}
+
 
 .email{
     overflow: hidden;
@@ -287,7 +289,6 @@ canvas {
 .container-txt{
     position: absolute;
     bottom: 15vmin;
-    width: 85svw;
     padding: 1em;
     z-index: 2;
     transition: all .65s ease-in-out;    

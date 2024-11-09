@@ -14,28 +14,25 @@ splitTypes.forEach((char,i) => {
             
 
         tl
-        .to(items, {y: 300, opacity: 1, duration: 0.7}, "<")
+        .to(items, {y: 300, opacity: 1, duration: 3}, "<")
         .to (offScreenMenu, {
-            y: 120,
-            duration: 0.25,
-            ease: 'back.in'
-        },"<")
+            y: 100,
+            duration: 0.5,
+            ease: "back.in"
+        }, "<")
 
         .from(text.chars, 
         {
             y: 30,
             opacity: 0,
             stagger: 0.1,
-            duration: .7,
             ease: "back.out"
         }, "<")
         
-        .to(["#logo, .logo"],
+        .to(["#logo"],
             {
                 y:20,
                 x: 15,
-                stagger: .9,
-                duration: 1,
                 ease: "back.out",
             }, "<")          
   });
@@ -44,7 +41,7 @@ splitTypes.forEach((char,i) => {
         this.classList.toggle('active');
         
         if (this.classList.contains('active')) {
-            document.body.classList.add('no-scroll');
+            document.body.classList.add('no-scroll'); //PROBLEMA HEADER CHE NON TIENE LO SCROLL
             tl.timeScale(1).play();
         } else {
             tl.timeScale(2).reverse();
