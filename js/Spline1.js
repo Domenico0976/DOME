@@ -8,13 +8,13 @@ document.addEventListener('DOMContentLoaded', () => {
         .load('https://prod.spline.design/gSpwmaTGq2eKo9wL/scene.splinecode')
         .then(() => {
         const spherePlanet = app.findObjectByName('spherePlanet');
-        gsap.set(spherePlanet.scale,{ x: 2, y: 2, z: 2});
+        gsap.set(spherePlanet.scale,{ x: 3, y: 3, z: 3});
         gsap.set(spherePlanet.position, { x: 0, y: 0 });
        
         gsap.timeline({
             scrollTrigger: {
                 trigger: ".Anicontainer",
-                start: "top 55%",
+                start: "left left",
                 end: "bottom bottom ",
                 // markers: true,
                 scrub: 4,
@@ -22,13 +22,13 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         })
         .to(spherePlanet.scale, {
-            x: 2,
-            y: 2,
-            z: 2
+            x: .1,
+            y: .1,
+            z: .1
         })
 
         .to(spherePlanet.position, {
-            x: -800,
+            x: -1800,
             y: -200,
         }, "<")
     });
