@@ -463,7 +463,7 @@ img, video{
 
     top: clamp(3%, 7vw, 35%);
     left: 120%;
-    width: min(calc(100% - 30px), 400px);
+    min-width: min(calc(100% - 30px), 400px);
     background-color: var(--bgBlack);
     border-radius: 1em;
     padding: 0.5em;
