@@ -93,20 +93,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
         initGSAP() {
             const animElements = document.querySelectorAll('#anim');
-
             gsap.set(animElements, { opacity: 0, x: -10, y: -100, scale: 0.2 });
 
             animElements.forEach((element, index) => {
                 gsap.to(element, {
                     scrollTrigger: {
                         trigger: element,
-                        start: "bottom 84%",  // Inizio dell'animazione quando l'elemento è nella parte superiore della viewport
-                        end: "bottom 85%", // Fine dell'animazione quando l'elemento raggiunge la fine della viewport
+                        start: "bottom 84%",
+                        end: "bottom 85%",
                         // markers: true,
-                        scrub: 2,
+                        scrub: 1,
                         toggleActions: "play none none reverse",
                     },
                     opacity: 1,
+                    stagger: 0.9,
                     y: 0,
                     x: 0,
                     scale: 1,               

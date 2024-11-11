@@ -83,6 +83,7 @@ section{
     
     h2{
         font-size: var(--H1-fontSize);
+        text-align: center;
         font-family: "am-majella";
         text-transform: uppercase;
         margin: 2vh;
