@@ -1,13 +1,12 @@
-document.addEventListener("DOMContentLoaded", () =>{
-    
-
 const hamMenu = document.querySelector('.ham-menu');
 const offScreenMenu = document.querySelector('.off-screen-menu');
 const items = document.querySelectorAll('#items');
+const body = document.getElementsByName("body");
 
 const splitTypes = document.querySelectorAll('#revealType1')
 const tl = gsap.timeline({ paused: true, reversed:false, defaults:{duration:0.8, ease:"none"} });
 
+document.addEventListener("DOMContentLoaded", () =>{
 splitTypes.forEach((char,i) => {
 
     const text = new SplitType(char, {types: 'chars'});
@@ -29,7 +28,7 @@ splitTypes.forEach((char,i) => {
             ease: "back.out"
         }, "<")
         
-        .to(["#logo"],
+        .to([".logo"],
             {
                 y:20,
                 x: 15,
@@ -39,16 +38,18 @@ splitTypes.forEach((char,i) => {
 
     hamMenu.addEventListener('click', function() {
         this.classList.toggle('active');
-        
+
         if (this.classList.contains('active')) {
-            document.body.classList.add('no-scroll'); //PROBLEMA HEADER CHE NON TIENE LO SCROLL
+            bodyScrollLockUpgrade.disableBodyScroll(body);
             tl.timeScale(1).play();
         } else {
             tl.timeScale(2).reverse();
             tl.eventCallback("onReverseComplete", () => {
-                document.body.classList.remove('no-scroll');});
+                bodyScrollLockUpgrade.enableBodyScroll(body);
+            });
         }
     });
+
 });
 
 function copyEmail() {
