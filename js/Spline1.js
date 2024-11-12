@@ -2,6 +2,7 @@ import { Application } from 'https://unpkg.com/@splinetool/runtime@latest/build/
 
 document.addEventListener('DOMContentLoaded', () => {
     const canvas = document.getElementById('canvas3d');
+    const container = document.querySelectorAll('.sticky')
     const app = new Application(canvas);
     
     app
@@ -13,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
        
         gsap.timeline({
             scrollTrigger: {
-                trigger: ".Anicontainer",
+                trigger: container,
                 start: "left left",
                 end: "bottom bottom ",
                 // markers: true,
@@ -22,13 +23,13 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         })
         .to(spherePlanet.scale, {
-            x: .1,
-            y: .1,
-            z: .1
+            x: 1,
+            y: 1,
+            z: 1
         })
 
         .to(spherePlanet.position, {
-            x: -1800,
+            x: -900,
             y: -200,
         }, "<")
     });

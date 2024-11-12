@@ -20,7 +20,7 @@ box-sizing: border-box;
 --H1-fontSize: clamp(1.3rem, 8vw, 2.3rem);
 --H2-fontSize: clamp(1rem, 8vw, 1.6rem);
 --H3-fontSize: clamp(.7rem, 8vw, 1.2rem);
---A-fontSize: clamp(.75rem, 8vw, .9rem);
+--A-fontSize: clamp(.5rem, 8vw, .9rem);
 --button-fontSize: clamp(.5rem, 5vw, 1rem);
 --H1-HugefontSize: clamp(2.3rem, 8vw, 4rem);
 }
@@ -217,7 +217,6 @@ a{
 
     h3{
         text-align: center;
-        padding: .5em;
         font-family: "poppins";
         font-weight: 700;
         text-align: center;

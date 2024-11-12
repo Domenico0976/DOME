@@ -178,7 +178,6 @@ nav{
     padding: .35rem;
     position: relative;
     gap: .65rem;
-    cursor: pointer;
     transition: .5s ease;
 
     a{
@@ -192,6 +191,8 @@ nav{
 
 .navTitle{
     padding: .35rem;
+    pointer-events: none;
+
 
     h2{
         font-family: "Poppins";
@@ -215,11 +216,14 @@ nav{
         font-weight: 400;
         letter-spacing: .05rem;
         color:#595858;
+        pointer-events: none;
     }
 
     a{
         font-family: "Poppins";
         font-weight: 500;
+        cursor: pointer;
+
         width: fit-content;
         font-size: var(--H3-fontSize);
         color: var(--text_PrimaryColor);
@@ -536,11 +540,12 @@ footer{
     justify-content: space-between;
     align-items: center;
     pointer-events: fill;
-    z-index: 11;
+    z-index: 1;
 
     h2{
         font-family: "Poppins";
         font-size: var(--A-fontSize);
+        pointer-events: none;
         letter-spacing: .3rem;
         color: var(--text_PrimaryColor);
         font-weight: 600;
