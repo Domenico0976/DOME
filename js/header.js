@@ -1,36 +1,35 @@
 const hamMenu = document.querySelector('.ham-menu'); 
 const offScreenMenu = document.querySelector('.off-screen-menu');
-const items = document.querySelectorAll('.item'); // Usa una classe se ci sono più elementi
+const items = document.querySelectorAll('#items');
+const body = document.documentElement;
+const splitsTypes = document.querySelectorAll('#revealType1');
 
-const splitTypes = document.querySelectorAll('#revealType1');
-const tl = gsap.timeline({ paused: true, reversed: false, defaults: { duration: 0.8, ease: "none" } });
+const tl = gsap.timeline({ paused: true, reversed: false, });
 
-document.addEventListener("DOMContentLoaded", () => {
 
-    splitTypes.forEach((char, i) => {
-        const text = new SplitType(char, { types: 'chars' });
+splitsTypes.forEach((char, i) => {
+    const text = new SplitType(char, { types: 'chars' });
 
-        tl
-        .to(items, { y: 300, opacity: 1, duration: 3 }, "<")
-        .to(offScreenMenu, { y: 100, duration: 0.5, ease: "back.in" }, "<")
-        .from(text.chars, { y: 30, opacity: 0, stagger: 0.1, ease: "back.out" }, "<")
-        .to(".logo", { y: 20, x: 15, ease: "back.out" }, "<");
-    });
+    tl
+    .to(items, { y: 300, opacity: 1, duration: 3 }, "<")
+    .to(offScreenMenu, { y: 90, duration: 0.5, ease: "back.in" }, "<")
+    .from(text.chars, { y: 30, opacity: 0, stagger: 0.1, ease: "back.out" }, "<")
+    .to(".logo", { x: 15, ease: "back.out" }, "<");
+});
 
-    hamMenu.addEventListener('click', function() {
+hamMenu.addEventListener('click', function() {
+    this.classList.toggle('active');
 
-        this.classList.toggle('active');
-        const body = document.body;
+    if (this.classList.contains('active')) {
+        tl.timeScale(1).play();
+        body.classList.add('no-scroll');
 
-        if (this.classList.contains('active')) {
-            bodyScrollLockUpgrade.disableBodyScroll(body); // Blocco scroll
-            tl.timeScale(1).play();
-        } else {
-            tl.timeScale(2).reverse();
-                bodyScrollLockUpgrade.enableBodyScroll(body); // Ripristino scroll
-            
-        }
-    });
+    } else {
+        tl.timeScale(2).reverse();
+        tl.eventCallback("onReverseComplete", () => {
+            body.classList.remove('no-scroll');
+        })
+    }
 });
 
 
@@ -38,13 +37,12 @@ function copyEmail() {
     const emailToCopy = "domenicofusto55@gmail.com";
     const copyElements = document.getElementsByClassName('copy');
 
-    // Copia l'email negli appunti
+    //copia
     navigator.clipboard.writeText(emailToCopy).then(() => {
         Array.from(copyElements).forEach(copyElement => {
             const originalText = copyElement.textContent;
             const originalStyle = copyElement.style.cssText;
 
-            // Aggiorna il testo e lo stile
             copyElement.textContent = "Copied!";
             copyElement.style.color = "#006400";
             copyElement.style.fontWeight = "700";

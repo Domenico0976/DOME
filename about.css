@@ -294,7 +294,6 @@ a{
     padding: 1em;
     border-radius: .5em;
     backdrop-filter: blur(4px);
-    transition: 1s ease;
 }
 
 .outroStatic h2 {
@@ -309,20 +308,15 @@ a{
     content: "arrow_back_ios_new";
     font-size: var(--H1-fontSize);
     display: none;
-    transition: 2.4s ease-out;
     animation: arrow 1s ease;
     
-}
-
-.outroStatic:hover {
-    background-color: var(--bgBlack);
-    color: white;
 }
 
 .outroStatic:hover::before {
     display: block;
     
 }
+
 
 @keyframes arrow {
     from{transform: translateY(-100px);}

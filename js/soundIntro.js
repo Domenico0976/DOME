@@ -1,7 +1,4 @@
-document.addEventListener("DOMContentLoaded", () =>{
-
-
-const paper = document.getElementById("paper"),
+const paper = document.querySelector("#paper"),
       pen = paper.getContext("2d");
 
 const get = selector => document.querySelector(selector);
@@ -201,7 +198,8 @@ const draw = () => {
   requestAnimationFrame(draw);
 }
 
-init();
+document.addEventListener("DOMContentLoaded", () =>{
 
-draw();
-})
+  init();
+  draw();
+});
