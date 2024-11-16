@@ -304,6 +304,7 @@ canvas {
 .container-txt{
     position: absolute;
     bottom: 15vmin;
+    width: calc(100% - 20%);
     padding: 1em;
     z-index: 2;
     transition: all .65s ease-in-out;    
