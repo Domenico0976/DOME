@@ -32,6 +32,13 @@ hamMenu.addEventListener('click', function() {
     }
 });
 
+document.addEventListener('DOMContentLoaded', function () {
+    gsap.from(items, {
+        y:110,
+        opacity: 0
+    })
+})
+
 
 function copyEmail() {
     const emailToCopy = "domenicofusto55@gmail.com";

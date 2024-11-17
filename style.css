@@ -17,10 +17,10 @@
     --text_ThirdColor: #2e0a39;
     --bgText-Gradient: -webkit-linear-gradient( #5a871b, #bbbb48);
     --bgText-Gradient2: -webkit-linear-gradient(#000004, #bbbb48);
-    --H1-fontSize: clamp(1.3rem, 8vw, 2.3rem);
-    --H2-fontSize: clamp(1rem, 8vw, 1.6rem);
-    --H3-fontSize: clamp(.7rem, 8vw, 1.2rem);
-    --A-fontSize: clamp(.5rem, 8vw, .9rem);
+    --H1-fontSize: clamp(1.3rem, 6vw, 2.3rem);
+    --H2-fontSize: clamp(1rem, 6vw, 1.6rem);
+    --H3-fontSize: clamp(.7rem, 6vw, 1.2rem);
+    --A-fontSize: clamp(.5rem, 6vw, .9rem);
     --H1-HugefontSize: clamp(3rem, 7vw, 6rem);
 }
 
@@ -315,7 +315,7 @@ canvas {
         text-align: center;
         color: white;
         font-family: "Poppins";
-        font-size: var(--H3-fontSize);
+        font-size: var(--A-fontSize);
         font-weight: 500;
         text-transform: uppercase;
     }
@@ -324,7 +324,7 @@ canvas {
         pointer-events: none;
         color: var(--text_SecondaryColor);
         font-family: "am-majella";
-        font-size: var(--H3-fontSize);
+        font-size: var(--A-fontSize);
         text-transform: none;
         font-weight: 400;
     }
@@ -432,8 +432,8 @@ canvas {
 
 
 .sticky{
+    top: clamp(2rem, 8vw, 3rem);
     background-color: white;
-    overflow: hidden;
 }
 
 img, video{
@@ -479,7 +479,7 @@ img, video{
 
     top: clamp(3%, 7vw, 35%);
     left: 120%;
-    min-width: min(calc(100% - 30px), 400px);
+    min-width: min(calc(100% - 80px), 400px);
     background-color: var(--bgBlack);
     border-radius: 1em;
     padding: 0.5em;
