@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
     stickySections.forEach(stickySection => {
         const stickyHeader = stickySection.querySelector(".sticky-header");
         const cards = stickySection.querySelectorAll(".card");
-        const stickyHeight = window.innerHeight * 3;
+        const stickyHeight = window.innerHeight * 4;
 
         const trasforms = [
             [[10, 10, 25, -10], [10, 10, 25, -10]],
@@ -64,7 +64,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         // const cardRotation = gsap.utils.interpolate(rotations[yIndex], rotations[yIndex + 1], yInterpolation);
 
                         gsap.to(card, {
-                            xPercent: cardX,
+                            xPercent: cardX * 1.8,
                             yPercent: cardY,
                             opacity: 1,
 

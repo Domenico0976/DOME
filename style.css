@@ -102,11 +102,12 @@ a{
 
 nav{
     backdrop-filter: blur(10px) contrast(90%);
-    padding: clamp( .8rem, 7vw, .8rem) clamp( 1rem, 7vw, 2rem);
+    padding: clamp( 1rem, 7vw, 1.5rem) 3em;
     mix-blend-mode: difference;
     flex-direction: row;
     position: fixed;
     width: 100svw;
+    border-bottom: 2px solid var(--bgBlack);
     box-sizing: border-box;
     display: flex;
     align-items: center;
@@ -126,17 +127,16 @@ nav{
 .ham-menu{
     overflow: hidden;
     cursor: pointer;
-    height: 3rem;
+    height: 2.5em;
     margin-left: auto;
-    width: 50px;
+    width: 35px;
     position: relative;
 }
 
 .ham-menu span{
     height: 4px;
-    width: 80%;
+    width: 100%;
     background-color: var(--bgBlack);
-    border-radius: 25px;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -154,18 +154,19 @@ nav{
 
 .ham-menu.active span:nth-child(1){
     top: 50%;
-    transform: translate(-50%, .50%) rotate(45deg);
+    transform: translate(-50%, -50%) rotate(45deg);
 }
 
 .ham-menu.active span:nth-child(3){
     top: 50%;
-    transform: translate(-50%, .50%) rotate(-45deg);
+    transform: translate(-50%, -50%) rotate(-45deg);
 }
 
 .ham-menu.active span:nth-child(2){
     top: 50%;
-    opacity: .2;
-    transform: translate(-110%, .50%) rotate(90deg);
+    opacity: 1;
+    background-color: var(--bgYellow);
+    transform: translate(100%, -50%) rotate(-90deg);
 }
 
 .social{
@@ -331,109 +332,8 @@ canvas {
     
 }
 
-.wrapper{
-    overflow: hidden;
-    position: relative;
-    z-index: 1;
-    background-color: white;
-}
-
-.Anicontainer{
-    display: flex;
-    position: relative;
-}
-#canvas3d,
-#canvas3d-2,
-#canvas3d-3{
-    opacity: 1;
-    position: absolute;
-    z-index: -1;
-
-}
-
-.Anicontainer > section{
-    position: relative;
-    z-index: 2;
-    display: flex;
-    width: 100svw;
-    height: 100svh;
-    flex-direction: row;
-    align-items: flex-end;
-    justify-content: flex-end;
-    background-color:transparent;
-}
-
-.leftText {
-    display: flex;
-    background-color: var(--bgBlack);
-    color: white;
-    padding: 10svw;
-
-    flex-direction: column;
-    pointer-events: none;
-    border-radius: 1em;
-    
-    h1{
-        font-family: "am-majella";
-        text-transform: lowercase;
-        font-size: var(--H1-fontSize);
-        font-weight: 800;
-    }
-
-    sup{
-        font-weight: 600;
-        font-size: var(--H3-fontSize);
-    }
-}
-
-.textCont{
-    overflow: hidden;
-    padding: 1em .2em;
-    gap: clamp( .5rem, 8vw, 1rem);
-
-    h4{
-        font-weight: 400;
-    }
-
-    h2{
-        font-family: "am-majella";
-        font-weight:800;
-        font-size: var(--H3-fontSize);
-        text-transform: uppercase;
-
-    }
-
-    h3{
-        font-size: var(--A-fontSize);
-        font-family: "Poppins";
-        font-weight: 600;
-        padding: .3em;
-        border-radius: .2em;
-        text-transform: none;
-    }
-
-    p{
-        text-transform: uppercase;
-        font-family: "Poppins";
-        font-weight: 400;
-        font-size: var(--A-fontSize);
-    }
-
-    span{
-        text-transform: uppercase;
-        font-family: "am-majella";
-        font-style: oblique;
-        font-weight: 400;
-        font-size: var(--A-fontSize);
-    }
-
-}
-
-
-
 .sticky{
     top: clamp(2rem, 8vw, 3rem);
-    background-color: white;
 }
 
 img, video{
@@ -443,6 +343,85 @@ img, video{
     object-fit: cover;
     border-radius: .5em;
 
+
+}
+
+.wrapper{
+    pointer-events: none;
+    display: flex;
+    flex-direction: row;
+    width: 300vw;
+    overflow: hidden;
+}
+
+.container{
+    display: flex;
+    align-items: flex-end;
+    width: 100%;
+    height: 80%;
+    border-bottom: 2px solid black;
+    z-index: 3;
+    overflow: hidden;
+
+}
+
+.leftBox{
+    height: 100%;
+    font-size: var(--H1-fontSize);
+    padding: .2em;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    border-left: 2px solid black;
+    border-right: 2px solid black;
+}
+
+
+
+.textCont{
+padding: 1em;
+gap: clamp( .5rem, 8vw, 1rem);
+overflow: hidden;
+
+h2{
+    font-family: "am-majella";
+    font-weight:800;
+    font-size: var(--H2-fontSize);
+    text-transform: uppercase;
+
+}
+
+h3{
+    font-size: var(--A-fontSize);
+    font-family: "Poppins";
+    font-weight: 500;
+    color: rgb(115, 114, 114);
+    text-transform: none;
+}
+
+h4{
+    font-size: var(--H3-fontSize);
+    font-family: "Poppins";
+    font-weight: 500;
+    text-transform: none;
+    font-style: oblique;
+    
+}
+
+p{
+    text-transform: uppercase;
+    font-family: "Poppins";
+    font-weight: 600;
+    font-size: var(--A-fontSize);
+    color: var(--text_PrimaryColor);
+}
+
+span{
+    text-transform: uppercase;
+    font-family: "am-majella";
+    font-style: oblique;
+    font-weight: 400;
+    font-size: var(--A-fontSize);
+}
 
 }
 

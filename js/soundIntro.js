@@ -1,4 +1,4 @@
-const paper = document.querySelector("#paper"),
+const paper = document.getElementById("paper"),
       pen = paper.getContext("2d");
 
 const get = selector => document.querySelector(selector);
@@ -7,16 +7,18 @@ const toggles = {
   sound: get("#sound-toggle")
 }
 
+const speedSlider = get("#speed-slider");
+
 const colors = Array(21).fill("#aaaa22");
 
 const settings = {
   startTime: new Date().getTime(), 
   duration: 650,
-  maxCycles: Math.max(colors.length, 65), 
+  maxCycles: Math.max(colors.length, 50), 
   soundEnabled: false, 
   pulseEnabled: true, 
   instrument: "default",
-  speedMultiplier: 2
+  speedMultiplier: 3
 }
 
 const handleSoundToggle = (enabled = !settings.soundEnabled) => {  
@@ -120,7 +122,7 @@ const draw = () => {
         elapsedTime = (currentTime - settings.startTime) / 1000;
   
   const length = Math.min(paper.width, paper.height) * 0.9,
-        offset = (paper.width - length) / 1;
+        offset = (paper.width - length) / 3;
   
   const start = {
     x: offset,
@@ -144,9 +146,9 @@ const draw = () => {
     maxAngle: 2 * Math.PI
   }
 
-  base.initialRadius = base.length * 0.09;
+  base.initialRadius = base.length * 0.05;
   base.circleRadius = base.length * 0.006;
-  base.clearance = base.length * 0.003;
+  base.clearance = base.length * 0.03;
   base.spacing = (base.length - base.initialRadius - base.clearance) / 2.5 / colors.length;
 
   arcs.forEach((arc, index) => {
@@ -154,10 +156,10 @@ const draw = () => {
 
 //ARCS
     pen.globalAlpha = determineOpacity(currentTime, arc.lastImpactTime, 0.02, 0.5, 500);
-    pen.lineWidth = base.length * 0.02;
+    pen.lineWidth = base.length * 0.002;
     pen.strokeStyle = arc.color;
     
-    const offset = base.circleRadius * (1 / 5) / radius;
+    const offset = base.circleRadius * (4 / 3) / radius;
     
     drawArc(center.x, center.y, radius, Math.PI + offset, (2 * Math.PI) - offset);
     
@@ -190,14 +192,12 @@ const draw = () => {
           angle = (Math.PI + distance) % base.maxAngle;
     
     drawPointOnArc(center, radius, base.circleRadius, angle);
-    drawPointOnArc(center, radius, base.circleRadius, angle * -0.5);
+    drawPointOnArc(center, radius, base.circleRadius, angle * 0.5);
   });
   
   requestAnimationFrame(draw);
 }
 
-document.addEventListener("DOMContentLoaded", () =>{
+init();
 
-  init();
-  draw();
-});
+draw();
