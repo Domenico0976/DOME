@@ -289,11 +289,16 @@ a{
     justify-content: center;
     align-items: center;
     z-index: 3;
+    width: 40%;
     text-decoration: none;
     color: var(--text_PrimaryColor);
     padding: 1em;
     border-radius: .5em;
-    backdrop-filter: blur(4px);
+
+    &:hover{
+        background-color: var(--bgBlack);
+        color: white;
+    }
 }
 
 .outroStatic h2 {
@@ -303,28 +308,49 @@ a{
     margin: 2vh;
 }
 
-.outroStatic::before {
-    font-family: 'Material Symbols Rounded';
-    content: "arrow_back_ios_new";
-    font-size: var(--H1-fontSize);
-    display: none;
-    animation: arrow 1s ease;
-    
+.arrow {
+    visibility: hidden;
+    cursor: pointer;
+    height: 100%;
+    transform: rotate(-90deg)
 }
 
-.outroStatic:hover::before {
+.arrow span {
     display: block;
-    
+    width: 1.5vw;
+    height: 1.5vw;
+    border-bottom: 5px solid white;
+    border-right: 5px solid white;
+    margin: -10px;
+    animation: animate 2s infinite;
 }
 
+.arrow span:nth-child(2) {
+    animation-delay: -0.2s;
+}
 
-@keyframes arrow {
-    from{transform: translateY(-100px);}
-    to{
-        transform: translateY(0px);
+.arrow span:nth-child(3) {
+    animation-delay: -0.4s;
+}
+
+@keyframes animate {
+    0% {
+        opacity: 0;
+        transform: rotate(45deg) translate(-20px, -20px);
     }
-   
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        transform: rotate(45deg) translate(20px, 20px);
+    }
 }
+
+.outroStatic:hover > .arrow{
+    visibility: visible;
+}
+
 
 @keyframes arrowD {
     from{transform: translateX(100px);}
