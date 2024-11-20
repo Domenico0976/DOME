@@ -333,7 +333,8 @@ canvas {
 }
 
 .sticky{
-    top: clamp(2rem, 8vw, 3rem);
+    position: relative;
+    top: 0;
 }
 
 img, video{
@@ -458,7 +459,7 @@ span{
 
     top: clamp(3%, 7vw, 35%);
     left: 120%;
-    min-width: min(calc(100% - 80px), 400px);
+    min-width: min(calc(100% - 10px), 400px);
     background-color: var(--bgBlack);
     border-radius: 1em;
     padding: 0.5em;
@@ -501,9 +502,7 @@ span{
 
 .web{
     height: fit-content;
-    padding: 1em;
-    background-color: white;
-    color: var(--text_PrimaryColor);
+    color: white;
     
 }
 
@@ -519,10 +518,10 @@ span{
 
 .webTitle{
     margin-bottom: 5vh;
-    margin-top: 10vh;
+    color: var(--text_PrimaryColor);
 
     h2{
-        font-size: 5vw;
+        font-size: var(--H1-HugefontSize);
         font-family: "am-majella";
         text-transform: uppercase;
         text-align: center;
@@ -530,34 +529,37 @@ span{
 
     p{
         font-size: var(--H3-fontSize);
-        font-family: "Poppins";
+        font-family: "am-majella";
+        text-transform: uppercase;
         text-align: center;
     }
 }
 
 
 .webCard{
+    background-color: var(--bgBlack);
+    padding: 1em;
+    border-radius: 1em;
     height: fit-content;
     display: flex;
     flex-wrap: wrap;
-    gap: 2vw;
+    gap: 1vw;
+    margin-bottom: 2em;
 
     img{
-        width: 350px;
-        height: 250px;
+        width: 100%;
+        height: 30vh;
         object-fit: cover;
         border-radius: 1em;
-        box-shadow: 0px 0px 0px 3px rgba(27, 27, 27, 0.1);
-        
+        margin-bottom: 2vh;
     }
 }
 
 
 .webDescription{
-    max-width: 60%;
+    min-width: 60%;
     display: flex;
-    flex-direction: column;
-    justify-content: space-around;
+    align-items: flex-end;
     gap: 1em;
 
     h2{
@@ -574,8 +576,6 @@ span{
 }
 
 .webContent{
-    min-width: 350px;
-
     h3{
         font-style: oblique;
     }
@@ -584,7 +584,6 @@ span{
 .button{
     width: 100%;
     border-radius: .5em;
-    border: 2px solid var(--bgBlack);
     background-color: white;
     padding: 1em;
     font-weight: 600;
@@ -595,6 +594,7 @@ span{
     transition: .5s ease;
 
     &:hover{
+        border: 2px solid var(--bgYellow);
         background-color: var(--bgBlack);
         color: white;
     }
@@ -675,4 +675,28 @@ footer{
 
 .social a:hover{
     border-bottom: 3px solid var(--bgYellow);
+}
+
+@media (max-width: 30em){
+
+    .arrow {
+        visibility: visible;
+    }
+
+    .button{
+        border: 2px solid var(--bgYellow);
+            background-color: var(--bgBlack);
+            color: white;
+    }
+
+    .arrow span {
+        border-bottom: 3.5px solid white;
+        border-right: 3.5px solid white;
+        animation: animate 2s infinite;
+    }
+
+    .arrow span {
+        width: 3.5vw;
+        height: 3.5vw;
+    }
 }

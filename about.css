@@ -283,19 +283,20 @@ a{
 }
 
 .outroStatic {
+    transition: .5s ease;
     display: flex;
     overflow: hidden;
-    flex-direction: row;
-    justify-content: center;
+    flex-direction: row-reverse;
+    justify-content: space-around;
     align-items: center;
-    z-index: 3;
-    width: 40%;
+    width: 65%;
     text-decoration: none;
     color: var(--text_PrimaryColor);
-    padding: 1em;
     border-radius: .5em;
 
     &:hover{
+        border: 2px solid var(--bgYellow);
+
         background-color: var(--bgBlack);
         color: white;
     }
@@ -312,7 +313,7 @@ a{
     visibility: hidden;
     cursor: pointer;
     height: 100%;
-    transform: rotate(-90deg)
+    transform: rotate(90deg)
 }
 
 .arrow span {
@@ -358,4 +359,28 @@ a{
         transform: translateX(0px);
     }
    
+}
+
+@media (max-width: 30em){
+
+    .arrow {
+        visibility: visible;
+    }
+
+    .outroStatic{
+        border: 2px solid var(--bgYellow);
+            background-color: var(--bgBlack);
+            color: white;
+    }
+
+    .arrow span {
+        border-bottom: 3.5px solid white;
+        border-right: 3.5px solid white;
+        animation: animate 2s infinite;
+    }
+
+    .arrow span {
+        width: 3.5vw;
+        height: 3.5vw;
+    }
 }

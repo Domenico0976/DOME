@@ -152,7 +152,7 @@ can1.load(
         onEnter: () => {
             if(model){
                 isFloating = true;
-                model.position.y = 0;
+                model.position.y = -10;
                 setTimeout(() =>{
                     scanSound.currentTime = 0;
                     scanSound.volume = 0.55;
@@ -205,6 +205,18 @@ can1.load(
         currentScroll = e.scroll;
     });
     
+
+    let mouseX = 0;
+    let mouseY = 0;
+
+    window.addEventListener("mousemove", (event) => {
+    const { clientX, clientY } = event;
+
+    // Converti le coordinate del mouse in un range normalizzato (-1 a 1)
+    mouseX = (clientX / window.innerWidth) * 2 - 1;
+    mouseY = -(clientY / window.innerHeight) * 2 + 1; // Invertito per allinearsi al canvas
+});
+
     function animate(){
         
         if(model){
@@ -216,13 +228,23 @@ can1.load(
 
             const scrollProgress = Math.min(currentScroll / scannerPosition);
 
+
             if(scrollProgress < 1){
                 model.rotation.x = scrollProgress * Math.PI * 2;
             }
 
             if(scrollProgress < 1){
-                model.rotation.y += 0.03 * rotationSpeed;
+                model.rotation.y += 0.01 * rotationSpeed;
             }
+
+        // Interpolazione della rotazione per seguire il puntatore del mouse
+        const targetRotationX = mouseX * Math.PI * 0.05; // Amplifica il movimento del mouse
+        const targetRotationY = mouseY * Math.PI * 0.05; // Amplifica il movimento del mouse
+
+        // Lerp per una transizione fluida
+        model.rotation.x += (targetRotationX - model.rotation.x) * 0.05; // Damping 0.1
+        model.rotation.z += (targetRotationY - model.rotation.z) * 0.05; // Damping 0.1
+
         }
         
         renderer.render(scene, camera);
