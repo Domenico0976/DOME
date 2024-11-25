@@ -239,7 +239,7 @@ can1.load(
 
         // Interpolazione della rotazione per seguire il puntatore del mouse
         const targetRotationX = mouseX * Math.PI * 0.05; // Amplifica il movimento del mouse
-        const targetRotationY = mouseY * Math.PI * 0.05; // Amplifica il movimento del mouse
+        const targetRotationY = mouseYgi * Math.PI * 0.05; // Amplifica il movimento del mouse
 
         // Lerp per una transizione fluida
         model.rotation.x += (targetRotationX - model.rotation.x) * 0.05; // Damping 0.1

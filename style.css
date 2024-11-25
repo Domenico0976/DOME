@@ -580,6 +580,15 @@ span{
         font-style: oblique;
     }
 }
+.buttonOff{
+    width: 100%;
+    text-align: center;
+    background-color: rgb(255, 183, 183);
+    color: crimson;
+    padding: 1em;
+    border-radius: 1em;
+    display: none;
+}
 
 .button{
     width: 100%;
@@ -698,5 +707,13 @@ footer{
     .arrow span {
         width: 3.5vw;
         height: 3.5vw;
+    }
+
+    .webCard:nth-child(3) .button{
+        display: none;
+    }
+
+    .webCard:nth-child(3) .buttonOff{
+        display: block;
     }
 }
