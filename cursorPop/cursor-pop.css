@@ -429,3 +429,7 @@ background-color: #331733;
 margin-bottom: 1em;
 border: 6px groove #331733;
 }
+
+.textFocus2{
+    display: flex;
+}

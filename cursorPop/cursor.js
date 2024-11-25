@@ -33,8 +33,6 @@ intro.addEventListener("mousemove", (e) => {
 
     });
 
-    // cursor.style.left = cursorX - cursor.offsetWidth / 2 + "px";
-    // cursor.style.top = cursorY - cursor.offsetHeight / 2 + "px";
     isCursorMoving = true;
 
     clearTimeout(cursorMoveTimeout);
@@ -251,15 +249,15 @@ let textFocus2 = document.querySelectorAll(".textFocus2")
 gsap.from(textFocus2, {
     scrollTrigger: {
         trigger: ".wallText",
-        start: "top 10%",
+        start: "top 20%",
         end: "bottom bottom",
         scrub: 4,
-        pine: true,
+        pin: true,
         toggleActions: "play none none reverse",
     },
     y: 300,
-    stagger: 0.09,
-    duration: 6,
+    stagger: 1,
+    duration: 3,
     ease: "power2.out"
 });
 
@@ -284,7 +282,7 @@ document.addEventListener("DOMContentLoaded", () => {
 ];
 
 let cells = [];
-let cellSize = 20;
+let cellSize = 5;
 let rows, cols;
 
 // Imposta le dimensioni del canvas in base al container
@@ -319,11 +317,11 @@ function drawCells() {
   cells.forEach(cell => {
     if (cell.isWhite) {
       // Celle temporaneamente bianche
-      ctx.strokeStyle = `rgba(255, 255, 255, ${Math.max(0.1, cell.whiteDuration / 80)})`;
+      ctx.strokeStyle = `rgba(61, 50, 79, ${Math.max(0.01, cell.whiteDuration / 30)})`;
 ctx.lineWidth = 2; // Imposta la larghezza del bordo
 ctx.strokeRect(cell.x, cell.y, cellSize, cellSize);    } else if (cell.color) {
       // Celle colorate
-      ctx.fillStyle = `rgba(${cell.color.join(",")}, ${Math.max(0.1, cell.colorDuration / 30)})`;
+      ctx.fillStyle = `rgba(${cell.color.join(",")}, ${Math.max(0.1, cell.colorDuration / 50)})`;
     } else {
       // Celle trasparenti
       ctx.fillStyle = "rgba(0, 0, 0, 0)";
@@ -335,13 +333,13 @@ ctx.strokeRect(cell.x, cell.y, cellSize, cellSize);    } else if (cell.color) {
 // Logica per animare le celle casualmente in bianco
 function animateRandomCells() {
   cells.forEach(cell => {
-    if (Math.random() < 0.0002) {
+    if (Math.random() < 0.003) {
       cell.isWhite = true;
-      cell.whiteDuration = 30; // Durata temporanea del bianco
+      cell.whiteDuration = 50; // Durata temporanea del bianco
     }
     if (cell.isWhite) {
       cell.whiteDuration--;
-      if (cell.whiteDuration <= 0) {
+      if (cell.whiteDuration <= 1) {
         cell.isWhite = false;
       }
     }
@@ -351,7 +349,7 @@ function animateRandomCells() {
 // Gestione del tempo di persistenza del colore
 function animateCellColors() {
   cells.forEach(cell => {
-    if (cell.colorDuration > 0) {
+    if (cell.colorDuration >= 0) {
       cell.colorDuration--;
       if (cell.colorDuration <= 0) {
         cell.color = null; // Torna trasparente
@@ -367,10 +365,10 @@ canvas.addEventListener("mousemove", e => {
 
   cells.forEach(cell => {
     const distance = Math.hypot(cell.x + cellSize / 2 - mouseX, cell.y + cellSize / 2 - mouseY);
-    if (distance < cellSize * 2) {
+    if (distance < cellSize * 1.6) {
       if (!cell.isWhite) {
         cell.color = colors[Math.floor(Math.random() * colors.length)];
-        cell.colorDuration = 30; // Durata del colore in frame
+        cell.colorDuration = 400; // Durata del colore in frame
       }
     }
   });
