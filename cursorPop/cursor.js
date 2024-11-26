@@ -182,7 +182,8 @@ gsap.from(textIntro, {
         end: "bottom bottom",
         toggleActions: "play none none reverse",
     },
-    y: -100,
+    y: -130,
+    scale: 0.6
 })
 
 let textFocus = document.querySelectorAll(".textFocus");
@@ -250,15 +251,13 @@ gsap.from(textFocus2, {
     scrollTrigger: {
         trigger: ".wallText",
         start: "top 20%",
-        end: "bottom bottom",
-        scrub: 4,
-        pin: true,
+        end: "center bottom",
         toggleActions: "play none none reverse",
     },
     y: 300,
-    stagger: 1,
-    duration: 3,
-    ease: "power2.out"
+    stagger: 0.1,
+    duration: 0.5,
+    ease: "power2.inOut"
 });
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -318,8 +317,10 @@ function drawCells() {
     if (cell.isWhite) {
       // Celle temporaneamente bianche
       ctx.strokeStyle = `rgba(61, 50, 79, ${Math.max(0.01, cell.whiteDuration / 30)})`;
-ctx.lineWidth = 2; // Imposta la larghezza del bordo
-ctx.strokeRect(cell.x, cell.y, cellSize, cellSize);    } else if (cell.color) {
+
+      ctx.lineWidth = Math.max(0.001, cell.whiteDuration / 30);
+
+      ctx.strokeRect(cell.x, cell.y, cellSize, cellSize);    } else if (cell.color) {
       // Celle colorate
       ctx.fillStyle = `rgba(${cell.color.join(",")}, ${Math.max(0.1, cell.colorDuration / 50)})`;
     } else {
