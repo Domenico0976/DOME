@@ -250,9 +250,10 @@ let textFocus2 = document.querySelectorAll(".textFocus2")
 gsap.from(textFocus2, {
     scrollTrigger: {
         trigger: ".wallText",
-        start: "top 20%",
-        end: "center bottom",
-        toggleActions: "play none none reverse",
+        start: "top top",
+      end: "+=250%",
+      scrub: true,
+      pin: true,
     },
     y: 300,
     stagger: 0.1,
