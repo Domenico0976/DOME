@@ -311,9 +311,9 @@ canvas {
     transition: all .65s ease-in-out;    
 
     h1{
+        max-width: 70%;
         pointer-events: none;
         text-align: start;
-        text-align: center;
         color: white;
         font-family: "Poppins";
         font-size: var(--A-fontSize);
