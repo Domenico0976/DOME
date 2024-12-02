@@ -14,11 +14,13 @@ imgNames.forEach((imgName) => {
     imgName.addEventListener("mouseover", () => {
         var dataImg = parseInt(imgName.getAttribute("data-img"), 10);
         if(dataImg < 7 || dataImg > 12 ){
-            imgPreviewContainer.innerHTML = `<img loading="lazy" src="../asset/gallery/${dataImg}/${dataImg}.png" alt="Preview image project ${dataImg}" />`;
+            imgPreviewContainer.innerHTML = `<img src="../asset/gallery/${dataImg}/${dataImg}.png" alt="Preview image project ${dataImg}" />`;
         } else {imgPreviewContainer.innerHTML = `<video src="../asset/gallery/${dataImg}/${dataImg}.mp4" alt="Preview video project ${dataImg}" />`;
         };
     });
     imgName.addEventListener("click", () =>{
+        modalImgReveal.innerHTML = '';
+        modalName.innerHTML = '';
         containerGallery.classList.add("display");
         closeBtn.style.pointerEvents = "auto";
         bodyAll.classList.add('no-scroll');
@@ -28,7 +30,7 @@ imgNames.forEach((imgName) => {
         
         if(dataImg >= 7 && dataImg < 13){
             imgViewContainer.innerHTML = `<video muted controls data-zoom="${dataImg}" autoplay src="../asset/gallery/${dataImg}/${dataImg}.mp4" alt="Preview video project ${dataImg}" />`;
-            } else {imgViewContainer.innerHTML = `<img data-zoom="${dataImg}" loading="lazy" src="../asset/gallery/${dataImg}/${dataImg}.png" alt="Preview image project ${dataImg}" draggable="false"/>`;
+            } else {imgViewContainer.innerHTML = `<img data-zoom="${dataImg}" src="../asset/gallery/${dataImg}/${dataImg}.png" alt="Preview image project ${dataImg}" draggable="false"/>`;
         };
 
         var name = imgName.querySelector(".name").textContent;
@@ -39,7 +41,7 @@ imgNames.forEach((imgName) => {
 
         modalImgReveal.innerHTML = '';
         for (let i = dataImg + 1; i <= dataImg + dataCount; i++) {
-            modalImgReveal.innerHTML += `<img data-zoom="${i}" loading="lazy" src="../asset/gallery/${dataImg}/${i}.png" alt="Project ${name} ${i}" />`;
+            modalImgReveal.innerHTML += `<img data-zoom="${i}" src="../asset/gallery/${dataImg}/${i}.png" alt="Project ${name} ${i}" />`;
         }
         tlGallery.reversed(!tlGallery.reversed());
     });
@@ -50,8 +52,7 @@ closeBtn.onclick = function(){
     tlGallery.reversed(!tlGallery.reversed());
     containerGallery.classList.remove("display");
     body.classList.remove('no-scroll');
-    modalImgReveal.innerHTML = '';
-    modalName.innerHTML = '';
+    
 
 };
 

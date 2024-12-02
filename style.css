@@ -37,7 +37,6 @@ html,body{
 
 
 .btn{
-    border-top: 3px solid var(--bgBlack);
     position: relative;
     display: flex;
     flex-direction: column;
@@ -444,7 +443,7 @@ highlight{
 .containerGallery .img-preview{
     display: flex;
     object-fit: cover;
-    width: 250px;
+    max-width: 250px;
     justify-content: flex-end;
     align-items: flex-end;
 }
@@ -526,7 +525,7 @@ highlight{
 
 .modal-container .img-view{
     object-fit: cover;
-    height: 150px;
+    width: 250px;
     clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
     pointer-events: fill;
 }
