@@ -353,6 +353,7 @@ img, video{
     height: 100%;
     font-size: var(--H1-fontSize);
     padding: .2em;
+    display: flex;
     writing-mode: vertical-rl;
     transform: rotate(180deg);
     border-left: 2px solid var(--bgBlack);

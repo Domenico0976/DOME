@@ -9,7 +9,7 @@ let scrollTween = gsap
     scrollTrigger:{
         trigger: container,
         pin: true,
-        scrub: 1,
+        scrub: true,
         end: "+=3000",
         // markers: true,
     }
@@ -17,14 +17,23 @@ let scrollTween = gsap
 
 sections.forEach(section => {
     let text = section.querySelectorAll('.anim');
-    
-    let animation = gsap.from(text, {
-        y: -130,
-        opacity: 0,
-        duration: 1,
-        ease: "bounce.Out",
-        stagger: 0.1,
-    });
+    let whgt = section.querySelectorAll("#title");
+
+    let tl = gsap.timeline({repeat: -1, yoyo: true});
+
+    let animation = 
+        gsap.from(text, 1, {
+            y: -130,
+            opacity: 0,
+            duration: 1,
+            ease: "bounce.Out",
+            stagger: 0.05,
+        }, "<")
+        tl.from(whgt, 1, {
+            ease: "none",
+            stagger: 0.1,
+            fontWeight: 100,
+        }, "<");
 
     ScrollTrigger.create({
         trigger: section,
