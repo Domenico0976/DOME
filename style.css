@@ -102,7 +102,6 @@ a{
 nav{
     backdrop-filter: blur(10px) contrast(90%);
     padding: clamp( 1rem, 7vw, 1.5rem) 3em;
-    mix-blend-mode: difference;
     flex-direction: row;
     position: fixed;
     width: 100svw;
@@ -419,7 +418,7 @@ span{
 
 highlight{
     font-weight: 700;
-    color: var(--color-black);
+    color: var(--text_PrimaryColor);
     font-family: "poppins";
     font-style: oblique;
     text-transform: none;
@@ -427,10 +426,9 @@ highlight{
 
 .containerGallery{
     position: relative;
-    margin-top: 10%;
     display: flex;
     height: fit-content;
-    align-items: flex-end;
+    align-items: center;
     justify-content: space-between;
     overflow: hidden;
     font-family: "am-majella";
@@ -444,6 +442,7 @@ highlight{
     display: flex;
     object-fit: cover;
     max-width: 250px;
+    padding: 1em;
     justify-content: flex-end;
     align-items: flex-end;
 }
@@ -508,8 +507,7 @@ highlight{
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    z-index: 10;
-    pointer-events: none;
+    z-index: 100;
     opacity: 0;
 }
 
@@ -527,7 +525,7 @@ highlight{
     object-fit: cover;
     width: 250px;
     clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
-    pointer-events: fill;
+    pointer-events: none;
 }
 
 .modal-container .close-btn{
@@ -589,7 +587,7 @@ gap: .4em;
 
     img, video{
         flex: 1;
-        max-width: calc(90% / 3);
+        max-width: calc(97% / 3);
         object-fit: cover;
     }
 }
@@ -607,12 +605,12 @@ gap: .4em;
     height: fit-content;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
-    border-bottom: 2px solid var(--bgBlack);
+    justify-content: center;
+    align-items: center;
+    border-bottom: 3px solid var(--bgBlack);
 }
 
 .webTitle{
-    margin-top: 5vh;
     color: var(--text_PrimaryColor);
 
     h2{
@@ -634,6 +632,7 @@ gap: .4em;
 .webCard{
     background-color: var(--bgBlack);
     padding: 1em;
+    width: 100%;
     border-radius: 1em;
     height: fit-content;
     display: flex;
@@ -652,7 +651,7 @@ gap: .4em;
 
 
 .webDescription{
-    min-width: 60%;
+    max-width: 90%;
     display: flex;
     align-items: flex-end;
     gap: 1em;
@@ -751,8 +750,10 @@ footer{
     display: flex;
     align-items: center;
     justify-content: space-between;
+    background: white;
     padding: 2rem;
     border-top: 3px solid var(--bgBlack);
+    z-index: 10;
 
 }
 

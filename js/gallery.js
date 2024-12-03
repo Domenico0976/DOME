@@ -5,6 +5,9 @@ var modalReveal = document.querySelector(".modal-name-revealer");
 var modalImgReveal = document.querySelector(".modal-image-container");
 var containerGallery = document.querySelector(".img-names");
 var bodyAll = document.documentElement;
+let nav = document.querySelector("nav")
+var modalPanel = document.querySelector(".img-modal");
+modalPanel.style.pointerEvents = "none";
 
 var closeBtn = document.querySelector(".close-btn");
 var modalName = document.querySelector(".modal-name");
@@ -19,11 +22,14 @@ imgNames.forEach((imgName) => {
         };
     });
     imgName.addEventListener("click", () =>{
+        imgViewContainer.innerHTML = '';
         modalImgReveal.innerHTML = '';
         modalName.innerHTML = '';
         containerGallery.classList.add("display");
         closeBtn.style.pointerEvents = "auto";
         bodyAll.classList.add('no-scroll');
+        modalPanel.style.pointerEvents = "auto";
+
 
         var dataImg = parseInt(imgName.getAttribute("data-img"), 10);
         var dataCount = parseInt(imgName.getAttribute("data-count"), 10);
@@ -39,7 +45,9 @@ imgNames.forEach((imgName) => {
         var description = imgName.getAttribute("data-description");
         modalReveal.innerHTML = description;
 
-        modalImgReveal.innerHTML = '';
+        nav.style.display = "none";
+
+        
         for (let i = dataImg + 1; i <= dataImg + dataCount; i++) {
             modalImgReveal.innerHTML += `<img data-zoom="${i}" src="../asset/gallery/${dataImg}/${i}.png" alt="Project ${name} ${i}" />`;
         }
@@ -52,15 +60,16 @@ closeBtn.onclick = function(){
     tlGallery.reversed(!tlGallery.reversed());
     containerGallery.classList.remove("display");
     body.classList.remove('no-scroll');
-    
-
+    nav.style.display = "flex";
+    closeBtn.style.pointerEvents = "auto";
+    modalPanel.style.pointerEvents = "none";
 };
 
 function revealImg(){
 
     tlGallery.to("#items", 0.5, {
             opacity: 0.1,
-        })
+        }, "<")
 
     tlGallery.to(".img-name .name", 1, {
         ease: "power4.inOut",
