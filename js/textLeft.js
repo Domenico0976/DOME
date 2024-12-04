@@ -13,7 +13,7 @@ let scrollTween = gsap
         end: "+=3000",
         // markers: true,
     }
-})
+});
 
 sections.forEach(section => {
     let text = section.querySelectorAll('.anim');
@@ -29,10 +29,10 @@ sections.forEach(section => {
             ease: "bounce.Out",
             stagger: 0.05,
         }, "<")
-        tl.from(whgt, 1, {
+        tl.to(whgt, 1, {
             ease: "none",
             stagger: 0.1,
-            fontWeight: 100,
+            fontWeight: 300,
         }, "<");
 
     ScrollTrigger.create({
