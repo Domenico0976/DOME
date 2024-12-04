@@ -17,11 +17,12 @@ imgNames.forEach((imgName) => {
     imgName.addEventListener("mouseover", () => {
         var dataImg = parseInt(imgName.getAttribute("data-img"), 10);
         if(dataImg < 7 || dataImg > 12 ){
-            imgPreviewContainer.innerHTML = `<img src="../asset/gallery/${dataImg}/${dataImg}.png" alt="Preview image project ${dataImg}" />`;
+            imgPreviewContainer.innerHTML = `<img loading ="lazy" src="../asset/gallery/${dataImg}/${dataImg}.png" alt="Preview image project ${dataImg}" draggable="false" />`;
         } else {imgPreviewContainer.innerHTML = `<video src="../asset/gallery/${dataImg}/${dataImg}.mp4" alt="Preview video project ${dataImg}" />`;
         };
     });
     imgName.addEventListener("click", () =>{
+        modalPanel.style.display = "flex";
         imgViewContainer.innerHTML = '';
         modalImgReveal.innerHTML = '';
         modalName.innerHTML = '';
@@ -35,8 +36,11 @@ imgNames.forEach((imgName) => {
         var dataCount = parseInt(imgName.getAttribute("data-count"), 10);
         
         if(dataImg >= 7 && dataImg < 13){
-            imgViewContainer.innerHTML = `<video muted controls data-zoom="${dataImg}" autoplay src="../asset/gallery/${dataImg}/${dataImg}.mp4" alt="Preview video project ${dataImg}" />`;
-            } else {imgViewContainer.innerHTML = `<img data-zoom="${dataImg}" src="../asset/gallery/${dataImg}/${dataImg}.png" alt="Preview image project ${dataImg}" draggable="false"/>`;
+            imgViewContainer.innerHTML = `<video data-zoom="${dataImg}" autoplay src="../asset/gallery/${dataImg}/${dataImg}.mp4" alt="Preview video project ${dataImg}" />`;
+            const video = imgViewContainer.querySelector('video');
+            video.volume = 0.05;
+
+            } else {imgViewContainer.innerHTML = `<img loading ="lazy" data-zoom="${dataImg}" src="../asset/gallery/${dataImg}/${dataImg}.png" alt="Preview image project ${dataImg}" draggable="false"/>`;
         };
 
         var name = imgName.querySelector(".name").textContent;
@@ -45,11 +49,10 @@ imgNames.forEach((imgName) => {
         var description = imgName.getAttribute("data-description");
         modalReveal.innerHTML = description;
 
-        nav.style.display = "none";
 
         
         for (let i = dataImg + 1; i <= dataImg + dataCount; i++) {
-            modalImgReveal.innerHTML += `<img data-zoom="${i}" src="../asset/gallery/${dataImg}/${i}.png" alt="Project ${name} ${i}" />`;
+            modalImgReveal.innerHTML += `<img loading ="lazy" data-zoom="${i}" src="../asset/gallery/${dataImg}/${i}.png" alt="Project ${name} ${i}" />`;
         }
         tlGallery.reversed(!tlGallery.reversed());
     });
@@ -60,12 +63,22 @@ closeBtn.onclick = function(){
     tlGallery.reversed(!tlGallery.reversed());
     containerGallery.classList.remove("display");
     body.classList.remove('no-scroll');
-    nav.style.display = "flex";
     closeBtn.style.pointerEvents = "auto";
-    modalPanel.style.pointerEvents = "none";
+    setTimeout(modalHide, 2000);
 };
 
+function modalHide(){
+    modalPanel.style.display = "none";
+    imgViewContainer.innerHTML = '';
+    modalImgReveal.innerHTML = '';
+    modalName.innerHTML = '';
+}
+
 function revealImg(){
+
+    tlGallery.to(nav, 1,{
+        y: -100
+    })
 
     tlGallery.to("#items", 0.5, {
             opacity: 0.1,
@@ -75,7 +88,7 @@ function revealImg(){
         ease: "power4.inOut",
         opacity: 0.6,
 
-    });
+    },"<");
 
     tlGallery.to(".img-preview-container", 1, {
         clipPath: "polygon(0 100%, 100% 100%, 100% 100%, 0 100%)",
@@ -87,7 +100,7 @@ function revealImg(){
         opacity: 1,
         ease: "none",
         delay: -0.125,
-    });
+    },">");
 
     tlGallery.to(".img-view", 1,{
         clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)",
