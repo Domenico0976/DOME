@@ -344,7 +344,7 @@ img, video{
     display: flex;
     align-items: flex-end;
     width: 100%;
-    height: 97%;
+    height: 95%;
     border-bottom: 2px solid var(--bgBlack);
     z-index: 3;
     overflow: hidden;
@@ -432,7 +432,7 @@ highlight{
     position: relative;
     display: flex;
     height: fit-content;
-    align-items: center;
+    align-items: flex-end;
     justify-content: space-between;
     overflow: hidden;
     font-family: "am-majella";
@@ -612,8 +612,10 @@ left: 0;
     height: fit-content;
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-around;
+    justify-content: space-between;
     gap: .5em;
+    margin: 10vh 0;
+
 }
 
 .webTitle{
@@ -654,9 +656,10 @@ left: 0;
 
 
 .webDescription{
-    max-width: 90%;
+    max-width: 99%;
     display: flex;
-    align-items: flex-end;
+    margin-bottom: 3%;
+    align-items: flex-start;
     gap: 1em;
 
     h2{
@@ -673,10 +676,9 @@ left: 0;
 }
 
 .webContent{
-    h3{
         font-style: oblique;
-    }
 }
+
 .buttonOff{
     width: 100%;
     text-align: center;
@@ -820,12 +822,16 @@ footer{
         display: block;
     }
 
+    .webCard{
+        width: 100%;
+    }
+
     
-    .webCard:nth-child(4) .button{
+    .webCard:nth-child(2) .button{
         display: none;
     }
 
-    .webCard:nth-child(4) .buttonOff{
+    .webCard:nth-child(2) .buttonOff{
         display: block;
     }
 
