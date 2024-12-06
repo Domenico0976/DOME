@@ -299,11 +299,12 @@ nav{
     width: 100%;
     padding: 1em;
     z-index: 2;
+    display: flex;
     transition: all .65s ease-in-out;    
 }
 
 .text-intro{
-    max-width: 55%;
+    padding-left: 5em;
     line-height: 150%;
     h1{
         pointer-events: none;
@@ -610,12 +611,11 @@ left: 0;
     width: 100%;
     padding: 1em;
     height: fit-content;
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     justify-content: space-between;
-    gap: .5em;
-    margin: 10vh 0;
-
+    gap: 1.1em;
+    margin-bottom: 8vh;
 }
 
 .webTitle{
@@ -638,9 +638,8 @@ left: 0;
 .webCard{
     background-color: var(--bgBlack);
     padding: 1em;
-    width: calc(100% - 51%);
     border-radius: 1em;
-    height: fit-content;
+    height: 100%;
     display: flex;
     flex-wrap: wrap;
     gap: 1vw;
@@ -790,8 +789,8 @@ footer{
 @media (max-width: 30em){
 
     .text-intro{
-        max-width: 80%;
-    }
+        max-width: 100%;
+        }
 
     .arrow {
         visibility: visible;
