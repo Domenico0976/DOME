@@ -71,7 +71,7 @@ section{
     justify-content: center;
     align-items: center;
     z-index: 3;
-    width: calc(100svw - 10%);
+    width: 90%;
     padding: 1em;
     text-decoration: none;
     color: var(--text_PrimaryColor);
