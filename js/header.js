@@ -1,3 +1,17 @@
+const schemeBtn = document.getElementById('scheme-btn');
+
+schemeBtn.addEventListener('click', () => {
+  const currentTheme = document.documentElement.getAttribute('data-theme');
+  const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+  document.documentElement.setAttribute('data-theme', newTheme);
+  localStorage.setItem('theme', newTheme);
+});
+
+const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+document.documentElement.setAttribute('data-theme', savedTheme);
+
+
 const hamMenu = document.querySelector('.ham-menu'); 
 const offScreenMenu = document.querySelector('.off-screen-menu');
 const items = document.querySelectorAll('#items');
@@ -38,7 +52,6 @@ document.addEventListener('DOMContentLoaded', function () {
         opacity: 0
     })
 })
-
 
 function copyEmail() {
     const emailToCopy = "domenicofusto55@gmail.com";

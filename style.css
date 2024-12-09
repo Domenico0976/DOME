@@ -9,10 +9,15 @@
 }
 
 :root{
-    --bgBlack: #000004;
+    color-scheme: light dark;
+    --scheme-bg: light-dark(var(--bgWhite), var(--bgBlack));
+    --scheme-txt: light-dark(var(--text_PrimaryColor), var(--text_whiteColor));
+    --bgBlack: #1d1d1d;
+    --bgWhite: #f6f3f3;
     --bgPurple: #7e2e96;
     --bgYellow: #aaaa22;
     --text_PrimaryColor: #000004;
+    --text_whiteColor: #ffffff;
     --text_SecondaryColor: rgb(187, 187, 72);
     --text_ThirdColor: #2e0a39;
     --bgText-Gradient: -webkit-linear-gradient( #5a871b, #bbbb48);
@@ -23,16 +28,39 @@
     --A-fontSize: clamp(.5rem, 6vw, .9rem);
     --H1-HugefontSize: clamp(3rem, 7vw, 6rem);
 }
+    [data-theme="dark"]{
+        color-scheme: dark light;
+    }
+
+    [data-theme="light"]{
+    --scheme-bg: light-dark(var(--bgBlack), var(--bgWhite));
+    --scheme-txt: light-dark(var(--text_whiteColor), var(--text_PrimaryColor));
+    }
+
 
 html,body{
     font-family: "Poppins";
-    transition: 2s ease;
+    transition: all .5s ease;
     overflow-x: hidden;
+    background-color: var(--scheme-bg);
+    color: var(--scheme-txt);
 }
 
 .no-scroll{
     overflow: hidden;
     width: 100%;
+}
+
+button{
+    all: unset;
+    font-family: "am-majella";
+    text-transform: uppercase;
+    font-size: var(--A-fontSize);
+    cursor: pointer;
+
+    &:hover{
+        border-bottom: 3px solid var(--bgYellow);
+    }
 }
 
 
@@ -50,7 +78,7 @@ html,body{
         font-family: "Poppins";
         font-size: var(--H3-fontSize);
         letter-spacing: .3rem;
-        color: var(--text_PrimaryColor);
+        color: var(--scheme-txt);
         font-weight: 600;
     }
    }
@@ -59,14 +87,14 @@ html,body{
 .off-screen-menu {
     overflow: hidden;
     padding: 1em;
-    background-color: white;
+    background-color: var(--scheme-bg);
     height: 100%;
     width: 100%;
     position: fixed;
     transform: translateY(-100vh);
     transition: 1s ease;
     z-index: 10;
-    border-bottom: 2px solid var(--bgBlack);
+    border-bottom: 2px solid var(--scheme-bg);
 }
 
 
@@ -89,7 +117,7 @@ html,body{
 
 
 .off-screen-menu a{
-    color: var(--text_PrimaryColor);
+    color: var(--scheme-txt);
     text-decoration: none;
     overflow: hidden;
 }
@@ -106,16 +134,16 @@ a{
 }
 
 nav{
-    backdrop-filter: blur(10px) contrast(90%);
     padding: clamp( 1rem, 7vw, 1.5rem) 3em;
     flex-direction: row;
     position: fixed;
     width: 100svw;
-    border-bottom: 2px solid var(--bgBlack);
+    border-bottom: 2px solid var(--scheme-txt);
     box-sizing: border-box;
     display: flex;
     align-items: center;
-    background-color: white;
+    pointer-events: fill;
+    background-color: var(--scheme-bg);
     justify-content: center;
     z-index: 100;
 }
@@ -125,7 +153,12 @@ nav{
     text-transform: uppercase;
     font-weight: 800;
     text-decoration: none;
-    color: var(--text_PrimaryColor);
+    color: var(--scheme-txt);
+}
+
+#scheme-btn{
+    margin-left: auto;
+    pointer-events: all;
 }
 
 .ham-menu{
@@ -140,7 +173,7 @@ nav{
 .ham-menu span{
     height: 4px;
     width: 100%;
-    background-color: var(--bgBlack);
+    background-color: var(--scheme-txt);
     position: absolute;
     top: 50%;
     left: 50%;
@@ -169,7 +202,7 @@ nav{
 .ham-menu.active span:nth-child(2){
     top: 50%;
     opacity: 1;
-    background-color: var(--bgYellow);
+    background-color: var(--scheme-bg);
     transform: translate(100%, -50%) rotate(-90deg);
 }
 
@@ -178,7 +211,7 @@ nav{
     flex-wrap: wrap;
     display: flex;
     flex-direction: column;
-    color: var(--text_PrimaryColor);
+    color: var(--scheme-txt);
     padding: .35rem;
     position: relative;
     gap: .65rem;
@@ -188,8 +221,8 @@ nav{
         font-family: "Poppins";
         width: fit-content;
         font-weight: 500;
+        color: var(--scheme-txt);
         font-size: var(--H3-fontSize);
-        color: var(--text_PrimaryColor);
     }
 }
 
@@ -202,7 +235,7 @@ nav{
         font-family: "Poppins";
         font-size: var(--H3-fontSize);
         letter-spacing: .3rem;
-        color: var(--text_PrimaryColor);
+        color: var(--scheme-txt);
         font-weight: 600;
     }
 
@@ -226,10 +259,9 @@ nav{
         font-family: "Poppins";
         font-weight: 500;
         cursor: pointer;
-
         width: fit-content;
         font-size: var(--H3-fontSize);
-        color: var(--text_PrimaryColor);
+        color: var(--scheme-txt);
     } 
 }
 
@@ -253,19 +285,22 @@ nav{
     opacity: 0.3;
     backdrop-filter: blur(5px);
     padding: 1rem;
-    border-radius: 0.25rem;
+    border-radius: 0.5rem;
     border: none;
     outline: none;
     cursor: pointer;
     color: white;
     font-family: "Poppins";
     font-size: var(--A-fontSize);
+    font-weight: 500;
     z-index: 10;
     transition: 0.5s ease-in;
 
     &:hover{
      background-color: var(--bgYellow);   
      color: var(--bgBlack);
+     border-radius: 0;
+     opacity: 1;
     }
 
   }
@@ -306,9 +341,10 @@ nav{
 .text-intro{
     padding-left: 5em;
     line-height: 150%;
+
     h1{
         pointer-events: none;
-        color: white;
+        color: var(--text_whiteColor);
         font-family: "Poppins";
         font-size: var(--A-fontSize);
         font-weight: 500;
@@ -345,8 +381,10 @@ img, video{
     display: flex;
     align-items: flex-end;
     width: 100%;
-    height: 95%;
-    border-bottom: 2px solid var(--bgBlack);
+    max-height: 92%;
+    background-color: var(--scheme-bg);
+    border-bottom: 2px solid var(--scheme-txt);
+    border-top: 2px solid var(--scheme-txt);
     z-index: 3;
     overflow: hidden;
 
@@ -359,8 +397,8 @@ img, video{
     display: flex;
     writing-mode: vertical-rl;
     transform: rotate(180deg);
-    border-left: 2px solid var(--bgBlack);
-    border-right: 2px solid var(--bgBlack);
+    border-left: 2px solid var(--scheme-txt);
+    border-right: 2px solid var(--scheme-txt);
 }
 
 .textCont{
@@ -398,7 +436,6 @@ p{
     font-family: "Poppins";
     font-weight: 600;
     font-size: var(--A-fontSize);
-    color: var(--text_PrimaryColor);
 }
 
 span{
@@ -423,7 +460,7 @@ span{
 
 highlight{
     font-weight: 700;
-    color: var(--text_PrimaryColor);
+    color: var(--scheme-txt);
     font-family: "poppins";
     font-style: oblique;
     text-transform: none;
@@ -503,8 +540,8 @@ highlight{
 } */
 
 .img-modal{
-    background: white;
-    border-top: 3px solid var(--bgBlack);
+    background: var(--scheme-bg);
+    border-top: 3px solid var(--scheme-txt);
     position: fixed;
     height: fit-content;
     bottom: 0;
@@ -546,7 +583,7 @@ highlight{
     opacity: 0;
     font-style: oblique;
     font-weight: 500;
-    color: var(--bgBlack);
+    color: var(--scheme-txt);
 }
 
 .modal-container .close-btn .btn-revealer{
@@ -603,7 +640,7 @@ left: 0;
     color: white;
     display: flex;
     flex-direction: column;
-    border-top: 3px solid var(--bgBlack);
+    border-top: 3px solid var(--scheme-txt);
     
 }
 
@@ -619,7 +656,7 @@ left: 0;
 }
 
 .webTitle{
-    color: var(--text_PrimaryColor);
+    color: var(--scheme-txt);
 
     h2{
         font-size: var(--H1-HugefontSize);
@@ -636,12 +673,13 @@ left: 0;
 
 
 .webCard{
-    background-color: var(--bgBlack);
+    background-color: var(--scheme-txt);
     padding: 1em;
     border-radius: 1em;
     height: 100%;
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: space-between;
     gap: 1vw;
 
     img{
@@ -660,6 +698,8 @@ left: 0;
     margin-bottom: 3%;
     align-items: flex-start;
     gap: 1em;
+    color: var(--scheme-bg);
+
 
     h2{
         font-size: var(--H1-fontSize);
@@ -668,7 +708,7 @@ left: 0;
 
     h3{
         font-size: var(--A-fontSize);
-        color: lightslategray;
+        color: rgb(117, 119, 121);
         font-weight: 500;
     }
     
@@ -691,18 +731,19 @@ left: 0;
 .button{
     width: 100%;
     border-radius: .5em;
-    background-color: white;
+    background-color: var(--scheme-bg);
     padding: 1em;
     font-weight: 600;
     display: flex;
     justify-content: space-between;
     font-style: oblique;
-    color: var(--text_PrimaryColor);
+    color: var(--scheme-txt);
     transition: .5s ease;
+    border: 2px solid var(--scheme-txt);
 
     &:hover{
         border: 2px solid var(--bgYellow);
-        background-color: var(--bgBlack);
+        background-color: var(--scheme-bg);
         color: white;
     }
 }
@@ -718,8 +759,8 @@ left: 0;
     display: block;
     width: 1.5vw;
     height: 1.5vw;
-    border-bottom: 5px solid white;
-    border-right: 5px solid white;
+    border-bottom: 5px solid var(--scheme-txt);
+    border-right: 5px solid var(--scheme-txt);
     margin: -10px;
     animation: animate 2s infinite;
 }
@@ -754,9 +795,9 @@ footer{
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: white;
+    background: var(--scheme-bg);
     padding: 2rem;
-    border-top: 3px solid var(--bgBlack);
+    border-top: 2px solid var(--scheme-txt);
     z-index: 10;
 
 }
@@ -777,7 +818,7 @@ footer{
         font-size: var(--A-fontSize);
         pointer-events: none;
         letter-spacing: .3rem;
-        color: var(--text_PrimaryColor);
+        color: var(--scheme-txt);
         font-weight: 600;
     }
    }

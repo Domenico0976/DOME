@@ -9,7 +9,11 @@ box-sizing: border-box;
 }
 
 :root{
---bgBlack: #000004;
+color-scheme: light dark;
+--scheme-bg:light-dark(var(--bgWhite), var(--bgBlack));
+--scheme-txt: light-dark(var(--text_PrimaryColor), var(--bgWhite));
+--bgBlack: #222222;
+--bgWhite: #f6f3f3;
 --bgPurple: #7e2e96;
 --bgYellow: #aaaa22;
 --text_PrimaryColor: #000004;
