@@ -285,7 +285,6 @@ let cells = [];
 let cellSize = 5;
 let rows, cols;
 
-// Imposta le dimensioni del canvas in base al container
 function resizeCanvas() {
   canvas.width = container.offsetWidth;
   canvas.height = container.offsetHeight;
@@ -294,7 +293,6 @@ function resizeCanvas() {
   initializeCells();
 }
 
-// Inizializza la griglia di celle
 function initializeCells() {
   cells = [];
   for (let row = 0; row < rows; row++) {
@@ -305,39 +303,34 @@ function initializeCells() {
         color: null,
         isWhite: false,
         whiteDuration: 0,
-        colorDuration: 0 // Aggiunta: durata del colore dal mouse
+        colorDuration: 2
       });
     }
   }
 }
 
-// Disegna le celle
 function drawCells() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   cells.forEach(cell => {
     if (cell.isWhite) {
-      // Celle temporaneamente bianche
       ctx.strokeStyle = `rgba(61, 50, 79, ${Math.max(0.01, cell.whiteDuration / 30)})`;
 
       ctx.lineWidth = Math.max(0.001, cell.whiteDuration / 30);
 
       ctx.strokeRect(cell.x, cell.y, cellSize, cellSize);    } else if (cell.color) {
-      // Celle colorate
       ctx.fillStyle = `rgba(${cell.color.join(",")}, ${Math.max(0.1, cell.colorDuration / 50)})`;
     } else {
-      // Celle trasparenti
       ctx.fillStyle = "rgba(0, 0, 0, 0)";
     }
     ctx.fillRect(cell.x, cell.y, cellSize, cellSize);
   });
 }
 
-// Logica per animare le celle casualmente in bianco
 function animateRandomCells() {
   cells.forEach(cell => {
     if (Math.random() < 0.003) {
       cell.isWhite = true;
-      cell.whiteDuration = 50; // Durata temporanea del bianco
+      cell.whiteDuration = 50;
     }
     if (cell.isWhite) {
       cell.whiteDuration--;
@@ -348,13 +341,12 @@ function animateRandomCells() {
   });
 }
 
-// Gestione del tempo di persistenza del colore
 function animateCellColors() {
   cells.forEach(cell => {
     if (cell.colorDuration >= 0) {
       cell.colorDuration--;
       if (cell.colorDuration <= 0) {
-        cell.color = null; // Torna trasparente
+        cell.color = null;
       }
     }
   });
