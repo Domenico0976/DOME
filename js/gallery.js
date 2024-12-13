@@ -80,8 +80,10 @@ function revealImg(){
         y: -100
     })
 
-    tlGallery.to("#items", 0.5, {
+    tlGallery.to("#items", {
             opacity: 0.1,
+            y: 130,
+            duration: 2,
         }, "<")
 
     tlGallery.to(".img-name .name", 1, {

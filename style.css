@@ -12,9 +12,11 @@
     color-scheme: light dark;
     --scheme-bg: light-dark(var(--bgWhite), var(--bgBlack));
     --scheme-txt: light-dark(var(--text_PrimaryColor), var(--text_whiteColor));
+    --scheme-txtSecondary: light-dark(var(--txSecondary),var(--txSecondaryDark));
     --bgBlack: #1d1d1d;
     --bgWhite: #f6f3f3;
-    --bgPurple: #7e2e96;
+    --txSecondary: rgb(81, 80, 82);
+    --txSecondaryDark: rgb(149, 149, 149);
     --bgYellow: #aaaa22;
     --text_PrimaryColor: #1d1d1d;
     --text_whiteColor: #ffffff;
@@ -137,8 +139,6 @@ a{
     overflow: hidden;
 }
 
-
-
 .space{
     height: fit-content;
     display: flex;
@@ -236,7 +236,7 @@ nav{
     transition: .5s ease;
 
     a{
-        font-family: "Poppins";
+        font-family: "am-majella";
         width: fit-content;
         font-weight: 500;
         color: var(--scheme-txt);
@@ -265,20 +265,19 @@ nav{
     position: relative;
 
     h3{
-        font-family: "Poppins";
         font-size: var(--A-fontSize);
         font-weight: 400;
         letter-spacing: .05rem;
-        color:#595858;
+        color: var(--scheme-txtSecondary);
         pointer-events: none;
     }
 
     a{
-        font-family: "Poppins";
         font-weight: 500;
         cursor: pointer;
         width: fit-content;
         font-size: var(--H3-fontSize);
+        font-family: "am-majella";
         color: var(--scheme-txt);
     } 
 }
@@ -436,12 +435,12 @@ h3{
     font-size: var(--A-fontSize);
     font-family: "Poppins";
     font-weight: 500;
-    color: rgb(115, 114, 114);
+    color: var(--scheme-txtSecondary);
     text-transform: none;
 }
 
 h4{
-    font-size: var(--H3-fontSize);
+    font-size: var(--A-fontSize);
     font-family: "Poppins";
     font-weight: 500;
     text-transform: none;
@@ -453,7 +452,7 @@ p{
     text-transform: uppercase;
     font-family: "Poppins";
     font-weight: 600;
-    font-size: var(--A-fontSize);
+    font-size: var(--H3-fontSize);
 }
 
 span{
@@ -626,7 +625,7 @@ highlight{
 .img-modal-name .modal-name-revealer{
     position: relative;
     font-size: 1rem;
-    color: rgb(81, 80, 82);
+    color: var(--scheme-txtSecondary);
     font-weight: 500;
     font-family: "Poppins";
     max-width: 1000px;
@@ -637,7 +636,7 @@ highlight{
 .modal-image-container{
 position: relative;
 display: flex;
-width: 65%;
+width: 75%;
 gap: .4em;
 flex-wrap: wrap;
 padding: 1em;
@@ -647,7 +646,7 @@ left: 0;
 
     img, video{
         flex: 1;
-        max-width: calc(80% / 3);
+        width: calc(80% / 3);
         object-fit: cover;
     }
 }
@@ -705,7 +704,6 @@ left: 0;
         height: 20vh;
         object-fit: cover;
         border-radius: 1em;
-        margin-bottom: 2vh;
     }
 
     .button{
@@ -717,6 +715,7 @@ left: 0;
 .webDescription{
     max-width: 99%;
     display: flex;
+    flex-direction: column;
     margin-bottom: 3%;
     align-items: flex-start;
     gap: 1em;
@@ -724,8 +723,9 @@ left: 0;
 
 
     h2{
-        font-size: var(--H1-fontSize);
+        font-size: var(--H2-fontSize);
         font-family: "am-majella";
+        margin-bottom: 2%;
     }
 
     h3{
@@ -816,7 +816,7 @@ footer{
     align-items: center;
     justify-content: space-between;
     background: var(--scheme-bg);
-    padding: 2rem;
+    padding: 1em 5em;
     border-top: 2px solid var(--scheme-txt);
     z-index: 10;
 
@@ -921,6 +921,10 @@ footer{
     
     .modal-image-container{
         width: 99%;
+    }
+
+    footer{
+        padding: 1em;
     }
 }
 
