@@ -302,8 +302,7 @@ nav{
     opacity: 0.3;
     backdrop-filter: blur(5px);
     padding: 1rem;
-    border-radius: 0.5rem;
-    border: none;
+    border-bottom: 2px solid var(--scheme-bg);
     outline: none;
     cursor: pointer;
     color: white;
@@ -315,8 +314,8 @@ nav{
 
     &:hover{
      background-color: var(--bgYellow);   
-     color: var(--bgBlack);
-     border-radius: 0;
+     color: var(--scheme-txt);
+     border-bottom: none;
      opacity: 1;
     }
 
@@ -351,20 +350,19 @@ nav{
     width: 100%;
     padding: 1em;
     z-index: 2;
-    display: flex;
     transition: all .65s ease-in-out;    
 }
 
 .text-intro{
     padding-left: 5em;
-    line-height: 150%;
+    line-height: 125%;
 
     h1{
         pointer-events: none;
         color: var(--text_whiteColor);
         font-family: "Poppins";
-        font-size: var(--A-fontSize);
-        font-weight: 500;
+        font-size: var(--H3-fontSize);
+        font-weight: 300;
         text-transform: uppercase;
     }
     
@@ -372,9 +370,7 @@ nav{
         pointer-events: none;
         color: var(--text_SecondaryColor);
         font-family: "am-majella";
-        font-size: var(--A-fontSize);
         text-transform: none;
-        font-weight: 400;
     }  
 }
 
@@ -705,10 +701,6 @@ left: 0;
         object-fit: cover;
         border-radius: 1em;
     }
-
-    .button{
-        transform: rotate(0deg);
-    }
 }
 
 
@@ -756,6 +748,7 @@ left: 0;
     font-weight: 600;
     display: flex;
     justify-content: space-between;
+    align-items: center;
     font-style: oblique;
     color: var(--scheme-txt);
     transition: .5s ease;
@@ -763,7 +756,7 @@ left: 0;
 
     &:hover{
         border: 2px solid var(--bgYellow);
-        background-color: var(--scheme-tx);
+        background-color: var(--scheme-txt);
         color: white;
     }
 }
@@ -847,10 +840,66 @@ footer{
     border-bottom: 3px solid var(--bgYellow);
 }
 
+#about{
+    padding: 1em;
+    font-family: "am-majella";
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.textContainer{
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    overflow: hidden;
+}
+
+.wallText{
+    height: fit-content;
+    max-width: 900px;
+    border-top: 2px solid var(--scheme-txt);
+    margin-top: 15vh;
+}
+
+.textFocus2{
+padding: .2em;
+
+ h1{
+    line-height: 100%;
+    font-size: var(--H1-HugefontSize);
+    font-weight: 700;
+    font-style: oblique;
+ }
+}
+
+.textFocus{
+    letter-spacing: .5vw;
+    padding: .2em;
+    font-size: var(--A-fontSize);
+
+}
+
+.description{
+    overflow: hidden;
+    padding: 1em;
+    pointer-events: none;
+
+}
+
+.poppins{
+    font-family: "Poppins";
+}
+
+
 @media (max-width: 30em){
 
     .text-intro{
         max-width: 100%;
+        padding: 0;
+        padding-bottom: 1em;
         }
 
     .arrow {
@@ -926,56 +975,4 @@ footer{
     footer{
         padding: 1em;
     }
-}
-
-#about{
-    padding: 1em;
-    font-family: "am-majella";
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-}
-
-.textContainer{
-    width: 100%;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-}
-
-.wallText{
-    height: fit-content;
-    max-width: 900px;
-    border-top: 2px solid var(--scheme-txt);
-    margin-top: 15vh;
-}
-
-.textFocus2{
-padding: .2em;
-
- h1{
-    line-height: 100%;
-    font-size: var(--H1-HugefontSize);
-    font-weight: 700;
-    font-style: oblique;
- }
-}
-
-.textFocus{
-    letter-spacing: .5vw;
-    padding: .2em;
-    font-size: var(--A-fontSize);
-
-}
-
-.description{
-    overflow: hidden;
-    padding: 1em;
-    pointer-events: none;
-
-}
-
-.poppins{
-    font-family: "Poppins";
 }

@@ -10,7 +10,7 @@ let scrollTween = gsap
         trigger: container,
         pin: true,
         scrub: true,
-        end: "+=3000",
+        end: "+=3500",
         // markers: true,
     }
 });
@@ -38,7 +38,7 @@ sections.forEach(section => {
     ScrollTrigger.create({
         trigger: section,
         containerAnimation: scrollTween,
-        start: "left center",
+        start: "left right",
         // markers: true,
         animation: animation,
         toggleActions: "play none none reverse",
