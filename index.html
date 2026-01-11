@@ -1,38 +1,548 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DOME|design</title>
-    <link rel="stylesheet" href="main.css">
-    
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DOME|design</title>
+  <link rel="stylesheet" href="main.css">
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/split-type@0.3.4/umd/index.min.js"></script>
 </head>
 
-<body>
-    <h1 class="counter" id="items">0</h1>
-<div class="background">
-    <div class="bar"></div>
-    <div class="bar"></div>
-    <div class="bar"></div>
-    <div class="bar"></div>
-    <div class="bar"></div>
-    <div class="bar"></div>
-    <div class="bar"></div>
-    <div class="bar"></div>
-    <div class="bar"></div>
-    <div class="bar"></div>
-</div>
-<div class="container" id="items">
-    <div class="DIV">
+<body class="noscroll">
+
+  <h1 class="counter" id="items">0</h1>
+  <div class="background">
+    <div class="bar-1"></div>
+    <div class="bar-2"></div>
+    <div class="bar-3"></div>
+    <div class="bar-4"></div>
+    <div class="bar-5"></div>
+    <div class="bar-6"></div>
+    <div class="bar-7"></div>
+    <div class="bar-8"></div>
+    <div class="bar-9"></div>
+    <div class="bar-10"></div>
+
+    <div class="container">
+      <div class="DIV">
         <h1 class="my-tu">DomenicoFusto</h1>
         <h3 class="my-tu2">whooo?</h3>
+      </div>
     </div>
-</div>
-<script src="
-https://cdn.jsdelivr.net/npm/split-type@0.3.4/umd/index.min.js"></script>
+  </div>
+
+  <div class="upgrade">
+
+    <div class="flex-2"style="padding: 0 24px 0 24px;">
+      <img src="./asset/FOTO_DOMENICOFUSTO.jpg" alt="" style="max-width: 80px; max-height: 80px; border-radius: 3rem;">
+      <div class="flex-3">
+        <div class="icons"><a href="https://www.linkedin.com/in/domenico-fusto-a74273189/" target="_blank">.in</a></div>
+        <div class="icons"><a href="https://www.behance.net/domenicofusto" target="_blank">.be</a></div>
+        <div class="icons"><a href="mailto:domenicofusto55@gmail.com" target="_blank">.@</a></div>
+      </div>
+    </div>
+
+    <div class="bento-grid">
+
+      <!-- FLEX 2: Intro Cards -->
+      <div class="flex-2">
+        <div class="ele-4 card-base-simple card-style w-40">
+          <div class="title">
+            <p class="title-text card-text-subtitle">
+              Domenico Fusto
+            </p>
+            <p class="percent" id="birthday">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1792 1792" fill="currentColor" height="20" width="20">
+                <path d="M1408 1216q0 26-19 45t-45 19h-896q-26 0-45-19t-19-45 19-45l448-448q19-19 45-19t45 19l448 448q19 19 19 45z"></path>
+              </svg> 25/05/1998
+            </p>
+          </div>
+          <div class="data">
+            <div class="data-value-container">
+              <p class="card-text-display" data-value="27">0</p>
+              <p class="card-text-info">years</p>
+            </div>
+            <div class="range">
+              <div class="fill"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ele-4 card-base-simple card-style">
+          <div class="title">
+            <p class="title-text card-text-subtitle">
+              UX/UI Designer
+            </p>
+            <p class="percent">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1792 1792" fill="currentColor" height="20" width="20">
+                <path d="M1408 1216q0 26-19 45t-45 19h-896q-26 0-45-19t-19-45 19-45l448-448q19-19 45-19t45 19l448 448q19 19 19 45z"></path>
+              </svg> Software Skills
+            </p>
+          </div>
+          <div class="data">
+            <div class="data-value-container">
+              <p class="card-text-display" data-value="95">0</p>
+              <p class="card-text-info">% Skills</p>
+            </div>
+            <div class="range">
+              <div class="fill"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- WEATHER API CARD -->
+      <div class="ele-3 weather-card-wrapper" style="z-index: 3000;">
+        <div class="card card-base card-clickable card-transition-slow card-min-height-md">
+          <!-- Search Bar -->
+          <div class="weather-search-container">
+            <input type="text" class="weather-search" placeholder="Cerca città..." value="Milano">
+            <button class="search-btn">></button>
+          </div>
+
+          <div class="container">
+            <div class="cloud front">
+              <span class="left-front"></span>
+              <span class="right-front"></span>
+            </div>
+            <span class="sun sunshine"></span>
+            <span class="sun"></span>
+            <div class="cloud back">
+              <span class="left-back"></span>
+              <span class="right-back"></span>
+            </div>
+          </div>
+
+          <div class="card-header">
+            <span>Milano</span>
+            <span>Loading...</span>
+          </div>
+
+          <div class="weather-bottom-container">
+            <span class="temp">--°</span>
+            <div class="weather-info-group">
+              <div class="weather-time-container">
+                <svg class="clock-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.2 3.2.8-1.3-4.5-2.7V7z" />
+                </svg>
+                <span class="weather-time">--:--:--</span>
+              </div>
+              <div class="weather-date-container">
+                <svg class="calendar-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z" />
+                </svg>
+                <span class="weather-date">--/--/----</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- WEATHER API CARD END -->
+
+      <!-- RADIO CARD BUTTONS -->
+      <div class="ele-1">
+        <fieldset class="radio-card-group card-base">
+          <label class="group-title card-text-title">
+            <p>Software i use</p>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M8 0a1 1 0 0 1 1 1v5.268l4.562-2.634a1 1 0 1 1 1 1.732L10 8l4.562 2.634a1 1 0 1 1-1 1.732L9 9.732V15a1 1 0 1 1-2 0V9.732l-4.562 2.634a1 1 0 1 1-1-1.732L6 8 1.438 5.366a1 1 0 0 1 1-1.732L7 6.268V1a1 1 0 0 1 1-1z" />
+            </svg>
+          </label>
+
+          <label for="option-wordpress" class="radio-card" data-progress="90">
+            <div class="card-icon">
+              <!-- Replaced WordPress Logo -->
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="currentColor">
+                <path d="M16 0C7.163 0 0 7.163 0 16s7.163 16 16 16 16-7.163 16-16S24.837 0 16 0zm-1.637 25.804l-5.69-15.602c1.78.522 3.659.805 5.605.805 2.067 0 4.049-.313 5.897-.887l-5.812 15.684zm-6.289-5.946l1.368 3.75-6.071-17.67c-4.364 4.034-6.143 10.463-3.693 16.442 2.327-5.679 7.953-9.27 14.091-8.995l-2.944 3.178c-.759-.705-1.516-1.41-2.751-1.41-1.558 0-2.825.409-2.825 1.701 0 1.05.759 2.003 1.368 2.931l1.457 4.073zm21.844-3.655c.052.466.08.944.08 1.433 0 1.504-.474 3.304-1.487 5.769l-6.096-17.653c5.388 3.996 8.525 10.669 7.503 17.519v-7.068zm-15.717 5.113l6.561-19.389c2.518 1.559 4.606 3.868 5.975 6.685l-7.792 23.256c-1.637.058-3.279-.168-4.747-.64l.003-9.912zm19.643 4.041c-2.434 6.304-8.879 10.138-15.656 9.31l3.228-9.31c.404 1.292 1.632 2.193 2.99 2.193 1.724 0 3.303-.742 4.417-1.942l5.021-.251z" />
+              </svg>
+            </div>
+            <span class="card-label">WordPress</span>
+            <div class="progress-bar-container">
+              <div class="progress-bar-fill">
+                <span class="progress-percentage">0%</span>
+              </div>
+            </div>
+            <input type="radio" id="option-wordpress" name="tech_stack" value="wordpress" class="card-input">
+          </label>
+
+          <label for="option-figma" class="radio-card" data-progress="90">
+            <div class="card-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="currentColor">
+                <path d="M16 16a5.333 5.333 0 1 1 10.667 0A5.333 5.333 0 0 1 16 16z" />
+                <path d="M5.333 26.667A5.333 5.333 0 0 1 10.667 21.333H16v5.334a5.333 5.333 0 1 1-10.667 0z" />
+                <path d="M5.333 16a5.333 5.333 0 0 1 5.334-5.333H16v10.666h-5.333A5.333 5.333 0 0 1 5.333 16z" />
+                <path d="M5.333 5.333A5.333 5.333 0 0 1 10.667 0H16v10.667h-5.333a5.333 5.333 0 0 1-5.334-5.334z" />
+                <path d="M16 0h5.333a5.333 5.333 0 1 1 0 10.667H16V0z" />
+              </svg>
+            </div>
+            <span class="card-label">Figma</span>
+            <div class="progress-bar-container">
+              <div class="progress-bar-fill">
+                <span class="progress-percentage">0%</span>
+              </div>
+            </div>
+            <input type="radio" id="option-figma" name="tech_stack" value="figma" class="card-input" checked>
+          </label>
+
+          <label for="option-adobe" class="radio-card" data-progress="85">
+            <div class="card-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="currentColor">
+                <path d="M18.621 30.165l-2.253-5.708H10.829l5.19-12.193 7.549 17.901zM11.845 1.835H0v28.33zm20.155 0H20.155L32 30.165Z" />
+              </svg>
+            </div>
+            <span class="card-label">Adobe Suite</span>
+            <div class="progress-bar-container">
+              <div class="progress-bar-fill">
+                <span class="progress-percentage">0%</span>
+              </div>
+            </div>
+            <input type="radio" id="option-adobe" name="tech_stack" value="adobe" class="card-input">
+          </label>
+
+          <label for="option-vscode" class="radio-card" data-progress="90">
+            <div class="card-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="currentColor">
+                <path d="M23.333.667l-14.8 13.866L3.333 10 0 12.667l5.867 4.666L0 22l3.333 2.667 5.2-4.534L23.333 32l4.667-2.666V2.667L23.333.667zm0 4.933v20.8l-10.533-10.4 10.533-10.4z" />
+              </svg>
+            </div>
+            <span class="card-label">Visual Code</span>
+            <div class="progress-bar-container">
+              <div class="progress-bar-fill">
+                <span class="progress-percentage">0%</span>
+              </div>
+            </div>
+            <input type="radio" id="option-vscode" name="tech_stack" value="vscode" class="card-input input-blue">
+          </label>
+
+          <label for="option-touchdesigner" class="radio-card" data-progress="90">
+            <div class="card-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="currentColor">
+                <path d="M16 0L2 8v16l14 8 14-8V8L16 0zm0 3.067L27.067 9.333v13.334L16 28.933 4.933 22.667V9.333L16 3.067zm0 4.266L10 11.467v9.066L16 24.667l6-4.134v-9.066L16 7.333zm0 3.067l3.067 2.133v4.267L16 18.933l-3.067-2.133V12.533L16 10.4z" />
+              </svg>
+            </div>
+            <span class="card-label">TouchDesigner</span>
+            <div class="progress-bar-container">
+              <div class="progress-bar-fill">
+                <span class="progress-percentage">0%</span>
+              </div>
+            </div>
+            <input type="radio" id="option-touchdesigner" name="tech_stack" value="touchdesigner" class="card-input input-blue">
+          </label>
+
+          <label for="option-blender" class="radio-card" data-progress="75">
+            <div class="card-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="currentColor">
+                <path d="M16.68 17.619c.061-1.067.584-2.008 1.373-2.675a4.565 4.565 0 0 1 2.949-1.053c1.133 0 2.175.4 2.948 1.053.789.667 1.311 1.608 1.371 2.675.06 1.097-.38 2.115-1.153 2.87a4.519 4.519 0 0 1-3.166 1.251 4.524 4.524 0 0 1-3.168-1.25c-.773-.756-1.213-1.774-1.154-2.871M9.8 19.775c.008.419.141 1.229.341 1.864a9.829 9.829 0 0 0 2.124 3.676 10.969 10.969 0 0 0 3.716 2.668A11.929 11.929 0 0 0 20.861 29a11.952 11.952 0 0 0 4.876-1.029 11.047 11.047 0 0 0 3.713-2.68 9.904 9.904 0 0 0 2.123-3.683 9.285 9.285 0 0 0 .333-4.099 9.497 9.497 0 0 0-1.355-3.705 10.352 10.352 0 0 0-2.469-2.724h.003L18.088 3.4l-.027-.02c-.656-.504-1.758-.501-2.48.003-.729.509-.812 1.353-.164 1.886l-.001.001 4.168 3.391-12.707.013h-.017c-1.051.001-2.06.691-2.26 1.563-.205.887.507 1.623 1.6 1.627v.001l6.44-.013-11.493 8.823-.045.033c-1.084.829-1.433 2.211-.783 3.093.657.891 2.031 1.099 3.087.037l.364-.295z" />
+              </svg>
+            </div>
+            <span class="card-label">Blender</span>
+            <div class="progress-bar-container">
+              <div class="progress-bar-fill">
+                <span class="progress-percentage">0%</span>
+              </div>
+            </div>
+            <input type="radio" id="option-blender" name="tech_stack" value="blender" class="card-input input-blue">
+          </label>
+        </fieldset>
+        <!-- RADIO CARD BUTTONS END -->
+      </div>
+
+
+      <!-- SALES CARD: Design Exp & Education -->
+      <div class="flex-2">
+        <div class="ele-4 card-base-simple card-style">
+          <div class="title">
+            <p class="title-text card-text-subtitle">
+              Design Experience
+            </p>
+            <p class="percent">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1792 1792" fill="currentColor" height="20" width="20">
+                <path d="M1408 1216q0 26-19 45t-45 19h-896q-26 0-45-19t-19-45 19-45l448-448q19-19 45-19t45 19l448 448q19 19 19 45z"></path>
+              </svg> UX/UI, Frontend, CMS
+            </p>
+          </div>
+          <div class="data">
+            <div class="data-value-container">
+              <p class="card-text-display" data-value="07">0</p>
+              <p class="card-text-info">years</p>
+            </div>
+          </div>
+        </div>
+        <div class="ele-4 card-base-simple card-style w-50">
+          <div class="title">
+            <p class="title-text card-text-subtitle">
+              Web Dev
+            </p>
+            <p class="percent">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1792 1792" fill="currentColor" height="20" width="20">
+                <path d="M1408 1216q0 26-19 45t-45 19h-896q-26 0-45-19t-19-45 19-45l448-448q19-19 45-19t45 19l448 448q19 19 19 45z"></path>
+              </svg> From 2022
+            </p>
+          </div>
+          <div class="data" id="timerWebDev">
+            <div class="data-value-container">
+              <p class="card-text-display" data-value="0">0</p>
+              <p class="card-text-info">hours</p>
+            </div>
+          </div>
+        </div>
+        <div class="ele-4 card-base-simple card-style w-40">
+          <div class="title">
+            <p class="title-text card-text-subtitle">
+              Revenue
+            </p>
+            <p class="percent">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1792 1792" fill="currentColor" height="20" width="20">
+                <path d="M1408 1216q0 26-19 45t-45 19h-896q-26 0-45-19t-19-45 19-45l448-448q19-19 45-19t45 19l448 448q19 19 19 45z"></path>
+              </svg> Accepted 👍🏼
+            </p>
+          </div>
+          <div class="data">
+            <div class="data-value-container">
+              <p class="card-text-display" data-value="1600">0</p>
+              <p class="card-text-info">€/Months</p>
+            </div>
+          </div>
+        </div>
+        <div class="ele-4 card-base-simple card-style">
+          <div class="title">
+            <p class="title-text card-text-subtitle">
+              Education
+            </p>
+            <p class="percent">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1792 1792" fill="currentColor" height="20" width="20">
+                <path d="M1408 1216q0 26-19 45t-45 19h-896q-26 0-45-19t-19-45 19-45l448-448q19-19 45-19t45 19l448 448q19 19 19 45z"></path>
+              </svg> Bachelor's Degree
+            </p>
+          </div>
+          <div class="data">
+            <div class="data-value-container">
+              <p class="card-text-display" data-value="5">0</p>
+              <p class="card-text-info">years</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- SALES CARD END -->
+
+      <!-- PORTFOLIO SCROLLER -->
+      <div class="ele-5 card-base-simple card-style portfolio-scroller-card" style="min-height: 855px;">
+        <div class="title" style="margin-bottom: 8px;">
+          <p class="card-text-title" style="margin-top: 8px;">
+            Student Projects
+          </p>
+        </div>
+
+        <!-- PORTFOLIO SLIDER SECTION -->
+        <div class="portfolio-slider-section">
+          <!-- SLIDER CONTAINER (IMMAGINI) -->
+          <div class="main portfolio-slider-main">
+            <div class="slider-wrap portfolio-slider-wrap">
+              <div data-slider="list" class="slider-list">
+                <!-- Slide 1 -->
+                <div data-slider="slide" data-slide-index="1" class="slider-slide active" meta-title="AlFly" meta-description="Finalist at UX Design Awards 2023 in Berlin. Recreate the experience of moving inside the city with sharing tickets and more freemium services.">
+                  <div class="slide-inner">
+                    <img src="./asset/Alfly/Copertina Alfly.png" loading="lazy" alt="Slide 1">
+                  </div>
+                </div>
+                <!-- Slide 2 -->
+                <div data-slider="slide" data-slide-index="2" class="slider-slide" meta-title="SISALFUNCLUB" meta-description="Reimagining the casual game SISALFUNCLUB with a new strategy, communication and rebuild the web app.">
+                  <div class="slide-inner">
+                    <img src="./asset/SisalFunClub/Copertina SisalFunClub.png" loading="lazy" alt="Slide 2">
+                  </div>
+                </div>
+                <!-- Slide 3 -->
+                <div data-slider="slide" data-slide-index="3" class="slider-slide" meta-title="Amici del Policlinico" meta-description="Rebuild and give a new modern look to the website of Amici del Policlinico, an association that supports with blood donation the hospital in Milan.">
+                  <div class="slide-inner">
+                    <img src="./asset/POLICLINICO/copertina policlinico.png" loading="lazy" alt="Slide 3">
+                  </div>
+                </div>
+                <!-- Slide 4 -->
+                <div data-slider="slide" data-slide-index="4" class="slider-slide" meta-title="iTour" meta-description="Personal Master thesis project. iTour is an app that allows you to create personalized tours in cities around the world using the experience that the place offer. Creation of brand communication, strategy and all of the UI/UX workflow.">
+                  <div class="slide-inner">
+                    <img src="./asset/iTour/copertina Itour.png" loading="lazy" alt="Slide 4">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- OVERLAY CON TITOLO, DESCRIZIONE, CONTROLLI -->
+          <div class="overlay portfolio-overlay">
+            <div class="overlay-inner">
+              <!-- TITOLO E DESCRIZIONE -->
+              <div class="titoloSwiper portfolio-titulo">
+                <h1 id="slider-title"></h1>
+                <h2 id="slider-description"></h2>
+              </div>
+
+              <!-- COUNTER E PULSANTI -->
+              <div class="portfolio-controls-row">
+                <div class="overlay-count-row portfolio-count-row">
+                  <div class="count-column">
+                    <h2 data-slide-count="step" class="count-heading">01</h2>
+                  </div>
+                  <div class="count-row-divider"></div>
+                  <div class="count-column">
+                    <h2 data-slide-count="total" class="count-heading"></h2>
+                  </div>
+                </div>
+
+                <div class="overlay-nav-row portfolio-nav-row">
+                  <button aria-label="previous slide" data-slider="button-prev" class="button portfolio-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 17 12" fill="none" class="button-arrow">
+                      <path d="M6.28871 12L7.53907 10.9111L3.48697 6.77778H16.5V5.22222H3.48697L7.53907 1.08889L6.28871 0L0.5 6L6.28871 12Z" fill="currentColor" />
+                    </svg>
+                  </button>
+                  <button aria-label="next slide" data-slider="button-next" class="button portfolio-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 17 12" fill="none" class="button-arrow next">
+                      <path d="M6.28871 12L7.53907 10.9111L3.48697 6.77778H16.5V5.22222H3.48697L7.53907 1.08889L6.28871 0L0.5 6L6.28871 12Z" fill="currentColor" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- PORTFOLIO SCROLLER END -->
+
+      <!-- SALES CARD: Online Works -->
+      <div class="flex-2 card-base-simple card-style">
+        <p class="title-text card-text-subtitle" style="align-self: flex-start;">Online Works</p>
+
+        <div class="ele-4 card-base-simple card-style w-100" style="padding: 24px;">
+          <div class="title-auto">
+            <p class="title-text card-text-title">
+              Dulcis in fundo
+            </p>
+            <p class="percent">
+              Online
+            </p>
+          </div>
+
+          <p class="title-text card-text-subtitle">
+            E-commerce site maded with WooCommerce for a local pastry shop based in Vallecrosia (IM) Imperia, Liguria.
+          </p>
+          <div class="flex-2">
+            <div class="data" style="margin-top: 20px;">
+              <p class="title-text card-text-subtitle">
+                Production Time
+              </p>
+              <div class="data-value-container">
+                <p class="card-text-display" data-value="3">0</p>
+                <p class="card-text-info">/months</p>
+              </div>
+            </div>
+            <a href="https://dulcisinfundo.store" target="_blank" class="button-proj">Website</a>
+          </div>
+        </div>
+
+        <div class="ele-4 card-base-simple card-style w-100" style="padding: 24px;">
+          <div class="title-auto">
+            <p class="title-text card-text-title">
+              Sielco
+            </p>
+            <p class="percent">
+              Online
+            </p>
+          </div>
+
+          <p class="title-text card-text-subtitle">
+            Sielco is a leader in IT and data center management, providing tailored services to both private and public sectors.
+          </p>
+          <div class="flex-2">
+            <div class="data" style="margin-top: 20px;">
+              <p class="title-text card-text-subtitle">
+                Production Time
+              </p>
+              <div class="data-value-container">
+                <p class="card-text-display" data-value="4">0</p>
+                <p class="card-text-info">/months</p>
+              </div>
+            </div>
+            <a href="https://sielco.it" target="_blank" class="button-proj">Website</a>
+          </div>
+        </div>
+
+        <div class="ele-4 card-base-simple card-style w-100" style="padding: 24px;">
+          <div class="title-auto">
+            <p class="title-text card-text-title">
+              Collezione Cagnola
+            </p>
+            <p class="percent" style="color: rgb(180, 87, 33);">
+              In Progress
+            </p>
+          </div>
+
+          <p class="title-text card-text-subtitle">
+            Bespoke museum booking solution with real-time inventory management and automated overbooking prevention.
+          </p>
+          <div class="flex-2">
+            <div class="data" style="margin-top: 20px;">
+              <p class="title-text card-text-subtitle">
+                Production Time
+              </p>
+              <div class="data-value-container">
+                <p class="card-text-display" data-value="2">0</p>
+                <p class="card-text-info">/months</p>
+              </div>
+            </div>
+            <a target="_blank" class="button-proj">coming soon</a>
+          </div>
+        </div>
+
+        <div class="ele-4 card-base-simple card-style w-100" style="padding: 24px;">
+          <div class="title-auto">
+            <p class="title-text card-text-title">
+              CYP Wheels
+            </p>
+            <p class="percent" style="color: rgb(180, 87, 33);">
+              In Progress
+            </p>
+          </div>
+
+          <p class="title-text card-text-subtitle">
+            E-commerce for fully customizable bicycle wheels, accessories, and individual components, featuring a configurator integrated with WooCommerce.
+          </p>
+          <div class="flex-2">
+            <div class="data" style="margin-top: 20px;">
+              <p class="title-text card-text-subtitle">
+                Production Time
+              </p>
+              <div class="data-value-container">
+                <p class="card-text-display" data-value="7">0</p>
+                <p class="card-text-info">/months</p>
+              </div>
+            </div>
+            <a target="_blank" class="button-proj">coming soon</a>
+          </div>
+        </div>
+      </div>
+      <!-- SALES CARD END (Online Works) -->
+
+      <div class="ele-7 card-base-simple card-style" style="padding: 24px; align-content: center;">
+        <p class="title-text card-text-title" style="align-self: flex-start;">💖 Thank you</p>
+        <p class="title-text" style="align-self: flex-start; font-size: 26px;">
+          Thanks for visiting my website. I’m currently working on the other internal pages, so they’re not available yet. Hope to see you again soon.        </p>
+      </div>
+
+    </div> <!-- End bento-grid -->
+  </div> <!-- End upgrade -->
+
+</body>
+
+<script src="https://cdn.jsdelivr.net/npm/split-type@0.3.4/umd/index.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
 
 <script src="./js/loadingPage.js" type="module"></script>
+<script src="./js/adaptiveText.js"></script>
+<script src="./js/weather.js"></script>
+<script src="./js/popIt.js"></script>
+<script src="./js/progressBar.js"></script>
+<script src="./js/masonry.js"></script>
+<script src="./js/slotCounter.js"></script>
+<script src="./js/slider.js"></script>
 
-</body>
 </html>
