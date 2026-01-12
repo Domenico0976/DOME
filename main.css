@@ -27,6 +27,7 @@
 
 html, body{
     margin: 0;
+    overflow-x: hidden;
 }
 
 /* ========== PORTFOLIO SLIDER STYLES ========== */
@@ -61,7 +62,7 @@ html, body{
   display: flex;
   flex-direction: column;
   min-height: 0; /* Prevent flex item from overflowing */
-  max-height: 500px;
+  max-height: max-content;
 }
 
 .portfolio-slider-wrap {
@@ -152,8 +153,8 @@ html, body{
 }
 
 .portfolio-titulo h1 {
-  font-size: var(--H1-fontSize);
-  font-weight: 700;
+  font-size: 2.5rem;
+  font-weight: 500;
   line-height: 1.3;
   margin: 0 0 6px 0;
   text-align: left;
@@ -161,7 +162,7 @@ html, body{
 }
 
 .portfolio-titulo h2 {
-  font-size: var(--H3-fontSize);
+  font-size: 1.25rem;
   font-weight: 300;
   margin: 0;
   opacity: 0.8;
@@ -281,8 +282,14 @@ html, body{
     gap: 10px;
   }
 
+  .portfolio-slider-wrap {
+    min-height: 0;
+    height: auto;
+  }
+
   .portfolio-scroller-card .slider-list {
     gap: 12px;
+    height: auto;
   }
 
   .portfolio-scroller-card .slider-slide {
@@ -472,8 +479,7 @@ h3{
     max-width: 1400px;
     margin: 0 auto;
     background-color: white;
-    height: 100vh;
-    /* Stato iniziale nascosto - gestito da JS */
+    height: 100%;
     opacity: 0;
     visibility: hidden;
     padding-top: 40px;
@@ -549,19 +555,16 @@ h3{
     gap: 16px;
     width: 100%;
     justify-content: space-between;
-    align-items: end;
-    /* No padding - gestito da masonry.js e bento-grid */
+    align-items: center;
 }
 
 .flex-2 > .ele-4 {
-    /* Base: gli elementi crescono per riempire lo spazio disponibile */
     flex: 1 1 auto;
-    min-width: 200px; /* Larghezza minima per evitare elementi troppo stretti */
+    min-width: 200px;
 }
 
 /* ========== FLEX-2 WIDTH UTILITIES ========== */
-/* Usa queste classi per definire la larghezza preferita di un elemento */
-/* L'altro elemento sulla riga si adatterà automaticamente */
+
 
 /* Larghezza 60% - l'altro elemento prenderà ~40% */
 .flex-2 > .w-60 {
@@ -766,7 +769,9 @@ h3{
 
 /* ========== BUTTON STYLE - ANIMATION ========== */
 a{
+  cursor: pointer !important;
   all: unset;
+
 }
 
 .button-proj{
@@ -895,6 +900,57 @@ a{
   justify-content: center;
   gap: 0.75rem;
   font-family: "Bricolage Grotesque";
+}
+
+.card-base-award {
+  height: fit-content;
+  border: none;
+  margin: 0;
+  padding: 1.25rem 1rem;
+  border-radius: 0 !important;
+  background-color: #ffffff;
+  border-radius: 23px;
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.09);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.75rem;
+  font-family: "Bricolage Grotesque";
+  transition: all 0.45s ease-out;
+}
+
+.card-base-award:hover{
+  background-color: #eeeeee;
+  border-radius: 23px !important;
+
+}
+
+.svg-award{
+  transition: all 0.3s ease-in-out;
+}
+
+.card-base-award:hover .svg-award{
+  transform: translateY(-8px);
+}
+
+.btn-award{
+  border-radius: 12px;
+  box-shadow: none;
+  transform: translateY(20px);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.45s cubic-bezier(0.445, 0.05, 0.55, 0.95), opacity 0.45s ease-out;
+  padding: 8px;
+}
+
+.card-base-award:hover .btn-award{
+  transform: translate(0px);
+  pointer-events: fill;
+  opacity: 1;
+}
+
+.card-base-award:hover .btn-award:hover{
+  transform: translateY(-4px);
 }
 
 /* Card compatta */
@@ -1193,7 +1249,7 @@ a{
   width: 250px;
   height: 250px;
   position: absolute;
-  right: 8px;
+  right: 5%;
   top: -20px;
   display: flex;
   align-items: center;
@@ -1201,6 +1257,12 @@ a{
   transform: scale(0.7);
   transform: translate(-9%, 15%);
   transition: all 4s cubic-bezier(0.15, 0.83, 0.66, 1);
+}
+
+@media screen and (max-width: 500px){
+  .weather-card-wrapper .container {
+    right: -15%;
+  }
 }
 
 .cloud {
