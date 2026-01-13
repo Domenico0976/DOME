@@ -964,6 +964,13 @@ a{
   font-family: "Bricolage Grotesque";
 }
 
+@media screen and (max-width: 500px) {
+  .svg-award {
+    display: none;
+  }
+  
+}
+
 
 /* ========== UTILITY CLASSES ========== */
 
