@@ -478,7 +478,7 @@ h3{
     height: 100%;
     opacity: 0;
     visibility: hidden;
-    padding-top: 40px;
+    padding: 40px 10px;
 }
 
 /* Elementi figli di .upgrade nascosti inizialmente */
