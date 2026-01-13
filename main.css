@@ -257,18 +257,14 @@ html, body{
     flex: 0 0 85cqw; /* Slightly wider on mobile using container units */
   }
 
-  .portfolio-titulo h1 {
-    font-size: var(--H3-fontSize);
-  }
-
   .portfolio-controls-row {
     padding-top: 8px;
     gap: 8px;
   }
 
   .portfolio-btn {
-    width: 36px;
-    height: 36px;
+    width: 42px;
+    height: 42px;
   }
 }
 
