@@ -7,11 +7,21 @@
 
   const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
 
+  // ── Hover tuning ────────────────────────────────────────────────
+  // ponytail: all hover "feel" numbers in one place for easy tweaking
+  const HOVER = {
+    radius: 160,        // px — effect reach (was 380: too diluted)
+    innerPlateau: 0.35, // fraction of radius with full collapse (crisp hole)
+    attack: 0.38,       // lerp speed growing (~80% collapse in ~70ms @60fps)
+    release: 0.15,      // lerp speed decaying (softer release reads natural)
+    minScale: 0.15,     // residual radius factor under cursor center
+    alphaFade: 0.30,    // alpha removed at full strength (was 0.5: too vanishing)
+  };
+
   // ── Config ────────────────────────────────────────────────────────
   const DEFAULTS = {
     spacing: 20,
     baseRadius: 7.2,
-    mouseRadius: 380,
     trailLength: 20,
     trailSampleRate: 5,
     trailRadius: 230,
@@ -215,7 +225,7 @@
     constructor(options = {}) {
       this.spacing = options.spacing ?? DEFAULTS.spacing;
       this.baseRadius = options.baseRadius ?? DEFAULTS.baseRadius;
-      this.mouseRadius = options.mouseRadius ?? DEFAULTS.mouseRadius;
+      this.mouseRadius = options.mouseRadius ?? HOVER.radius;
       this.trailLength = options.trailLength ?? DEFAULTS.trailLength;
       this.trailSampleRate = options.trailSampleRate ?? DEFAULTS.trailSampleRate;
       this.trailRadius = options.trailRadius ?? DEFAULTS.trailRadius;
@@ -390,7 +400,7 @@
     }
 
     _drawDot(x, y, radius, brightness, grayDisperse, trailStrength, mouseStrength, edgeFade = 1) {
-      const mouseFade = mouseStrength * mouseStrength * 0.5;
+      const mouseFade = mouseStrength * mouseStrength * HOVER.alphaFade;
       const trailFade = trailStrength * 0.3;
       // ponytail: grid visible gray, graphic black; edgeFade keeps top-5-row fade
       const alpha = clamp01(0.75 + brightness * 0.25 - mouseFade - trailFade) * edgeFade;
@@ -484,7 +494,7 @@
 
         dot.currentShapeStrength = lerp(dot.currentShapeStrength, shapeStrength, 0.12);
 
-        // Cursor head influence (distSq — no sqrt)
+        // Cursor head influence: flat collapse plateau + crisp smoothstep edge
         let targetMouseStrength = 0;
         if (mouse.active) {
           const dx = dot.x - mouse.x;
@@ -492,11 +502,22 @@
           const distSq = dx * dx + dy * dy;
           const mrSq = this.mouseRadius * this.mouseRadius;
           if (distSq < mrSq) {
-            const norm = Math.sqrt(distSq) / this.mouseRadius;
-            targetMouseStrength = (1 - norm) ** 3;
+            const inner = this.mouseRadius * HOVER.innerPlateau;
+            targetMouseStrength =
+              distSq <= inner * inner
+                ? 1
+                : 1 - smoothstep(inner, this.mouseRadius, Math.sqrt(distSq));
           }
         }
-        dot.currentMouseStrength = lerp(dot.currentMouseStrength, targetMouseStrength, 0.12);
+        const kMouse =
+          targetMouseStrength > dot.currentMouseStrength
+            ? HOVER.attack
+            : HOVER.release;
+        dot.currentMouseStrength = lerp(
+          dot.currentMouseStrength,
+          targetMouseStrength,
+          kMouse
+        );
 
         // Trail influence (distSq — no sqrt)
         // ponytail: spatial culling — skip dots far from any trail point
@@ -527,7 +548,7 @@
         const edgeFade = topFade * bottomFade;
         const brightness = clamp01(dot.currentShapeStrength) * edgeFade;
 
-        const mouseShrink = 1 - dot.currentMouseStrength * 0.75;
+        const mouseShrink = 1 - dot.currentMouseStrength * (1 - HOVER.minScale);
         const trailShrink = 1 - dot.currentTrailStrength * 0.65;
         const stableRadius = this.baseRadius + dot.currentShapeStrength * 1.25;
         const radius = stableRadius * mouseShrink * trailShrink;
