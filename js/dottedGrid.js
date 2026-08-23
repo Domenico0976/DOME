@@ -439,17 +439,35 @@
       return { shapeStrength: shapeStrength * (1 - eased) };
     }
 
-    _drawDot(x, y, radius, brightness, grayDisperse, trailStrength, mouseStrength, edgeFade = 1) {
+    _drawDot(x, y, radius, brightness, grayDisperse, trailStrength, mouseStrength, edgeFade = 1, buckets = null) {
       const mouseFade = mouseStrength * mouseStrength * HOVER.alphaFade;
       const trailFade = trailStrength * 0.3;
-      // ponytail: grid visible gray, graphic black; edgeFade keeps top-5-row fade
+      // ponytail: grid visible gray, graphic black; edgeFade keeps top/bottom fade
       const alpha = clamp01(0.75 + brightness * 0.25 - mouseFade - trailFade) * edgeFade;
       if (alpha <= 0.002) return;
       const srcLightness = lerp(18, 100, brightness);
-      this.ctx.beginPath();
-      this.ctx.fillStyle = `hsla(210, 0%, ${srcLightness}%, ${alpha})`;
-      this.ctx.arc(x, y, radius, 0, Math.PI * 2);
-      this.ctx.fill();
+
+      if (!buckets) {
+        this.ctx.beginPath();
+        this.ctx.fillStyle = `hsla(210, 0%, ${srcLightness}%, ${alpha})`;
+        this.ctx.arc(x, y, radius, 0, Math.PI * 2);
+        this.ctx.fill();
+        return;
+      }
+
+      // ponytail: quantize style → few Path2D buckets → one fill() each.
+      // max dot diameter ≈17px < spacing 20px ⇒ no overlap ⇒ union fill == per-dot fills
+      const rQ = Math.round(radius * 2);
+      const lQ = Math.round(srcLightness / 8);
+      const aQ = Math.round(alpha * 20);
+      const key = rQ | (lQ << 7) | (aQ << 12);
+      let b = buckets.get(key);
+      if (!b) {
+        b = { style: `hsla(210, 0%, ${lQ * 8}%, ${aQ / 20})`, path: new Path2D() };
+        buckets.set(key, b);
+      }
+      b.path.moveTo(x + radius, y);
+      b.path.arc(x, y, radius, 0, Math.PI * 2);
     }
 
     _loop() {
@@ -522,6 +540,8 @@
         trailCull = true;
       }
 
+      const buckets = new Map();
+
       for (let i = 0; i < this.dots.length; i++) {
         const dot = this.dots[i];
 
@@ -536,7 +556,7 @@
           const edgeFade = topFade * bottomFade;
           const brightness = clamp01(shapeStrength) * edgeFade;
           const radius = this.baseRadius + shapeStrength * 1.25;
-          this._drawDot(dot.x, dot.y, radius, brightness, 0, 0, 0, edgeFade);
+          this._drawDot(dot.x, dot.y, radius, brightness, 0, 0, 0, edgeFade, buckets);
           continue;
         }
 
@@ -611,8 +631,15 @@
           0,
           dot.currentTrailStrength,
           dot.currentMouseStrength,
-          edgeFade
+          edgeFade,
+          buckets
         );
+      }
+
+      // ponytail: one fill() per style bucket instead of thousands per frame
+      for (const b of buckets.values()) {
+        this.ctx.fillStyle = b.style;
+        this.ctx.fill(b.path);
       }
 
       this.frameCount++;
