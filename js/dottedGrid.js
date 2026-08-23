@@ -294,6 +294,7 @@
       // ponytail: pause canvas rendering while the page scrolls — frees the main thread
       // exactly when the browser needs it for compositing (fixes scroll jank)
       this._scrolling = false;
+      this._scrollTick = 0;
       this._scrollDebounce = null;
       this._onScroll = () => {
         this._cacheRect();
@@ -312,7 +313,8 @@
         if (this.isVisible && this.hiddenTimer) {
           clearTimeout(this.hiddenTimer);
           this.hiddenTimer = null;
-          this._loop();
+          // defer the heavy render out of the observer callback (no jank burst)
+          requestAnimationFrame(() => this._loop());
         }
       }, { threshold: 0 });
       observer.observe(this.canvas);
@@ -434,10 +436,16 @@
         this.hiddenTimer = null;
       }
 
-      // ponytail: skip the heavy render while the user is actively scrolling;
-      // canvas holds its last frame (shapes rotate too slowly to notice),
-      // loop stays alive and resumes ~150ms after the scroll stops
+      // ponytail: while scrolling run a reduced-rate ambient loop (1 frame
+      // every 3 ticks, no mouse/trail updates) instead of freezing — the
+      // canvas keeps living and full rate resumes ~150ms after scroll stops
       if (this._scrolling) {
+        this._scrollTick++;
+        if (this._scrollTick % 3 !== 0) {
+          this.rafId = requestAnimationFrame(() => this._loop());
+          return;
+        }
+        this._renderFrame(true);
         this.rafId = requestAnimationFrame(() => this._loop());
         return;
       }
@@ -446,13 +454,15 @@
       this.rafId = requestAnimationFrame(() => this._loop());
     }
 
-    _renderFrame() {
+    _renderFrame(ambient = false) {
       const time = performance.now() * 0.001;
       const mouse = this.mouse;
       const now = performance.now();
 
-      mouse.x = lerp(mouse.x, mouse.targetX, 0.12);
-      mouse.y = lerp(mouse.y, mouse.targetY, 0.12);
+      if (!ambient) {
+        mouse.x = lerp(mouse.x, mouse.targetX, 0.12);
+        mouse.y = lerp(mouse.y, mouse.targetY, 0.12);
+      }
 
       this.ctx.fillStyle = "#ffffff";
       this.ctx.fillRect(0, 0, this.width, this.height);
@@ -501,54 +511,56 @@
 
         dot.currentShapeStrength = lerp(dot.currentShapeStrength, shapeStrength, 0.12);
 
-        // Cursor head influence: flat collapse plateau + crisp smoothstep edge
-        let targetMouseStrength = 0;
-        if (mouse.active) {
-          const dx = dot.x - mouse.x;
-          const dy = dot.y - mouse.y;
-          const distSq = dx * dx + dy * dy;
-          const mrSq = this.mouseRadius * this.mouseRadius;
-          if (distSq < mrSq) {
-            const inner = this.mouseRadius * HOVER.innerPlateau;
-            targetMouseStrength =
-              distSq <= inner * inner
-                ? 1
-                : 1 - smoothstep(inner, this.mouseRadius, Math.sqrt(distSq));
-          }
-        }
-        const kMouse =
-          targetMouseStrength > dot.currentMouseStrength
-            ? HOVER.attack
-            : HOVER.release;
-        dot.currentMouseStrength = lerp(
-          dot.currentMouseStrength,
-          targetMouseStrength,
-          kMouse
-        );
-
-        // Trail influence (distSq — no sqrt)
-        // ponytail: spatial culling — skip dots far from any trail point
-        let targetTrailStrength = 0;
-        if (trailCull && dot.x >= tMinX && dot.x <= tMaxX && dot.y >= tMinY && dot.y <= tMaxY) {
-          const trSq = this.trailRadius * this.trailRadius;
-          for (let j = 0; j < mouse.trail.length; j++) {
-            const pt = mouse.trail[j];
-            const age = (now - pt.t) / this.trailFadeMs;
-            if (age >= 1) continue;
-            const ageFade = (1 - age) ** 3;
-            const positionFade = (j + 1) / mouse.trail.length;
-            const fade = ageFade * positionFade;
-            const dx = dot.x - pt.x;
-            const dy = dot.y - pt.y;
+        if (!ambient) {
+          // Cursor head influence: flat collapse plateau + crisp smoothstep edge
+          let targetMouseStrength = 0;
+          if (mouse.active) {
+            const dx = dot.x - mouse.x;
+            const dy = dot.y - mouse.y;
             const distSq = dx * dx + dy * dy;
-            if (distSq < trSq) {
-              const proximity = 1 - smoothstep(0, 1, Math.sqrt(distSq) / this.trailRadius);
-              const softProximity = proximity * proximity * proximity;
-              targetTrailStrength = Math.max(targetTrailStrength, softProximity * fade);
+            const mrSq = this.mouseRadius * this.mouseRadius;
+            if (distSq < mrSq) {
+              const inner = this.mouseRadius * HOVER.innerPlateau;
+              targetMouseStrength =
+                distSq <= inner * inner
+                  ? 1
+                  : 1 - smoothstep(inner, this.mouseRadius, Math.sqrt(distSq));
             }
           }
+          const kMouse =
+            targetMouseStrength > dot.currentMouseStrength
+              ? HOVER.attack
+              : HOVER.release;
+          dot.currentMouseStrength = lerp(
+            dot.currentMouseStrength,
+            targetMouseStrength,
+            kMouse
+          );
+
+          // Trail influence (distSq — no sqrt)
+          // ponytail: spatial culling — skip dots far from any trail point
+          let targetTrailStrength = 0;
+          if (trailCull && dot.x >= tMinX && dot.x <= tMaxX && dot.y >= tMinY && dot.y <= tMaxY) {
+            const trSq = this.trailRadius * this.trailRadius;
+            for (let j = 0; j < mouse.trail.length; j++) {
+              const pt = mouse.trail[j];
+              const age = (now - pt.t) / this.trailFadeMs;
+              if (age >= 1) continue;
+              const ageFade = (1 - age) ** 3;
+              const positionFade = (j + 1) / mouse.trail.length;
+              const fade = ageFade * positionFade;
+              const dx = dot.x - pt.x;
+              const dy = dot.y - pt.y;
+              const distSq = dx * dx + dy * dy;
+              if (distSq < trSq) {
+                const proximity = 1 - smoothstep(0, 1, Math.sqrt(distSq) / this.trailRadius);
+                const softProximity = proximity * proximity * proximity;
+                targetTrailStrength = Math.max(targetTrailStrength, softProximity * fade);
+              }
+            }
+          }
+          dot.currentTrailStrength = lerp(dot.currentTrailStrength, targetTrailStrength, 0.08);
         }
-        dot.currentTrailStrength = lerp(dot.currentTrailStrength, targetTrailStrength, 0.08);
 
         const topFade = clamp01(smoothstep(0, 5 * this.spacing, dot.y));
         const bottomFade = clamp01(smoothstep(0, 5 * this.spacing, this.height - dot.y));
