@@ -292,6 +292,8 @@
       this.isVisible = true;
       this.hiddenTimer = null;
       this._rect = null; // cached getBoundingClientRect (layout-read cache)
+      this._handlers = null;
+      this._resizeTimer = null;
 
       this._init();
     }
@@ -316,11 +318,17 @@
         }
       });
 
-      // Pointer events
-      this.canvas.addEventListener("pointermove", (e) => this._onPointerMove(e));
-      this.canvas.addEventListener("pointerleave", () => (this.mouse.active = false));
-      this.canvas.addEventListener("click", () => this._onClick());
-      window.addEventListener("resize", () => this._resize());
+      // Pointer events (stored handlers so destroy() can actually remove them)
+      this._handlers = {
+        pointermove: (e) => this._onPointerMove(e),
+        pointerleave: () => (this.mouse.active = false),
+        click: () => this._onClick(),
+        resize: () => this._scheduleResize(),
+      };
+      this.canvas.addEventListener("pointermove", this._handlers.pointermove);
+      this.canvas.addEventListener("pointerleave", this._handlers.pointerleave);
+      this.canvas.addEventListener("click", this._handlers.click);
+      window.addEventListener("resize", this._handlers.resize);
 
       // ponytail: pause canvas rendering while the page scrolls — frees the main thread
       // exactly when the browser needs it for compositing (fixes scroll jank)
@@ -368,6 +376,14 @@
 
     _cacheRect() {
       this._rect = this.canvas.getBoundingClientRect();
+    }
+
+    _scheduleResize() {
+      if (this._resizeTimer) clearTimeout(this._resizeTimer);
+      this._resizeTimer = setTimeout(() => {
+        this._resizeTimer = null;
+        this._resize();
+      }, 150);
     }
 
     _createDots() {
@@ -650,19 +666,24 @@
       cancelAnimationFrame(this.rafId);
       if (this.hiddenTimer) clearTimeout(this.hiddenTimer);
       if (this._scrollDebounce) clearTimeout(this._scrollDebounce);
+      if (this._resizeTimer) clearTimeout(this._resizeTimer);
       window.removeEventListener("scroll", this._onScroll);
-      this.canvas.removeEventListener("pointermove", this._onPointerMove);
-      this.canvas.removeEventListener("pointerleave", () => (this.mouse.active = false));
-      this.canvas.removeEventListener("click", () => this._onClick());
-      window.removeEventListener("resize", () => this._resize());
+      if (this._handlers) {
+        this.canvas.removeEventListener("pointermove", this._handlers.pointermove);
+        this.canvas.removeEventListener("pointerleave", this._handlers.pointerleave);
+        this.canvas.removeEventListener("click", this._handlers.click);
+        window.removeEventListener("resize", this._handlers.resize);
+      }
     }
   }
 
   // ── Auto-init when DOM ready ──────────────────────────────────────
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", () => new DottedGrid());
+    document.addEventListener("DOMContentLoaded", () => {
+      window.dottedGridInstance = new DottedGrid();
+    });
   } else {
-    new DottedGrid();
+    window.dottedGridInstance = new DottedGrid();
   }
 
   // Expose globally for customisation
