@@ -46,14 +46,34 @@
     return t * t * (3 - 2 * t);
   };
 
+  // ponytail: axis-aligned bbox of projected points (+margin), computed once
+  // per geometry refresh so dots far from a shape skip distance loops
+  function bboxOf(points, margin = 0) {
+    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    for (let i = 0; i < points.length; i++) {
+      const p = points[i];
+      if (p[0] < minX) minX = p[0];
+      if (p[0] > maxX) maxX = p[0];
+      if (p[1] < minY) minY = p[1];
+      if (p[1] > maxY) maxY = p[1];
+    }
+    return [minX - margin, minY - margin, maxX + margin, maxY + margin];
+  }
+
   // ── Shape functions ───────────────────────────────────────────────
   // ponytail: edges precomputed once per frame (see computeShapeGeometry)
-  function getCubeStrength(x, y, time, width, height, edges) {
+  function getCubeStrength(x, y, time, width, height, edges, cubeBBox) {
     const cx = width / 2;
     const cy = height / 2;
     const scale = Math.min(width, height) * 0.28;
     const px = (x - cx) / scale;
     const py = (y - cy) / scale;
+    if (
+      px < cubeBBox[0] || px > cubeBBox[2] ||
+      py < cubeBBox[1] || py > cubeBBox[3]
+    ) {
+      return 0; // ponytail: outside projected bbox → no distance loops
+    }
 
     let minDist = Infinity;
     for (let i = 0; i < edges.length; i++) {
@@ -126,12 +146,18 @@
   }
 
   // ponytail: pts precomputed once per frame (see computeShapeGeometry)
-  function getInfinityStrength(x, y, time, width, height, pts) {
+  function getInfinityStrength(x, y, time, width, height, pts, infBBox) {
     const cx = width / 2;
     const cy = height / 2;
     const scale = Math.min(width, height) * 0.27;
     const px = (x - cx) / scale;
     const py = (y - cy) / scale;
+    if (
+      px < infBBox[0] || px > infBBox[2] ||
+      py < infBBox[1] || py > infBBox[3]
+    ) {
+      return 0; // ponytail: outside projected bbox → no distance loops
+    }
 
     let minDist = Infinity;
     const n = pts.length;
@@ -184,13 +210,14 @@
     const cube = [
       [0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]
     ].map(([a,b]) => [proj[a][0], proj[a][1], proj[b][0], proj[b][1]]);
+    const cubeBBox = bboxOf(proj, 0.25);
 
-    // Infinity: lemniscate rotated Y then Z, perspective-projected (64 samples)
+    // Infinity: lemniscate rotated Y then Z, perspective-projected (48 samples)
     const cyI = Math.cos(time * 0.3);
     const syI = Math.sin(time * 0.3);
     const czI = Math.cos(time * 0.2);
     const szI = Math.sin(time * 0.2);
-    const a = 0.7, pInf = 2.5, samples = 64;
+    const a = 0.7, pInf = 2.5, samples = 48;
     const infinity = [];
     for (let i = 0; i < samples; i++) {
       const t = (i / samples) * Math.PI * 2;
@@ -207,17 +234,21 @@
       const p = pInf / (pInf + vz);
       infinity.push([vx * p, vy * p]);
     }
+    const infBBox = bboxOf(infinity, 0.25);
 
-    return { cube, infinity };
+    return { cube, infinity, cubeBBox, infBBox };
   }
 
   function getRawShapeStrength(shapeIndex, x, y, time, width, height, geo) {
     const i = shapeIndex % TOTAL_SHAPES;
-    if (i === 0) return getCubeStrength(x, y, time, width, height, geo.cube);
+    if (i === 0)
+      return getCubeStrength(x, y, time, width, height, geo.cube, geo.cubeBBox);
     if (i === 1) return getStarfishStrength(x, y, time, width, height);
     if (i === 2) return getConcentricRingsStrength(x, y, time, width, height);
     if (i === 3) return getSpiralStrength(x, y, time, width, height);
-    return getInfinityStrength(x, y, time, width, height, geo.infinity);
+    return getInfinityStrength(
+      x, y, time, width, height, geo.infinity, geo.infBBox
+    );
   }
 
   // ── Public API ────────────────────────────────────────────────────
