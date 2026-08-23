@@ -1,0 +1,11 @@
+.env
+.env.local
+.env.*.local
+node_modules/
+.kilo/node_modules/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+dist/
+build/
