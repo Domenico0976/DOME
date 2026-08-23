@@ -260,6 +260,7 @@
       this.rafId = null;
       this.isVisible = true;
       this.hiddenTimer = null;
+      this._rect = null; // cached getBoundingClientRect (layout-read cache)
 
       this._init();
     }
@@ -295,6 +296,7 @@
       this._scrolling = false;
       this._scrollDebounce = null;
       this._onScroll = () => {
+        this._cacheRect();
         this._scrolling = true;
         if (this._scrollDebounce) clearTimeout(this._scrollDebounce);
         this._scrollDebounce = setTimeout(() => {
@@ -327,7 +329,12 @@
       this.canvas.width = Math.floor(this.width * this.dpr);
       this.canvas.height = Math.floor(this.height * this.dpr);
       this.ctx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
+      this._rect = rect;
       this._createDots();
+    }
+
+    _cacheRect() {
+      this._rect = this.canvas.getBoundingClientRect();
     }
 
     _createDots() {
@@ -351,7 +358,7 @@
     }
 
     _onPointerMove(e) {
-      const rect = this.canvas.getBoundingClientRect();
+      const rect = this._rect || this.canvas.getBoundingClientRect();
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
       this.mouse.targetX = x;
