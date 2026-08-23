@@ -1,0 +1,7 @@
+Task 1: complete (commits 6a800ae..08b0276, review clean)
+Task 2: complete (commits 08b0276..a04194c, review clean; minor: _cacheRect per scroll-tick accettato come trade-off)
+Task 3: complete (commits a04194c..acc9eb5, review clean)
+Task 4: complete (commits acc9eb5..cdf31ec, review clean; deviazione piano validata dal reviewer: bbox passato come parametro)
+Task 5: complete (commits cdf31ec..394d1df, review clean)
+Task 6: complete (commits 394d1df..1677354, review clean; minor1: removeEventListener scroll senza {passive:true} - innocuo; minor2: MQ listener reduced-motion non rimosso in destroy - informativo)
+FINAL REVIEW: complete (verdict READY TO MERGE; 3 minor deferiti: scroll-tick cacheRect innocuo, passive-option non necessaria su remove, MQ listener informativo)

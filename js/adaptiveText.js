@@ -36,41 +36,51 @@ class AdaptiveText {
     }
     
     adjustTextSize(element) {
-        const card = element.closest('.card');
-        if (!card) return;
+        const cardHeader = element.closest('.card-header');
+        if (!cardHeader) return;
         
-        const cardWidth = card.offsetWidth;
-        const targetWidth = cardWidth * 0.7; // 70% della larghezza della card
+        const flex2 = cardHeader.closest('.flex-2');
+        if (!flex2) return;
+        
+        // Larghezza disponibile nel card-header (considerando padding)
+        const cardHeaderWidth = cardHeader.offsetWidth - 24; // 12px padding left + margine
         
         // Reset font size per calcolare correttamente
         element.style.fontSize = '';
         
-        // Font size massimo e minimo
-        const maxFontSize = cardWidth * 0.15; // 15% della larghezza della card
-        const minFontSize = cardWidth * 0.05; // 5% della larghezza della card
+        // Font size basato sulla larghezza del card-header
+        // Min: 16px, Max: basato sulla larghezza disponibile
+        const minFontSize = 16;
+        const maxFontSize = Math.min(cardHeaderWidth * 0.15, 72); // Max 72px o 15% della larghezza
         
+        // Calcola font size ottimale basato sulla lunghezza del testo
+        const textLength = element.textContent.length;
         let fontSize = maxFontSize;
+        
+        // Se il testo è molto lungo, riduci la dimensione base
+        if (textLength > 20) {
+            fontSize = Math.max(maxFontSize * 0.6, minFontSize);
+        } else if (textLength > 12) {
+            fontSize = Math.max(maxFontSize * 0.75, minFontSize);
+        } else if (textLength > 8) {
+            fontSize = Math.max(maxFontSize * 0.85, minFontSize);
+        }
+        
         element.style.fontSize = `${fontSize}px`;
         
-        // Riduci il font size finché il testo non sta in una linea entro il 70%
-        while (element.scrollWidth > targetWidth && fontSize > minFontSize) {
-            fontSize -= 0.5;
+        // Verifica se il testo va a capo correttamente
+        // Se occupa troppo spazio verticalmente, riduci leggermente
+        const lineHeight = parseFloat(window.getComputedStyle(element).lineHeight);
+        const maxLines = 3; // Massimo 3 righe
+        
+        while (element.offsetHeight > (lineHeight * maxLines) && fontSize > minFontSize) {
+            fontSize -= 1;
             element.style.fontSize = `${fontSize}px`;
         }
         
-        // Se il testo è troppo corto, aumenta gradualmente
-        if (element.scrollWidth < targetWidth * 0.5 && fontSize < maxFontSize) {
-            while (element.scrollWidth < targetWidth && fontSize < maxFontSize) {
-                fontSize += 0.25;
-                element.style.fontSize = `${fontSize}px`;
-                
-                // Previeni overflow
-                if (element.scrollWidth > targetWidth) {
-                    fontSize -= 0.55;
-                    element.style.fontSize = `${fontSize}px`;
-                    break;
-                }
-            }
+        // Assicurati che il font non sia mai sotto il minimo
+        if (fontSize < minFontSize) {
+            element.style.fontSize = `${minFontSize}px`;
         }
     }
 }

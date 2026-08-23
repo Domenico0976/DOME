@@ -30,6 +30,7 @@ html, body{
     overflow-x: hidden;
 }
 
+/* =============== STYLE CARD ============== */
 /* ========== PORTFOLIO SLIDER STYLES ========== */
 .portfolio-scroller-card {
   display: flex;
@@ -132,7 +133,6 @@ html, body{
 .portfolio-overlay {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   order: 2;
   width: 100%;
   gap: 12px;
@@ -142,7 +142,8 @@ html, body{
   display: flex;
   flex-direction: column;
   gap: 12px;
-  justify-content: end;
+  min-height: 250px;
+  justify-content: space-between;
 }
 
 /* Titolo e Descrizione */
@@ -262,10 +263,24 @@ html, body{
     gap: 8px;
   }
 
+  /* Ensure minimum 44px touch target for nav buttons on mobile */
   .portfolio-btn {
-    width: 42px;
-    height: 42px;
+    width: 50px;
+    height: 50px;
+    min-width: 44px;
+    min-height: 44px;
   }
+  .flex-2-prtf{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 4px;
+    width: 100%;
+    justify-content: space-between;
+    align-content: start;
+    margin-bottom: 12px;
+}
+
 }
 
 @media (max-width: 480px) {
@@ -452,11 +467,11 @@ html, body{
 
 h1{
     mix-blend-mode: difference;
+    font-family: "Bricolage Grotesque";
     margin: 0;
     text-align: center;
     color: white;
     font-size: var(--H1-HugefontSize);
-    text-transform: uppercase;
     
 }
 
@@ -480,6 +495,24 @@ h3{
     visibility: hidden;
     padding: 40px 10px;
 }
+
+/* =============== SPLINE CANVAS VIEWER ============== */
+.hello {
+    width: 100%;
+    height: 60vh;
+    min-height: 400px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 1.5rem;
+    margin: 24px 0;
+}
+
+.hello #spline-canvas {
+    width: 100% !important;
+    height: 100% !important;
+    display: block;
+}
+/* =============== END SPLINE CANVAS VIEWER ============== */
 
 /* Elementi figli di .upgrade nascosti inizialmente */
 .upgrade .bento-grid > *,
@@ -530,6 +563,8 @@ h3{
 @media (max-width: 768px) {
     .bento-grid {
         grid-template-columns: 1fr;
+        padding: 16px;
+        gap: 16px;
     }
 }
 
@@ -537,6 +572,8 @@ h3{
 @media (max-width: 1000px) {
     .bento-grid {
         grid-template-columns: 1fr;
+        padding: 20px;
+        gap: 20px;
     }
 }
 
@@ -546,6 +583,14 @@ h3{
 }
 
 .flex-2{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+}
+.flex-2-prtf{
     display: flex;
     flex-wrap: wrap;
     gap: 16px;
@@ -763,6 +808,112 @@ h3{
   min-height: 400px;
 }
 
+/* ========== MOBILE RESPONSIVE CARD TWEAKS ========== */
+@media (max-width: 768px) {
+    /* Reduce card padding on mobile for more content space */
+    .card-base,
+    .card-base-simple,
+    .card-base-award {
+        padding: 1rem 0.875rem;
+        gap: 0.6rem;
+    }
+
+    /* Compact display numbers on mobile */
+    .card-text-display {
+        font-size: clamp(32px, 10vw, 48px);
+    }
+
+    /* Smaller gap between weather info pills on mobile */
+    .weather-info-group > div {
+        padding: 5px 10px;
+    }
+
+    .weather-time,
+    .weather-date,
+    .weather-humidity,
+    .weather-wind,
+    .weather-precip,
+    .weather-population,
+    .weather-sunrise-countdown,
+    .weather-sunset-countdown,
+    .weather-coordinates,
+    .weather-crime {
+        font-size: 13px;
+    }
+
+    .weather-info-icon {
+        width: 18px;
+        height: 18px;
+    }
+}
+
+/* Extra compact on very small screens */
+@media (max-width: 480px) {
+    .bento-grid {
+        padding: 12px;
+        gap: 12px;
+    }
+
+    .card-base,
+    .card-base-simple {
+        padding: 0.875rem 0.75rem;
+        border-radius: 18px;
+    }
+
+    .card-text-display {
+        font-size: clamp(28px, 9vw, 36px);
+    }
+
+    .card-text-subtitle {
+        font-size: clamp(0.95rem, 3.5vw, 1.1rem);
+    }
+
+    .card-text-title {
+        font-size: clamp(1.1rem, 4vw, 1.4rem);
+    }
+
+    /* Ensure weather info pills don't overflow their container */
+    .weather-info-group > div {
+        min-width: fit-content;
+        padding: 4px 8px;
+        gap: 6px;
+    }
+
+    .weather-info-icon {
+        width: 16px;
+        height: 16px;
+    }
+
+    .weather-time,
+    .weather-date,
+    .weather-humidity,
+    .weather-wind,
+    .weather-precip,
+    .weather-population,
+    .weather-sunrise-countdown,
+    .weather-sunset-countdown,
+    .weather-coordinates,
+    .weather-crime {
+        font-size: 12px;
+    }
+
+    .card-header span:first-child {
+        font-size: 20px;
+    }
+
+    .card-header span:last-child,
+    .card-header .region-label {
+        font-size: 0.9rem;
+    }
+
+  /* Radio cards: full width, more touch-friendly on mobile */
+  .radio-card {
+    height: auto;
+    min-height: 52px;
+    padding: 0.75rem 0.875rem;
+  }
+}
+
 /* ========== BUTTON STYLE - ANIMATION ========== */
 a{
   cursor: pointer !important;
@@ -874,7 +1025,7 @@ a{
   margin: 0;
   padding: 1.25rem 1rem;
   background: radial-gradient(178.94% 106.41% at 26.42% 106.41%, #fcfcfc 0%, rgba(48, 48, 48, 0) 71.88%), #FFFFFF;
-  border-radius: 23px;
+  border-radius: 8px;
   box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.09);
   display: flex;
   flex-direction: column;
@@ -889,7 +1040,7 @@ a{
   margin: 0;
   padding: 1.25rem 1rem;
   background-color: #ffffff;
-  border-radius: 23px;
+  border-radius: 8px;
   box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.09);
   display: flex;
   flex-direction: column;
@@ -903,9 +1054,7 @@ a{
   border: none;
   margin: 0;
   padding: 1.25rem 1rem;
-  border-radius: 0 !important;
-  background-color: #ffffff;
-  border-radius: 23px;
+  cursor: pointer;
   box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.09);
   display: flex;
   flex-direction: column;
@@ -913,11 +1062,31 @@ a{
   gap: 0.75rem;
   font-family: "Bricolage Grotesque";
   transition: all 0.45s ease-out;
+  animation: pulse-btn 3s ease-in-out infinite;
+}
+
+@keyframes pulse-btn {
+  0%{
+    border-radius: 8px;
+    background-color: #f7f7f7;
+    border: 3px solid #eeeeee;
+  }
+
+  60%{
+    border-radius: 23px;
+    background-color: #eeeeee;
+    border: 3px solid #f7f7f7;
+  }
+
+  100%{
+    border-radius: 8px;
+    background-color: #f7f7f7;
+    border: 3px solid #eeeeee;
+  }
 }
 
 .card-base-award:hover{
   background-color: #eeeeee;
-  border-radius: 23px !important;
 
 }
 
@@ -1006,7 +1175,30 @@ a{
   overflow: hidden;
 }
 
-/****************************** END DESIGN SYSTEM *****************************/
+/* Respect prefers-reduced-motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+    .card-transition-slow {
+        transition: none;
+    }
+    .card-base-award {
+        animation: none;
+    }
+    .cloud, .rain-container, .snow-container, .lightning,
+    .sun.sunshine, .storm-lateral-left, .storm-lateral-right,
+    .heavy-rain-main, .rain-drop, .snow-flake,
+    .lightning-inner, .lightning-outer {
+        animation: none !important;
+    }
+    .slider-slide {
+        transition: none;
+    }
+    .portfolio-btn, .button-proj, .card-hover-lift {
+        transition: none;
+    }
+    .status-dot.online::after {
+        animation: none;
+    }
+}
 
 
 /* ========== APPLICAZIONE CLASSI ESISTENTI ========== */
@@ -1080,7 +1272,7 @@ a{
   font-weight: 500;
   color: rgba(87, 77, 51, 0.6);
   margin: 0;
-  padding-bottom: 8px;
+  padding-bottom: 11px;
 }
 
 .data p {
@@ -1122,10 +1314,9 @@ a{
 
 .radio-card {
   position: relative;
-  height: 3.5rem;
+  height: 4rem;
   display: flex;
-  align-items: center;
-  padding: 0 0.75rem;
+  padding: 0.75rem;
   gap: 0.75rem;
   border-radius: 0.5rem;
   font-weight: 500;
@@ -1135,6 +1326,7 @@ a{
   transition: all 0.2s ease-in-out;
   overflow: hidden;
   font-family: "Bricolage Grotesque", sans-serif;
+  min-height: 48px;
 }
 
 .radio-card:hover {
@@ -1243,29 +1435,86 @@ a{
 .card {
   /* Weather card - eredita da design system */
   position: relative;
+  display: flex;
+  justify-content: space-between;
   /* Stili specifici per weather card solo */
 }
 
 
 
+.weather-card-wrapper > .card {
+  overflow: clip;
+}
+
 .weather-card-wrapper .container {
-  width: 250px;
-  height: 250px;
-  position: absolute;
-  right: 5%;
-  top: -20px;
+  width: min(250px, 85%);
+  height: min(250px, 85%);
   display: flex;
+  right: 0;
   align-items: center;
   justify-content: center;
-  transform: scale(0.7);
-  transform: translate(-9%, 15%);
+  transform: scale(0.8);
+  transform: translate(9%, 45%);
   transition: all 4s cubic-bezier(0.15, 0.83, 0.66, 1);
+}
+
+@media (max-width: 1024px) {
+  .weather-card-wrapper .container {
+    transform: scale(0.65) translate(5%, 30%);
+  }
 }
 
 @media screen and (max-width: 500px){
   .weather-card-wrapper .container {
-    right: -15%;
+    right: -5%;
+    top: 20%;
+    transform: scale(0.55) translate(0%, 20%);
+    transform-origin: bottom;
+    width: 90%;
+    height: 90%;
   }
+
+  .reverse-column-mob {
+    flex-direction: column-reverse !important;
+    align-items: stretch;
+  }
+
+  .card-min-height-md {
+    min-height: 300px;
+  }
+
+  .card-header {
+    min-height: 60px;
+    padding-left: 8px;
+    margin-top: 6px;
+  }
+
+  .card-header span:first-child {
+    font-size: 22px;
+  }
+
+  .card-header span:last-child,
+  .card-header .region-label {
+    font-size: 1rem;
+  }
+
+  .cloud { width: 160px; }
+  .front { padding-top: 30px; margin-left: 15px; }
+  .back { margin-top: -20px; margin-left: 100px; }
+  .right-front { width: 32px; height: 32px; }
+  .left-front { width: 46px; height: 46px; }
+  .right-back { width: 36px; height: 36px; }
+  .left-back { width: 22px; height: 22px; }
+  .heavy-rain-main { top: 18px; }
+  .heavy-rain-main .left-main { width: 50px; height: 50px; }
+  .heavy-rain-main .right-main { width: 38px; height: 38px; }
+  .left-lat { width: 38px; height: 38px; }
+  .right-lat { width: 30px; height: 30px; }
+  .sun { width: 80px; height: 80px; border-radius: 40px; }
+  .rain-container { top: 55px; height: 80px; }
+  .snow-container { top: 55px; height: 80px; }
+  .temp-scale { right: 12px; bottom: 12px; width: 60px; height: 28px; }
+  .weather-bottom-container { padding-left: 8px; gap: 10px; }
 }
 
 .cloud {
@@ -1280,6 +1529,7 @@ a{
   opacity: 0;
   transform: scale(0);
   pointer-events: none;
+  animation: none;
 }
 
 .front {
@@ -1303,7 +1553,6 @@ a{
   height: 45px;
   border-radius: 50% 50% 50% 0%;
   background-color: #000;
-  mix-blend-mode: difference;
   display: inline-block;
   margin-left: -10px;
   z-index: 5;
@@ -1334,6 +1583,92 @@ a{
   border-radius: 50% 50% 0% 50%;
   background-color: #000;
   display: inline-block;
+  z-index: 5;
+}
+
+/* Heavy rain main cloud - centered in container */
+.heavy-rain-main {
+  position: absolute;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 15;
+  transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.heavy-rain-main.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Heavy rain main cloud - slightly larger than front cloud */
+.heavy-rain-main .left-main {
+  width: 75px;
+  height: 75px;
+  border-radius: 50% 50% 0% 50%;
+  background-color: #1a1a1a;
+  display: inline-block;
+  z-index: 5;
+}
+
+.heavy-rain-main .right-main {
+  width: 55px;
+  height: 55px;
+  border-radius: 50% 50% 50% 0%;
+  background-color: #1a1a1a;
+  display: inline-block;
+  margin-left: -12px;
+  z-index: 5;
+}
+
+/* Storm variant - darker main cloud for storm */
+.heavy-rain-main.storm .left-main,
+.heavy-rain-main.storm .right-main {
+  background-color: #0a0a0a;
+}
+
+/* Storm lateral clouds */
+.storm-lateral-left,
+.storm-lateral-right {
+  position: absolute;
+  top: 60px;
+  z-index: 13;
+  transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), 
+              transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.storm-lateral-left {
+  left: 5%;
+  transform: scale(0.9);
+}
+
+.storm-lateral-right {
+  left: 55%;
+  transform: scale(0.85);
+}
+
+.storm-lateral-left.hidden,
+.storm-lateral-right.hidden {
+  opacity: 0;
+  transform: scale(0);
+}
+
+.left-lat {
+  width: 55px;
+  height: 55px;
+  border-radius: 50% 50% 0% 50%;
+  background-color: #777;
+  display: inline-block;
+  z-index: 5;
+}
+
+.right-lat {
+  width: 45px;
+  height: 45px;
+  border-radius: 50% 50% 50% 0%;
+  background-color: #777;
+  display: inline-block;
+  margin-left: -12px;
   z-index: 5;
 }
 
@@ -1400,36 +1735,270 @@ a{
   }
 }
 
+/* Rain Animation */
+.rain-container {
+  position: absolute;
+  top: 80px;
+  left: 0;
+  width: 100%;
+  height: 120px;
+  pointer-events: none;
+}
+
+.rain-container.hidden {
+  display: none;
+}
+
+/* Rain transition effect - shrink and fade */
+.rain-container.transitioning .rain-drop {
+  animation: rain-drop-hide 0.4s forwards ease-out;
+}
+
+@keyframes rain-drop-hide {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateY(-10px) scale(0);
+    opacity: 0;
+  }
+}
+
+/* Faster rain animations */
+.rain-container.heavy .rain-drop {
+  animation: rain-fall-heavy 0.47s infinite linear;
+}
+
+.rain-container.fast .rain-drop {
+  animation: rain-fall-storm 0.32s infinite linear;
+}
+
+.rain-drop {
+  position: absolute;
+  width: 2px;
+  height: 15px;
+  background-color: #000;
+  mix-blend-mode: difference;
+  border-radius: 2px;
+  opacity: 0.7;
+  animation: rain-fall 0.8s infinite linear;
+}
+
+@keyframes rain-fall {
+  0% {
+    transform: translateY(0);
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateY(80px);
+    opacity: 0;
+  }
+}
+
+@keyframes rain-fall-heavy {
+  0% {
+    transform: translateY(0) translateX(0) rotate(15deg);
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateY(80px) translateX(-15px) rotate(15deg);
+    opacity: 0;
+  }
+}
+
+@keyframes rain-fall-storm {
+  0% {
+    transform: translateY(0) translateX(0) rotate(45deg);
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateY(80px) translateX(-30px) rotate(25deg);
+    opacity: 0;
+  }
+}
+
+/* Lightning Animation - expanding circles */
+.lightning {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 200px;
+  height: 200px;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.lightning.hidden {
+  opacity: 0;
+}
+
+.lightning.active {
+  opacity: 1;
+}
+
+.lightning-inner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  margin-top: -5px;
+  margin-left: -5px;
+  background-color: #000;
+  border-radius: 50%;
+  transform: scale(0);
+}
+
+.lightning-outer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  margin-top: -5px;
+  margin-left: -5px;
+  border: 3px solid #888;
+  border-radius: 50%;
+  transform: scale(0);
+}
+
+.lightning.active .lightning-inner,
+.lightning.active .lightning-outer {
+  animation: lightning-expand 3s infinite ease-out;
+}
+
+@keyframes lightning-expand {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  70% {
+    transform: scale(12);
+    opacity: 0.3;
+  }
+  100% {
+    transform: scale(15);
+    opacity: 0;
+  }
+}
+
+/* Snow Animation */
+.snow-container {
+  position: absolute;
+  top: 80px;
+  left: 0;
+  width: 100%;
+  height: 120px;
+  pointer-events: none;
+  transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), 
+              transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: center;
+}
+
+.snow-container.hidden {
+  opacity: 0;
+  transform: scale(0);
+}
+
+.snow-flake {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background-color: #000;
+  mix-blend-mode: difference;
+  border-radius: 50%;
+  opacity: 0.8;
+  animation: snow-fall 3s infinite ease-in-out;
+}
+
+@keyframes snow-fall {
+  0% {
+    transform: translateY(0) translateX(0);
+    opacity: 0.8;
+  }
+  25% {
+    transform: translateY(20px) translateX(10px);
+  }
+  50% {
+    transform: translateY(40px) translateX(-5px);
+  }
+  75% {
+    transform: translateY(60px) translateX(8px);
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(80px) translateX(0);
+    opacity: 0;
+  }
+}
+
+/* Heavy Rain - faster drops */
+.rain-container.heavy .rain-drop {
+  animation-duration: 0.615s;
+}
+
+/* Fast Rain - storm speed */
+.rain-container.fast .rain-drop {
+  animation-duration: 0.4s;
+}
+
+/* Dark clouds for heavy rain and storm */
+.cloud.dark .left-front,
+.cloud.dark .right-front,
+.cloud.dark .left-back,
+.cloud.dark .right-back {
+  background-color: #2a2a2a;
+}
+
+.cloud.storm .left-front,
+.cloud.storm .right-front,
+.cloud.storm .left-back,
+.cloud.storm .right-back {
+  background-color: #1a1a1a;
+}
+
+/* Hide sun sunshine for dark weather */
+.sun.sunshine.hidden {
+  opacity: 0;
+  transform: scale(0);
+}
+
 .card-header {
   display: flex;
   flex-direction: column;
   gap: 0;
-  justify-content: center;
+  justify-content: flex-start;
   min-height: 100px;
   margin-top: 10px;
+  padding-left: 12px;
 }
 
 .card-header span:first-child {
-  font-weight: 800;
+  font-weight: 600;
+  font-size: 32px;
   color: #000;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: clip;
+  font-style: italic;
+  margin-bottom: 2px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: manual;
+  line-height: 0.9;
 }
 
 /* Regione/Stato sopra il nome della città - stesso stile della data */
 .card-header .region-label {
   font-weight: 500;
-  font-size: 1.45rem;
+  font-size: 1.25rem;
   color: rgb(43, 43, 43);
   position: relative;
-  margin-top: -4px;
 }
 
 .card-header span:last-child {
-  font-weight: 700;
+  font-weight: 400;
   font-size: 1.15rem;
-  margin-top: 12px;
+  margin-top: 0;
   color: rgb(43, 43, 43);
 }
 
@@ -1439,46 +2008,123 @@ a{
   color: rgb(0, 0, 0);
 }
 
+.temp-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.temp-toggle {
+  display: flex;
+  background: rgba(0, 0, 0, 0.06);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.temp-toggle-btn {
+  border: none;
+  background: transparent;
+  padding: 4px 12px;
+  font-family: "Bricolage Grotesque", sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(43, 43, 43, 0.5);
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.temp-toggle-btn.active {
+  background: rgb(43, 43, 43);
+  color: #fff;
+  border-radius: 6px;
+}
+
 .weather-bottom-container {
-  position: absolute;
-  left: 25px;
-  right: 25px;
-  bottom: 16px;
+  padding-left: 12px;
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 18px;
 }
 
 .weather-info-group {
   display: flex;
-  flex-direction: row-reverse;
+  flex-direction: row;
   gap: 8px;
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  cursor: grab;
+  padding: 4px 8px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x;
+  box-sizing: border-box;
 }
 
-.weather-time-container {
+.weather-info-group::-webkit-scrollbar {
+  display: none;
+}
+
+.weather-info-group:active {
+  cursor: grabbing;
+}
+
+.weather-info-group > div {
   display: flex;
   align-items: center;
-  min-width: 110px;
   justify-content: space-between;
-  gap: 10px;
-  padding: 8px 12px;
+  gap: 8px;
+  flex-shrink: 0;
+  min-width: fit-content;
+  white-space: nowrap;
+  padding: 6px 12px;
   background: rgba(0, 0, 0, 0.06);
   border-radius: 9px;
   box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.08);
 }
 
-.weather-date-container {
-  display: flex;
+.weather-retry-btn {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  display: none;
   align-items: center;
-  min-width: 100px;
-  gap: 10px;
-  justify-content: space-between;
-  padding: 8px 12px;
+  justify-content: center;
+  gap: 8px;
+  flex-shrink: 0;
+  min-width: fit-content;
+  white-space: nowrap;
+  padding: 6px 12px;
   background: rgba(0, 0, 0, 0.06);
+  border: none;
   border-radius: 9px;
   box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.08);
+  font-family: "Bricolage Grotesque", sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  color: rgb(43, 43, 43);
+  cursor: pointer;
+  z-index: 5;
+  transition: box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.weather-retry-btn.visible {
+  display: inline-flex;
+}
+
+.weather-retry-btn:hover {
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.14), 0px 0px 8px rgba(0, 0, 0, 0.08);
+}
+
+.weather-info-icon {
+  width: 22px;
+  height: 22px;
+  color: rgb(43, 43, 43);
+  flex-shrink: 0;
 }
 
 .clock-icon,
@@ -1489,10 +2135,51 @@ a{
 }
 
 .weather-time,
-.weather-date {
-  font-weight: 600;
+.weather-date,
+.weather-humidity,
+.weather-wind,
+.weather-precip,
+.weather-population,
+.weather-sunrise-countdown,
+.weather-sunset-countdown,
+.weather-coordinates,
+.weather-crime {
+  font-weight: 500;
   font-size: 14px;
   color: rgb(43, 43, 43);
+  white-space: nowrap;
+}
+
+.mono{
+  font-family: monospace;
+  font-weight: 600;
+}
+
+.custom-weather-tooltip {
+  position: fixed;
+  left: 0;
+  top: 0;
+  max-width: 120px;
+  padding: 6px 8px;
+  border-radius: 4px;
+  background: rgba(230, 230, 230, 0.95);
+  color: rgb(43, 43, 43);
+  font-family: "Bricolage Grotesque", sans-serif;
+  font-size: 12px;
+  line-height: 1.25;
+  text-align: center;
+  white-space: normal;
+  word-break: break-word;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, 8px);
+  transition: opacity 0.22s ease, transform 0.22s ease;
+  z-index: 9999;
+}
+
+.custom-weather-tooltip.is-visible {
+  opacity: 1;
+  transform: translate(-50%, 0px);
 }
 
 .temp-scale {
@@ -1594,7 +2281,7 @@ a{
 }
 
 .weather-suggestions.visible {
-  max-height: 280px;
+  max-height: 260px;
   overflow-y: auto;
   opacity: 1;
   transform: translateY(0);
@@ -1627,12 +2314,30 @@ a{
 }
 
 .suggestion-details {
+   font-family: "Bricolage Grotesque";
+   font-size: 14px;
+   color: rgb(149 148 145);
+   white-space: nowrap;
+   overflow: hidden;
+   text-overflow: ellipsis;
+ }
+
+/* Country group header */
+.suggestion-country-header {
+  padding: 8px 14px;
   font-family: "Bricolage Grotesque";
-  font-size: 11px;
-  color: rgba(87, 77, 51, 0.6);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(87, 77, 51, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid rgba(87, 77, 51, 0.15);
+  background: rgba(255, 255, 255, 0.95);
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  pointer-events: none;
+  user-select: none;
 }
 
 /* Scrollbar personalizzata per suggestions */
@@ -1711,4 +2416,418 @@ a{
         transform: translate(-50%, -50%) scale(2.5);
         opacity: 0;
     }
+}
+
+/* ===========CAR STYLE END ========== */
+
+.wrapper {
+    --nav-offset: 0;
+    --card-trans-duration: 1000ms;
+    --card-trans-easing: linear(0, 0.01 0.8%, 0.038 1.6%, 0.154 3.4%, 0.781 9.7%, 1.01 12.5%, 1.089 13.8%, 1.153 15.2%, 1.195 16.6%, 1.219 18%, 1.224 19.7%, 1.208 21.6%, 1.172 23.6%, 1.057 28.6%, 1.007 31.2%, 0.969 34.1%, 0.951 37.1%, 0.953 40.9%, 0.998 50.4%, 1.011 56%, 0.998 74.7%, 1);
+    --card-border-radius: 12px;
+    --card-width: 15vmin;
+    --radius-x: 62vmin;
+    --radius-y: 18vmin;
+    --cards: 7; /* overridden by JS dynamically */
+    --arc-size: calc(var(--arc-end) - var(--arc-start));
+    --arc-center: 0.75;
+    --arc-end: 0.875;
+    --arc-start: 0.715;
+    --arc-shift: 0;
+    --arc-shift-delta: 0.01;
+    position: relative;
+    width: 100%;
+    height: calc(var(--card-width) * 1.4 + 10vmin);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+@media (max-width: 600px) {
+  .wrapper {
+      --card-width: 25vmin;
+      height: calc(var(--card-width) * 1.4 + 21vmin);
+  }
+
+  .wrapper > div:hover ~ div:not(:hover) {
+    transform: scale(0.65);
+    filter: grayscale(1) contrast(1) opacity(0.84);
+    offset-anchor: 50% 80%;
+  }
+  
+  .wrapper > div:hover {
+      offset-anchor: 50% 85%;
+      transform: translateY(8px) scale(1.2);
+  }
+}
+
+.wrapper > div {
+  cursor: pointer;
+    --card-i: 1;
+    --arc-step: calc(var(--arc-size) / (var(--cards) - 1));
+    position: absolute;
+    width: var(--card-width);
+    aspect-ratio: 4/6;
+    background: white;
+    border-radius: var(--card-border-radius);
+    offset-path: ellipse(var(--radius-x) var(--radius-y) at 50% 145%);
+    offset-distance: calc((var(--arc-start) + (var(--card-i) - var(--nav-offset)) * var(--arc-step) + var(--arc-shift)) * 100%);
+    offset-rotate: auto;
+    offset-anchor: 50% 100%;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.2);
+    filter: brightness(1) contrast(1);
+    transition: 
+        offset-anchor var(--card-trans-duration) var(--card-trans-easing),
+        offset-distance var(--card-trans-duration) var(--card-trans-easing),
+        transform 600ms cubic-bezier(0.34, 1.56, 0.64, 1),
+        box-shadow 600ms cubic-bezier(0.34, 1.56, 0.64, 1),
+        filter 600ms ease;
+}
+
+/* card-i and z-index are set dynamically by JS; these are CSS-only fallbacks */
+.wrapper > div:nth-child(1)  { --card-i: 1;  }
+.wrapper > div:nth-child(2)  { --card-i: 2;  }
+.wrapper > div:nth-child(3)  { --card-i: 3;  }
+.wrapper > div:nth-child(4)  { --card-i: 4;  }
+.wrapper > div:nth-child(5)  { --card-i: 5;  }
+.wrapper > div:nth-child(6)  { --card-i: 6;  }
+.wrapper > div:nth-child(7)  { --card-i: 7;  }
+.wrapper > div:nth-child(8)  { --card-i: 8;  }
+.wrapper > div:nth-child(9)  { --card-i: 9;  }
+.wrapper > div:nth-child(10) { --card-i: 10; }
+.wrapper > div:nth-child(11) { --card-i: 11; }
+.wrapper > div:nth-child(12) { --card-i: 12; }
+.wrapper > div:nth-child(13) { --card-i: 13; }
+.wrapper > div:nth-child(14) { --card-i: 14; }
+.wrapper > div:nth-child(15) { --card-i: 15; }
+
+.wrapper > div:hover {
+    offset-anchor: 50% 120%;
+    animation: index-img 450ms linear forwards;
+    animation-delay: 120ms;
+    transform: translateY(-8px) scale(1.24);
+    border-radius: 4px;
+    filter: brightness(1) contrast(1);
+}
+
+.wrapper > div.image-squ{
+  min-width: 150px;
+  min-height: 60px;
+  max-width: 550px;
+  max-height: 180px;
+}
+
+.wrapper > div:hover ~ div:not(:hover) {
+    transform: scale(0.65);
+    opacity: 0.8;;
+    filter: brightness(1) contrast(1) opacity(0.84);
+    offset-anchor: 50% 125%;
+}
+
+@keyframes index-img {
+    0%{
+    }
+
+    100%{
+        z-index: 100;
+    }
+    
+}
+
+.wrapper > div:hover + div { --arc-shift: calc(var(--arc-shift-delta) * 3); }
+.wrapper > div:hover + div + div { --arc-shift: calc(var(--arc-shift-delta) * 2); }
+.wrapper > div:hover + div + div + div { --arc-shift: calc(var(--arc-shift-delta) * 1); }
+.wrapper > div:has(+ *:hover) { --arc-shift: calc(var(--arc-shift-delta) * -3); }
+.wrapper > div:has(+ * + *:hover) { --arc-shift: calc(var(--arc-shift-delta) * -2); }
+.wrapper > div:has(+ * + * + *:hover) { --arc-shift: calc(var(--arc-shift-delta) * -1); }
+
+.wrapper > div > img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: inherit;
+}
+
+.wrapper > div.image-squ.is-selected-to-canvas {
+  width: 0 !important;
+  height: 0 !important;
+  opacity: 0 !important;
+  transform: scale(0) !important;
+  box-shadow: none !important;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.wrapper > div.image-squ.is-returning-to-stack {
+  transform-origin: 150% 40%;
+  animation: card-return-to-stack 600ms cubic-bezier(0.2, 0.23, 0.54, 1) both;
+  pointer-events: none;
+}
+
+@keyframes card-return-to-stack {
+  0% {
+    opacity: 0;
+    transform: translateY(-14px) rotate(15deg) scale(0.82);
+  }
+
+  55% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) rotate(0deg) scale(1);
+  }
+}
+
+.opgl-stage {
+  position: relative;
+  width: 100%;
+}
+
+.opgl-nav-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  align-self: flex-start;
+}
+
+.opgl-nav-row .portfolio-btn[data-opgl-nav="next"] {
+  transform: rotate(180deg) scale(0.9);
+}
+
+.opgl-nav-row .portfolio-btn[data-opgl-nav="next"]:hover {
+  transform: rotate(180deg) scale(1);
+}
+
+.opgl-like-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 14px;
+  height: 50px;
+  min-width: 50px;
+  border-radius: 6px;
+  background-color: transparent;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  color: #999;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: "Bricolage Grotesque", sans-serif;
+  transform: scale(0.9);
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.3s ease;
+}
+
+.opgl-like-btn:hover {
+  background-color: #fff0f0;
+  border-color: rgba(220, 38, 38, 0.35);
+  color: #dc2626;
+  transform: scale(1);
+}
+
+.opgl-like-btn.is-liked {
+  background-color: #dc2626;
+  border-color: transparent;
+  color: #fff;
+  transform: scale(1);
+}
+
+.opgl-like-btn.is-liked:hover {
+  background-color: #b91c1c;
+  transform: scale(1.04);
+}
+
+.opgl-meta-card {
+    width: 100%;
+    margin: 0 auto;
+    padding: 32px 24px 32px 24px;
+}
+
+.card-base-clear {
+  width: 100%;
+  min-height: 230px;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+}
+
+.canvas-opgl {
+  position: absolute;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: transparent;
+}
+
+.canvas-opgl-view {
+  position: relative;
+  display: inline-flex;
+  max-width: min(100%, 600px);
+  max-height: 500px;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.144);
+}
+
+.canvas-opgl-view img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 500px;
+  object-fit: contain;
+  border-radius: 14px;
+  transition: transform 0.12s ease;
+  will-change: transform;
+}
+
+.canvas-opgl-view.zoom-active img {
+  cursor: crosshair;
+}
+
+/* ── Fluid hover canvas (WebGL liquid effect) ─────────────────────────── */
+.canvas-opgl-fluid-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 120ms ease;
+}
+
+/* Fluid active: canvas on top, plain img hidden beneath */
+.canvas-opgl-view.has-fluid > img {
+  /* keep the existing transform transition for zoom, add opacity for mode swap */
+  transition: opacity 120ms ease, transform 0.12s ease;
+  opacity: 0;
+}
+
+/* Zoom mode ON: fluid fully OFF (crisp img with CSS scale) */
+.canvas-opgl-view.has-fluid.zoom-active .canvas-opgl-fluid-canvas {
+  opacity: 0;
+}
+.canvas-opgl-view.has-fluid.zoom-active > img {
+  opacity: 1;
+}
+
+.canvas-opgl-zoom-btn {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  font-family: 'Bricolage Grotesque', sans-serif;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 14px;
+  height: 40px;
+  border-radius: 12px;
+  background-color: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: 500;
+  color: #050505;
+  white-space: nowrap;
+  transform: scale(0.9);
+  transition: transform 0.3s ease, background-color 0.2s ease;
+  z-index: 10;
+}
+
+.canvas-opgl-zoom-btn:hover {
+  transform: scale(1);
+}
+
+.canvas-opgl-zoom-btn.is-active {
+  background-color: rgba(0, 0, 0, 0.85);
+  color: #fff;
+  border-color: transparent;
+}
+
+.canvas-opgl-zoom-btn svg {
+  width: 14px;
+  height: 14px;
+  pointer-events: none;
+  flex-shrink: 0;
+}
+
+@media (max-width: 1024px) {
+  .canvas-opgl-zoom-btn {
+    display: none;
+  }
+
+  div > .opgl-meta-card > p{
+  max-width: 85%;
+}
+}
+
+.canvas-opgl-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  border: 3px solid #fff;
+  background: rgba(224, 224, 224, 0.9);
+  color: #050505;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms ease;
+}
+
+.canvas-opgl:hover .canvas-opgl-close,
+.canvas-opgl:focus-within .canvas-opgl-close {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.opgl-stage > * {
+  transition: opacity 260ms ease;
+}
+
+.opgl-stage.is-canvas-open > *:not(.canvas-opgl) {
+  opacity: 0.12;
+  pointer-events: none;
+}
+
+@media (max-width: 600px) {
+  .card-base-clear {
+    min-height: 230px;
+  }
+
+  .canvas-opgl {
+    padding: 12px;
+  }
+
+  .canvas-opgl-view,
+  .canvas-opgl-view img {
+    max-height: 420px;
+  }
+}
+
+#dotted-grid-bg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  padding: 0 4px;
+}
+
+.dotted-grid-footer {
+  width: 100%;
+  min-height: 80vh;
+  position: relative;
+  overflow: hidden;
 }

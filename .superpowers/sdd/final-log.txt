@@ -1,0 +1,10 @@
+﻿1677354 fix dotted grid cleanup
+394d1df batch footer canvas draws path2d
+cdf31ec cull off-bbox dots cube infinity
+acc9eb5 smooth footer canvas entry
+a04194c cache footer canvas rect
+08b0276 sharpen footer canvas hover
+--- MINOR FINDINGS ACCUMULATI ---
+T2: _cacheRect chiamato a ogni scroll tick (trade-off accettato)
+T6: removeEventListener scroll senza {passive:true} (innocuo, matching per identita)
+T6: MQ change listener reduced-motion non rimosso in destroy() (informativo)

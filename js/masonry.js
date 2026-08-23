@@ -127,8 +127,14 @@ class MasonryLayout {
 // Inizializza quando il DOM è pronto
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
-        new MasonryLayout('.bento-grid');
+        document.querySelectorAll('.bento-grid').forEach((el, i) => {
+            if (!el.id) el.id = `bento-grid-${i}`;
+            new MasonryLayout(`#${el.id}`);
+        });
     });
 } else {
-    new MasonryLayout('.bento-grid');
+    document.querySelectorAll('.bento-grid').forEach((el, i) => {
+        if (!el.id) el.id = `bento-grid-${i}`;
+        new MasonryLayout(`#${el.id}`);
+    });
 }

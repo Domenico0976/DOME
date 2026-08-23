@@ -1,0 +1,133 @@
+﻿diff --git a/js/dottedGrid.js b/js/dottedGrid.js
+index 4a28a9d..b3cebb0 100644
+--- a/js/dottedGrid.js
++++ b/js/dottedGrid.js
+@@ -285,20 +285,22 @@
+       this.pattern = {
+         currentShapeIndex: 0,
+         transitionStartTime: null,
+       };
+       this.reduceMotion =
+         window.matchMedia?.(REDUCED_MOTION_QUERY)?.matches ?? false;
+       this.rafId = null;
+       this.isVisible = true;
+       this.hiddenTimer = null;
+       this._rect = null; // cached getBoundingClientRect (layout-read cache)
++      this._handlers = null;
++      this._resizeTimer = null;
+ 
+       this._init();
+     }
+ 
+     _init() {
+       this.canvas = document.getElementById(this.id);
+       if (!this.canvas) {
+         console.warn(`[DottedGrid] Canvas #${this.id} not found`);
+         return;
+       }
+@@ -309,25 +311,31 @@
+       const mq = window.matchMedia(REDUCED_MOTION_QUERY);
+       mq.addEventListener("change", (e) => {
+         this.reduceMotion = e.matches;
+         if (this.reduceMotion) {
+           this.mouse.active = false;
+           this.mouse.trail = [];
+           this.pattern.transitionStartTime = null;
+         }
+       });
+ 
+-      // Pointer events
+-      this.canvas.addEventListener("pointermove", (e) => this._onPointerMove(e));
+-      this.canvas.addEventListener("pointerleave", () => (this.mouse.active = false));
+-      this.canvas.addEventListener("click", () => this._onClick());
+-      window.addEventListener("resize", () => this._resize());
++      // Pointer events (stored handlers so destroy() can actually remove them)
++      this._handlers = {
++        pointermove: (e) => this._onPointerMove(e),
++        pointerleave: () => (this.mouse.active = false),
++        click: () => this._onClick(),
++        resize: () => this._scheduleResize(),
++      };
++      this.canvas.addEventListener("pointermove", this._handlers.pointermove);
++      this.canvas.addEventListener("pointerleave", this._handlers.pointerleave);
++      this.canvas.addEventListener("click", this._handlers.click);
++      window.addEventListener("resize", this._handlers.resize);
+ 
+       // ponytail: pause canvas rendering while the page scrolls ÔÇö frees the main thread
+       // exactly when the browser needs it for compositing (fixes scroll jank)
+       this._scrolling = false;
+       this._scrollTick = 0;
+       this._scrollDebounce = null;
+       this._onScroll = () => {
+         this._cacheRect();
+         this._scrolling = true;
+         if (this._scrollDebounce) clearTimeout(this._scrollDebounce);
+@@ -363,20 +371,28 @@
+       this.canvas.height = Math.floor(this.height * this.dpr);
+       this.ctx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
+       this._rect = rect;
+       this._createDots();
+     }
+ 
+     _cacheRect() {
+       this._rect = this.canvas.getBoundingClientRect();
+     }
+ 
++    _scheduleResize() {
++      if (this._resizeTimer) clearTimeout(this._resizeTimer);
++      this._resizeTimer = setTimeout(() => {
++        this._resizeTimer = null;
++        this._resize();
++      }, 150);
++    }
++
+     _createDots() {
+       this.dots = [];
+       this.shapeCache = [];
+       for (let y = this.spacing / 2; y < this.height; y += this.spacing) {
+         for (let x = this.spacing / 2; x < this.width; x += this.spacing) {
+           this.dots.push({
+             x,
+             y,
+             phase: Math.random() * Math.PI * 2,
+             speed: 0.3 + Math.random() * 1.0,
+@@ -643,28 +659,33 @@
+       }
+ 
+       this.frameCount++;
+       this.ctx.globalCompositeOperation = "source-over";
+     }
+ 
+     destroy() {
+       cancelAnimationFrame(this.rafId);
+       if (this.hiddenTimer) clearTimeout(this.hiddenTimer);
+       if (this._scrollDebounce) clearTimeout(this._scrollDebounce);
++      if (this._resizeTimer) clearTimeout(this._resizeTimer);
+       window.removeEventListener("scroll", this._onScroll);
+-      this.canvas.removeEventListener("pointermove", this._onPointerMove);
+-      this.canvas.removeEventListener("pointerleave", () => (this.mouse.active = false));
+-      this.canvas.removeEventListener("click", () => this._onClick());
+-      window.removeEventListener("resize", () => this._resize());
++      if (this._handlers) {
++        this.canvas.removeEventListener("pointermove", this._handlers.pointermove);
++        this.canvas.removeEventListener("pointerleave", this._handlers.pointerleave);
++        this.canvas.removeEventListener("click", this._handlers.click);
++        window.removeEventListener("resize", this._handlers.resize);
++      }
+     }
+   }
+ 
+   // ÔöÇÔöÇ Auto-init when DOM ready ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇ
+   if (document.readyState === "loading") {
+-    document.addEventListener("DOMContentLoaded", () => new DottedGrid());
++    document.addEventListener("DOMContentLoaded", () => {
++      window.dottedGridInstance = new DottedGrid();
++    });
+   } else {
+-    new DottedGrid();
++    window.dottedGridInstance = new DottedGrid();
+   }
+ 
+   // Expose globally for customisation
+   window.DottedGrid = DottedGrid;
+ })();
