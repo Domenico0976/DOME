@@ -24,6 +24,53 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: tools-app/package-lock.json
+
+      - name: Build tools app
+        run: |
+          npm ci
+          npm run build
+        working-directory: tools-app
+
+      - name: Stage tools build
+        run: |
+          rm -rf tools
+          mkdir -p tools
+          cp -r tools-app/dist/* tools/
+
+      # Security fix (owner-approved 2026-08-24, R-(f)): repo internals were publicly
+      # served at /<dir>/ because upload-pages-artifact ignores .gitignore. Stage ONLY
+      # public files via denylist; internal tooling dirs must never reach the artifact.
+      # NOTE: docs/ intentionally stays PUBLIC for now — if the owner revokes it,
+      # add here:  --exclude 'docs'
+      - name: Stage public files (denylist internal dirs)
+        run: |
+          mkdir -p _pages
+          rsync -a ./ _pages/ \
+            --exclude '.git' \
+            --exclude '.github' \
+            --exclude '.omo' \
+            --exclude '.kilo' \
+            --exclude '.superpowers' \
+            --exclude '.vscode' \
+            --exclude '.codegraph' \
+            --exclude 'tools-app' \
+            --exclude 'Project-istr' \
+            --exclude '_pages' \
+            --exclude 'node_modules'
+
+      - name: Assert tools build present
+        run: |
+          test -f _pages/tools/index.html || { echo "tools build missing in staged artifact"; exit 1; }
+          grep -q "/tools/assets/" _pages/tools/index.html || { echo "asset base path wrong"; exit 1; }
+
+      # Runs AFTER staging so sed only touches the STAGED _pages/index.html,
+      # never the tracked root index.html (working tree stays byte-for-byte clean).
       - name: Inject Firebase config from secrets
         run: |
           sed -i \
@@ -34,7 +81,19 @@ jobs:
             -e "s|___FIREBASE_STORAGE_BUCKET___|${{ secrets.FIREBASE_STORAGE_BUCKET }}|g" \
             -e "s|___FIREBASE_MESSAGING_SENDER_ID___|${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}|g" \
             -e "s|___FIREBASE_APP_ID___|${{ secrets.FIREBASE_APP_ID }}|g" \
-            index.html
+            _pages/index.html
+
+      - name: Inventory gate (fail on internal-dir leak or missing site roots)
+        run: |
+          fail=0
+          # MUST mirror the rsync denylist above EXACTLY.
+          for d in .git .github .omo .kilo .superpowers .vscode .codegraph tools-app Project-istr _pages node_modules; do
+            if [ -e "_pages/$d" ]; then echo "LEAK: '$d' was staged - aborting"; fail=1; fi
+          done
+          test -f "_pages/index.html"       || { echo "MISSING: index.html"; fail=1; }
+          test -f "_pages/CNAME"            || { echo "MISSING: CNAME"; fail=1; }
+          test -f "_pages/tools/index.html" || { echo "MISSING: tools/index.html"; fail=1; }
+          exit $fail
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
@@ -42,7 +101,7 @@ jobs:
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: '.'
+          path: '_pages'
 
       - name: Deploy to GitHub Pages
         id: deployment

@@ -2,10 +2,16 @@
 .env.local
 .env.*.local
 node_modules/
-.kilo/node_modules/
+.kilo/
 .vscode/
 .idea/
 .DS_Store
 Thumbs.db
 dist/
 build/
+Project-istr/
+/tools/
+tools-app/dist/
+.omo/
+.superpowers/
+.codegraph/
