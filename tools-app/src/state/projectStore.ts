@@ -15,6 +15,7 @@ export interface ProjectStore extends ProjectState {
   removeTool: (uid: string) => void
   moveTool: (uid: string, dir: 'up' | 'down') => void
   toggleSwitch: (uid: string) => void
+  switchTool: (uid: string, newToolId: string) => void
   updateParam: (uid: string, param: string, value: number | string) => void
   addAudioBinding: (uid: string, binding: AudioBinding) => void
   removeAudioBinding: (uid: string, param: string) => void
@@ -79,6 +80,21 @@ export const useProjectStore = create<ProjectStore>((set) => ({
 
   toggleSwitch: (uid) =>
     set((s) => ({ stack: patchItem(s.stack, uid, (i) => ({ ...i, hidden: !i.hidden })), unsaved: true })),
+
+  switchTool: (uid, newToolId) =>
+    set((s) => {
+      const def = resolveTool(newToolId)
+      if (!def) return {}
+      return {
+        stack: patchItem(s.stack, uid, (i) => ({
+          ...i,
+          toolId: def.id,
+          toolVersion: def.version,
+          params: { ...def.defaultParams },
+        })),
+        unsaved: true,
+      }
+    }),
 
   updateParam: (uid, param, value) =>
     set((s) => ({

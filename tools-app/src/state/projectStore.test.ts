@@ -15,9 +15,22 @@ const demo: ToolDef = {
   render: () => {},
 }
 
+const demo2: ToolDef = {
+  id: 'demo2',
+  kind: 'generative',
+  version: '1.0.0',
+  label: 'Demo Two',
+  icon: '',
+  category: 'Generative',
+  defaultParams: { speed: 5 },
+  controls: [],
+  render: () => {},
+}
+
 describe('projectStore', () => {
   beforeEach(() => {
     registerTool(demo)
+    registerTool(demo2)
     useProjectStore.getState().reset()
   })
 
@@ -52,6 +65,17 @@ describe('projectStore', () => {
     const uid = useProjectStore.getState().stack[0].uid
     s.toggleSwitch(uid)
     expect(useProjectStore.getState().stack[0].hidden).toBe(true)
+  })
+
+  test('switchTool replaces tool keeping uid and position', () => {
+    const s = useProjectStore.getState()
+    s.addTool('demo')
+    const uid = useProjectStore.getState().stack[0].uid
+    s.switchTool(uid, 'demo2')
+    const item = useProjectStore.getState().stack[0]
+    expect(item.uid).toBe(uid)
+    expect(item.toolId).toBe('demo2')
+    expect(item.params.speed).toBe(5)
   })
 
   test('moveTool reorders within the stack', () => {
