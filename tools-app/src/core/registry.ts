@@ -1,5 +1,5 @@
 import { DIRECTIVES } from './directives'
-import type { AudioFrame, Frame, StackItem, StackRenderContext, ToolDef } from './types'
+import type { ToolDef } from './types'
 
 export { DIRECTIVES }
 
