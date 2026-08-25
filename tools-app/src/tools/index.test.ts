@@ -40,12 +40,12 @@ describe('tools registration surface', () => {
     expect(ids).toEqual(['audioFile', 'camera', 'gradient', 'imageVideo', 'solidColor', 'text'].sort())
   })
 
-  test('registers all 10 generative tools', () => {
+  test('registers all 13 generative tools', () => {
     const ids = getCatalog().Generative.map((t) => t.id).sort()
     expect(ids).toEqual(
       [
-        'ferrofluid', 'flowfield', 'kaleidoscope', 'liquidmetal', 'molecules',
-        'particles', 'plasma', 'rings', 'starfield', 'tunnel',
+        'brutalist', 'doodle', 'ferrofluid', 'flowfield', 'kaleidoscope', 'liquidmetal',
+        'molecules', 'particles', 'particles2', 'plasma', 'rings', 'starfield', 'tunnel',
       ].sort(),
     )
   })
