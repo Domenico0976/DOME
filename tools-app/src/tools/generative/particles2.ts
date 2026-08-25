@@ -2,8 +2,31 @@ import type { ToolDef } from '../../core/types'
 import { mulberry32 } from '../../engine/rd'
 import { strHash } from '../toolUtils'
 
-type Swarm = { pts: Float32Array; vel: Float32Array; sig: string }
+type Swarm = { pts: Float32Array; vel: Float32Array; n: number; rng: () => number }
 const swarms = new Map<string, Swarm>()
+
+function ensureSwarm(uid: string, target: number, width: number, height: number): Swarm {
+  let s = swarms.get(uid)
+  if (!s) {
+    s = { pts: new Float32Array(0), vel: new Float32Array(0), n: 0, rng: mulberry32(strHash(uid)) }
+    swarms.set(uid, s)
+  }
+  if (s.n !== target) {
+    const keep = Math.min(s.n, target)
+    const pts = new Float32Array(target * 2)
+    const vel = new Float32Array(target * 2)
+    pts.set(s.pts.subarray(0, keep * 2))
+    vel.set(s.vel.subarray(0, keep * 2))
+    for (let i = s.n; i < target; i++) {
+      pts[i * 2] = s.rng() * width
+      pts[i * 2 + 1] = s.rng() * height
+    }
+    s.pts = pts
+    s.vel = vel
+    s.n = target
+  }
+  return s
+}
 
 // Particles 2: multi-attractor kinematics with inverse-square pull (Tool-Render.md §1.8).
 export const particles2Tool: ToolDef = {
@@ -27,18 +50,7 @@ export const particles2Tool: ToolDef = {
     const hue = Number(item.params.hue ?? 320)
     const t = frame.timeSec
 
-    let swarm = swarms.get(item.uid)
-    const sig = `${count}|${attN}`
-    if (!swarm || swarm.sig !== sig) {
-      const rng = mulberry32(strHash(item.uid))
-      const pts = new Float32Array(count * 4)
-      for (let i = 0; i < count; i++) {
-        pts[i * 4] = rng() * stack.width
-        pts[i * 4 + 1] = rng() * stack.height
-      }
-      swarm = { pts, vel: new Float32Array(count * 2), sig }
-      swarms.set(item.uid, swarm)
-    }
+    const swarm = ensureSwarm(item.uid, count, stack.width, stack.height)
 
     const atts = Array.from({ length: attN }, (_, i) => {
       const ph = (i / attN) * Math.PI * 2
@@ -48,11 +60,10 @@ export const particles2Tool: ToolDef = {
       }
     })
 
-    const { pts, vel } = swarm
     const pull = 0.001 * (1 + audio.level * 2)
-    for (let i = 0; i < count; i++) {
-      const x = pts[i * 4]
-      const y = pts[i * 4 + 1]
+    for (let i = 0; i < swarm.n; i++) {
+      const x = swarm.pts[i * 2]
+      const y = swarm.pts[i * 2 + 1]
       let fx = 0
       let fy = 0
       for (const a of atts) {
@@ -62,20 +73,20 @@ export const particles2Tool: ToolDef = {
         fx += (dx / d2) * strength
         fy += (dy / d2) * strength
       }
-      vel[i * 2] = (vel[i * 2] + fx * pull) * 0.985
-      vel[i * 2 + 1] = (vel[i * 2 + 1] + fy * pull) * 0.985
-      let nx = x + vel[i * 2]
-      let ny = y + vel[i * 2 + 1]
+      swarm.vel[i * 2] = (swarm.vel[i * 2] + fx * pull) * 0.985
+      swarm.vel[i * 2 + 1] = (swarm.vel[i * 2 + 1] + fy * pull) * 0.985
+      let nx = x + swarm.vel[i * 2]
+      let ny = y + swarm.vel[i * 2 + 1]
       if (nx < 0 || nx > stack.width) {
-        vel[i * 2] *= -0.7
+        swarm.vel[i * 2] *= -0.7
         nx = Math.min(stack.width, Math.max(0, nx))
       }
       if (ny < 0 || ny > stack.height) {
-        vel[i * 2 + 1] *= -0.7
+        swarm.vel[i * 2 + 1] *= -0.7
         ny = Math.min(stack.height, Math.max(0, ny))
       }
-      pts[i * 4] = nx
-      pts[i * 4 + 1] = ny
+      swarm.pts[i * 2] = nx
+      swarm.pts[i * 2 + 1] = ny
       ctx.fillStyle = `hsla(${hue}, 85%, 62%, 0.85)`
       ctx.fillRect(nx, ny, 2.2, 2.2)
     }

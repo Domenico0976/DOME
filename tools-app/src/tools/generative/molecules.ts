@@ -2,8 +2,29 @@ import type { ToolDef } from '../../core/types'
 import { mulberry32 } from '../../engine/rd'
 import { strHash } from '../toolUtils'
 
-type Net = { seeds: Float32Array; sig: string }
+type Net = { seeds: Float32Array; n: number; rng: () => number }
 const nets = new Map<string, Net>()
+
+function ensureNet(uid: string, target: number): Net {
+  let net = nets.get(uid)
+  if (!net) {
+    net = { seeds: new Float32Array(0), n: 0, rng: mulberry32(strHash(uid)) }
+    nets.set(uid, net)
+  }
+  if (net.n !== target) {
+    const seeds = new Float32Array(target * 4)
+    seeds.set(net.seeds.subarray(0, Math.min(net.n, target) * 4))
+    for (let i = net.n; i < target; i++) {
+      seeds[i * 4] = net.rng()
+      seeds[i * 4 + 1] = net.rng()
+      seeds[i * 4 + 2] = net.rng() * Math.PI * 2
+      seeds[i * 4 + 3] = 0.2 + net.rng() * 0.5
+    }
+    net.seeds = seeds
+    net.n = target
+  }
+  return net
+}
 
 // Molecules: pseudo-3D node/bond lattice with depth-faded opacity (Tool-Render.md §1.2).
 export const moleculesTool: ToolDef = {
@@ -25,20 +46,7 @@ export const moleculesTool: ToolDef = {
     const drift = Number(item.params.drift ?? 0.5)
     const t = frame.timeSec
 
-    let net = nets.get(item.uid)
-    const sig = `${nodeN}`
-    if (!net || net.sig !== sig) {
-      const rng = mulberry32(strHash(item.uid))
-      const seeds = new Float32Array(nodeN * 4)
-      for (let i = 0; i < nodeN; i++) {
-        seeds[i * 4] = rng()
-        seeds[i * 4 + 1] = rng()
-        seeds[i * 4 + 2] = rng() * Math.PI * 2
-        seeds[i * 4 + 3] = 0.2 + rng() * 0.5
-      }
-      net = { seeds, sig }
-      nets.set(item.uid, net)
-    }
+    const net = ensureNet(item.uid, nodeN)
 
     const px = new Float32Array(nodeN)
     const py = new Float32Array(nodeN)

@@ -11,10 +11,34 @@ function chladni(x: number, y: number, a: number, b: number, m: number, n: numbe
   )
 }
 
-type Cloud = { pts: Float32Array; vel: Float32Array; sig: string }
+type Cloud = { pts: Float32Array; vel: Float32Array; n: number; rng: () => number }
 const clouds = new Map<string, Cloud>()
 
+function ensureCloud(uid: string, target: number): Cloud {
+  let c = clouds.get(uid)
+  if (!c) {
+    c = { pts: new Float32Array(0), vel: new Float32Array(0), n: 0, rng: mulberry32(strHash(uid)) }
+    clouds.set(uid, c)
+  }
+  if (c.n !== target) {
+    const keep = Math.min(c.n, target)
+    const pts = new Float32Array(target * 2)
+    const vel = new Float32Array(target * 2)
+    pts.set(c.pts.subarray(0, keep * 2))
+    vel.set(c.vel.subarray(0, keep * 2))
+    for (let i = c.n; i < target; i++) {
+      pts[i * 2] = c.rng()
+      pts[i * 2 + 1] = c.rng()
+    }
+    c.pts = pts
+    c.vel = vel
+    c.n = target
+  }
+  return c
+}
+
 // Particles: dust aggregating along Chladni nodal lines into sabulous textures.
+// Field params are read live each frame so tuning migrates the existing cloud smoothly.
 export const particlesTool: ToolDef = {
   id: 'particles',
   kind: 'generative',
@@ -37,42 +61,29 @@ export const particlesTool: ToolDef = {
   render(ctx, frame, item, audio, stack) {
     const count = Math.round(Number(item.params.count ?? 400))
     const size = Number(item.params.size ?? 2) * (1 + audio.level * 1.5)
-    const a = Number(item.params.a ?? 3)
-    const b = Number(item.params.b ?? 4)
-    const m = Number(item.params.m ?? 5)
-    const n = Number(item.params.n ?? 6)
+    const pa = Number(item.params.a ?? 3)
+    const pb = Number(item.params.b ?? 4)
+    const pm = Number(item.params.m ?? 5)
+    const pn = Number(item.params.n ?? 6)
     const damping = Number(item.params.damping ?? 0.96)
     const hue = Number(item.params.hue ?? 200)
 
-    let cloud = clouds.get(item.uid)
-    const sig = `${count}|${a}|${b}|${m}|${n}`
-    if (!cloud || cloud.sig !== sig) {
-      const rng = mulberry32(strHash(item.uid))
-      const pts = new Float32Array(count * 2)
-      const vel = new Float32Array(count * 2)
-      for (let i = 0; i < count; i++) {
-        pts[i * 2] = rng()
-        pts[i * 2 + 1] = rng()
-      }
-      cloud = { pts, vel, sig }
-      clouds.set(item.uid, cloud)
-    }
+    const cloud = ensureCloud(item.uid, count)
 
-    const { pts, vel } = cloud
     const dtScale = frame.dt * 60 * Number(item.params.speed ?? 1)
     ctx.save()
-    for (let i = 0; i < count; i++) {
-      const x = pts[i * 2]
-      const y = pts[i * 2 + 1]
-      const val = chladni(x, y, a, b, m, n)
-      vel[i * 2] -= val * 0.004 * (x > 0.5 ? 1 : -1) * dtScale
-      vel[i * 2 + 1] -= val * 0.004 * (y > 0.5 ? 1 : -1) * dtScale
-      vel[i * 2] *= damping
-      vel[i * 2 + 1] *= damping
-      pts[i * 2] = (x + vel[i * 2] + 1) % 1
-      pts[i * 2 + 1] = (y + vel[i * 2 + 1] + 1) % 1
+    for (let i = 0; i < cloud.n; i++) {
+      const x = cloud.pts[i * 2]
+      const y = cloud.pts[i * 2 + 1]
+      const val = chladni(x, y, pa, pb, pm, pn)
+      cloud.vel[i * 2] -= val * 0.004 * (x > 0.5 ? 1 : -1) * dtScale
+      cloud.vel[i * 2 + 1] -= val * 0.004 * (y > 0.5 ? 1 : -1) * dtScale
+      cloud.vel[i * 2] *= damping
+      cloud.vel[i * 2 + 1] *= damping
+      cloud.pts[i * 2] = (x + cloud.vel[i * 2] + 1) % 1
+      cloud.pts[i * 2 + 1] = (y + cloud.vel[i * 2 + 1] + 1) % 1
       ctx.fillStyle = `hsla(${hue}, 80%, 62%, 0.75)`
-      ctx.fillRect(pts[i * 2] * stack.width, pts[i * 2 + 1] * stack.height, size, size)
+      ctx.fillRect(cloud.pts[i * 2] * stack.width, cloud.pts[i * 2 + 1] * stack.height, size, size)
     }
     ctx.restore()
   },
