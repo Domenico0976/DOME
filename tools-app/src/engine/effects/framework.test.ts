@@ -74,3 +74,11 @@ test('EFFECT_ORDER heads registered so far stay ordered', async () => {
   for (const t of ['adjustments', 'aberration', 'waves'] as const) expect(EFFECTS[t]).toBeDefined()
   expect(EFFECT_ORDER[0]).toBe('adjustments')
 })
+
+test('glow/edgeblur uniforms map', async () => {
+  const { glowDef } = await import('./glow')
+  const { edgeBlurDef } = await import('./edgeblur')
+  const f = { timeSec: 0, dt: 0, bpm: 120 }
+  expect(glowDef.uniforms({ intensity: 0.7, threshold: 0.5, radius: 8 }, f)).toEqual({ u_intensity: 0.7, u_threshold: 0.5, u_radius: 8 })
+  expect(edgeBlurDef.uniforms({ area: 0.4, falloff: 0.3 }, f)).toEqual({ u_area: 0.4, u_falloff: 0.3 })
+})
