@@ -44,6 +44,23 @@ export class ReactionDiffusion {
     for (let i = 0; i < this.b.length; i++) if (rng() < 0.002) this.b[i] = 1
   }
 
+  stampBlobs(count: number, rng: () => number): void {
+    const n = this.size
+    for (let k = 0; k < count; k++) {
+      const cx = rng() * n
+      const cy = rng() * n
+      const r = n * 0.02 + rng() * n * 0.03
+      for (let y = -r; y <= r; y++)
+        for (let x = -r; x <= r; x++) {
+          if (x * x + y * y > r * r) continue
+          const xi = Math.round(cx + x)
+          const yi = Math.round(cy + y)
+          this.b[((yi + n) % n) * n + ((xi + n) % n)] = 1
+        }
+    }
+    for (let i = 0; i < this.b.length; i++) if (rng() < 0.002) this.b[i] = 1
+  }
+
   step(feed: number, kill: number): void {
     const Da = 1.0
     const Db = 0.5
@@ -89,5 +106,18 @@ export class ReactionDiffusion {
       d[i * 4 + 3] = 255
     }
     return img
+  }
+
+  writeImageData(img: ImageData, accent: [number, number, number]): void {
+    const n = this.size
+    if (img.width !== n || img.height !== n) return
+    const d = img.data
+    for (let i = 0; i < n * n; i++) {
+      const v = Math.min(1, this.b[i] * 1.4)
+      d[i * 4] = Math.round(accent[0] * v)
+      d[i * 4 + 1] = Math.round(accent[1] * v)
+      d[i * 4 + 2] = Math.round(accent[2] * v)
+      d[i * 4 + 3] = 255
+    }
   }
 }

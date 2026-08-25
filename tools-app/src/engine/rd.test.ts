@@ -28,4 +28,34 @@ describe('ReactionDiffusion', () => {
     expect(img.width).toBe(16)
     expect(img.data.length).toBe(16 * 16 * 4)
   })
+
+  test('writeImageData fills provided buffer (zero-alloc path)', () => {
+    const rd = new ReactionDiffusion(32)
+    rd.seed(3, mulberry32(9))
+    for (let i = 0; i < 30; i++) rd.step(0.055, 0.062)
+    const img = new ImageData(32, 32)
+    rd.writeImageData(img, [255, 128, 0])
+    let foundAccent = false
+    for (let i = 0; i < img.data.length; i += 4) {
+      if (img.data[i] === 255 && img.data[i + 1] === 128 && img.data[i + 2] === 0) { foundAccent = true; break }
+    }
+    expect(foundAccent).toBe(true)
+  })
+
+  test('writeImageData ignores mismatched size', () => {
+    const rd = new ReactionDiffusion(16)
+    rd.seed(1, mulberry32(2))
+    const img = new ImageData(8, 8)
+    expect(() => rd.writeImageData(img, [255, 0, 0])).not.toThrow()
+  })
+
+  test('stampBlobs adds B concentration without wiping existing state', () => {
+    const rd = new ReactionDiffusion(32)
+    rd.seed(1, mulberry32(5))
+    for (let i = 0; i < 10; i++) rd.step(0.055, 0.062)
+    const before = rd.averageB()
+    expect(before).toBeGreaterThan(0)
+    rd.stampBlobs(3, mulberry32(6))
+    expect(rd.averageB()).toBeGreaterThanOrEqual(before)
+  })
 })
