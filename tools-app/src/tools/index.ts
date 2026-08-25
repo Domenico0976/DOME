@@ -13,6 +13,12 @@ import { ringsTool } from './generative/rings'
 import { starfieldTool } from './generative/starfield'
 import { kaleidoscopeTool } from './generative/kaleidoscope'
 import { plasmaTool } from './generative/plasma'
+import { halftoneTool } from './filters/halftone'
+import { pixelatorTool } from './filters/pixelator'
+import { thermalTool } from './filters/thermal'
+import { reLightTool } from './filters/reLight'
+import { facetsTool } from './filters/facets'
+import { typeShapeTool } from './filters/typeShape'
 
 registerTool(imageVideoTool)
 registerTool(textTool)
@@ -28,3 +34,9 @@ registerTool(ringsTool)
 registerTool(starfieldTool)
 registerTool(kaleidoscopeTool)
 registerTool(plasmaTool)
+registerTool(halftoneTool)
+registerTool(pixelatorTool)
+registerTool(thermalTool)
+registerTool(reLightTool)
+registerTool(facetsTool)
+registerTool(typeShapeTool)

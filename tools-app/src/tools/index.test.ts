@@ -3,6 +3,7 @@ import { getCatalog } from '../core/registry'
 import type { StackItem, Frame, AudioFrame, StackRenderContext } from '../core/types'
 import { solidColorTool } from './inputs/solidColor'
 import { particlesTool } from './generative/particles'
+import { halftoneTool } from './filters/halftone'
 import * as tools from './index'
 
 const item: StackItem = {
@@ -55,5 +56,16 @@ describe('tools registration surface', () => {
 
   test('particles renders without throwing', () => {
     expect(() => particlesTool.render(stubCtx(), frame, item, audio, stack)).not.toThrow()
+  })
+
+  test('registers all 6 filter tools', () => {
+    const ids = getCatalog().Filters.map((t) => t.id).sort()
+    expect(ids).toEqual(
+      ['facets', 'halftone', 'pixelator', 'reLight', 'thermal', 'typeShape'].sort(),
+    )
+  })
+
+  test('halftone renders without throwing (graceful without getImageData)', () => {
+    expect(() => halftoneTool.render(stubCtx(), frame, item, audio, stack)).not.toThrow()
   })
 })
