@@ -1,6 +1,8 @@
 import { useAudio } from '../audio/useAudio'
 import { useProjectStore } from '../state/projectStore'
 import { evaluateStack } from '../core/stackEngine'
+import { Button } from '../components/ui/button'
+import { Download, Camera, Music2, Maximize2, RotateCcw } from 'lucide-react'
 
 function download(canvas: HTMLCanvasElement, name: string): void {
   const url = canvas.toDataURL('image/png')
@@ -36,22 +38,27 @@ export function ExportMenu() {
   const resetView = () => useProjectStore.getState().reset()
 
   return (
-    <div className="export-menu" aria-label="Export menu">
-      <button type="button" onClick={png}>
+    <div className="flex items-center gap-1.5" aria-label="Export menu">
+      <Button variant="default" size="sm" onClick={png}>
+        <Download className="h-3.5 w-3.5" />
         Export PNG
-      </button>
-      <button type="button" onClick={instagram}>
+      </Button>
+      <Button variant="secondary" size="sm" onClick={instagram}>
+        <Camera className="h-3.5 w-3.5" />
         Instagram
-      </button>
-      <button type="button" onClick={spotify}>
+      </Button>
+      <Button variant="secondary" size="sm" onClick={spotify}>
+        <Music2 className="h-3.5 w-3.5" />
         Spotify Canvas
-      </button>
-      <button type="button" onClick={fullscreen}>
+      </Button>
+      <Button variant="ghost" size="sm" onClick={fullscreen}>
+        <Maximize2 className="h-3.5 w-3.5" />
         Fullscreen
-      </button>
-      <button type="button" onClick={resetView}>
+      </Button>
+      <Button variant="ghost" size="sm" onClick={resetView}>
+        <RotateCcw className="h-3.5 w-3.5" />
         Reset
-      </button>
+      </Button>
     </div>
   )
 }

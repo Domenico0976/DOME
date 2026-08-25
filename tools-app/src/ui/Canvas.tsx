@@ -39,5 +39,15 @@ export function Canvas() {
     return () => cancelAnimationFrame(raf)
   }, [aspect, quality, stackLen])
 
-  return <canvas ref={ref} id="stage-canvas" className="stage-canvas" data-testid="stage-canvas" style={{ width: W, height: H }} />
+  return (
+    <div className="flex h-full w-full items-center justify-center">
+      <canvas
+        ref={ref}
+        id="stage-canvas"
+        data-testid="stage-canvas"
+        className="max-h-full max-w-full rounded-lg border border-border bg-black shadow-2xl"
+        style={{ width: W, height: H }}
+      />
+    </div>
+  )
 }

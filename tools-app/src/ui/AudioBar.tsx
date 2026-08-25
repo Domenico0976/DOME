@@ -1,8 +1,11 @@
 import { useRef, useState } from 'react'
 import type { ChangeEvent } from 'react'
+import { Play, Pause, Upload, Mic, Piano } from 'lucide-react'
 import { useProjectStore } from '../state/projectStore'
 import { useAudio } from '../audio/useAudio'
 import { connectMidi } from '../audio/midi'
+import { Button } from '../components/ui/button'
+import { Slider } from '../components/ui/slider'
 
 export function AudioBar() {
   const audio = useAudio()
@@ -33,40 +36,75 @@ export function AudioBar() {
   }
 
   return (
-    <footer className="audio-bar" aria-label="Audio Reactivity and Automations">
+    <footer className="flex items-center gap-2 border-t border-border bg-surface px-4 py-2" aria-label="Audio Reactivity and Automations">
+      {/* File load */}
       <input ref={fileRef} type="file" accept="audio/*" hidden onChange={onFile} />
-      <button type="button" onClick={() => fileRef.current?.click()}>
-        {source === 'file' ? `♪ ${fileName ?? 'audio'}` : 'Load audio'}
-      </button>
-      <button type="button" onClick={() => audio.enableMic()} aria-pressed={source === 'mic'}>
-        {source === 'mic' ? '● Mic' : 'Mic'}
-      </button>
-      <button type="button" onClick={onMidi} disabled={midiBusy || midiEnabled}>
+      <Button
+        variant="secondary"
+        size="sm"
+        onClick={() => fileRef.current?.click()}
+      >
+        <Upload className="h-3.5 w-3.5" />
+        {source === 'file' ? (fileName ?? 'audio') : 'Load audio'}
+      </Button>
+
+      {/* Mic */}
+      <Button
+        variant={source === 'mic' ? 'default' : 'secondary'}
+        size="sm"
+        onClick={() => audio.enableMic()}
+        aria-pressed={source === 'mic'}
+      >
+        <Mic className="h-3.5 w-3.5" />
+        Mic
+      </Button>
+
+      {/* MIDI */}
+      <Button
+        variant={midiEnabled ? 'default' : 'secondary'}
+        size="sm"
+        disabled={midiBusy || midiEnabled}
+        onClick={onMidi}
+      >
+        <Piano className="h-3.5 w-3.5" />
         {midiEnabled ? 'MIDI ✓' : 'MIDI'}
-      </button>
-      <label>
+      </Button>
+
+      {/* BPM */}
+      <label className="flex items-center gap-1.5 text-[11px] uppercase tracking-wide text-muted-foreground">
         BPM
         <input
+          aria-label="BPM"
           type="number"
           min={20}
           max={300}
           value={bpm}
           onChange={(e) => setBpm(Number(e.target.value))}
+          className="h-8 w-16 rounded-md border border-border bg-surface-2 px-2 text-center font-mono text-[13px] text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
         />
       </label>
-      <button type="button" aria-label="Play/Pause" onClick={() => setPlaying(!playing)}>
-        {playing ? '⏸' : '▶'}
-      </button>
-      <input
-        type="range"
-        min={0}
-        max={durationSec}
-        step={0.1}
-        value={timeSec}
-        onChange={(e) => setTime(Number(e.target.value))}
-        aria-label="Timeline"
-      />
-      <span>{timeSec.toFixed(1)}s</span>
+
+      {/* Play/Pause */}
+      <Button variant="ghost" size="icon" aria-label="Play/Pause" onClick={() => setPlaying(!playing)}>
+        {playing ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+      </Button>
+
+      {/* Timeline slider */}
+      <span aria-label="Timeline">
+        <Slider
+          min={0}
+          max={durationSec}
+          step={0.1}
+          value={[timeSec]}
+          onValueChange={(v) => setTime(v[0])}
+          className="mx-1 min-w-24 flex-1"
+        />
+      </span>
+
+      {/* Time readout */}
+      <span className="font-mono text-[12px] tabular-nums text-muted-foreground">
+        {`${timeSec.toFixed(1)}s`}
+      </span>
     </footer>
   )
 }

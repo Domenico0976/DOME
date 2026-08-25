@@ -1,4 +1,15 @@
 import { useProjectStore } from '../state/projectStore'
+import { Button } from '../components/ui/button'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogClose,
+} from '../components/ui/dialog'
+import { LayoutTemplate } from 'lucide-react'
 
 const TEMPLATES: { name: string; stack: unknown[] }[] = [
   { name: 'Blank', stack: [] },
@@ -19,16 +30,30 @@ const TEMPLATES: { name: string; stack: unknown[] }[] = [
 
 export function Templates() {
   const loadProject = useProjectStore((s) => s.loadProject)
+
   return (
-    <details className="templates">
-      <summary>Templates</summary>
-      <div className="template-list">
-        {TEMPLATES.map((t) => (
-          <button key={t.name} className="template-item" onClick={() => loadProject({ stack: t.stack })}>
-            {t.name}
-          </button>
-        ))}
-      </div>
-    </details>
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button variant="ghost" size="sm">
+          <LayoutTemplate className="h-3.5 w-3.5" />
+          Templates
+        </Button>
+      </DialogTrigger>
+      <DialogContent max-w-md>
+        <DialogHeader>
+          <DialogTitle>Templates</DialogTitle>
+          <DialogDescription>Start from a preset stack.</DialogDescription>
+        </DialogHeader>
+        <div className="grid gap-2">
+          {TEMPLATES.map((t) => (
+            <DialogClose asChild key={t.name}>
+              <Button variant="secondary" className="w-full justify-start" onClick={() => loadProject({ stack: t.stack })}>
+                {t.name}
+              </Button>
+            </DialogClose>
+          ))}
+        </div>
+      </DialogContent>
+    </Dialog>
   )
 }
