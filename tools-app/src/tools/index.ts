@@ -13,6 +13,8 @@ import { ringsTool } from './generative/rings'
 import { starfieldTool } from './generative/starfield'
 import { kaleidoscopeTool } from './generative/kaleidoscope'
 import { plasmaTool } from './generative/plasma'
+import { liquidMetalTool } from './generative/liquidmetal'
+import { moleculesTool } from './generative/molecules'
 import { halftoneTool } from './filters/halftone'
 import { pixelatorTool } from './filters/pixelator'
 import { thermalTool } from './filters/thermal'
@@ -34,6 +36,8 @@ registerTool(ringsTool)
 registerTool(starfieldTool)
 registerTool(kaleidoscopeTool)
 registerTool(plasmaTool)
+registerTool(liquidMetalTool)
+registerTool(moleculesTool)
 registerTool(halftoneTool)
 registerTool(pixelatorTool)
 registerTool(thermalTool)
