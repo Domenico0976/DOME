@@ -3,7 +3,7 @@ export type ToolKind = 'input' | 'generative' | 'filter'
 export type ControlDef = {
   param: string
   label: string
-  kind: 'slider' | 'select' | 'color'
+  kind: 'slider' | 'select' | 'color' | 'text'
   min?: number
   max?: number
   step?: number

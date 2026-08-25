@@ -46,6 +46,14 @@ export function NodeOptions({ item }: { item: StackItem }) {
               onChange={(e) => updateParam(item.uid, c.param, e.target.value)}
             />
           )}
+          {c.kind === 'text' && (
+            <input
+              id={c.param}
+              type="text"
+              value={String(item.params[c.param] ?? '')}
+              onChange={(e) => updateParam(item.uid, c.param, e.target.value)}
+            />
+          )}
           <button
             aria-label={`Bind audio for ${c.param}`}
             onClick={() => addAudioBinding(item.uid, { param: c.param, source: 'bass', curve: 'linear', amount: 1 })}
