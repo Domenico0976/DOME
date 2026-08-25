@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import type { AudioBinding, Automation, MidiBinding, ProjectState, StackItem } from '../core/types'
+import type { AudioBinding, Automation, EffectType, MidiBinding, ProjectState, StackItem } from '../core/types'
 import { migrateProject } from '../core/schema'
 import { resolveTool } from '../core/registry'
 
@@ -23,6 +23,10 @@ export interface ProjectStore extends ProjectState {
   removeAudioBinding: (uid: string, param: string) => void
   addAutomation: (uid: string, automation: Automation) => void
   removeAutomation: (uid: string, param: string) => void
+  addEffect: (uid: string, type: EffectType) => void
+  removeEffect: (uid: string, effectUid: string) => void
+  setEffectParam: (uid: string, effectUid: string, param: string, value: number) => void
+  toggleEffect: (uid: string, effectUid: string) => void
   enableMidi: () => void
   bindMidi: (uid: string, param: string, cc: number) => void
   removeMidi: (uid: string, param: string) => void
@@ -149,6 +153,39 @@ export const useProjectStore = create<ProjectStore>((setOriginal, get) => {
     removeAutomation: (uid, param) =>
       set((s) => ({
         stack: patchItem(s.stack, uid, (i) => ({ ...i, automations: i.automations.filter((a) => a.param !== param) })),
+        unsaved: true,
+      })),
+
+    addEffect: (uid, type) =>
+      set((s) => ({
+        stack: patchItem(s.stack, uid, (i) => ({
+          ...i,
+          effects: [...(i.effects ?? []), { uid: makeUid(), type, enabled: true, params: {} }],
+        })),
+        unsaved: true,
+      })),
+
+    removeEffect: (uid, effectUid) =>
+      set((s) => ({
+        stack: patchItem(s.stack, uid, (i) => ({ ...i, effects: (i.effects ?? []).filter((e) => e.uid !== effectUid) })),
+        unsaved: true,
+      })),
+
+    setEffectParam: (uid, effectUid, param, value) =>
+      set((s) => ({
+        stack: patchItem(s.stack, uid, (i) => ({
+          ...i,
+          effects: (i.effects ?? []).map((e) => (e.uid === effectUid ? { ...e, params: { ...e.params, [param]: value } } : e)),
+        })),
+        unsaved: true,
+      })),
+
+    toggleEffect: (uid, effectUid) =>
+      set((s) => ({
+        stack: patchItem(s.stack, uid, (i) => ({
+          ...i,
+          effects: (i.effects ?? []).map((e) => (e.uid === effectUid ? { ...e, enabled: !e.enabled } : e)),
+        })),
         unsaved: true,
       })),
 
