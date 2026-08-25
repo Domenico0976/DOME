@@ -23,6 +23,8 @@ export type Automation = {
   keyframes: { timeSec: number; value: number; easing: 'linear' | 'ease' }[]
 }
 
+export type MidiBinding = { uid: string; param: string; cc: number }
+
 export type StackItem = {
   uid: string
   toolId: string
@@ -38,7 +40,7 @@ export type ProjectState = {
   stack: StackItem[]
   selectedUid: string | null
   timeline: { durationSec: number; bpm: number; playing: boolean; timeSec: number }
-  audio: { enabled: boolean; source: 'mic' | 'file' | null; fileName?: string }
+  audio: { enabled: boolean; source: 'mic' | 'file' | null; fileName?: string; midi: { enabled: boolean; bindings: MidiBinding[] } }
   canvas: { aspect: '1:1' | '3:4' | '9:16' | '4:3' | '16:9'; quality: 'low' | 'med' | 'high' | '4k' }
   theme: 'dark' | 'light'
   unsaved: boolean

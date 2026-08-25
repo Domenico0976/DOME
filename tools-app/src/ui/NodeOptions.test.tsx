@@ -47,4 +47,12 @@ describe('NodeOptions', () => {
     expect(audio.length).toBe(1)
     expect(audio[0].param).toBe('speed')
   })
+
+  test('removes an audio binding', () => {
+    const item = useProjectStore.getState().stack[0]
+    useProjectStore.getState().addAudioBinding(item.uid, { param: 'speed', source: 'bass', curve: 'linear', amount: 1 })
+    const { getByLabelText } = render(<NodeOptions item={useProjectStore.getState().stack[0]} />)
+    fireEvent.click(getByLabelText('Remove audio binding speed'))
+    expect(useProjectStore.getState().stack[0].audio.length).toBe(0)
+  })
 })

@@ -23,6 +23,10 @@ export function migrateProject(input: unknown): ProjectState {
       enabled: raw.audio?.enabled ?? false,
       source: raw.audio?.source ?? null,
       fileName: raw.audio?.fileName,
+      midi: {
+        enabled: raw.audio?.midi?.enabled ?? false,
+        bindings: Array.isArray(raw.audio?.midi?.bindings) ? raw.audio?.midi?.bindings : [],
+      },
     },
     canvas: {
       aspect: raw.canvas?.aspect ?? '1:1',

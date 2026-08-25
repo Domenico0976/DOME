@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import type { AudioBinding, Automation, ProjectState, StackItem } from '../core/types'
+import type { AudioBinding, Automation, MidiBinding, ProjectState, StackItem } from '../core/types'
 import { migrateProject } from '../core/schema'
 import { resolveTool } from '../core/registry'
 
@@ -22,6 +22,10 @@ export interface ProjectStore extends ProjectState {
   addAudioBinding: (uid: string, binding: AudioBinding) => void
   removeAudioBinding: (uid: string, param: string) => void
   addAutomation: (uid: string, automation: Automation) => void
+  removeAutomation: (uid: string, param: string) => void
+  enableMidi: () => void
+  bindMidi: (uid: string, param: string, cc: number) => void
+  removeMidi: (uid: string, param: string) => void
   setBpm: (bpm: number) => void
   setAspect: (aspect: ProjectState['canvas']['aspect']) => void
   setQuality: (quality: ProjectState['canvas']['quality']) => void
@@ -139,6 +143,30 @@ export const useProjectStore = create<ProjectStore>((setOriginal, get) => {
           ...i,
           automations: [...i.automations.filter((a) => a.param !== automation.param), automation],
         })),
+        unsaved: true,
+      })),
+
+    removeAutomation: (uid, param) =>
+      set((s) => ({
+        stack: patchItem(s.stack, uid, (i) => ({ ...i, automations: i.automations.filter((a) => a.param !== param) })),
+        unsaved: true,
+      })),
+
+    enableMidi: () => set((s) => ({ audio: { ...s.audio, midi: { ...s.audio.midi, enabled: true } } })),
+
+    bindMidi: (uid, param, cc) =>
+      set((s) => {
+        const bindings = s.audio.midi.bindings.filter((b) => !(b.uid === uid && b.param === param))
+        const next: MidiBinding = { uid, param, cc }
+        return { audio: { ...s.audio, midi: { enabled: true, bindings: [...bindings, next] } }, unsaved: true }
+      }),
+
+    removeMidi: (uid, param) =>
+      set((s) => ({
+        audio: {
+          ...s.audio,
+          midi: { ...s.audio.midi, bindings: s.audio.midi.bindings.filter((b) => !(b.uid === uid && b.param === param)) },
+        },
         unsaved: true,
       })),
 
