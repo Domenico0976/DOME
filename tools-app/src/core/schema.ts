@@ -37,6 +37,8 @@ TOOL_PARAM_MIGRATIONS.flowfield = (p) => ({
   hue: Number(p.hue ?? 180),
 })
 
+TOOL_PARAM_MIGRATIONS.tunnel = (p) => ({ ...p, shape: 'circle' })
+
 let orphanCounter = 0
 function normalizeItem(raw: Partial<StackItem>): StackItem {
   orphanCounter += 1
