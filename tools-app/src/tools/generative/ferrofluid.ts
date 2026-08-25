@@ -1,40 +1,90 @@
 import type { ToolDef } from '../../core/types'
+import { ReactionDiffusion, mulberry32 } from '../../engine/rd'
 
+function hexToRgb(hex: string): [number, number, number] {
+  const m = /^#?([0-9a-f]{6})$/i.exec(hex.trim())
+  if (!m) return [242, 121, 12]
+  const int = parseInt(m[1], 16)
+  return [(int >> 16) & 255, (int >> 8) & 255, int & 255]
+}
+
+function strHash(s: string): number {
+  let h = 7
+  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0
+  return h >>> 0
+}
+
+const SIZE_BY_QUALITY = { low: 96, med: 128, high: 160, '4k': 200 } as const
+
+type Sim = {
+  rd: ReactionDiffusion
+  sig: string
+  tmp: HTMLCanvasElement | null
+  tctx: CanvasRenderingContext2D | null
+}
+const sims = new Map<string, Sim>()
+
+// Ferrofluid: Gray-Scott reaction-diffusion channels weaving around dark magnetic attractors (Tool-Render.md §1.1).
 export const ferrofluidTool: ToolDef = {
   id: 'ferrofluid',
   kind: 'generative',
-  version: '1.0.0',
+  version: '2.0.0',
   label: 'Ferrofluid',
-  icon: '🟣',
+  icon: 'atom',
   category: 'Generative',
-  defaultParams: { blobs: 5, intensity: 1, hue: 280 },
+  defaultParams: { feed: 0.055, kill: 0.062, scale: 3, speed: 1, attractors: 5, accent: '#f2790c' },
   controls: [
-    { param: 'blobs', label: 'Blobs', kind: 'slider', min: 2, max: 10, step: 1 },
-    { param: 'intensity', label: 'Intensity', kind: 'slider', min: 0.2, max: 3, step: 0.1 },
-    { param: 'hue', label: 'Hue', kind: 'slider', min: 0, max: 360, step: 1 },
+    { param: 'feed', label: 'Feed', kind: 'slider', min: 0.01, max: 0.09, step: 0.001 },
+    { param: 'kill', label: 'Kill', kind: 'slider', min: 0.03, max: 0.075, step: 0.001 },
+    { param: 'scale', label: 'Scale', kind: 'slider', min: 1, max: 8, step: 0.5 },
+    { param: 'speed', label: 'Speed', kind: 'slider', min: 0, max: 3, step: 0.1 },
+    { param: 'attractors', label: 'Attractors', kind: 'slider', min: 0, max: 12, step: 1 },
+    { param: 'accent', label: 'Accent', kind: 'color' },
   ],
-  render(ctx, frame, item, audio, stack) {
-    const { width, height } = stack
-    const blobs = Number(item.params.blobs ?? 5)
-    const intensity = Number(item.params.intensity ?? 1)
-    const hue = Number(item.params.hue ?? 280)
-    const t = frame.timeSec
-    const base = Math.min(width, height)
-    ctx.save()
-    ctx.globalCompositeOperation = 'lighter'
-    for (let i = 0; i < blobs; i++) {
-      const ph = (i / blobs) * Math.PI * 2
-      const x = width / 2 + Math.cos(ph + t * 0.3) * width * 0.2
-      const y = height / 2 + Math.sin(ph * 1.7 + t * 0.25) * height * 0.2
-      const rad = base * 0.12 * (1 + audio.bass * 1.5) * intensity
-      const g = ctx.createRadialGradient(x, y, 0, x, y, rad)
-      g.addColorStop(0, `hsla(${hue}, 80%, 55%, 0.9)`)
-      g.addColorStop(1, `hsla(${hue}, 80%, 55%, 0)`)
-      ctx.fillStyle = g
-      ctx.beginPath()
-      ctx.arc(x, y, rad, 0, Math.PI * 2)
-      ctx.fill()
+  render(ctx, _frame, item, audio, stack) {
+    const feed = Number(item.params.feed ?? 0.055)
+    const kill = Number(item.params.kill ?? 0.062)
+    const speed = Number(item.params.speed ?? 1)
+    const attractors = Number(item.params.attractors ?? 5)
+    const accent = hexToRgb(String(item.params.accent ?? '#f2790c'))
+    const size = SIZE_BY_QUALITY[stack.quality]
+
+    let sim = sims.get(item.uid)
+    const sig = `${attractors}|${size}`
+    if (!sim || sim.sig !== sig) {
+      const rd = new ReactionDiffusion(size)
+      rd.seed(attractors, mulberry32(strHash(item.uid)))
+      const tmp = document.createElement('canvas')
+      tmp.width = size
+      tmp.height = size
+      sim = { rd, sig, tmp, tctx: tmp.getContext('2d') }
+      sims.set(item.uid, sim)
     }
-    ctx.restore()
+
+    const iterations = Math.min(20, Math.max(1, Math.round(2 + speed * 4)))
+    const f = Math.min(0.12, Math.max(0.01, feed * (1 + audio.bass * 0.15)))
+    for (let i = 0; i < iterations; i++) sim.rd.step(f, kill)
+
+    if (sim.tmp && sim.tctx) {
+      sim.tctx.putImageData(sim.rd.toImageData(accent), 0, 0)
+      const zoom = Math.max(0.5, Number(item.params.scale ?? 3) / 3)
+      const dw = stack.width * zoom
+      const dh = stack.height * zoom
+      ctx.save()
+      ctx.imageSmoothingEnabled = true
+      ctx.drawImage(sim.tmp, (stack.width - dw) / 2, (stack.height - dh) / 2, dw, dh)
+      ctx.restore()
+    } else {
+      // No 2d context available (jsdom): coarse cell sampling keeps the tool functional in tests.
+      const img = sim.rd.toImageData(accent)
+      const cw = stack.width / size
+      const ch = stack.height / size
+      for (let y = 0; y < size; y += 2)
+        for (let x = 0; x < size; x += 2) {
+          const i4 = (y * size + x) * 4
+          ctx.fillStyle = `rgb(${img.data[i4]},${img.data[i4 + 1]},${img.data[i4 + 2]})`
+          ctx.fillRect(x * cw, y * ch, cw * 2 + 1, ch * 2 + 1)
+        }
+    }
   },
 }

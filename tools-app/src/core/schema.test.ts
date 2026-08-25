@@ -29,3 +29,15 @@ describe('schema v2 effects', () => {
     expect(p.stack[0].effects).toEqual(eff)
   })
 })
+
+describe('legacy ferrofluid migration', () => {
+  test('legacy ferrofluid migrates to 2.0.0 params', () => {
+    const p = migrateProject({
+      stack: [{ uid: 'f', toolId: 'ferrofluid', toolVersion: '1.0.0', params: { blobs: 7, intensity: 2, hue: 280 }, audio: [], automations: [], hidden: false }],
+    })
+    expect(p.stack[0].toolVersion).toBe('2.0.0')
+    expect(p.stack[0].params.attractors).toBe(7)
+    expect(p.stack[0].params.speed).toBe(2)
+    expect(p.stack[0].params.accent).toMatch(/^#[0-9a-f]{6}$/)
+  })
+})

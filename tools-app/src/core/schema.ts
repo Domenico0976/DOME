@@ -7,6 +7,22 @@ export const TOOL_PARAM_MIGRATIONS: Record<
   (params: Record<string, number | string>) => Record<string, number | string>
 > = {}
 
+export function hslToHex(h: number, s: number, l: number): string {
+  s /= 100
+  l /= 100
+  const k = (n: number) => (n + h / 30) % 12
+  const a = s * Math.min(l, 1 - l)
+  const f = (n: number) => l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)))
+  const to = (v: number) => Math.round(v * 255).toString(16).padStart(2, '0')
+  return `#${to(f(0))}${to(f(8))}${to(f(4))}`
+}
+
+TOOL_PARAM_MIGRATIONS.ferrofluid = (p) => ({
+  attractors: Number(p.blobs ?? 5),
+  speed: Number(p.intensity ?? 1),
+  accent: hslToHex(Number(p.hue ?? 280), 80, 55),
+})
+
 let orphanCounter = 0
 function normalizeItem(raw: Partial<StackItem>): StackItem {
   orphanCounter += 1
