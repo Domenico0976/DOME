@@ -1,5 +1,7 @@
 import type { AudioBinding, AudioFrame, ControlDef, EffectType, Frame, StackItem } from '../../core/types'
 import { adjustmentsDef } from './adjustments'
+import { aberrationDef } from './aberration'
+import { wavesDef } from './waves'
 
 // Shared vertex shader for every effect pass: fullscreen quad with pass-through UVs.
 export const VERT_SRC =
@@ -19,7 +21,7 @@ export const EFFECT_ORDER: EffectType[] = ['adjustments', 'aberration', 'glow', 
 
 // Populated incrementally by each effect module; exhaustive from Task "lens + grain" onward.
 export const EFFECTS: Partial<Record<EffectType, EffectPassDef>> = {}
-Object.assign(EFFECTS, { adjustments: adjustmentsDef })
+Object.assign(EFFECTS, { adjustments: adjustmentsDef, aberration: aberrationDef, waves: wavesDef })
 
 export type ActivePass = {
   uid: string

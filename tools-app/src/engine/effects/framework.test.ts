@@ -60,3 +60,17 @@ test('adjustments uniforms map resolved params', async () => {
   const out = adjustmentsDef.uniforms({ brightness: 10, contrast: 20, saturation: 0.5 }, { timeSec: 0, dt: 0, bpm: 120 })
   expect(out).toEqual({ u_brightness: 10, u_contrast: 20, u_saturation: 0.5 })
 })
+
+test('aberration/waves uniforms map', async () => {
+  const { aberrationDef } = await import('./aberration')
+  const { wavesDef } = await import('./waves')
+  const f = { timeSec: 2, dt: 0, bpm: 120 }
+  expect(aberrationDef.uniforms({ displace: 12, frequency: 0.05 }, f)).toEqual({ u_displace: 12, u_frequency: 0.05 })
+  expect(wavesDef.uniforms({ intensity: 15, quantity: 0.08, speed: 1 }, f)).toEqual({ u_intensity: 15, u_quantity: 0.08, u_speed: 1 })
+})
+
+test('EFFECT_ORDER heads registered so far stay ordered', async () => {
+  const { EFFECTS, EFFECT_ORDER } = await import('./index')
+  for (const t of ['adjustments', 'aberration', 'waves'] as const) expect(EFFECTS[t]).toBeDefined()
+  expect(EFFECT_ORDER[0]).toBe('adjustments')
+})
