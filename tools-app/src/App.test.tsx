@@ -6,12 +6,11 @@ import App from './App'
 afterEach(cleanup)
 
 describe('App layout', () => {
-  test('right aside is scrollable and constrained', () => {
+  test('renders floating island components', () => {
     const { container } = render(<App />)
-    const aside = Array.from(container.querySelectorAll('aside')).find((el) =>
-      el.className.includes('w-[340px]'),
-    )
-    expect(aside?.className ?? '').toMatch(/overflow-y-auto/)
-    expect(aside?.className ?? '').toMatch(/max-h-/)
+    // CanvasArea should exist
+    expect(container.querySelector('[data-testid="stage-canvas"]')).toBeTruthy()
+    // FloatingStack should exist (fixed positioned)
+    expect(container.querySelector('.fixed')).toBeTruthy()
   })
 })
