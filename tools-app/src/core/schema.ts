@@ -1,17 +1,41 @@
-import type { ProjectState } from './types'
+import type { ProjectState, StackItem } from './types'
 
-export const SCHEMA_VERSION = 1
+export const SCHEMA_VERSION = 2
 
-/**
- * migrateProject normalizes any stored (possibly older / partial) project blob
- * into the current ProjectState shape. Old projects keep rendering because every
- * field has a safe default — this is what makes the universe "not closed to itself".
- */
+export const TOOL_PARAM_MIGRATIONS: Record<
+  string,
+  (params: Record<string, number | string>) => Record<string, number | string>
+> = {}
+
+let orphanCounter = 0
+function normalizeItem(raw: Partial<StackItem>): StackItem {
+  orphanCounter += 1
+  return {
+    uid: typeof raw.uid === 'string' ? raw.uid : `m_${Date.now().toString(36)}_${orphanCounter}`,
+    toolId: typeof raw.toolId === 'string' ? raw.toolId : 'solidColor',
+    toolVersion: typeof raw.toolVersion === 'string' ? raw.toolVersion : '1.0.0',
+    params: raw.params && typeof raw.params === 'object' ? { ...raw.params } : {},
+    audio: Array.isArray(raw.audio) ? raw.audio : [],
+    automations: Array.isArray(raw.automations) ? raw.automations : [],
+    hidden: Boolean(raw.hidden),
+    effects: Array.isArray(raw.effects) ? raw.effects : [],
+  }
+}
+
+// migrateProject normalizes any stored project blob into the current shape and
+// applies registered per-tool parameter migrations for legacy major versions.
 export function migrateProject(input: unknown): ProjectState {
   const raw = (input ?? {}) as Partial<ProjectState>
+  const stack: StackItem[] = Array.isArray(raw.stack) ? raw.stack.map(normalizeItem) : []
   return {
     schemaVersion: SCHEMA_VERSION,
-    stack: Array.isArray(raw.stack) ? raw.stack : [],
+    stack: stack.map((item) => {
+      const migrate = TOOL_PARAM_MIGRATIONS[item.toolId]
+      if (migrate && item.toolVersion.startsWith('1.')) {
+        return { ...item, toolVersion: '2.0.0', params: migrate(item.params) }
+      }
+      return item
+    }),
     selectedUid: raw.selectedUid ?? null,
     timeline: {
       durationSec: raw.timeline?.durationSec ?? 60,

@@ -25,6 +25,22 @@ export type Automation = {
 
 export type MidiBinding = { uid: string; param: string; cc: number }
 
+export type EffectType =
+  | 'adjustments'
+  | 'aberration'
+  | 'glow'
+  | 'waves'
+  | 'edgeblur'
+  | 'lens'
+  | 'grain'
+
+export type EffectInstance = {
+  uid: string
+  type: EffectType
+  enabled: boolean
+  params: Record<string, number>
+}
+
 export type StackItem = {
   uid: string
   toolId: string
@@ -33,6 +49,7 @@ export type StackItem = {
   audio: AudioBinding[]
   automations: Automation[]
   hidden: boolean
+  effects?: EffectInstance[]
 }
 
 export type ProjectState = {
