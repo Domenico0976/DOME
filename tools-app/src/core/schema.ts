@@ -30,6 +30,13 @@ TOOL_PARAM_MIGRATIONS.particles = (p) => ({
   hue: Number(p.hue ?? 200),
 })
 
+TOOL_PARAM_MIGRATIONS.flowfield = (p) => ({
+  segments: Number(p.density ?? 14) * 40,
+  steplen: 2.5,
+  curl: 1,
+  hue: Number(p.hue ?? 180),
+})
+
 let orphanCounter = 0
 function normalizeItem(raw: Partial<StackItem>): StackItem {
   orphanCounter += 1
