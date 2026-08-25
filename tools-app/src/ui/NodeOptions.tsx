@@ -8,6 +8,8 @@ import { Separator } from '../components/ui/separator'
 import { Badge } from '../components/ui/badge'
 import { Button } from '../components/ui/button'
 import type { ControlDef, StackItem } from '../core/types'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs'
+import { NodeOptionsEffects } from './NodeOptionsEffects'
 
 const AUDIO_SOURCES = ['bass', 'mid', 'treble', 'level', 'spectrum', 'bpm'] as const
 
@@ -48,8 +50,14 @@ export function NodeOptions({ item }: { item: StackItem }) {
         {item.hidden && <Badge variant="warning">Hidden</Badge>}
       </div>
 
-      {/* Controls body */}
-      <ScrollArea className="flex-1">
+      <Tabs defaultValue="controls" className="flex min-h-0 flex-1 flex-col">
+        <TabsList className="mx-4 shrink-0 self-start">
+          <TabsTrigger value="controls">Controls</TabsTrigger>
+          <TabsTrigger value="effects">Effects</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="controls" className="mt-0 min-h-0 flex-1">
+          <ScrollArea className="h-full">
         <div className="space-y-5 p-4">
           {def.controls.map((c: ControlDef) => (
             <div key={c.param} className="space-y-1.5">
@@ -250,7 +258,13 @@ export function NodeOptions({ item }: { item: StackItem }) {
             </>
           )}
         </div>
-      </ScrollArea>
+          </ScrollArea>
+        </TabsContent>
+
+        <TabsContent value="effects" className="mt-0 min-h-0 flex-1 overflow-hidden p-4">
+          <NodeOptionsEffects item={item} />
+        </TabsContent>
+      </Tabs>
     </div>
   )
 }
