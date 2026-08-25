@@ -30,7 +30,7 @@ export default function App() {
       <div className="flex min-w-0 flex-1 flex-col">
         <TopBar />
         <main className="flex min-h-0 flex-1">
-          <section className="flex-1 min-w-0 relative overflow-hidden" style={{ background: 'radial-gradient(circle at 50% 40%, hsl(var(--surface-2)) 0%, hsl(var(--background)) 70%)' }}>
+          <section className="flex flex-col flex-1 min-w-0 relative overflow-hidden" style={{ background: 'radial-gradient(circle at 50% 40%, hsl(var(--surface-2)) 0%, hsl(var(--background)) 70%)' }}>
             <CanvasArea>
               <Canvas />
             </CanvasArea>
