@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [master]
+    branches: [master, main]
   workflow_dispatch:
 
 permissions:
@@ -34,6 +34,7 @@ jobs:
       - name: Build tools app
         run: |
           npm ci
+          npm run test
           npm run build
         working-directory: tools-app
 

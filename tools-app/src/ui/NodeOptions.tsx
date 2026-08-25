@@ -14,6 +14,27 @@ import { NodeOptionsEffects } from './NodeOptionsEffects'
 
 const AUDIO_SOURCES = ['bass', 'mid', 'treble', 'level', 'spectrum', 'bpm'] as const
 
+const BLEND_MODES = [
+  { label: 'Normal', value: 'source-over' },
+  { label: 'Darken', value: 'darken' },
+  { label: 'Multiply', value: 'multiply' },
+  { label: 'Plus darker', value: 'source-over' },
+  { label: 'Color burn', value: 'color-burn' },
+  { label: 'Lighten', value: 'lighten' },
+  { label: 'Screen', value: 'screen' },
+  { label: 'Plus lighter', value: 'lighter' },
+  { label: 'Color dodge', value: 'color-dodge' },
+  { label: 'Overlay', value: 'overlay' },
+  { label: 'Soft light', value: 'soft-light' },
+  { label: 'Hard light', value: 'hard-light' },
+  { label: 'Difference', value: 'difference' },
+  { label: 'Exclusion', value: 'exclusion' },
+  { label: 'Hue', value: 'hue' },
+  { label: 'Saturation', value: 'saturation' },
+  { label: 'Color', value: 'color' },
+  { label: 'Luminosity', value: 'luminosity' },
+] as const
+
 export function NodeOptions({ item }: { item: StackItem }) {
   const updateParam = useProjectStore((s) => s.updateParam)
   const addAudioBinding = useProjectStore((s) => s.addAudioBinding)
@@ -49,6 +70,37 @@ export function NodeOptions({ item }: { item: StackItem }) {
         </div>
         <h3 className="text-[15px] font-semibold">{def.label}</h3>
         {item.hidden && <Badge variant="warning">Hidden</Badge>}
+      </div>
+
+      <div className="flex items-center gap-2 border-b border-border px-4 py-2 shrink-0">
+        <label htmlFor="blend-mode" className="text-[11px] font-medium text-muted-foreground">
+          Blend mode
+        </label>
+        <select
+          id="blend-mode"
+          value={item.blendMode ?? 'source-over'}
+          onChange={(e) => updateParam(item.uid, '_blendMode', e.target.value)}
+          className="h-7 rounded-md border border-border bg-surface-2 px-2 text-[11px]"
+        >
+          {BLEND_MODES.map((m) => (
+            <option key={m.label} value={m.value}>
+              {m.label}
+            </option>
+          ))}
+        </select>
+        <label htmlFor="opacity" className="text-[11px] font-medium text-muted-foreground">
+          Opacity
+        </label>
+        <input
+          id="opacity"
+          type="range"
+          min={0}
+          max={1}
+          step={0.01}
+          value={item.opacity ?? 1}
+          onChange={(e) => updateParam(item.uid, '_opacity', Number(e.target.value))}
+          className="w-20 accent-[hsl(var(--primary))] cursor-pointer h-1 appearance-auto"
+        />
       </div>
 
       <Tabs defaultValue="controls" className="flex min-h-0 flex-1 flex-col">

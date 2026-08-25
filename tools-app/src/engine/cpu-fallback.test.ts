@@ -69,4 +69,13 @@ describe('cpu fallback effects', () => {
     applyGrainCPU(b, { intensity: 0.5 }, 99)
     expect(Array.from(a.data)).toEqual(Array.from(b.data))
   })
+
+  test('grain intensity is normalized so moderate values do not immediately clip', () => {
+    const img = img2x1(128, 128, 128)
+    applyGrainCPU(img, { intensity: 25 }, 123)
+    expect(img.data[0]).toBeGreaterThan(0)
+    expect(img.data[0]).toBeLessThan(255)
+    expect(img.data[4]).toBeGreaterThan(0)
+    expect(img.data[4]).toBeLessThan(255)
+  })
 })

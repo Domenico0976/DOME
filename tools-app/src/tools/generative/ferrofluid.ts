@@ -22,6 +22,16 @@ type Sim = {
 }
 const sims = new Map<string, Sim>()
 
+export function disposeFerrofluidSim(uid: string): void {
+  sims.delete(uid)
+}
+
+export function pruneFerrofluidSims(activeUids: Set<string>): void {
+  for (const uid of Array.from(sims.keys())) {
+    if (!activeUids.has(uid)) sims.delete(uid)
+  }
+}
+
 // Ferrofluid: Gray-Scott reaction-diffusion channels weaving around dark magnetic attractors (Tool-Render.md §1.1).
 // Attractor changes stamp additively onto the running field (no reseed); grid rebuilds only on quality change.
 export const ferrofluidTool: ToolDef = {

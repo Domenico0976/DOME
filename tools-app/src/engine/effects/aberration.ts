@@ -19,8 +19,11 @@ uniform float u_displace;
 uniform float u_area;
 uniform float u_falloff;
 void main() {
-  float dist = length(v_uv - 0.5) * min(u_res.x, u_res.y);
-  float env = smoothstep(u_area, u_area + max(1.0, u_falloff), dist);
+  float dist = max(length(v_uv - 0.5) * min(u_res.x, u_res.y), 0.001);
+  float maxR = min(u_res.x, u_res.y) * 0.5;
+  float area = (u_area / 100.0) * maxR;
+  float falloff = (u_falloff / 100.0) * maxR;
+  float env = smoothstep(area, area + max(1.0, falloff), dist);
   float wave = sin(dist * 0.08) * u_displace * env / u_res.x;
   vec4 c = texture2D(u_tex, v_uv);
   float r = texture2D(u_tex, clamp(v_uv + vec2(wave, 0.0), 0.0, 1.0)).r;

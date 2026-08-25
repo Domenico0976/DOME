@@ -4,7 +4,7 @@ import type { EffectPassDef } from './index'
 export const grainDef: EffectPassDef = {
   type: 'grain',
   label: 'Grain',
-  defaultParams: { intensity: 0, motion: 1, size: 50 },
+  defaultParams: { intensity: 10, motion: 1, size: 50 },
   controls: [
     { param: 'intensity', label: 'Intensity', kind: 'slider', min: 0, max: 100, step: 1 },
     { param: 'motion', label: 'Motion', kind: 'slider', min: 0, max: 1, step: 1 },
@@ -27,7 +27,7 @@ void main() {
   gl_FragColor = vec4(clamp(c.rgb + n * (u_intensity / 100.0), 0.0, 1.0), c.a);
 }`,
   uniforms: (p, frame) => ({
-    u_intensity: (p.intensity ?? 0) / 100,
+    u_intensity: p.intensity ?? 0,
     u_grainsize: p.size ?? 50,
     u_seed: (p.motion ?? 1) > 0.5 ? Math.floor(frame.timeSec * 60) : 0,
   }),

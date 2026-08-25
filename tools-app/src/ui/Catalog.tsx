@@ -17,7 +17,7 @@ export function Catalog({ anchorUid, onClose }: { anchorUid: string | null; onCl
   return (
     <div
       className={cn(
-        'grid grid-cols-3 gap-4 rounded-lg border border-border bg-popover p-3 shadow-xl animate-in fade-in-0 zoom-in-95 duration-150 w-fit min-w-[420px]',
+        'grid grid-cols-3 gap-4 rounded-lg border border-border bg-popover p-3 shadow-xl animate-in fade-in-0 zoom-in-95 duration-150 max-w-[90vw] max-h-[60vh] overflow-auto',
       )}
       role="dialog"
       aria-label="Tool catalog"

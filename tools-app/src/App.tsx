@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { useProjectStore } from './state/projectStore'
 import { TopBar } from './ui/TopBar'
 import { Sidebar } from './ui/Sidebar'
@@ -11,6 +12,16 @@ export default function App() {
   const selectedUid = useProjectStore((s) => s.selectedUid)
   const stack = useProjectStore((s) => s.stack)
   const selected = stack.find((i) => i.uid === selectedUid) ?? null
+
+  useEffect(() => {
+    const raw = localStorage.getItem('dome-project')
+    if (!raw) return
+    try {
+      useProjectStore.getState().loadProject(JSON.parse(raw))
+    } catch {
+    }
+  }, [])
+
   return (
     <div className="flex h-screen w-screen overflow-hidden bg-background font-sans text-foreground">
       <Sidebar />
@@ -25,7 +36,7 @@ export default function App() {
               </div>
             )}
           </section>
-          <aside className="flex w-[340px] shrink-0 flex-col gap-3 border-l border-border bg-surface p-3">
+          <aside className="flex w-[340px] shrink-0 flex-col gap-3 border-l border-border bg-surface p-3 overflow-y-auto max-h-[calc(100vh-8rem)]">
             <Stack />
             <div className="min-h-0 flex-1">
               {selected ? (

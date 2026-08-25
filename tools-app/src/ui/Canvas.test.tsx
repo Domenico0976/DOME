@@ -3,6 +3,8 @@ import { describe, test, expect, beforeEach, afterEach, vi } from 'vitest'
 import { render, cleanup } from '@testing-library/react'
 import { evaluateStack } from '../core/stackEngine'
 import { Canvas } from './Canvas'
+import { useProjectStore } from '../state/projectStore'
+import { registerTool } from '../core/registry'
 
 vi.mock('../core/stackEngine', () => ({
   evaluateStack: vi.fn(),
@@ -47,5 +49,29 @@ describe('Canvas', () => {
   test('renders wrapper carrying stage-canvas testid alongside dual canvases', () => {
     const { getByTestId } = render(<Canvas />)
     expect(getByTestId('stage-canvas')).toBeTruthy()
+  })
+
+  test('applies CPU effects when GPU effects are also active and WebGL is unavailable', () => {
+    registerTool({
+      id: 'g',
+      kind: 'generative',
+      version: '1.0.0',
+      label: 'Gen',
+      icon: '',
+      category: 'Generative',
+      defaultParams: {},
+      controls: [],
+      render: () => {},
+    })
+    useProjectStore.getState().reset()
+    useProjectStore.getState().addTool('g')
+    const uid = useProjectStore.getState().stack[0].uid
+    useProjectStore.getState().addEffect(uid, 'adjustments')
+    useProjectStore.getState().addEffect(uid, 'lens')
+
+    render(<Canvas />)
+    expect(rafCb).not.toBeNull()
+    rafCb?.(0)
+    expect(stubCtx.getImageData).toHaveBeenCalled()
   })
 })

@@ -1,0 +1,102 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic "DOME" [ref=e5]: D
+    - generic [ref=e6]:
+      - button "Undo" [disabled]
+      - button "Redo" [disabled]
+  - generic [ref=e7]:
+    - banner [ref=e8]:
+      - combobox "Preview quality" [ref=e9] [cursor=pointer]:
+        - generic: High · 1080p
+      - generic [ref=e12]:
+        - button "Tips" [ref=e13] [cursor=pointer]
+        - button "Support" [ref=e17] [cursor=pointer]
+        - button "Templates" [ref=e25] [cursor=pointer]
+        - button "Save project" [ref=e30] [cursor=pointer]: Save Project
+        - button "Sign in" [ref=e35] [cursor=pointer]
+        - button "Toggle theme" [ref=e36] [cursor=pointer]
+    - main [ref=e43]:
+      - generic [ref=e44]: Select a node to edit its parameters
+      - complementary [ref=e48]:
+        - generic [ref=e49]:
+          - generic [ref=e50]:
+            - generic [ref=e51]: Stack
+            - button "Add tool to stack" [active] [ref=e52] [cursor=pointer]
+          - generic [ref=e54]: Add a tool with + to begin
+          - dialog "Tool catalog" [ref=e106]:
+            - generic [ref=e107]:
+              - heading "Inputs" [level=4] [ref=e108]
+              - button "Add Audio File" [ref=e109] [cursor=pointer]:
+                - generic [ref=e114]: Audio File
+              - button "Add Camera" [ref=e115] [cursor=pointer]:
+                - generic [ref=e119]: Camera
+              - button "Add Gradient" [ref=e120] [cursor=pointer]:
+                - generic [ref=e127]: Gradient
+              - button "Add Image / Video" [ref=e128] [cursor=pointer]:
+                - generic [ref=e133]: Image / Video
+              - button "Add Solid Color" [ref=e134] [cursor=pointer]:
+                - generic [ref=e137]: Solid Color
+              - button "Add Text" [ref=e138] [cursor=pointer]:
+                - generic [ref=e141]: Text
+            - generic [ref=e142]:
+              - heading "Generative" [level=4] [ref=e143]
+              - button "Add Brutalist" [ref=e144] [cursor=pointer]:
+                - generic [ref=e147]: Brutalist
+              - button "Add Doodle" [ref=e148] [cursor=pointer]:
+                - generic [ref=e153]: Doodle
+              - button "Add Ferrofluid" [ref=e154] [cursor=pointer]:
+                - generic [ref=e159]: Ferrofluid
+              - button "Add Flow Field" [ref=e160] [cursor=pointer]:
+                - generic [ref=e165]: Flow Field
+              - button "Add Kaleidoscope" [ref=e166] [cursor=pointer]:
+                - generic [ref=e169]: Kaleidoscope
+              - button "Add Liquid Metal" [ref=e170] [cursor=pointer]:
+                - generic [ref=e174]: Liquid Metal
+              - button "Add Molecules" [ref=e175] [cursor=pointer]:
+                - generic [ref=e181]: Molecules
+              - button "Add Particles" [ref=e182] [cursor=pointer]:
+                - generic [ref=e186]: Particles
+              - button "Add Particles 2" [ref=e187] [cursor=pointer]:
+                - generic [ref=e201]: Particles 2
+              - button "Add Plasma" [ref=e202] [cursor=pointer]:
+                - generic [ref=e206]: Plasma
+              - button "Add Rings" [ref=e207] [cursor=pointer]:
+                - generic [ref=e214]: Rings
+              - button "Add Shaders" [ref=e215] [cursor=pointer]:
+                - generic [ref=e222]: Shaders
+              - button "Add Starfield" [ref=e223] [cursor=pointer]:
+                - generic [ref=e226]: Starfield
+              - button "Add Tunnel" [ref=e227] [cursor=pointer]:
+                - generic [ref=e237]: Tunnel
+            - generic [ref=e238]:
+              - heading "Filters" [level=4] [ref=e239]
+              - button "Add Facets" [ref=e240] [cursor=pointer]:
+                - generic [ref=e243]: Facets
+              - button "Add Halftone" [ref=e244] [cursor=pointer]:
+                - generic [ref=e255]: Halftone
+              - button "Add Pixelator" [ref=e256] [cursor=pointer]:
+                - generic [ref=e259]: Pixelator
+              - button "Add Re-Light" [ref=e260] [cursor=pointer]:
+                - generic [ref=e263]: Re-Light
+              - button "Add Thermal" [ref=e264] [cursor=pointer]:
+                - generic [ref=e267]: Thermal
+              - button "Add Type Shape" [ref=e268] [cursor=pointer]:
+                - generic [ref=e271]: Type Shape
+        - generic [ref=e55]: No node selected
+    - generic "Export menu" [ref=e59]:
+      - button "Export PNG" [ref=e60] [cursor=pointer]
+      - button "Instagram" [ref=e64] [cursor=pointer]
+      - button "Spotify Canvas" [ref=e68] [cursor=pointer]
+      - button "Fullscreen" [ref=e72] [cursor=pointer]
+      - button "Reset" [ref=e78] [cursor=pointer]
+    - contentinfo "Audio Reactivity and Automations" [ref=e82]:
+      - button "Load audio" [ref=e83] [cursor=pointer]
+      - button "Mic" [ref=e87] [cursor=pointer]
+      - button "MIDI" [ref=e91] [cursor=pointer]
+      - generic [ref=e94]:
+        - text: BPM
+        - spinbutton "BPM" [ref=e95]: "120"
+      - button "Play/Pause" [ref=e96] [cursor=pointer]
+      - generic "Timeline" [ref=e99]:
+        - slider [ref=e103]
+      - generic [ref=e104]: 0.0s

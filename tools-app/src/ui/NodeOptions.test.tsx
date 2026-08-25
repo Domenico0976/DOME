@@ -55,4 +55,30 @@ describe('NodeOptions', () => {
     fireEvent.click(getByLabelText('Remove audio binding speed'))
     expect(useProjectStore.getState().stack[0].audio.length).toBe(0)
   })
+
+  test('blend mode select updates the item blendMode', () => {
+    const item = useProjectStore.getState().stack[0]
+    const { getByLabelText } = render(<NodeOptions item={item} />)
+    const select = getByLabelText('Blend mode') as HTMLSelectElement
+    fireEvent.change(select, { target: { value: 'multiply' } })
+    expect(useProjectStore.getState().stack[0].blendMode).toBe('multiply')
+  })
+
+  test('opacity slider updates the item opacity', () => {
+    const item = useProjectStore.getState().stack[0]
+    const { getByLabelText } = render(<NodeOptions item={item} />)
+    const input = getByLabelText('Opacity') as HTMLInputElement
+    fireEvent.change(input, { target: { value: '0.5' } })
+    expect(useProjectStore.getState().stack[0].opacity).toBe(0.5)
+  })
+
+  test('renders automation entries with keyframe count', () => {
+    const item = useProjectStore.getState().stack[0]
+    useProjectStore.getState().addAutomation(item.uid, {
+      param: 'speed',
+      keyframes: [{ timeSec: 0, value: 1, easing: 'linear' }],
+    })
+    const { getByText } = render(<NodeOptions item={useProjectStore.getState().stack[0]} />)
+    expect(getByText('1 keys')).toBeTruthy()
+  })
 })

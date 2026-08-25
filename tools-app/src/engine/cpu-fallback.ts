@@ -69,7 +69,7 @@ export function applyGrainCPU(img: ImageData, p: Record<string, number>, seed: n
   const rng = mulberry32(seed)
   const d = img.data
   for (let i = 0; i < d.length; i += 4) {
-    const n = (rng() - 0.5) * 255 * intensity
+    const n = (rng() - 0.5) * 255 * (intensity / 100)
     d[i] = clampByte(d[i] + n)
     d[i + 1] = clampByte(d[i + 1] + n)
     d[i + 2] = clampByte(d[i + 2] + n)

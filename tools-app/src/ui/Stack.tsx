@@ -4,7 +4,7 @@ import { resolveTool, getCatalog } from '../core/registry'
 import { ToolIcon } from './toolIcon'
 import { Catalog } from './Catalog'
 import { Button } from '../components/ui/button'
-import { SwitchCamera, EyeOff, X, Plus } from 'lucide-react'
+import { SwitchCamera, EyeOff, X, Plus, ArrowUp, ArrowDown } from 'lucide-react'
 import { cn } from '../lib/utils'
 
 export function Stack() {
@@ -13,13 +13,14 @@ export function Stack() {
   const selectTool = useProjectStore((s) => s.selectTool)
   const toggleSwitch = useProjectStore((s) => s.toggleSwitch)
   const removeTool = useProjectStore((s) => s.removeTool)
+  const moveTool = useProjectStore((s) => s.moveTool)
   const switchTool = useProjectStore((s) => s.switchTool)
   const [addAbove, setAddAbove] = useState<string | null>(null)
   const [switchUid, setSwitchUid] = useState<string | null>(null)
   const [showCatalog, setShowCatalog] = useState(false)
 
   return (
-    <div className="flex flex-col gap-1 p-3">
+    <div className="flex flex-col gap-1 p-3 overflow-y-auto max-h-[50vh]">
       {/* Header */}
       <div className="flex items-center gap-2 mb-2">
         <span className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Stack</span>
@@ -90,6 +91,30 @@ export function Stack() {
                   }}
                 >
                   <SwitchCamera className="h-3.5 w-3.5" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-7 w-7"
+                  aria-label="Move up"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    moveTool(it.uid, 'up')
+                  }}
+                >
+                  <ArrowUp className="h-3.5 w-3.5" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-7 w-7"
+                  aria-label="Move down"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    moveTool(it.uid, 'down')
+                  }}
+                >
+                  <ArrowDown className="h-3.5 w-3.5" />
                 </Button>
                 <Button
                   variant="ghost"

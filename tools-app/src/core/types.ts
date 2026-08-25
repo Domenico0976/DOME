@@ -50,6 +50,8 @@ export type StackItem = {
   automations: Automation[]
   hidden: boolean
   effects?: EffectInstance[]
+  blendMode?: string
+  opacity?: number
 }
 
 export type ProjectState = {
@@ -86,4 +88,28 @@ export type ToolDef = {
   defaultParams: Record<string, number | string>
   controls: ControlDef[]
   render(ctx: CanvasRenderingContext2D, frame: Frame, item: StackItem, audio: AudioFrame, stack: StackRenderContext): void
+}
+
+export type AudioPreset = {
+  readonly id: string
+  readonly toolId: string
+  readonly param: string
+  readonly reactTo: 'bass' | 'mid' | 'treble' | 'level' | 'spectrum' | 'bpm'
+  readonly sensitivity: number
+  readonly valueRange: [number, number]
+}
+
+export type CanvasState = {
+  readonly pan: { x: number; y: number }
+  readonly zoom: number
+  readonly gridSize: number
+  readonly gridVisible: boolean
+}
+
+export type PanelState = {
+  readonly uid: string | null
+  readonly position: { x: number; y: number }
+  readonly isSnapped: boolean
+  readonly snapSide: 'left' | 'right' | null
+  readonly size: { width: number; height: number }
 }

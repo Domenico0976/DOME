@@ -15,25 +15,44 @@ export const kaleidoscopeTool: ToolDef = {
   render(ctx, frame, item, _audio, stack) {
     const { width, height } = stack
     const wedges = Number(item.params.wedges ?? 6)
-    const hue = Number(item.params.hue ?? 320)
     const t = frame.timeSec
+
+    // Capture the current canvas content as the source for reflection
+    const sourceCanvas = document.createElement('canvas')
+    sourceCanvas.width = width
+    sourceCanvas.height = height
+    const sourceCtx = sourceCanvas.getContext('2d')
+    if (!sourceCtx) return
+    sourceCtx.drawImage(ctx.canvas, 0, 0)
+
+    const wedgeAngle = (Math.PI * 2) / wedges
+    const maxRadius = Math.sqrt(width * width + height * height) / 2
+
     ctx.save()
     ctx.translate(width / 2, height / 2)
-    ctx.globalCompositeOperation = 'lighter'
+
     for (let w = 0; w < wedges; w++) {
       ctx.save()
-      ctx.rotate((w / wedges) * Math.PI * 2 + Math.sin(t * 0.2) * 0.1)
-      ctx.scale(w % 2 ? -1 : 1, 1)
-      for (let i = 0; i < 5; i++) {
-        const r = 20 + i * 30 + Math.sin(t + i) * 10
-        ctx.strokeStyle = `hsla(${(hue + i * 50 + t * 40) % 360}, 80%, 60%, 0.6)`
-        ctx.lineWidth = 4
-        ctx.beginPath()
-        ctx.arc(0, 0, r, 0, Math.PI / 3)
-        ctx.stroke()
+      ctx.rotate(w * wedgeAngle + Math.sin(t * 0.2) * 0.1)
+
+      // Create wedge-shaped clip region centered on the rotated x-axis
+      ctx.beginPath()
+      ctx.moveTo(0, 0)
+      ctx.arc(0, 0, maxRadius, -wedgeAngle / 2, wedgeAngle / 2)
+      ctx.closePath()
+      ctx.clip()
+
+      // Mirror alternating wedges across the wedge centerline
+      if (w % 2 === 1) {
+        ctx.scale(1, -1)
       }
+
+      // Draw the source content reflected into this wedge
+      ctx.drawImage(sourceCanvas, -width / 2, -height / 2)
+
       ctx.restore()
     }
+
     ctx.restore()
   },
 }

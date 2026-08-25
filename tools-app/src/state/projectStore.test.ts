@@ -34,7 +34,7 @@ describe('projectStore', () => {
     useProjectStore.getState().reset()
   })
 
-  test('addTool inserts after the selected node and selects it', () => {
+  test('addTool inserts before the selected node and selects it', () => {
     const s = useProjectStore.getState()
     s.addTool('demo')
     s.addTool('demo')
@@ -45,7 +45,7 @@ describe('projectStore', () => {
     state.addTool('demo')
     state = useProjectStore.getState()
     expect(state.stack).toHaveLength(3)
-    expect(state.stack[1].uid).toBe(state.selectedUid)
+    expect(state.stack[0].uid).toBe(state.selectedUid)
   })
 
   test('removeTool deletes and clears selection', () => {
@@ -104,5 +104,33 @@ describe('projectStore', () => {
     const state = useProjectStore.getState()
     expect(state.canvas.aspect).toBe('9:16')
     expect(state.unsaved).toBe(false)
+  })
+
+  test('reset clears undo/redo history', () => {
+    const s = useProjectStore.getState()
+    s.addTool('demo')
+    s.reset()
+    const state = useProjectStore.getState()
+    expect(state.stack).toHaveLength(0)
+    expect(state.past).toHaveLength(0)
+    expect(state.future).toHaveLength(0)
+  })
+
+  test('loadProject clears undo/redo history', () => {
+    const s = useProjectStore.getState()
+    s.addTool('demo')
+    s.loadProject({ stack: [] })
+    const state = useProjectStore.getState()
+    expect(state.past).toHaveLength(0)
+    expect(state.future).toHaveLength(0)
+  })
+
+  test('undo after add clears selectedUid when the node is removed', () => {
+    const s = useProjectStore.getState()
+    s.addTool('demo')
+    s.undo()
+    const state = useProjectStore.getState()
+    expect(state.stack).toHaveLength(0)
+    expect(state.selectedUid).toBeNull()
   })
 })

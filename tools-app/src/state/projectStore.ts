@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import type { AudioBinding, Automation, EffectType, MidiBinding, ProjectState, StackItem } from '../core/types'
 import { migrateProject } from '../core/schema'
 import { resolveTool } from '../core/registry'
+import { disposeFerrofluidSim, pruneFerrofluidSims } from '../tools/generative/ferrofluid'
 
 let counter = 0
 function makeUid(): string {
@@ -79,17 +80,20 @@ export const useProjectStore = create<ProjectStore>((setOriginal, get) => {
         }
         const idx = s.selectedUid ? s.stack.findIndex((i) => i.uid === s.selectedUid) : -1
         const stack = [...s.stack]
-        if (idx >= 0) stack.splice(idx + 1, 0, item)
+        if (idx >= 0) stack.splice(idx, 0, item)
         else stack.push(item)
         return { stack, selectedUid: item.uid, unsaved: true }
       }),
 
     removeTool: (uid) =>
-      set((s) => ({
-        stack: s.stack.filter((i) => i.uid !== uid),
-        selectedUid: s.selectedUid === uid ? null : s.selectedUid,
-        unsaved: true,
-      })),
+      set((s) => {
+        disposeFerrofluidSim(uid)
+        return {
+          stack: s.stack.filter((i) => i.uid !== uid),
+          selectedUid: s.selectedUid === uid ? null : s.selectedUid,
+          unsaved: true,
+        }
+      }),
 
     moveTool: (uid, dir) =>
       set((s) => {
@@ -122,7 +126,11 @@ export const useProjectStore = create<ProjectStore>((setOriginal, get) => {
 
     updateParam: (uid, param, value) =>
       set((s) => ({
-        stack: patchItem(s.stack, uid, (i) => ({ ...i, params: { ...i.params, [param]: value } })),
+        stack: patchItem(s.stack, uid, (i) => {
+          if (param === '_blendMode') return { ...i, blendMode: String(value) }
+          if (param === '_opacity') return { ...i, opacity: Number(value) }
+          return { ...i, params: { ...i.params, [param]: value } }
+        }),
         unsaved: true,
       })),
 
@@ -214,17 +222,23 @@ export const useProjectStore = create<ProjectStore>((setOriginal, get) => {
     setPlaying: (playing) => set((s) => ({ timeline: { ...s.timeline, playing } })),
     setTime: (timeSec) => set((s) => ({ timeline: { ...s.timeline, timeSec } })),
     markSaved: () => set({ unsaved: false }),
-    loadProject: (raw) => set({ ...migrateProject(raw), unsaved: false }),
-    reset: () => set({ ...migrateProject({ stack: [] }), unsaved: false }),
+    loadProject: (raw) => setOriginal({ ...migrateProject(raw), past: [], future: [], unsaved: false }),
+    reset: () => {
+      pruneFerrofluidSims(new Set())
+      return setOriginal({ ...migrateProject({ stack: [] }), past: [], future: [], unsaved: false })
+    },
 
     undo: () =>
       setOriginal((s) => {
         if (s.past.length === 0) return {}
         const prev = s.past[s.past.length - 1]
+        pruneFerrofluidSims(new Set(prev.map((i) => i.uid)))
+        const selectedUid = prev.some((i) => i.uid === s.selectedUid) ? s.selectedUid : null
         return {
           stack: prev,
           past: s.past.slice(0, -1),
           future: [s.stack, ...s.future].slice(0, 50),
+          selectedUid,
           unsaved: true,
         }
       }),
@@ -233,6 +247,7 @@ export const useProjectStore = create<ProjectStore>((setOriginal, get) => {
       setOriginal((s) => {
         if (s.future.length === 0) return {}
         const next = s.future[0]
+        pruneFerrofluidSims(new Set(next.map((i) => i.uid)))
         return {
           stack: next,
           past: [...s.past, s.stack].slice(-50),

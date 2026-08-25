@@ -1,0 +1,211 @@
+- generic [ref=e2]:
+  - generic [ref=e4]:
+    - generic [ref=e5]:
+      - button "Tips & tricks" [ref=e7] [cursor=pointer]
+      - button "Support" [ref=e9] [cursor=pointer]
+      - button "Templates" [ref=e15] [cursor=pointer]
+      - generic [ref=e17]:
+        - button "Save Project" [ref=e18]
+        - generic [ref=e445]: Unsaved changes
+    - generic [ref=e23]:
+      - button "Open menu" [ref=e25] [cursor=pointer]
+      - generic [ref=e31]:
+        - button "Sign in" [ref=e32] [cursor=pointer]
+        - button "Undo (⌘Z)" [ref=e36] [cursor=pointer]
+        - button "Redo (⌘⇧Z)" [disabled] [ref=e39]
+    - generic [ref=e446]:
+      - generic [ref=e447]:
+        - generic [ref=e448]: Shader
+        - generic [ref=e462]:
+          - 'button "Blend mode: Normal" [ref=e463] [cursor=pointer]'
+          - button "Close tool editor" [ref=e466] [cursor=pointer]
+      - generic [ref=e471]:
+        - tablist "Tool panel" [ref=e472]:
+          - tab "Controls" [selected] [ref=e474]
+          - tab "Effects" [ref=e475]
+        - tabpanel [ref=e477]:
+          - generic [ref=e478]:
+            - generic [ref=e479]:
+              - generic [ref=e480]:
+                - heading [level=3] [ref=e481]:
+                  - button "Parameters" [expanded] [ref=e482]
+                - region "Parameters" [ref=e489]:
+                  - generic [ref=e490]:
+                    - generic [ref=e491]:
+                      - generic [ref=e492]:
+                        - switch "Smooth bands Smooth bands Smooth bands" [checked] [ref=e493]
+                        - generic [ref=e494] [cursor=pointer]: Smooth bands
+                      - generic [ref=e495]:
+                        - generic [ref=e496]:
+                          - paragraph [ref=e498]: Warp depth
+                          - button "3" [ref=e499]
+                        - slider [ref=e505]: "3.1"
+                      - generic [ref=e506]:
+                        - generic [ref=e507]:
+                          - paragraph [ref=e509]: Complexity
+                          - button "2" [ref=e510]
+                        - slider [ref=e516]: "1.5"
+                      - generic [ref=e517]:
+                        - generic [ref=e518]:
+                          - paragraph [ref=e520]: Bands
+                          - button "48" [ref=e521]
+                        - slider [ref=e527]: "48"
+                      - generic [ref=e528]:
+                        - generic [ref=e529]:
+                          - paragraph [ref=e531]: Speed
+                          - button "57%" [ref=e532]
+                        - slider [ref=e538]: "57"
+                      - generic [ref=e539]:
+                        - generic [ref=e540]:
+                          - paragraph [ref=e542]: Scale
+                          - button "2x" [ref=e543]
+                        - slider [ref=e549]: "2.2"
+                    - generic [ref=e551]:
+                      - generic [ref=e552]:
+                        - paragraph [ref=e554]: Opacity
+                        - button "100%" [ref=e555]
+                      - slider [ref=e561]: "100"
+              - heading [level=3] [ref=e563]:
+                - button "Colors" [ref=e564]
+            - button "Reset settings to default" [disabled]: Reset settings
+    - generic:
+      - generic:
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - button "Particles"
+                  - button "Shader"
+              - generic:
+                - generic:
+                  - button "Add tool"
+    - generic [ref=e171]:
+      - button "Add tool" [ref=e571] [cursor=pointer]
+      - generic:
+        - generic "Stack pipeline nodes":
+          - generic:
+            - button "Drag nodes" [ref=e572]
+            - generic [ref=e181]:
+              - button "Edit Particles" [ref=e573] [cursor=pointer]:
+                - generic [ref=e187]: Particles
+              - generic [ref=e189]:
+                - button "Switch tool" [ref=e574] [cursor=pointer]:
+                  - generic [ref=e193]: Switch
+                - button "Node options" [ref=e575] [cursor=pointer]
+            - generic [ref=e579]:
+              - button "Edit Shader" [pressed] [ref=e580] [cursor=pointer]:
+                - generic [ref=e585]: Shader
+              - generic [ref=e587]:
+                - button "Switch tool" [ref=e588] [cursor=pointer]:
+                  - generic [ref=e591]: Switch
+                - button "Node options" [ref=e592] [cursor=pointer]
+      - generic [ref=e199]:
+        - generic [ref=e200]: "Stack: Particles"
+        - generic [ref=e204]:
+          - button "1:1" [ref=e597]
+          - generic [ref=e214]:
+            - button "Open full-screen display" [ref=e598] [cursor=pointer]
+            - button [ref=e219] [cursor=pointer]
+            - button "Video loop for Spotify Canvas" [disabled] [ref=e599]
+            - button "Export" [ref=e600] [cursor=pointer]
+    - generic:
+      - generic:
+        - button "Reset canvas position":
+          - generic: Reset view
+        - button "Switch to light mode" [ref=e601] [cursor=pointer]
+      - generic [ref=e238]:
+        - generic [ref=e240] [cursor=pointer]:
+          - generic [ref=e241]: AUDIO REACTIVITY & AUTOMATIONS
+          - generic [ref=e242]:
+            - generic [ref=e243]:
+              - generic [ref=e244]:
+                - generic [ref=e245]: 00:00
+                - textbox "Timeline duration" [ref=e602]: 01:00
+              - generic "BPM" [ref=e603]:
+                - textbox "BPM" [ref=e604]: "82"
+            - generic [ref=e250]:
+              - generic [ref=e251]:
+                - button "Stop" [disabled] [ref=e605]
+                - generic: Add an audio fileor enable the mic
+              - generic [ref=e255]:
+                - button [disabled] [ref=e256]
+                - generic: Add an audio fileor enable the mic
+            - generic [ref=e259]:
+              - generic [ref=e260]: MP3, WAV
+              - generic [ref=e264]:
+                - button "Record mic" [ref=e606]
+                - button "Select audio input" [ref=e607]
+          - generic [ref=e273]:
+            - button "Open MIDI assignment panel" [ref=e608]:
+              - generic [ref=e278]: MIDI
+            - button "Expand panel" [ref=e609]
+        - generic:
+          - generic:
+            - generic:
+              - button
+              - generic:
+                - generic: Presets
+                - generic: React to
+                - generic: Sensitivity
+                - generic: Value range
+                - generic:
+                  - generic:
+                    - img:
+                      - generic:
+                        - generic:
+                          - generic: 00:00
+                          - generic: 00:10
+                          - generic: 00:20
+                          - generic: 00:30
+                          - generic: 00:40
+                          - generic: 00:50
+                          - generic: 01:00
+                      - generic:
+                        - generic: "1"
+                        - generic: "5"
+                        - generic: "9"
+                        - generic: "13"
+                        - generic: "17"
+                        - generic: "21"
+            - generic:
+              - button
+              - generic:
+                - generic:
+                  - generic:
+                    - generic:
+                      - button
+                      - generic:
+                        - button:
+                          - generic:
+                            - generic: Particles · Controls
+                            - generic: Handle X
+                      - button
+                  - generic:
+                    - generic:
+                      - button:
+                        - generic: dB
+                      - generic:
+                        - button
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - slider
+                      - button: 50%
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - slider
+                        - generic:
+                          - slider
+            - generic:
+              - button: Add Preset
+    - button "PREVIEW QUALITY Ultra 4K · 60fps" [ref=e283] [cursor=pointer]:
+      - generic [ref=e284]: PREVIEWQUALITY
+      - generic [ref=e286]:
+        - generic [ref=e287]: Ultra
+        - generic [ref=e288]: 4K · 60fps
+    - region "Notifications alt+T"
+  - region "Notifications alt+T"

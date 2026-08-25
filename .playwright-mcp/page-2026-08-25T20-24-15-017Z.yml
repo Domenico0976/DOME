@@ -1,0 +1,82 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic "DOME" [ref=e5]: D
+    - generic [ref=e6]:
+      - button "Undo" [ref=e272] [cursor=pointer]
+      - button "Redo" [disabled]
+  - generic [ref=e7]:
+    - banner [ref=e8]:
+      - combobox "Preview quality" [ref=e9] [cursor=pointer]:
+        - generic: High · 1080p
+      - generic [ref=e12]:
+        - button "Tips" [ref=e13] [cursor=pointer]
+        - button "Support" [ref=e17] [cursor=pointer]
+        - button "Templates" [ref=e25] [cursor=pointer]
+        - button "Save project" [ref=e30] [cursor=pointer]: Unsaved changes
+        - button "Sign in" [ref=e35] [cursor=pointer]
+        - button "Toggle theme" [ref=e36] [cursor=pointer]
+    - main [ref=e43]:
+      - complementary [ref=e48]:
+        - generic [ref=e49]:
+          - generic [ref=e50]:
+            - generic [ref=e51]: Stack
+            - button "Add tool to stack" [ref=e52] [cursor=pointer]
+          - generic [ref=e278] [cursor=pointer]:
+            - generic [ref=e279]: Shaders
+            - generic [ref=e287]:
+              - button "Switch tool" [ref=e288]
+              - button "Hide node" [ref=e295]
+              - button "Remove node" [ref=e301]
+              - button "Add tool above" [ref=e305]
+        - generic [ref=e307]:
+          - heading "Shaders" [level=3] [ref=e316]
+          - generic [ref=e317]:
+            - tablist [ref=e318]:
+              - tab "Controls" [selected] [ref=e319] [cursor=pointer]
+              - tab "Effects" [ref=e320] [cursor=pointer]
+            - tabpanel "Controls" [ref=e321]:
+              - generic [ref=e325]:
+                - generic [ref=e326]:
+                  - generic [ref=e327]:
+                    - generic [ref=e328]: Palette
+                    - generic [ref=e329]:
+                      - button "Bind audio for palette" [ref=e330] [cursor=pointer]
+                      - button "Learn MIDI for palette" [disabled]
+                      - button "Add keyframe for palette" [ref=e332] [cursor=pointer]
+                  - combobox "Palette" [ref=e336]:
+                    - option "magma" [selected]
+                    - option "ice"
+                    - option "toxic"
+                - generic [ref=e337]:
+                  - generic [ref=e338]:
+                    - generic [ref=e339]: Scale
+                    - generic [ref=e340]:
+                      - button "Bind audio for scale" [ref=e341] [cursor=pointer]
+                      - button "Learn MIDI for scale" [disabled]
+                      - button "Add keyframe for scale" [ref=e343] [cursor=pointer]
+                  - slider "Scale" [ref=e347] [cursor=pointer]: "4"
+                - generic [ref=e348]:
+                  - generic [ref=e349]:
+                    - generic [ref=e350]: Speed
+                    - generic [ref=e351]:
+                      - button "Bind audio for speed" [ref=e352] [cursor=pointer]
+                      - button "Learn MIDI for speed" [disabled]
+                      - button "Add keyframe for speed" [ref=e354] [cursor=pointer]
+                  - slider "Speed" [ref=e358] [cursor=pointer]: "1"
+    - generic "Export menu" [ref=e59]:
+      - button "Export PNG" [ref=e60] [cursor=pointer]
+      - button "Instagram" [ref=e64] [cursor=pointer]
+      - button "Spotify Canvas" [ref=e68] [cursor=pointer]
+      - button "Fullscreen" [ref=e72] [cursor=pointer]
+      - button "Reset" [ref=e78] [cursor=pointer]
+    - contentinfo "Audio Reactivity and Automations" [ref=e82]:
+      - button "Load audio" [ref=e83] [cursor=pointer]
+      - button "Mic" [ref=e87] [cursor=pointer]
+      - button "MIDI" [ref=e91] [cursor=pointer]
+      - generic [ref=e94]:
+        - text: BPM
+        - spinbutton "BPM" [ref=e95]: "120"
+      - button "Play/Pause" [ref=e96] [cursor=pointer]
+      - generic "Timeline" [ref=e99]:
+        - slider [ref=e103]
+      - generic [ref=e104]: 0.0s

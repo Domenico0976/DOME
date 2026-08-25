@@ -30,4 +30,29 @@ describe('Stack', () => {
     fireEvent.click(getByLabelText('Add Gen'))
     expect(useProjectStore.getState().stack.length).toBe(2)
   })
+
+  test('stack list is scrollable and constrained', () => {
+    const { container } = render(<Stack />)
+    const el = container.firstChild as HTMLElement
+    expect(el.className).toMatch(/overflow-y-auto/)
+    expect(el.className).toMatch(/max-h-/)
+  })
+
+  test('move up and move down buttons reorder the stack', () => {
+    useProjectStore.getState().addTool('g')
+    useProjectStore.getState().addTool('g')
+    const { getAllByLabelText } = render(<Stack />)
+    const [firstUid, secondUid] = useProjectStore.getState().stack.map((i) => i.uid)
+    const moveDownButtons = getAllByLabelText('Move down')
+    const moveUpButtons = getAllByLabelText('Move up')
+    expect(moveDownButtons.length).toBe(2)
+    expect(moveUpButtons.length).toBe(2)
+    fireEvent.click(moveDownButtons[0])
+    expect(useProjectStore.getState().stack[0].uid).toBe(secondUid)
+    expect(useProjectStore.getState().stack[1].uid).toBe(firstUid)
+    const moveUpButtonsAfter = getAllByLabelText('Move up')
+    fireEvent.click(moveUpButtonsAfter[1])
+    expect(useProjectStore.getState().stack[0].uid).toBe(firstUid)
+    expect(useProjectStore.getState().stack[1].uid).toBe(secondUid)
+  })
 })

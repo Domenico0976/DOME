@@ -30,4 +30,12 @@ describe('Catalog', () => {
     fireEvent.click(getByLabelText('Add Gen'))
     expect(useProjectStore.getState().stack.length).toBe(1)
   })
+
+  test('catalog is constrained and scrollable within the viewport', () => {
+    const { container } = render(<Catalog anchorUid={null} onClose={() => {}} />)
+    const el = container.querySelector('[role="dialog"]') as HTMLElement
+    expect(el.className).toMatch(/max-w-/)
+    expect(el.className).toMatch(/max-h-/)
+    expect(el.className).toMatch(/overflow-/)
+  })
 })

@@ -91,20 +91,26 @@ test('glow/edgeblur uniforms map', async () => {
   })
 })
 
-test('lens/grain uniforms map', async () => {
+test('lens/grain uniforms pass raw intensity for shader-side normalization', async () => {
   const { lensDef } = await import('./lens')
   const { grainDef } = await import('./grain')
   const f = { timeSec: 3, dt: 0, bpm: 120 }
   const lensOut = lensDef.uniforms({ intensity: 70, x: 50, y: 50 }, f)
-  expect(lensOut.u_intensity).toBeCloseTo(0.7, 6)
+  expect(lensOut.u_intensity).toBe(70)
   expect(lensOut.u_center_x).toBe(0.5)
   expect(lensOut.u_center_y).toBe(0.5)
   const on = grainDef.uniforms({ intensity: 50, motion: 1, size: 50 }, f)
-  expect(on.u_intensity).toBe(0.5)
+  expect(on.u_intensity).toBe(50)
   expect(on.u_grainsize).toBe(50)
   expect(on.u_seed).toBe(180)
   const off = grainDef.uniforms({ intensity: 50, motion: 0, size: 50 }, f)
   expect(off.u_seed).toBe(0)
+})
+
+test('aberration shader normalizes area and falloff from percentages', async () => {
+  const { aberrationDef } = await import('./aberration')
+  expect(aberrationDef.fragment).toContain('u_area / 100.0')
+  expect(aberrationDef.fragment).toContain('u_falloff / 100.0')
 })
 
 test('registry is exhaustive over EFFECT_ORDER', async () => {

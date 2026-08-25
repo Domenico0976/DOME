@@ -1,0 +1,126 @@
+- generic [ref=e2]:
+  - generic [ref=e4]:
+    - generic [ref=e5]:
+      - button "Tips & tricks" [ref=e7] [cursor=pointer]
+      - button "Support" [ref=e9] [cursor=pointer]
+      - button "Templates" [ref=e15] [cursor=pointer]
+      - button "Save Project" [ref=e18]
+    - generic [ref=e23]:
+      - button "Open menu" [ref=e25] [cursor=pointer]
+      - generic [ref=e31]:
+        - button "Sign in" [ref=e32] [cursor=pointer]
+        - button "Undo (⌘Z)" [disabled] [ref=e36]
+        - button "Redo (⌘⇧Z)" [disabled] [ref=e39]
+    - generic:
+      - generic:
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - button "Add tool"
+              - generic:
+                - generic:
+                  - button "Add tool" [disabled]
+    - generic [ref=e45]:
+      - generic:
+        - generic "Stack pipeline nodes":
+          - generic:
+            - button "Drag nodes" [ref=e46]
+            - button "Add tool" [ref=e52] [cursor=pointer]
+      - generic [ref=e58]:
+        - generic [ref=e59]: "Stack: Stack"
+        - generic [ref=e64]:
+          - generic [ref=e66]:
+            - heading "Add a tool to get started" [level=2] [ref=e67]
+            - button "Browse tools" [ref=e68] [cursor=pointer]
+          - contentinfo [ref=e71]:
+            - paragraph [ref=e72]: Tutorials
+            - list [ref=e73]:
+              - listitem [ref=e74]:
+                - button "Getting started with Sketch" [ref=e75] [cursor=pointer]
+              - listitem [ref=e78]:
+                - button "Display & Export" [ref=e79] [cursor=pointer]
+    - generic:
+      - generic:
+        - button "Reset canvas position":
+          - generic: Reset view
+        - button "Switch to light mode" [ref=e83] [cursor=pointer]
+      - generic [ref=e87]:
+        - generic [ref=e89] [cursor=pointer]:
+          - generic [ref=e90]: AUDIO REACTIVITY & AUTOMATIONS
+          - generic [ref=e91]:
+            - generic [ref=e92]:
+              - generic [ref=e93]:
+                - generic [ref=e94]: 00:00
+                - textbox "Timeline duration" [ref=e95]: 01:00
+              - generic "BPM" [ref=e96]:
+                - textbox "BPM" [ref=e97]: "82"
+            - generic [ref=e99]:
+              - generic [ref=e100]:
+                - button "Stop" [disabled] [ref=e101]
+                - generic: Add an audio fileor enable the mic
+              - generic [ref=e104]:
+                - button [disabled] [ref=e105]
+                - generic: Add an audio fileor enable the mic
+            - generic [ref=e108]:
+              - generic [ref=e109]: MP3, WAV
+              - generic [ref=e113]:
+                - button "Record mic" [ref=e114]
+                - button "Select audio input" [ref=e119]
+          - generic [ref=e122]:
+            - button "Open MIDI assignment panel" [ref=e124]:
+              - generic [ref=e127]: MIDI
+            - button "Expand panel" [ref=e128]
+        - generic:
+          - generic:
+            - generic:
+              - button
+              - generic:
+                - generic: Presets
+                - generic: React to
+                - generic: Sensitivity
+                - generic: Value range
+                - generic:
+                  - generic:
+                    - img:
+                      - generic:
+                        - generic:
+                          - generic: 00:00
+                          - generic: 00:10
+                          - generic: 00:20
+                          - generic: 00:30
+                          - generic: 00:40
+                          - generic: 00:50
+                          - generic: 01:00
+                      - generic:
+                        - generic: "1"
+                        - generic: "5"
+                        - generic: "9"
+                        - generic: "13"
+                        - generic: "17"
+                        - generic: "21"
+    - generic [ref=e134]:
+      - button "Close" [ref=e135] [cursor=pointer]
+      - generic [ref=e138]:
+        - generic [ref=e139]:
+          - heading "Welcome to Sketch" [level=2] [ref=e143]
+          - paragraph [ref=e144]: A new creative playground.
+        - generic [ref=e145]:
+          - button "Continue with google" [ref=e146] [cursor=pointer]
+          - generic [ref=e153]: Or continue with
+          - generic [ref=e157]:
+            - paragraph [ref=e159]: Email
+            - textbox "Enter your email address" [ref=e161]
+          - button "Continue" [ref=e162] [cursor=pointer]
+          - button "Already have an account? Sign In" [ref=e164] [cursor=pointer]
+          - paragraph [ref=e165]:
+            - text: By continuing, you confirm you agree to the
+            - link "Terms" [ref=e166] [cursor=pointer]:
+              - /url: https://sketchdesign.club/tc
+            - text: and
+            - link "Privacy Policy" [ref=e167] [cursor=pointer]:
+              - /url: https://sketchdesign.club/pp
+            - text: .
+    - region "Notifications alt+T"
+  - region "Notifications alt+T"

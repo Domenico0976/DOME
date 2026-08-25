@@ -1,23 +1,28 @@
 import { resolveTool } from './registry'
-import type { AudioFrame, Frame, StackItem } from './types'
+import type { AudioFrame, Frame, StackItem, StackRenderContext } from './types'
 
 export function evaluateStack(
   ctx: CanvasRenderingContext2D,
   frame: Frame,
   audio: AudioFrame,
   items: StackItem[],
+  options?: { quality?: StackRenderContext['quality'] },
 ): void {
+  const quality = options?.quality ?? 'high'
   ctx.save()
   ctx.globalCompositeOperation = 'source-over'
-  for (const item of items) {
+  for (let i = items.length - 1; i >= 0; i--) {
+    const item = items[i]
     if (item.hidden) continue
     const tool = resolveTool(item.toolId, item.toolVersion)
     if (!tool) continue
     ctx.save()
+    ctx.globalCompositeOperation = (item.blendMode ?? 'source-over') as GlobalCompositeOperation
+    ctx.globalAlpha = item.opacity ?? 1
     tool.render(ctx, frame, item, audio, {
       width: ctx.canvas.width,
       height: ctx.canvas.height,
-      quality: 'high',
+      quality,
     })
     ctx.restore()
   }

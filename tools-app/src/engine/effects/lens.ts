@@ -30,7 +30,7 @@ void main() {
   gl_FragColor = vec4(clamp(c.rgb, 0.0, 1.0), c.a);
 }`,
   uniforms: (p) => ({
-    u_intensity: (p.intensity ?? 0) / 100,
+    u_intensity: p.intensity ?? 0,
     u_center_x: (p.x ?? 50) / 100,
     u_center_y: (p.y ?? 50) / 100,
   }),
