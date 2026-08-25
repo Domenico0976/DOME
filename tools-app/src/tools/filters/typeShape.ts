@@ -6,7 +6,7 @@ export const typeShapeTool: ToolDef = {
   kind: 'filter',
   version: '1.0.0',
   label: 'Type Shape',
-  icon: '🔤',
+  icon: 'type',
   category: 'Filters',
   defaultParams: { glyph: '#', size: 12, fg: '#ffffff', bg: '#0a0a0f' },
   controls: [

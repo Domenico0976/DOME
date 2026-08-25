@@ -11,7 +11,7 @@ export const textTool: ToolDef = {
   kind: 'input',
   version: '1.0.0',
   label: 'Text',
-  icon: '🆃',
+  icon: 'pilcrow',
   category: 'Inputs',
   defaultParams: { text: 'DOME', font: 'sans', size: 64, color: '#ffffff', align: 'center' },
   controls: [

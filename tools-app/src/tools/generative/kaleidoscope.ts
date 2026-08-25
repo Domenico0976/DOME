@@ -5,7 +5,7 @@ export const kaleidoscopeTool: ToolDef = {
   kind: 'generative',
   version: '1.0.0',
   label: 'Kaleidoscope',
-  icon: '🔷',
+  icon: 'hexagon',
   category: 'Generative',
   defaultParams: { wedges: 6, hue: 320 },
   controls: [

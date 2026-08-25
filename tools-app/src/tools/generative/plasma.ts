@@ -5,7 +5,7 @@ export const plasmaTool: ToolDef = {
   kind: 'generative',
   version: '1.0.0',
   label: 'Plasma',
-  icon: '🌐',
+  icon: 'droplets',
   category: 'Generative',
   defaultParams: { scale: 1, hue: 260 },
   controls: [

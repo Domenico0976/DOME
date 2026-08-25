@@ -1,4 +1,5 @@
 import { getCatalog } from '../core/registry'
+import { ToolIcon } from './toolIcon'
 import { useProjectStore } from '../state/projectStore'
 import { cn } from '../lib/utils'
 import { Button } from '../components/ui/button'
@@ -41,7 +42,7 @@ export function Catalog({ anchorUid, onClose }: { anchorUid: string | null; onCl
                   onClose()
                 }}
               >
-                {t.icon && <span className="text-base">{t.icon}</span>}
+                <ToolIcon name={String(t.icon)} className="h-4 w-4" />
                 <span>{t.label}</span>
               </Button>
             ))}

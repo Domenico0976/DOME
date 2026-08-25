@@ -25,7 +25,7 @@ export const cameraTool: ToolDef = {
   kind: 'input',
   version: '1.0.0',
   label: 'Camera',
-  icon: '📷',
+  icon: 'camera',
   category: 'Inputs',
   defaultParams: { mirror: 'on' },
   controls: [{ param: 'mirror', label: 'Mirror', kind: 'select', options: ['on', 'off'] }],

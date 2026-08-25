@@ -67,7 +67,7 @@ export function AudioBar() {
         onClick={onMidi}
       >
         <Piano className="h-3.5 w-3.5" />
-        {midiEnabled ? 'MIDI ✓' : 'MIDI'}
+        {midiEnabled ? 'MIDI connected' : 'MIDI'}
       </Button>
 
       {/* BPM */}

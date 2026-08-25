@@ -5,7 +5,7 @@ export const audioFileTool: ToolDef = {
   kind: 'input',
   version: '1.0.0',
   label: 'Audio File',
-  icon: '🎵',
+  icon: 'music',
   category: 'Inputs',
   defaultParams: { mode: 'bars' },
   controls: [{ param: 'mode', label: 'Style', kind: 'select', options: ['bars', 'level'] }],

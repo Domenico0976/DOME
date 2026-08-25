@@ -5,7 +5,7 @@ export const ringsTool: ToolDef = {
   kind: 'generative',
   version: '1.0.0',
   label: 'Rings',
-  icon: '💠',
+  icon: 'orbit',
   category: 'Generative',
   defaultParams: { count: 8, hue: 200 },
   controls: [

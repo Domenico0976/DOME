@@ -5,7 +5,7 @@ export const solidColorTool: ToolDef = {
   kind: 'input',
   version: '1.0.0',
   label: 'Solid Color',
-  icon: '🟦',
+  icon: 'square',
   category: 'Inputs',
   defaultParams: { color: '#101018' },
   controls: [{ param: 'color', label: 'Color', kind: 'color' }],

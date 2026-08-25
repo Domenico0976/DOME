@@ -6,7 +6,7 @@ export const reLightTool: ToolDef = {
   kind: 'filter',
   version: '1.0.0',
   label: 'Re-Light',
-  icon: '💡',
+  icon: 'lightbulb',
   category: 'Filters',
   defaultParams: { brightness: 0, contrast: 0 },
   controls: [

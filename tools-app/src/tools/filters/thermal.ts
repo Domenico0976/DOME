@@ -6,7 +6,7 @@ export const thermalTool: ToolDef = {
   kind: 'filter',
   version: '1.0.0',
   label: 'Thermal',
-  icon: '🌡',
+  icon: 'thermometer',
   category: 'Filters',
   defaultParams: {},
   controls: [],

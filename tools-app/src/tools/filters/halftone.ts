@@ -6,7 +6,7 @@ export const halftoneTool: ToolDef = {
   kind: 'filter',
   version: '1.0.0',
   label: 'Halftone',
-  icon: '⠿',
+  icon: 'grip',
   category: 'Filters',
   defaultParams: { dot: 6, bg: '#0a0a0f', fg: '#ffffff' },
   controls: [

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useProjectStore } from '../state/projectStore'
 import { resolveTool, getCatalog } from '../core/registry'
+import { ToolIcon } from './toolIcon'
 import { Catalog } from './Catalog'
 import { Button } from '../components/ui/button'
 import { SwitchCamera, EyeOff, X, Plus } from 'lucide-react'
@@ -68,7 +69,7 @@ export function Stack() {
             <div className="flex items-center gap-2">
               {/* Icon + label */}
               <div className="flex items-center gap-2 min-w-0 flex-1">
-                {def?.icon && <span className="text-base leading-none">{def.icon}</span>}
+                <ToolIcon name={String(def?.icon ?? 'square')} className="h-4 w-4 shrink-0" />
                 <span className="truncate font-medium text-[13px]">{def?.label ?? it.toolId}</span>
                 {it.hidden && (
                   <span className="text-[10px] text-muted-foreground">(hidden)</span>

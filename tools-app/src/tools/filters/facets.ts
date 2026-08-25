@@ -6,7 +6,7 @@ export const facetsTool: ToolDef = {
   kind: 'filter',
   version: '1.0.0',
   label: 'Facets',
-  icon: '🔻',
+  icon: 'triangle',
   category: 'Filters',
   defaultParams: { size: 16 },
   controls: [{ param: 'size', label: 'Facet Size', kind: 'slider', min: 4, max: 64, step: 1 }],

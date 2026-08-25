@@ -5,7 +5,7 @@ export const starfieldTool: ToolDef = {
   kind: 'generative',
   version: '1.0.0',
   label: 'Starfield',
-  icon: '🌟',
+  icon: 'star',
   category: 'Generative',
   defaultParams: { count: 120, hue: 200 },
   controls: [

@@ -5,7 +5,7 @@ export const gradientTool: ToolDef = {
   kind: 'input',
   version: '1.0.0',
   label: 'Gradient',
-  icon: '🌈',
+  icon: 'palette',
   category: 'Inputs',
   defaultParams: { colorA: '#0b1026', colorB: '#6b21a8', angle: 45 },
   controls: [

@@ -18,7 +18,7 @@ export const imageVideoTool: ToolDef = {
   kind: 'input',
   version: '1.0.0',
   label: 'Image / Video',
-  icon: '🖼',
+  icon: 'image',
   category: 'Inputs',
   defaultParams: { src: '', mode: 'cover' },
   controls: [

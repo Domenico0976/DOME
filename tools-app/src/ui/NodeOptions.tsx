@@ -3,6 +3,7 @@ import { AudioLines, KeyRound, MousePointerClick, Trash2, Loader2 } from 'lucide
 import { useProjectStore } from '../state/projectStore'
 import { resolveTool } from '../core/registry'
 import { learnNextCc } from '../audio/midi'
+import { ToolIcon } from './toolIcon'
 import { ScrollArea } from '../components/ui/scroll-area'
 import { Separator } from '../components/ui/separator'
 import { Badge } from '../components/ui/badge'
@@ -44,7 +45,7 @@ export function NodeOptions({ item }: { item: StackItem }) {
       {/* Sticky header */}
       <div className="flex items-center gap-2 border-b border-border px-4 py-3 shrink-0">
         <div className="grid h-7 w-7 place-items-center rounded-sm bg-surface-2">
-          <span className="text-base leading-none">{def.icon}</span>
+          <ToolIcon name={String(def.icon)} className="h-4 w-4" />
         </div>
         <h3 className="text-[15px] font-semibold">{def.label}</h3>
         {item.hidden && <Badge variant="warning">Hidden</Badge>}

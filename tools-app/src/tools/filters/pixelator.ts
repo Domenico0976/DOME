@@ -6,7 +6,7 @@ export const pixelatorTool: ToolDef = {
   kind: 'filter',
   version: '1.0.0',
   label: 'Pixelator',
-  icon: '🔲',
+  icon: 'grid-2x2',
   category: 'Filters',
   defaultParams: { size: 12 },
   controls: [{ param: 'size', label: 'Block Size', kind: 'slider', min: 2, max: 48, step: 1 }],
