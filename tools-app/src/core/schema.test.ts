@@ -41,3 +41,29 @@ describe('legacy ferrofluid migration', () => {
     expect(p.stack[0].params.accent).toMatch(/^#[0-9a-f]{6}$/)
   })
 })
+
+describe('legacy flowfield migration', () => {
+  test('legacy flowfield migrates to 2.0.0 params', () => {
+    const p = migrateProject({
+      stack: [{ uid: 'ffl', toolId: 'flowfield', toolVersion: '1.0.0', params: { density: 14, hue: 90 }, audio: [], automations: [], hidden: false }],
+    })
+    expect(p.stack[0].toolVersion).toBe('2.0.0')
+    expect(p.stack[0].params.segments).toBe(560)
+    expect(p.stack[0].params.steplen).toBe(2.5)
+    expect(p.stack[0].params.curl).toBe(1)
+    expect(p.stack[0].params.hue).toBe(90)
+  })
+})
+
+describe('legacy tunnel migration', () => {
+  test('legacy tunnel migrates to 2.0.0 params', () => {
+    const p = migrateProject({
+      stack: [{ uid: 'tnl', toolId: 'tunnel', toolVersion: '1.0.0', params: { rings: 30, speed: 0.8, hue: 300 }, audio: [], automations: [], hidden: false }],
+    })
+    expect(p.stack[0].toolVersion).toBe('2.0.0')
+    expect(p.stack[0].params.rings).toBe(30)
+    expect(p.stack[0].params.speed).toBe(0.8)
+    expect(p.stack[0].params.hue).toBe(300)
+    expect(p.stack[0].params.shape).toBe('circle')
+  })
+})
