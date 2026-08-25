@@ -1,17 +1,12 @@
 import type { ToolDef } from '../../core/types'
 import { ReactionDiffusion, mulberry32 } from '../../engine/rd'
+import { strHash } from '../toolUtils'
 
 function hexToRgb(hex: string): [number, number, number] {
   const m = /^#?([0-9a-f]{6})$/i.exec(hex.trim())
   if (!m) return [242, 121, 12]
   const int = parseInt(m[1], 16)
   return [(int >> 16) & 255, (int >> 8) & 255, int & 255]
-}
-
-function strHash(s: string): number {
-  let h = 7
-  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0
-  return h >>> 0
 }
 
 const SIZE_BY_QUALITY = { low: 96, med: 128, high: 160, '4k': 200 } as const

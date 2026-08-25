@@ -23,6 +23,13 @@ TOOL_PARAM_MIGRATIONS.ferrofluid = (p) => ({
   accent: hslToHex(Number(p.hue ?? 280), 80, 55),
 })
 
+TOOL_PARAM_MIGRATIONS.particles = (p) => ({
+  count: Number(p.count ?? 400),
+  size: Number(p.size ?? 2),
+  speed: Number(p.speed ?? 1),
+  hue: Number(p.hue ?? 200),
+})
+
 let orphanCounter = 0
 function normalizeItem(raw: Partial<StackItem>): StackItem {
   orphanCounter += 1
