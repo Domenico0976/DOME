@@ -13,6 +13,10 @@ const stubCtx = {
   save: vi.fn(),
   restore: vi.fn(),
   scale: vi.fn(),
+  setTransform: vi.fn(),
+  drawImage: vi.fn(),
+  getImageData: vi.fn(() => ({ data: new Uint8ClampedArray(4), width: 1, height: 1 })),
+  putImageData: vi.fn(),
 }
 
 let rafCb: FrameRequestCallback | null = null
@@ -38,5 +42,10 @@ describe('Canvas', () => {
     expect(rafCb).not.toBeNull()
     rafCb?.(0)
     expect(evaluateStack).toHaveBeenCalled()
+  })
+
+  test('renders wrapper carrying stage-canvas testid alongside dual canvases', () => {
+    const { getByTestId } = render(<Canvas />)
+    expect(getByTestId('stage-canvas')).toBeTruthy()
   })
 })
