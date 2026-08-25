@@ -57,6 +57,16 @@ export function isInitialized(): boolean {
   return context !== null && analyserNode !== null && frequencyData !== null && bandRanges !== null
 }
 
+export function attachStream(stream: MediaStream): void {
+  if (context === null || analyserNode === null) {
+    throw new AudioEngineError(
+      'Call ensureAudioContext() inside a user gesture before attaching streams',
+    )
+  }
+  const source = context.createMediaStreamSource(stream)
+  source.connect(analyserNode)
+}
+
 export function readBands(): BandsSnapshot & { spectrum: { data: Float32Array } } {
   if (analyserNode === null || frequencyData === null || bandRanges === null) {
     throw new AudioEngineError('Audio not initialized: a user gesture is required (ensureAudioContext)')
