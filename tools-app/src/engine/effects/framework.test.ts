@@ -54,3 +54,9 @@ describe('effects framework', () => {
     expect(EFFECT_ORDER).toEqual(['adjustments', 'aberration', 'glow', 'waves', 'edgeblur', 'lens', 'grain'])
   })
 })
+
+test('adjustments uniforms map resolved params', async () => {
+  const { adjustmentsDef } = await import('./adjustments')
+  const out = adjustmentsDef.uniforms({ brightness: 10, contrast: 20, saturation: 0.5 }, { timeSec: 0, dt: 0, bpm: 120 })
+  expect(out).toEqual({ u_brightness: 10, u_contrast: 20, u_saturation: 0.5 })
+})
