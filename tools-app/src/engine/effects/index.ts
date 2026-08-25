@@ -4,6 +4,8 @@ import { aberrationDef } from './aberration'
 import { wavesDef } from './waves'
 import { glowDef } from './glow'
 import { edgeBlurDef } from './edgeblur'
+import { lensDef } from './lens'
+import { grainDef } from './grain'
 
 // Shared vertex shader for every effect pass: fullscreen quad with pass-through UVs.
 export const VERT_SRC =
@@ -22,14 +24,15 @@ export type EffectPassDef = {
 export const EFFECT_ORDER: EffectType[] = ['adjustments', 'aberration', 'glow', 'waves', 'edgeblur', 'lens', 'grain']
 
 // Populated incrementally by each effect module; exhaustive from Task "lens + grain" onward.
-export const EFFECTS: Partial<Record<EffectType, EffectPassDef>> = {}
-Object.assign(EFFECTS, {
+export const EFFECTS: Record<EffectType, EffectPassDef> = {
   adjustments: adjustmentsDef,
   aberration: aberrationDef,
   waves: wavesDef,
   glow: glowDef,
   edgeblur: edgeBlurDef,
-})
+  lens: lensDef,
+  grain: grainDef,
+}
 
 export type ActivePass = {
   uid: string

@@ -82,3 +82,17 @@ test('glow/edgeblur uniforms map', async () => {
   expect(glowDef.uniforms({ intensity: 0.7, threshold: 0.5, radius: 8 }, f)).toEqual({ u_intensity: 0.7, u_threshold: 0.5, u_radius: 8 })
   expect(edgeBlurDef.uniforms({ area: 0.4, falloff: 0.3 }, f)).toEqual({ u_area: 0.4, u_falloff: 0.3 })
 })
+
+test('lens/grain uniforms map', async () => {
+  const { lensDef } = await import('./lens')
+  const { grainDef } = await import('./grain')
+  const f = { timeSec: 3, dt: 0, bpm: 120 }
+  expect(lensDef.uniforms({ intensity: 0.7, centerX: 0.5, centerY: 0.5 }, f)).toEqual({ u_intensity: 0.7, u_centerX: 0.5, u_centerY: 0.5 })
+  expect(grainDef.uniforms({ intensity: 0.5, motion: 1 }, f)).toEqual({ u_intensity: 0.5, u_seed: 180 })
+  expect(grainDef.uniforms({ intensity: 0.5, motion: 0 }, f)).toEqual({ u_intensity: 0.5, u_seed: 0 })
+})
+
+test('registry is exhaustive over EFFECT_ORDER', async () => {
+  const { EFFECTS, EFFECT_ORDER } = await import('./index')
+  for (const t of EFFECT_ORDER) expect(EFFECTS[t]).toBeDefined()
+})
