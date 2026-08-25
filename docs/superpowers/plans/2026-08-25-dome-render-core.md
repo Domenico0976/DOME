@@ -290,6 +290,26 @@ export class ReactionDiffusion {
 }
 ```
 
+- [ ] **Step 0: Mandatory jsdom ImageData polyfill** — append to `src/test/setup.ts` (validated by standalone probe on this machine):
+
+```ts
+if (!('ImageData' in globalThis)) {
+  class ImageDataPoly {
+    readonly width: number
+    readonly height: number
+    readonly data: Uint8ClampedArray
+    constructor(width: number, height: number) {
+      this.width = width
+      this.height = height
+      this.data = new Uint8ClampedArray(Math.max(0, width | 0) * Math.max(0, height | 0) * 4)
+    }
+  }
+  ;(globalThis as { ImageData?: unknown }).ImageData = ImageDataPoly
+}
+```
+
+Guard keeps the existing 39 tests untouched; Tasks 3, 4 and the ferrofluid fallback depend on it.
+
 - [ ] **Step 1: Failing test** — `src/engine/rd.test.ts`:
 
 ```ts
@@ -424,7 +444,7 @@ export class ReactionDiffusion {
 }
 ```
 
-Note: `new ImageData` requires jsdom ≥ 22 (available). If jsdom lacks it, polyfill in `src/test/setup.ts` via `class ImageDataPoly { constructor(w,h){this.width=w;this.height=h;this.data=new Uint8ClampedArray(w*h*4)} }` guarded by `if (!('ImageData' in globalThis))`.
+**Pre-flight finding (verified 2026-08-25):** jsdom 30.0.1 without the optional `canvas` package does NOT expose a global `ImageData` (probe test failed). The polyfill in Step 0 below is therefore MANDATORY, not conditional — it is validated by this task's tests.
 
 - [ ] **Step 4: Run** → PASS. **Step 5: Commit**
 
