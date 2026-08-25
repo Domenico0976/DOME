@@ -18,6 +18,7 @@ import { moleculesTool } from './generative/molecules'
 import { doodleTool } from './generative/doodle'
 import { brutalistTool } from './generative/brutalist'
 import { particles2Tool } from './generative/particles2'
+import { shadersTool } from './generative/shaders'
 import { halftoneTool } from './filters/halftone'
 import { pixelatorTool } from './filters/pixelator'
 import { thermalTool } from './filters/thermal'
@@ -44,6 +45,7 @@ registerTool(moleculesTool)
 registerTool(doodleTool)
 registerTool(brutalistTool)
 registerTool(particles2Tool)
+registerTool(shadersTool)
 registerTool(halftoneTool)
 registerTool(pixelatorTool)
 registerTool(thermalTool)

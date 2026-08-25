@@ -58,15 +58,24 @@ export function Canvas() {
       bctx.restore()
 
       const passes = collectActiveEffects(st.stack)
+      const genItem = st.stack.find((i) => i.toolId === 'shaders' && !i.hidden)
+      const shaderGen = genItem
+        ? {
+            scale: Number(genItem.params.scale ?? 4),
+            speed: Number(genItem.params.speed ?? 1),
+            palette: Math.max(0, ['magma', 'ice', 'toxic'].indexOf(String(genItem.params.palette ?? 'magma'))),
+            timeSec: effFrame.timeSec,
+          }
+        : undefined
       if (passes.length > 0 && !compRef.current && hasWebGL2(glc)) compRef.current = createCompositor(glc)
       const comp = compRef.current
       const fctx = flat.getContext('2d')
 
-      if (comp && passes.length > 0) {
+      if (comp && (passes.length > 0 || shaderGen)) {
         flat.style.visibility = 'hidden'
         glc.style.visibility = 'visible'
         comp.resize(W, H)
-        comp.apply(base, passes, effFrame, a)
+        comp.apply(base, passes, effFrame, a, { shaderGen })
       } else if (passes.length > 0 && fctx) {
         flat.style.visibility = 'visible'
         glc.style.visibility = 'hidden'
