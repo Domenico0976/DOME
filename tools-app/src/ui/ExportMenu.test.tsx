@@ -25,4 +25,19 @@ describe('ExportMenu', () => {
     fireEvent.click(getByText('Reset'))
     expect(useProjectStore.getState().stack.length).toBe(0)
   })
+
+  test('shows Raster output badge when an enabled effect exists', () => {
+    useProjectStore.getState().reset()
+    useProjectStore.getState().addTool('solidColor')
+    const uid = useProjectStore.getState().stack[0].uid
+    useProjectStore.getState().addEffect(uid, 'grain')
+    const { getByText } = render(<ExportMenu />)
+    expect(getByText('Raster output')).toBeTruthy()
+  })
+
+  test('no badge without enabled effects', () => {
+    useProjectStore.getState().reset()
+    const { queryByText } = render(<ExportMenu />)
+    expect(queryByText('Raster output')).toBeNull()
+  })
 })

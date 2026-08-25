@@ -2,6 +2,7 @@ import { useAudio } from '../audio/useAudio'
 import { useProjectStore } from '../state/projectStore'
 import { evaluateStack } from '../core/stackEngine'
 import { Button } from '../components/ui/button'
+import { Badge } from '../components/ui/badge'
 import { Download, Camera, Music2, Maximize2, RotateCcw } from 'lucide-react'
 
 function download(canvas: HTMLCanvasElement, name: string): void {
@@ -14,6 +15,7 @@ function download(canvas: HTMLCanvasElement, name: string): void {
 
 export function ExportMenu() {
   const audio = useAudio()
+  const rasterForced = useProjectStore((s) => s.stack.some((i) => i.effects?.some((e) => e.enabled)))
 
   const exportAt = (w: number, h: number, name: string) => {
     const c = document.createElement('canvas')
@@ -39,6 +41,11 @@ export function ExportMenu() {
 
   return (
     <div className="flex items-center gap-1.5" aria-label="Export menu">
+      {rasterForced && (
+        <Badge variant="warning" data-testid="raster-badge">
+          Raster output
+        </Badge>
+      )}
       <Button variant="default" size="sm" onClick={png}>
         <Download className="h-3.5 w-3.5" />
         Export PNG
