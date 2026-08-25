@@ -57,16 +57,19 @@ describe('effects framework', () => {
 
 test('adjustments uniforms map resolved params', async () => {
   const { adjustmentsDef } = await import('./adjustments')
-  const out = adjustmentsDef.uniforms({ brightness: 10, contrast: 20, saturation: 0.5 }, { timeSec: 0, dt: 0, bpm: 120 })
-  expect(out).toEqual({ u_brightness: 10, u_contrast: 20, u_saturation: 0.5 })
+  const out = adjustmentsDef.uniforms(
+    { contrast: 60, exposure: 70, saturation: 50, temperature: 80, tint: 20 },
+    { timeSec: 0, dt: 0, bpm: 120 },
+  )
+  expect(out).toEqual({ u_contrast: 60, u_exposure: 70, u_saturation: 50, u_temperature: 80, u_tint: 20 })
 })
 
 test('aberration/waves uniforms map', async () => {
   const { aberrationDef } = await import('./aberration')
   const { wavesDef } = await import('./waves')
   const f = { timeSec: 2, dt: 0, bpm: 120 }
-  expect(aberrationDef.uniforms({ displace: 12, frequency: 0.05 }, f)).toEqual({ u_displace: 12, u_frequency: 0.05 })
-  expect(wavesDef.uniforms({ intensity: 15, quantity: 0.08, speed: 1 }, f)).toEqual({ u_intensity: 15, u_quantity: 0.08, u_speed: 1 })
+  expect(aberrationDef.uniforms({ displace: 12, area: 60, falloff: 40 }, f)).toEqual({ u_displace: 12, u_area: 60, u_falloff: 40 })
+  expect(wavesDef.uniforms({ intensity: 15, quantity: 30, organic: 20 }, f)).toEqual({ u_intensity: 15, u_quantity: 30, u_organic: 20 })
 })
 
 test('EFFECT_ORDER heads registered so far stay ordered', async () => {
@@ -79,17 +82,29 @@ test('glow/edgeblur uniforms map', async () => {
   const { glowDef } = await import('./glow')
   const { edgeBlurDef } = await import('./edgeblur')
   const f = { timeSec: 0, dt: 0, bpm: 120 }
-  expect(glowDef.uniforms({ intensity: 0.7, threshold: 0.5, radius: 8 }, f)).toEqual({ u_intensity: 0.7, u_threshold: 0.5, u_radius: 8 })
-  expect(edgeBlurDef.uniforms({ area: 0.4, falloff: 0.3 }, f)).toEqual({ u_area: 0.4, u_falloff: 0.3 })
+  expect(glowDef.uniforms({ intensity: 70 }, f)).toEqual({ u_intensity: 70 })
+  expect(edgeBlurDef.uniforms({ intensity: 75, falloff: 50, x: 10, y: 20 }, f)).toEqual({
+    u_intensity: 75,
+    u_falloff: 50,
+    u_x: 10,
+    u_y: 20,
+  })
 })
 
 test('lens/grain uniforms map', async () => {
   const { lensDef } = await import('./lens')
   const { grainDef } = await import('./grain')
   const f = { timeSec: 3, dt: 0, bpm: 120 }
-  expect(lensDef.uniforms({ intensity: 0.7, centerX: 0.5, centerY: 0.5 }, f)).toEqual({ u_intensity: 0.7, u_centerX: 0.5, u_centerY: 0.5 })
-  expect(grainDef.uniforms({ intensity: 0.5, motion: 1 }, f)).toEqual({ u_intensity: 0.5, u_seed: 180 })
-  expect(grainDef.uniforms({ intensity: 0.5, motion: 0 }, f)).toEqual({ u_intensity: 0.5, u_seed: 0 })
+  const lensOut = lensDef.uniforms({ intensity: 70, x: 50, y: 50 }, f)
+  expect(lensOut.u_intensity).toBeCloseTo(0.7, 6)
+  expect(lensOut.u_center_x).toBe(0.5)
+  expect(lensOut.u_center_y).toBe(0.5)
+  const on = grainDef.uniforms({ intensity: 50, motion: 1, size: 50 }, f)
+  expect(on.u_intensity).toBe(0.5)
+  expect(on.u_grainsize).toBe(50)
+  expect(on.u_seed).toBe(180)
+  const off = grainDef.uniforms({ intensity: 50, motion: 0, size: 50 }, f)
+  expect(off.u_seed).toBe(0)
 })
 
 test('registry is exhaustive over EFFECT_ORDER', async () => {

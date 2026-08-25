@@ -14,28 +14,42 @@ function img2x1(r: number, g: number, b: number): ImageData {
   return img
 }
 
+const NEUTRAL = { contrast: 50, exposure: 50, saturation: 50, temperature: 50, tint: 50 }
+
 describe('cpu fallback effects', () => {
-  test('brightness shifts additively and clamps', () => {
-    const img = img2x1(10, 20, 30)
-    applyAdjustmentsCPU(img, { brightness: 100, contrast: 0, saturation: 0 })
-    expect(img.data[0]).toBe(110)
-    const clipped = img2x1(250, 250, 250)
-    applyAdjustmentsCPU(clipped, { brightness: 50, contrast: 0, saturation: 0 })
-    expect(clipped.data[0]).toBe(255)
-  })
-
-  test('contrast scales around 128', () => {
-    const img = img2x1(128, 128, 128)
-    applyAdjustmentsCPU(img, { brightness: 0, contrast: 50, saturation: 0 })
+  test('exposure doubles mid-gray at +1EV (75)', () => {
+    const img = img2x1(64, 64, 64)
+    applyAdjustmentsCPU(img, { ...NEUTRAL, exposure: 75 })
     expect(img.data[0]).toBe(128)
+    expect(img.data[1]).toBe(128)
+    expect(img.data[2]).toBe(128)
   })
 
-  test('desaturation pulls toward luminance', () => {
-    const img = img2x1(255, 0, 0)
-    applyAdjustmentsCPU(img, { brightness: 0, contrast: 0, saturation: -1 })
-    const lum = Math.round(0.299 * 255 + 0.587 * 0 + 0.114 * 0)
-    expect(img.data[0]).toBe(lum)
-    expect(img.data[1]).toBe(lum)
+  test('exposure halves at -1EV (25)', () => {
+    const img = img2x1(200, 200, 200)
+    applyAdjustmentsCPU(img, { ...NEUTRAL, exposure: 25 })
+    expect(img.data[0]).toBe(100)
+  })
+
+  test('contrast 50 is neutral for every level', () => {
+    const img = img2x1(37, 99, 200)
+    applyAdjustmentsCPU(img, { ...NEUTRAL })
+    expect([img.data[0], img.data[1], img.data[2]]).toEqual([37, 99, 200])
+  })
+
+  test('temperature warms white (R up, B down)', () => {
+    const img = img2x1(255, 255, 255)
+    applyAdjustmentsCPU(img, { ...NEUTRAL, temperature: 100 })
+    expect(img.data[0]).toBe(255)
+    expect(img.data[2]).toBe(232)
+  })
+
+  test('tint 0 pushes gray toward green', () => {
+    const img = img2x1(128, 128, 128)
+    applyAdjustmentsCPU(img, { ...NEUTRAL, tint: 0 })
+    expect(img.data[0]).toBe(128)
+    expect(img.data[1]).toBe(Math.round((128 / 255 + (50 - 0) * 0.0012) * 255))
+    expect(img.data[2]).toBe(128)
   })
 
   test('waves shifts row by sine offset (deterministic)', () => {

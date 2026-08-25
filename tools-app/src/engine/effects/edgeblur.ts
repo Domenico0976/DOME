@@ -1,25 +1,31 @@
 import type { EffectPassDef } from './index'
 
-// Variable radial blur: sharp inside "area", growing blur toward borders via "falloff" (Tool-Render.md §3.5).
+// Variable blur strengthening away from an offsettable center point (Tool-Render.md §3.5).
 export const edgeBlurDef: EffectPassDef = {
   type: 'edgeblur',
   label: 'Edge Blur',
-  defaultParams: { area: 0.4, falloff: 0.3 },
+  defaultParams: { intensity: 75, falloff: 50, x: 0, y: 0 },
   controls: [
-    { param: 'area', label: 'Area', kind: 'slider', min: 0, max: 0.8, step: 0.01 },
-    { param: 'falloff', label: 'Falloff', kind: 'slider', min: 0.05, max: 0.6, step: 0.01 },
+    { param: 'intensity', label: 'Intensity', kind: 'slider', min: 0, max: 100, step: 1 },
+    { param: 'falloff', label: 'Falloff', kind: 'slider', min: 0, max: 100, step: 1 },
+    { param: 'x', label: 'Center X', kind: 'slider', min: 0, max: 100, step: 1 },
+    { param: 'y', label: 'Center Y', kind: 'slider', min: 0, max: 100, step: 1 },
   ],
   fragment: `
 precision mediump float;
 varying vec2 v_uv;
 uniform sampler2D u_tex;
 uniform vec2 u_res;
-uniform float u_area;
+uniform float u_intensity;
 uniform float u_falloff;
+uniform float u_x;
+uniform float u_y;
 void main() {
   vec4 base = texture2D(u_tex, v_uv);
-  float dist = length(v_uv - 0.5) / 0.7071;
-  float radius = max(0.0, (dist - u_area) / max(0.001, u_falloff)) * 12.0;
+  vec2 cpos = vec2(u_x, u_y) / 100.0;
+  float d01 = distance(v_uv, cpos) / 1.42;
+  float amt = smoothstep(0.15, 1.0, d01) * (u_intensity / 100.0);
+  float radius = amt * (0.5 + u_falloff / 100.0) * 18.0;
   if (radius < 0.5) { gl_FragColor = base; return; }
   vec3 sum = vec3(0.0);
   for (int i = 0; i < 8; i++) {
@@ -29,5 +35,10 @@ void main() {
   }
   gl_FragColor = vec4(sum / 8.0, base.a);
 }`,
-  uniforms: (p) => ({ u_area: p.area ?? 0.4, u_falloff: p.falloff ?? 0.3 }),
+  uniforms: (p) => ({
+    u_intensity: p.intensity ?? 75,
+    u_falloff: p.falloff ?? 50,
+    u_x: p.x ?? 0,
+    u_y: p.y ?? 0,
+  }),
 }
