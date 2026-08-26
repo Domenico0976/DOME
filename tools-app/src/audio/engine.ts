@@ -29,7 +29,6 @@ export function ensureAudioContext(): AudioContext {
     analyserNode.minDecibels = MIN_DECIBELS
     analyserNode.maxDecibels = MAX_DECIBELS
     analyserNode.smoothingTimeConstant = SMOOTHING_TIME_CONSTANT
-    analyserNode.connect(context.destination)
     frequencyData = new Uint8Array(analyserNode.frequencyBinCount)
     bandRanges = computeBandRanges(context.sampleRate, analyserNode.frequencyBinCount)
   }
@@ -37,7 +36,13 @@ export function ensureAudioContext(): AudioContext {
 }
 
 export async function resumeIfSuspended(): Promise<void> {
-  if (context !== null && context.state === 'suspended') await context.resume()
+  if (context !== null && context.state === 'suspended') {
+    await context.resume()
+    // Verify resume succeeded
+    if (context.state === 'suspended') {
+      throw new AudioEngineError('AudioContext could not be resumed: autoplay blocked')
+    }
+  }
 }
 
 export function attachMediaElement(element: HTMLMediaElement): void {

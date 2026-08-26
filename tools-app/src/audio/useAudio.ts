@@ -2,6 +2,7 @@ import { useCallback, useRef, useState } from 'react'
 import {
   attachMediaElement,
   attachStream,
+  AudioEngineError,
   ensureAudioContext,
   isInitialized,
   readBands,
@@ -34,7 +35,16 @@ export function useAudio() {
     el.loop = true
     mediaRef.current = el
     attachMediaElement(el)
-    await el.play()
+    try {
+      await el.play()
+    } catch (err) {
+      if (err instanceof DOMException && err.name === 'NotAllowedError') {
+        throw new AudioEngineError(
+          'Audio playback blocked: allow autoplay in browser settings or click anywhere on the page first'
+        )
+      }
+      throw err
+    }
     setFileName(file.name)
     setSource('file')
     setEnabled(true)
