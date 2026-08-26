@@ -9,8 +9,8 @@ const stack: StackRenderContext = { width: 200, height: 200, quality: 'high' }
 const item: StackItem = {
   uid: 'ff1',
   toolId: 'ferrofluid',
-  toolVersion: '2.0.0',
-  params: { feed: 0.055, kill: 0.062, scale: 3, speed: 1, attractors: 4, accent: '#f2790c' },
+  toolVersion: '3.0.0',
+  params: { feed: 0.055, kill: 0.062, speed: 1, attractors: 4, accent: '#f2790c' },
   audio: [],
   automations: [],
   hidden: false,

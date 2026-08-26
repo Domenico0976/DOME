@@ -6,9 +6,10 @@ export function evaluateStack(
   frame: Frame,
   audio: AudioFrame,
   items: StackItem[],
-  options?: { quality?: StackRenderContext['quality'] },
+  options?: { quality?: StackRenderContext['quality']; gl?: WebGL2RenderingContext },
 ): void {
   const quality = options?.quality ?? 'high'
+  const gl = options?.gl
   ctx.save()
   ctx.globalCompositeOperation = 'source-over'
   for (let i = items.length - 1; i >= 0; i--) {
@@ -23,7 +24,7 @@ export function evaluateStack(
       width: ctx.canvas.width,
       height: ctx.canvas.height,
       quality,
-    })
+    }, gl)
     ctx.restore()
   }
   ctx.restore()

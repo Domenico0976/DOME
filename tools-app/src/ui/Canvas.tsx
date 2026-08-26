@@ -56,7 +56,9 @@ export function Canvas() {
       bctx.clearRect(0, 0, base.width, base.height)
       bctx.save()
       bctx.scale(scale, scale)
-      evaluateStack(bctx, effFrame, a, st.stack, { quality: st.canvas.quality })
+      const glcInner = glRef.current
+      const gl = glcInner ? glcInner.getContext('webgl2') as WebGL2RenderingContext | null : null
+      evaluateStack(bctx, effFrame, a, st.stack, { quality: st.canvas.quality, gl: gl || undefined })
       bctx.restore()
 
       const passes = collectActiveEffects(st.stack)
@@ -69,8 +71,8 @@ export function Canvas() {
             timeSec: effFrame.timeSec,
           }
         : undefined
-    if ((passes.length > 0 || shaderGen) && !compRef.current && hasWebGL2(glc))
-      compRef.current = createCompositor(glc)
+    if ((passes.length > 0 || shaderGen) && !compRef.current && glcInner && hasWebGL2(glcInner))
+      compRef.current = createCompositor(glcInner)
     if (passes.length === 0 && !shaderGen && compRef.current) {
       compRef.current = null
     }
@@ -83,12 +85,12 @@ export function Canvas() {
 
       if (comp && (passes.length > 0 || shaderGen)) {
         flat.style.visibility = 'hidden'
-        glc.style.visibility = 'visible'
+        if (glcInner) glcInner.style.visibility = 'visible'
         comp.resize(W, H)
         comp.apply(base, passes, effFrame, a, { shaderGen })
       } else if (passes.length > 0 && fctx) {
         flat.style.visibility = 'visible'
-        glc.style.visibility = 'hidden'
+        if (glcInner) glcInner.style.visibility = 'hidden'
         const cpuPasses = passes.filter((p) => CPU_ONLY.has(p.type))
         fctx.drawImage(base, 0, 0)
         if (cpuPasses.length > 0) {
@@ -102,7 +104,7 @@ export function Canvas() {
         }
       } else if (fctx) {
         flat.style.visibility = 'visible'
-        glc.style.visibility = 'hidden'
+        if (glcInner) glcInner.style.visibility = 'hidden'
         fctx.drawImage(base, 0, 0)
       }
       raf = requestAnimationFrame(loop)

@@ -87,7 +87,7 @@ export type ToolDef = {
   category: 'Inputs' | 'Generative' | 'Filters'
   defaultParams: Record<string, number | string>
   controls: ControlDef[]
-  render(ctx: CanvasRenderingContext2D, frame: Frame, item: StackItem, audio: AudioFrame, stack: StackRenderContext): void
+  render(ctx: CanvasRenderingContext2D, frame: Frame, item: StackItem, audio: AudioFrame, stack: StackRenderContext, gl?: WebGL2RenderingContext): void
 }
 
 export type AudioPreset = {
