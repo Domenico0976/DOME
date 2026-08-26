@@ -1,9 +1,13 @@
+// Kaleidoscope: Canvas2D only — the core rendering is drawImage-based image
+// transformation (reflection/mirror into wedge clips), not per-pixel shader work.
+// GPU migration would require readback of the source canvas into a texture each
+// frame plus a custom quad-rendering pipeline for zero net performance gain.
 import type { ToolDef } from '../../core/types'
 
 export const kaleidoscopeTool: ToolDef = {
   id: 'kaleidoscope',
   kind: 'generative',
-  version: '1.0.0',
+  version: '3.0.0',
   label: 'Kaleidoscope',
   icon: 'hexagon',
   category: 'Generative',

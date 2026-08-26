@@ -1,3 +1,8 @@
+// Doodle: Canvas2D only — renders a small number of quadratic bezier strokes
+// (~4–80) with per-frame random jitter. GPU migration would require tessellating
+// curves into triangles each frame, adding complexity for no performance benefit
+// at this scale. The artistic intent relies on the organic, hand-drawn look of
+// raw 2D line rendering.
 import type { ToolDef } from '../../core/types'
 import { mulberry32 } from '../../engine/rd'
 import { strHash } from '../toolUtils'
@@ -10,7 +15,7 @@ const inkCache = new Map<string, Ink>()
 export const doodleTool: ToolDef = {
   id: 'doodle',
   kind: 'generative',
-  version: '1.0.0',
+  version: '3.0.0',
   label: 'Doodle',
   icon: 'brush',
   category: 'Generative',
