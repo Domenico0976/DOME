@@ -1,36 +1,53 @@
-import type { ToolDef } from '../../core/types'
+// tools-app/src/tools/generative/plasma.ts
+import { ToolDef } from '../../core/types'
+import { ToolRenderer } from '../../engine/toolRenderer'
+import { PLASMA_FRAG } from '../../engine/shaders/plasma'
+
+let renderer: ToolRenderer | null = null
+
+function getRenderer(gl: WebGL2RenderingContext): ToolRenderer {
+  if (!renderer) {
+    renderer = new ToolRenderer(gl)
+    renderer.compileProgram('plasma', PLASMA_FRAG)
+  }
+  return renderer
+}
 
 export const plasmaTool: ToolDef = {
   id: 'plasma',
   kind: 'generative',
-  version: '1.0.0',
+  version: '3.0.0',
   label: 'Plasma',
   icon: 'droplets',
   category: 'Generative',
-  defaultParams: { scale: 1, hue: 260 },
+  defaultParams: { scale: 8, speed: 1, colorShift: 0 },
   controls: [
-    { param: 'scale', label: 'Scale', kind: 'slider', min: 0.3, max: 3, step: 0.1 },
-    { param: 'hue', label: 'Hue', kind: 'slider', min: 0, max: 360, step: 1 },
+    { param: 'scale', label: 'Scale', kind: 'slider', min: 2, max: 20, step: 1 },
+    { param: 'speed', label: 'Speed', kind: 'slider', min: 0.1, max: 3, step: 0.1 },
+    { param: 'colorShift', label: 'Color', kind: 'slider', min: 0, max: 1, step: 0.05 },
   ],
-  render(ctx, frame, item, _audio, stack) {
-    const { width, height } = stack
-    const scale = Number(item.params.scale ?? 1)
-    const hue = Number(item.params.hue ?? 260)
-    const t = frame.timeSec
-    const step = 14
-    ctx.save()
-    ctx.globalCompositeOperation = 'lighter'
-    for (let x = 0; x < width; x += step) {
-      for (let y = 0; y < height; y += step) {
-        const v =
-          Math.sin(x * 0.02 * scale + t) +
-          Math.sin(y * 0.02 * scale + t * 1.3) +
-          Math.sin((x + y) * 0.015 * scale + t * 0.7)
-        const h = (v * 40 + t * 30 + hue) % 360
-        ctx.fillStyle = `hsla(${h}, 80%, 55%, 0.25)`
-        ctx.fillRect(x, y, step, step)
-      }
+  render: (ctx, frame, item, _audio, _stack, gl) => {
+    if (!gl) return
+
+    const r = getRenderer(gl)
+    const p = item.params
+    const w = ctx.canvas.width
+    const h = ctx.canvas.height
+
+    let fbos = r.getFBO('plasma')
+    if (!fbos || fbos.texA === null) {
+      fbos = r.createFBO('plasma', w, h)
     }
-    ctx.restore()
-  },
+
+    const prog = r.compileProgram('plasma', PLASMA_FRAG)
+    if (!prog) return
+
+    r.renderToCanvas(prog, fbos.texA, w, h, {
+      u_time: frame.timeSec,
+      u_scale: Number(p.scale ?? 8),
+      u_speed: Number(p.speed ?? 1),
+      u_colorShift: Number(p.colorShift ?? 0),
+      u_res: [w, h]
+    })
+  }
 }

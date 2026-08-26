@@ -1,36 +1,53 @@
-import type { ToolDef } from '../../core/types'
+// tools-app/src/tools/generative/starfield.ts
+import { ToolDef } from '../../core/types'
+import { ToolRenderer } from '../../engine/toolRenderer'
+import { STARFIELD_FRAG } from '../../engine/shaders/starfield'
+
+let renderer: ToolRenderer | null = null
+
+function getRenderer(gl: WebGL2RenderingContext): ToolRenderer {
+  if (!renderer) {
+    renderer = new ToolRenderer(gl)
+    renderer.compileProgram('starfield', STARFIELD_FRAG)
+  }
+  return renderer
+}
 
 export const starfieldTool: ToolDef = {
   id: 'starfield',
   kind: 'generative',
-  version: '1.0.0',
+  version: '3.0.0',
   label: 'Starfield',
   icon: 'star',
   category: 'Generative',
-  defaultParams: { count: 120, hue: 200 },
+  defaultParams: { speed: 1, density: 1, zoom: 3 },
   controls: [
-    { param: 'count', label: 'Count', kind: 'slider', min: 30, max: 400, step: 1 },
-    { param: 'hue', label: 'Hue', kind: 'slider', min: 0, max: 360, step: 1 },
+    { param: 'speed', label: 'Speed', kind: 'slider', min: 0.1, max: 3, step: 0.1 },
+    { param: 'density', label: 'Density', kind: 'slider', min: 0.1, max: 3, step: 0.05 },
+    { param: 'zoom', label: 'Zoom', kind: 'slider', min: 1, max: 10, step: 0.5 },
   ],
-  render(ctx, frame, item, _audio, stack) {
-    const { width, height } = stack
-    const count = Number(item.params.count ?? 120)
-    const hue = Number(item.params.hue ?? 200)
-    const t = frame.timeSec
-    ctx.save()
-    ctx.translate(width / 2, height / 2)
-    ctx.globalCompositeOperation = 'lighter'
-    for (let i = 0; i < count; i++) {
-      const a = i * 2.39996
-      const seed = ((i * 97) % 100) / 100
-      const z = (seed + t * 0.3) % 1
-      const r = z * Math.max(width, height) * 0.6
-      const x = Math.cos(a) * r
-      const y = Math.sin(a) * r
-      const s = (1 - z) * 3 + 0.5
-      ctx.fillStyle = `hsla(${hue}, 80%, ${70 - z * 40}%, ${1 - z})`
-      ctx.fillRect(x, y, s, s)
+  render: (ctx, frame, item, _audio, _stack, gl) => {
+    if (!gl) return
+
+    const r = getRenderer(gl)
+    const p = item.params
+    const w = ctx.canvas.width
+    const h = ctx.canvas.height
+
+    let fbos = r.getFBO('starfield')
+    if (!fbos || fbos.texA === null) {
+      fbos = r.createFBO('starfield', w, h)
     }
-    ctx.restore()
-  },
+
+    const prog = r.compileProgram('starfield', STARFIELD_FRAG)
+    if (!prog) return
+
+    r.renderToCanvas(prog, fbos.texA, w, h, {
+      u_time: frame.timeSec,
+      u_speed: Number(p.speed ?? 1),
+      u_density: Number(p.density ?? 1),
+      u_zoom: Number(p.zoom ?? 3),
+      u_res: [w, h]
+    })
+  }
 }
