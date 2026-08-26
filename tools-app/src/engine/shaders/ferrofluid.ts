@@ -9,12 +9,13 @@ uniform sampler2D u_tex;
 uniform vec2 u_res;
 uniform float u_time;
 uniform float u_speed;
+uniform float u_audioLevel;
 in vec2 v_uv;
 out vec4 fragColor;
 
 void main() {
   vec2 uv = v_uv;
-  vec2 vel = curlNoise(uv * 3.0 + u_time * 0.1) * u_speed * 0.01;
+  vec2 vel = curlNoise(uv * 3.0 + u_time * 0.1) * u_speed * 0.01 * (1.0 + u_audioLevel * 0.5);
   vec4 col = texture(u_tex, uv - vel);
   fragColor = col;
 }
@@ -28,6 +29,7 @@ uniform sampler2D u_tex;
 uniform vec2 u_res;
 uniform float u_time;
 uniform float u_feed;
+uniform float u_audioLevel;
 in vec2 v_uv;
 out vec4 fragColor;
 
@@ -35,7 +37,7 @@ void main() {
   vec2 uv = v_uv;
   vec4 prev = texture(u_tex, uv);
   
-  // Add feed blobs
+  float feed = u_feed * (1.0 + u_audioLevel * 0.3);
   float blob = 0.0;
   for (int i = 0; i < 4; i++) {
     vec2 center = vec2(

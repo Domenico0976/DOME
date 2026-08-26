@@ -28,6 +28,8 @@ float noise(vec2 p) {
 
 void main() {
   vec2 uv = v_uv;
+  float aspect = u_res.x / max(u_res.y, 1.0);
+  uv.x *= aspect;
   float t = u_time * u_speed * (1.0 + u_audioLevel * 0.4);
   int n = int(u_count);
 
@@ -52,7 +54,8 @@ void main() {
     if (d < minDist) { minDist = d; closestId = fi; }
   }
 
-  float threshold = 1.0 / (u_radius * u_radius) * u_radius * 0.5;
+  float radiusSq = max(u_radius * u_radius, 0.0001);
+  float threshold = 1.0 / radiusSq * u_radius * 0.5;
   float edge = smoothstep(threshold - 0.3, threshold + 0.1, field);
   float inner = smoothstep(threshold, threshold + 1.5, field);
 

@@ -64,6 +64,8 @@ float voronoi(vec2 x, float t) {
 
 void main() {
   vec2 uv = v_uv;
+  float aspect = u_res.x / max(u_res.y, 1.0);
+  uv.x *= aspect;
   float t = u_time * (0.8 + u_audioLevel * 0.3);
   float scale = u_noiseScale * (1.0 + u_audioLevel * 0.15);
 

@@ -9,6 +9,8 @@ uniform float u_m;
 uniform float u_n;
 uniform float u_freq;
 uniform float u_density;
+uniform float u_count;
+uniform float u_size;
 uniform float u_audioLevel;
 in vec2 v_uv;
 out vec4 fragColor;
@@ -30,6 +32,8 @@ float noise(vec2 p) {
 
 void main() {
   vec2 uv = v_uv;
+  float aspect = u_res.x / max(u_res.y, 1.0);
+  uv.x *= aspect;
   vec2 norm = uv * 2.0 - 1.0;
   float t = u_time * (1.0 + u_audioLevel * 0.4);
 
@@ -40,8 +44,19 @@ void main() {
   float edge = abs(chladni);
   float density = exp(-edge * u_density * 10.0);
 
+  float modes = max(u_count, 1.0);
+  for (int i = 1; i < 4; i++) {
+    float fi = float(i);
+    if (fi >= modes) break;
+    density += 0.15 * exp(-abs(sin((u_m + fi) * f * norm.x) * sin((u_n + fi) * f * norm.y)
+                              - sin((u_n + fi) * f * norm.x) * sin((u_m + fi) * f * norm.y)) * u_density * 8.0);
+  }
+
   float n = noise(uv * 20.0 + t * 0.1) * 0.2;
   density += n * 0.3;
+
+  float nodeSize = u_size * 0.01;
+  density = smoothstep(nodeSize, nodeSize + 0.3, density);
 
   vec3 col = vec3(density) * vec3(0.2, 0.8, 1.0);
   col *= 0.8 + u_audioLevel * 0.4;

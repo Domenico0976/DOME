@@ -52,6 +52,7 @@ export const flowfieldTool: ToolDef = {
       u_speed: Number(params.speed ?? 1),
       u_particles: Number(params.particles ?? 500),
       u_color: Number(params.color ?? 0),
+      u_trails: Number(params.trails ?? 0.5),
       u_audioLevel: audio.level,
       u_res: [w, h]
     })

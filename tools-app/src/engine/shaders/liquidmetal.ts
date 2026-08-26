@@ -40,7 +40,7 @@ float fbm(vec2 p) {
 
 void main() {
   vec2 uv = v_uv * 2.0 - 1.0;
-  float aspect = u_res.x / u_res.y;
+  float aspect = u_res.x / max(u_res.y, 1.0);
   uv.x *= aspect;
   float time = u_time * u_speed * (1.0 + u_audioLevel * 0.5);
   int n = int(u_blobs);

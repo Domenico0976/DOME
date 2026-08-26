@@ -103,6 +103,7 @@ export const ferrofluidTool: ToolDef = {
         r.renderToTexture(advectProg, fbos.texA, fbos.fboB, w, h, {
           u_time: time,
           u_speed: speed,
+          u_audioLevel: audio.level,
           u_res: [w, h]
         })
 
@@ -110,6 +111,7 @@ export const ferrofluidTool: ToolDef = {
         r.renderToTexture(thicknessProg, fbos.texB, fbos.fboA, w, h, {
           u_time: time,
           u_feed: f,
+          u_audioLevel: audio.level,
           u_res: [w, h]
         })
 

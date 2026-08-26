@@ -34,6 +34,8 @@ float star(vec2 p, float t) {
 
 void main() {
   vec2 uv = v_uv;
+  float aspect = u_res.x / max(u_res.y, 1.0);
+  uv.x *= aspect;
   float t = u_time * u_speed * (1.0 + u_audioLevel * 0.3);
   vec2 p = uv * u_zoom + vec2(t * 0.1, t * 0.05);
   float n = noise(p * 3.0);

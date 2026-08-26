@@ -39,6 +39,8 @@ float fbm(vec2 p) {
 
 void main() {
   vec2 uv = (v_uv - 0.5) * 2.0;
+  float aspect = u_res.x / max(u_res.y, 1.0);
+  uv.x *= aspect;
   float a = atan(uv.y, uv.x);
   float r = length(uv);
   float t = u_time * u_speed * (1.0 + u_audioLevel * 0.3);

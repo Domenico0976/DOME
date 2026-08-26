@@ -8,6 +8,7 @@ uniform float u_scale;
 uniform float u_speed;
 uniform float u_color;
 uniform float u_particles;
+uniform float u_trails;
 uniform float u_audioLevel;
 in vec2 v_uv;
 out vec4 fragColor;
@@ -28,7 +29,7 @@ float noise(vec2 p) {
 }
 
 vec2 curlNoise(vec2 p) {
-  float e = 0.01;
+  float e = 0.1;
   float n1 = noise(p + vec2(e, 0.0));
   float n2 = noise(p - vec2(e, 0.0));
   float n3 = noise(p + vec2(0.0, e));
@@ -38,15 +39,17 @@ vec2 curlNoise(vec2 p) {
 
 void main() {
   vec2 uv = v_uv;
+  float aspect = u_res.x / max(u_res.y, 1.0);
+  uv.x *= aspect;
   vec2 p = uv * u_scale;
   float t = u_time * u_speed * (1.0 + u_audioLevel * 0.4);
 
   vec2 flow = curlNoise(p + t * 0.5) * 0.5;
 
   float density = 0.0;
-  int n = int(u_particles);
+  int n = min(int(u_particles), 64);
 
-  for (int i = 0; i < 256; i++) {
+  for (int i = 0; i < 64; i++) {
     if (i >= n) break;
     float fi = float(i);
     vec2 seed = vec2(
@@ -55,13 +58,13 @@ void main() {
     );
 
     vec2 pos = seed;
-    for (int j = 0; j < 20; j++) {
-      vec2 f = curlNoise(pos * u_scale + t * 0.5) * 0.02;
+    for (int j = 0; j < 8; j++) {
+      vec2 f = curlNoise(pos * u_scale + t * 0.5) * 0.03;
       pos += f;
     }
 
     float d = length(uv - pos);
-    density += exp(-d * d * 5000.0);
+    density += exp(-d * d * 3000.0);
   }
 
   density = clamp(density, 0.0, 1.0);
@@ -70,6 +73,7 @@ void main() {
   vec3 col = 0.5 + 0.5 * cos(6.28 * (angle / 6.28 + u_color + t * 0.02 + vec3(0.0, 0.33, 0.67)));
   col *= density * (0.8 + u_audioLevel * 0.4);
 
-  fragColor = vec4(col, density);
+  float alpha = density * u_trails;
+  fragColor = vec4(col, max(alpha, density * 0.1));
 }
 `

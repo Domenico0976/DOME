@@ -57,6 +57,8 @@ export const particlesTool: ToolDef = {
       u_n: Number(params.n ?? 2),
       u_freq: Number(params.freq ?? 1.5),
       u_density: Number(params.density ?? 10),
+      u_count: Number(params.count ?? 500),
+      u_size: Number(params.size ?? 3),
       u_audioLevel: audio.level,
       u_res: [w, h]
     })
