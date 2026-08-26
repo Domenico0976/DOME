@@ -1,66 +1,58 @@
-import type { ToolDef } from '../../core/types'
-import { mulberry32 } from '../../engine/rd'
-import { strHash } from '../toolUtils'
+// tools-app/src/tools/generative/flowfield.ts
+import { ToolDef } from '../../core/types'
+import { ToolRenderer } from '../../engine/toolRenderer'
+import { FLOWFIELD_FRAG } from '../../engine/shaders/flowfield'
 
-type Starts = { pts: Float32Array; sig: string }
-const startsCache = new Map<string, Starts>()
+let renderer: ToolRenderer | null = null
 
-// Flow Field: thousands of short streamlines integrated through an animated angle field
-// (curl-noise surrogate per Tool-Render.md §1.2-style flow rendering).
+function getRenderer(gl: WebGL2RenderingContext): ToolRenderer {
+  if (!renderer) {
+    renderer = new ToolRenderer(gl)
+    renderer.compileProgram('flowfield', FLOWFIELD_FRAG)
+  }
+  return renderer
+}
+
 export const flowfieldTool: ToolDef = {
   id: 'flowfield',
   kind: 'generative',
-  version: '2.0.0',
-  label: 'Flow Field',
+  version: '3.0.0',
+  label: 'Flowfield',
   icon: 'waves',
   category: 'Generative',
-  defaultParams: { segments: 600, steplen: 2.5, curl: 1, hue: 180 },
   controls: [
-    { param: 'segments', label: 'Segments', kind: 'slider', min: 100, max: 2000, step: 10 },
-    { param: 'steplen', label: 'Step Length', kind: 'slider', min: 0.5, max: 6, step: 0.1 },
-    { param: 'curl', label: 'Curl', kind: 'slider', min: 0.2, max: 3, step: 0.05 },
-    { param: 'hue', label: 'Hue', kind: 'slider', min: 0, max: 360, step: 1 },
+    { param: 'scale', label: 'Scale', kind: 'slider', min: 2, max: 20, step: 1 },
+    { param: 'speed', label: 'Speed', kind: 'slider', min: 0.1, max: 3, step: 0.1 },
+    { param: 'particles', label: 'Particles', kind: 'slider', min: 100, max: 1000, step: 50 },
+    { param: 'color', label: 'Color Shift', kind: 'slider', min: 0, max: 1, step: 0.05 },
+    { param: 'trails', label: 'Trails', kind: 'slider', min: 0, max: 1, step: 0.1 }
   ],
-  render(ctx, frame, item, _audio, stack) {
-    const segCount = Math.round(Number(item.params.segments ?? 600))
-    const steplen = Number(item.params.steplen ?? 2.5)
-    const curl = Number(item.params.curl ?? 1)
-    const hue = Number(item.params.hue ?? 180)
-    const t = frame.timeSec
+  defaultParams: { scale: 8, speed: 1, particles: 500, color: 0, trails: 0.5 },
+  render: (ctx, frame, item, _audio, _stack, gl) => {
+    if (!gl) return
 
-    let starts = startsCache.get(item.uid)
-    const sig = `${segCount}|${stack.width}x${stack.height}`
-    if (!starts || starts.sig !== sig) {
-      const rng = mulberry32(strHash(item.uid))
-      const pts = new Float32Array(segCount * 2)
-      for (let i = 0; i < segCount; i++) {
-        pts[i * 2] = rng() * stack.width
-        pts[i * 2 + 1] = rng() * stack.height
-      }
-      starts = { pts, sig }
-      startsCache.set(item.uid, starts)
+    const r = getRenderer(gl)
+    const params = item.params
+    const w = ctx.canvas.width
+    const h = ctx.canvas.height
+
+    let fbos = r.getFBO('flowfield')
+    if (!fbos || fbos.texA === null) {
+      fbos = r.createFBO('flowfield', w, h)
     }
 
-    const angle = (px: number, py: number) =>
-      (Math.sin(px * 0.008 * curl + t * 0.4) + Math.cos(py * 0.011 * curl - t * 0.3)) * Math.PI
+    const prog = r.compileProgram('flowfield', FLOWFIELD_FRAG)
+    if (!prog) return
 
-    ctx.save()
-    ctx.lineWidth = 1.25
-    const K = 14
-    for (let i = 0; i < segCount; i++) {
-      let x = starts.pts[i * 2]
-      let y = starts.pts[i * 2 + 1]
-      ctx.strokeStyle = `hsla(${(hue + ((i * 7) % 40)) % 360}, 70%, 60%, 0.32)`
-      ctx.beginPath()
-      ctx.moveTo(x, y)
-      for (let k = 0; k < K; k++) {
-        const a = angle(x, y)
-        x += Math.cos(a) * steplen
-        y += Math.sin(a) * steplen
-        ctx.lineTo(x, y)
-      }
-      ctx.stroke()
-    }
-    ctx.restore()
-  },
+    const time = frame.timeSec
+
+    r.renderToCanvas(prog, fbos.texA, w, h, {
+      u_time: time,
+      u_scale: Number(params.scale ?? 8),
+      u_speed: Number(params.speed ?? 1),
+      u_particles: Number(params.particles ?? 500),
+      u_color: Number(params.color ?? 0),
+      u_res: [w, h]
+    })
+  }
 }
