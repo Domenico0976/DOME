@@ -12,7 +12,7 @@ const stack: StackRenderContext = { width: 200, height: 200, quality: 'high' }
 const mkItem = (uid: string, toolId: string): StackItem => ({
   uid,
   toolId,
-  toolVersion: '1.0.0',
+  toolVersion: '3.0.0',
   params: {},
   audio: [],
   automations: [],
