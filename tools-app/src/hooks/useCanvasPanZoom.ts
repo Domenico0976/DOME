@@ -54,7 +54,6 @@ export function useCanvasPanZoom(): UseCanvasPanZoomResult {
   }, [])
 
   const onWheel = useCallback((e: React.WheelEvent) => {
-    e.preventDefault()
     const delta = e.deltaY > 0 ? -1 : 1
     const step = e.shiftKey ? FINE_ZOOM_STEP : ZOOM_STEP
     setZoom((prev) => {
