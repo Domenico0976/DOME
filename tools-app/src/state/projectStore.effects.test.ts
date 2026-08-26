@@ -10,7 +10,7 @@ describe('effect store actions', () => {
     const uid = useProjectStore.getState().stack[0].uid
     const s = useProjectStore.getState()
     s.addEffect(uid, 'glow')
-    let item = useProjectStore.getState().stack[0]
+    const item = useProjectStore.getState().stack[0]
     expect(item.effects?.length).toBe(1)
     expect(item.effects?.[0].enabled).toBe(true)
     expect(item.effects?.[0].params).toEqual({})

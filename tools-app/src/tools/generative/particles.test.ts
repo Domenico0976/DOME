@@ -22,7 +22,7 @@ describe('particles 2.0.0 chladni', () => {
       const ctx = {
         save: () => calls.push('save'),
         restore: () => calls.push('restore'),
-        fillRect: (..._a: unknown[]) => calls.push('rect'),
+        fillRect: () => calls.push('rect'),
       } as unknown as CanvasRenderingContext2D
       particlesTool.render(ctx, frame, item, audio, stack)
       return calls.length

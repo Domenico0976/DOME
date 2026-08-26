@@ -17,5 +17,5 @@ if (!('ImageData' in globalThis)) {
       this.data = new Uint8ClampedArray(Math.max(0, width | 0) * Math.max(0, height | 0) * 4)
     }
   }
-  ;(globalThis as { ImageData?: unknown }).ImageData = ImageDataPoly
+  (globalThis as { ImageData?: unknown }).ImageData = ImageDataPoly
 }

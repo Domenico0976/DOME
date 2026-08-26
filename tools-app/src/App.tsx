@@ -24,7 +24,9 @@ export default function App() {
     if (!raw) return
     try {
       useProjectStore.getState().loadProject(JSON.parse(raw))
-    } catch {
+    } catch (e) {
+      // ignore invalid project data
+      void e
     }
   }, [])
 

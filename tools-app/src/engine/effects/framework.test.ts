@@ -44,7 +44,7 @@ describe('effects framework', () => {
     const m = await import('./index')
     const frame = { timeSec: 0, dt: 0, bpm: 240 }
     const audio = { bass: 0.5, mid: 0, treble: 0, level: 1, spectrum: new Float32Array(0), bpm: 240 }
-    const bind = (source: any, amount: number, curve: any = 'linear') => [{ param: 'k', source, curve, amount }]
+    const bind = (source: NonNullable<AudioBinding['source']>, amount: number, curve: AudioBinding['curve'] = 'linear') => [{ param: 'k', source, curve, amount }]
     expect(m.resolveEffectValue(1, bind('bass', 2), 'k', frame, audio)).toBe(2)
     expect(m.resolveEffectValue(1, bind('bass', 2, 'invert'), 'k', frame, audio)).toBe(0)
     expect(m.resolveEffectValue(1, bind('bpm', 1), 'k', frame, audio)).toBe(2)
