@@ -30,6 +30,7 @@ export function FloatingStack({ className }: FloatingStackProps) {
   const trackRef = useRef<HTMLDivElement>(null)
   const itemRefs = useRef<Map<string, HTMLDivElement>>(new Map())
   const dropIndexRef = useRef<number | null>(null)
+  const dropIndexSyncRef = useRef<number | null>(null)
 
   const [draggingUid, setDraggingUid] = useState<string | null>(null)
   const [dropIndex, setDropIndex] = useState<number | null>(null)
@@ -82,11 +83,13 @@ export function FloatingStack({ className }: FloatingStackProps) {
             }
           }
           setDropIndex(newIndex)
+          dropIndexSyncRef.current = newIndex
         },
         onDragEnd: () => {
-          const currentDropIndex = dropIndexRef.current
+          const currentDropIndex = dropIndexSyncRef.current
           setDraggingUid(null)
           setDropIndex(null)
+          dropIndexSyncRef.current = null
 
           if (currentDropIndex !== null) {
             const currentIndex = stack.findIndex((i) => i.uid === uid)
