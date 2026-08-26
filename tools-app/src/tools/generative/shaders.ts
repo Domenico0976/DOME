@@ -1,39 +1,57 @@
-import type { ToolDef } from '../../core/types'
+// tools-app/src/tools/generative/shaders.ts
+import { ToolDef } from '../../core/types'
+import { ToolRenderer } from '../../engine/toolRenderer'
+import { SHADERS_FRAG } from '../../engine/shaders/shaders'
 
-// Shaders: GPU fbm nebula rendered by the compositor pre-pass (spec §6).
-// CPU/no-GL fallback paints an intentional dark speckle field so the layer still composites.
+let renderer: ToolRenderer | null = null
+
+function getRenderer(gl: WebGL2RenderingContext): ToolRenderer {
+  if (!renderer) {
+    renderer = new ToolRenderer(gl)
+    renderer.compileProgram('shaders', SHADERS_FRAG)
+  }
+  return renderer
+}
+
 export const shadersTool: ToolDef = {
   id: 'shaders',
   kind: 'generative',
-  version: '1.0.0',
+  version: '3.0.0',
   label: 'Shaders',
   icon: 'aperture',
   category: 'Generative',
-  defaultParams: { palette: 'magma', scale: 4, speed: 1 },
+  defaultParams: { noiseScale: 4, warp: 1, colorShift: 0, complexity: 4 },
   controls: [
-    { param: 'palette', label: 'Palette', kind: 'select', options: ['magma', 'ice', 'toxic'] },
-    { param: 'scale', label: 'Scale', kind: 'slider', min: 1, max: 12, step: 0.5 },
-    { param: 'speed', label: 'Speed', kind: 'slider', min: 0, max: 3, step: 0.1 },
+    { param: 'noiseScale', label: 'Scale', kind: 'slider', min: 1, max: 10, step: 0.5 },
+    { param: 'warp', label: 'Warp', kind: 'slider', min: 0, max: 5, step: 0.1 },
+    { param: 'colorShift', label: 'Color', kind: 'slider', min: 0, max: 1, step: 0.05 },
+    { param: 'complexity', label: 'Complexity', kind: 'slider', min: 1, max: 8, step: 0.5 },
   ],
-  render(ctx, frame, _item, _audio, stack) {
-    let seed = Math.floor(frame.timeSec * 2) & 0x7fffffff
-    const rand = () => {
-      seed = (seed * 1103515245 + 12345) & 0x7fffffff
-      return seed / 0x7fffffff
+  render: (ctx, frame, item, _audio, _stack, gl) => {
+    if (!gl) return
+
+    const r = getRenderer(gl)
+    const params = item.params
+    const w = ctx.canvas.width
+    const h = ctx.canvas.height
+
+    let fbos = r.getFBO('shaders')
+    if (!fbos || fbos.texA === null) {
+      fbos = r.createFBO('shaders', w, h)
     }
-    ctx.save()
-    ctx.fillStyle = '#07070a'
-    ctx.fillRect(0, 0, stack.width, stack.height)
-    for (let i = 0; i < 140; i++) {
-      const x = rand() * stack.width
-      const y = rand() * stack.height
-      const s = 1 + rand() * 2
-      const r = 120 + ((rand() * 100) | 0)
-      const g = 80 + ((rand() * 60) | 0)
-      const b = 180 + ((rand() * 70) | 0)
-      ctx.fillStyle = `rgba(${r},${g},${b},${(0.25 + rand() * 0.4).toFixed(2)})`
-      ctx.fillRect(x, y, s, s)
-    }
-    ctx.restore()
-  },
+
+    const prog = r.compileProgram('shaders', SHADERS_FRAG)
+    if (!prog) return
+
+    const time = frame.timeSec
+
+    r.renderToCanvas(prog, fbos.texA, w, h, {
+      u_time: time,
+      u_noiseScale: Number(params.noiseScale ?? 4),
+      u_warp: Number(params.warp ?? 1),
+      u_colorShift: Number(params.colorShift ?? 0),
+      u_complexity: Number(params.complexity ?? 4),
+      u_res: [w, h]
+    })
+  }
 }

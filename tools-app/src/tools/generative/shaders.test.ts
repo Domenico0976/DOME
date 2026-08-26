@@ -11,15 +11,15 @@ const stack: StackRenderContext = { width: 200, height: 200, quality: 'high' }
 const item: StackItem = {
   uid: 'sh1',
   toolId: 'shaders',
-  toolVersion: '1.0.0',
-  params: { palette: 'ice', scale: 5, speed: 1 },
+  toolVersion: '3.0.0',
+  params: { noiseScale: 4, warp: 1, colorShift: 0, complexity: 4 },
   audio: [],
   automations: [],
   hidden: false,
 }
 
 describe('shaders tool', () => {
-  test('renders fallback without throwing', () => {
+  test('renders fallback without throwing (no GL)', () => {
     const ctx = new Proxy({}, { get: () => () => {} }) as unknown as CanvasRenderingContext2D
     expect(() => shadersTool.render(ctx, frame, item, audio, stack)).not.toThrow()
   })
