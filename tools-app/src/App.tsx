@@ -16,6 +16,10 @@ export default function App() {
   const selected = stack.find((i) => i.uid === selectedUid) ?? null
 
   useEffect(() => {
+    setPanelOpen(true)
+  }, [selectedUid])
+
+  useEffect(() => {
     const raw = localStorage.getItem('dome-project')
     if (!raw) return
     try {
