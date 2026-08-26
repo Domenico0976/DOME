@@ -115,18 +115,21 @@ export const ferrofluidTool: ToolDef = {
 
         // Pass 3: Reaction-Diffusion (multiple iterations)
         const iterations = Math.floor(speed * 3) + 1
+        let readTex = fbos.texA
+        let writeFbo = fbos.fboB
         for (let i = 0; i < iterations; i++) {
-          r.renderToTexture(rdProg, fbos.texA, fbos.fboB, w, h, {
+          r.renderToTexture(rdProg, readTex, writeFbo, w, h, {
             u_feed: f,
             u_kill: kill,
             u_da: 1.0,
             u_db: 0.5,
             u_res: [w, h]
           })
-          // Swap
-          const tmp = fbos.texA
-          fbos.texA = fbos.texB
-          fbos.texB = tmp
+          // Swap both texture and framebuffer together
+          const nextFbo = writeFbo === fbos.fboB ? fbos.fboA : fbos.fboB
+          const nextTex = writeFbo === fbos.fboB ? fbos.texB : fbos.texA
+          writeFbo = nextFbo
+          readTex = nextTex
         }
 
         // Pass 4: Render to canvas

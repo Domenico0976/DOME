@@ -37,6 +37,10 @@ export class ToolRenderer {
     gl.bindVertexArray(null)
   }
 
+  private hasFloatRenderSupport(): boolean {
+    return !!this.gl.getExtension('EXT_color_buffer_float')
+  }
+
   compileProgram(name: string, fragSource: string): WebGLProgram | null {
     const gl = this.gl
 
@@ -56,13 +60,19 @@ export class ToolRenderer {
     const vert = gl.createShader(gl.VERTEX_SHADER)!
     gl.shaderSource(vert, vertSource)
     gl.compileShader(vert)
+    if (!gl.getShaderParameter(vert, gl.COMPILE_STATUS)) {
+      console.error('Vertex shader error:', gl.getShaderInfoLog(vert))
+      gl.deleteShader(vert)
+      return null
+    }
 
     const frag = gl.createShader(gl.FRAGMENT_SHADER)!
     gl.shaderSource(frag, fragSource)
     gl.compileShader(frag)
-
     if (!gl.getShaderParameter(frag, gl.COMPILE_STATUS)) {
       console.error('Fragment shader error:', gl.getShaderInfoLog(frag))
+      gl.deleteShader(vert)
+      gl.deleteShader(frag)
       return null
     }
 
@@ -73,8 +83,17 @@ export class ToolRenderer {
 
     if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
       console.error('Program link error:', gl.getProgramInfoLog(program))
+      gl.deleteShader(vert)
+      gl.deleteShader(frag)
+      gl.deleteProgram(program)
       return null
     }
+
+    // Release shaders after successful link to free GPU memory
+    gl.detachShader(program, vert)
+    gl.detachShader(program, frag)
+    gl.deleteShader(vert)
+    gl.deleteShader(frag)
 
     this.programs.set(name, program)
     return program
@@ -82,8 +101,21 @@ export class ToolRenderer {
 
   createFBO(name: string, width: number, height: number, float: boolean = false): FBOPair {
     const gl = this.gl
-    const format = float ? gl.RGBA32F : gl.RGBA8
-    const type = float ? gl.FLOAT : gl.UNSIGNED_BYTE
+    let format: number
+    let type: number
+
+    if (float) {
+      if (this.hasFloatRenderSupport()) {
+        format = gl.RGBA16F
+        type = gl.FLOAT
+      } else {
+        format = gl.RGBA8
+        type = gl.UNSIGNED_BYTE
+      }
+    } else {
+      format = gl.RGBA8
+      type = gl.UNSIGNED_BYTE
+    }
 
     const createTex = (): WebGLTexture => {
       const tex = gl.createTexture()!
@@ -100,6 +132,10 @@ export class ToolRenderer {
       const fbo = gl.createFramebuffer()!
       gl.bindFramebuffer(gl.FRAMEBUFFER, fbo)
       gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, tex, 0)
+      const status = gl.checkFramebufferStatus(gl.FRAMEBUFFER)
+      if (status !== gl.FRAMEBUFFER_COMPLETE) {
+        console.error(`FBO incomplete for ${name}: status=${status}`)
+      }
       return fbo
     }
 
@@ -128,6 +164,8 @@ export class ToolRenderer {
     const gl = this.gl
     gl.bindFramebuffer(gl.FRAMEBUFFER, outputFBO)
     gl.viewport(0, 0, width, height)
+    gl.clearColor(0, 0, 0, 0)
+    gl.clear(gl.COLOR_BUFFER_BIT)
     gl.useProgram(program)
 
     // Bind input texture
