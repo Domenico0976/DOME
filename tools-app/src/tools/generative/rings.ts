@@ -27,7 +27,7 @@ export const ringsTool: ToolDef = {
     { param: 'warp', label: 'Warp', kind: 'slider', min: 1, max: 15, step: 0.5 },
     { param: 'speed', label: 'Speed', kind: 'slider', min: 0.1, max: 3, step: 0.1 },
   ],
-  render: (ctx, frame, item, _audio, _stack, gl) => {
+  render: (ctx, frame, item, audio, _stack, gl) => {
     if (!gl) return
 
     const r = getRenderer(gl)
@@ -49,6 +49,7 @@ export const ringsTool: ToolDef = {
       u_thick: Number(p.thick ?? 0.15),
       u_warp: Number(p.warp ?? 4),
       u_speed: Number(p.speed ?? 1),
+      u_audioLevel: audio.level,
       u_res: [w, h]
     })
   }

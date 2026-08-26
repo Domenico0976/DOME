@@ -27,7 +27,7 @@ export const shadersTool: ToolDef = {
     { param: 'colorShift', label: 'Color', kind: 'slider', min: 0, max: 1, step: 0.05 },
     { param: 'complexity', label: 'Complexity', kind: 'slider', min: 1, max: 8, step: 0.5 },
   ],
-  render: (ctx, frame, item, _audio, _stack, gl) => {
+  render: (ctx, frame, item, audio, _stack, gl) => {
     if (!gl) return
 
     const r = getRenderer(gl)
@@ -51,6 +51,7 @@ export const shadersTool: ToolDef = {
       u_warp: Number(params.warp ?? 1),
       u_colorShift: Number(params.colorShift ?? 0),
       u_complexity: Number(params.complexity ?? 4),
+      u_audioLevel: audio.level,
       u_res: [w, h]
     })
   }

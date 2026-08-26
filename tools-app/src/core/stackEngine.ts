@@ -25,6 +25,11 @@ export function evaluateStack(
       height: ctx.canvas.height,
       quality,
     }, gl)
+    // After a GPU tool renders to the WebGL framebuffer, composite it back
+    // onto the 2D canvas so the display logic always has content to show.
+    if (gl) {
+      ctx.drawImage(gl.canvas, 0, 0)
+    }
     ctx.restore()
   }
   ctx.restore()

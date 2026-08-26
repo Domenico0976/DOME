@@ -26,7 +26,7 @@ export const tunnelTool: ToolDef = {
     { param: 'twist', label: 'Twist', kind: 'slider', min: 1, max: 10, step: 0.5 },
     { param: 'density', label: 'Density', kind: 'slider', min: 0.1, max: 2, step: 0.05 },
   ],
-  render: (ctx, frame, item, _audio, _stack, gl) => {
+  render: (ctx, frame, item, audio, _stack, gl) => {
     if (!gl) return
 
     const r = getRenderer(gl)
@@ -47,6 +47,7 @@ export const tunnelTool: ToolDef = {
       u_speed: Number(p.speed ?? 1),
       u_twist: Number(p.twist ?? 3),
       u_density: Number(p.density ?? 1),
+      u_audioLevel: audio.level,
       u_res: [w, h]
     })
   }

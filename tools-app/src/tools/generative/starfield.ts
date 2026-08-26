@@ -26,7 +26,7 @@ export const starfieldTool: ToolDef = {
     { param: 'density', label: 'Density', kind: 'slider', min: 0.1, max: 3, step: 0.05 },
     { param: 'zoom', label: 'Zoom', kind: 'slider', min: 1, max: 10, step: 0.5 },
   ],
-  render: (ctx, frame, item, _audio, _stack, gl) => {
+  render: (ctx, frame, item, audio, _stack, gl) => {
     if (!gl) return
 
     const r = getRenderer(gl)
@@ -47,6 +47,7 @@ export const starfieldTool: ToolDef = {
       u_speed: Number(p.speed ?? 1),
       u_density: Number(p.density ?? 1),
       u_zoom: Number(p.zoom ?? 3),
+      u_audioLevel: audio.level,
       u_res: [w, h]
     })
   }

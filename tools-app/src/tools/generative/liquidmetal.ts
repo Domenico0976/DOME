@@ -26,7 +26,7 @@ export const liquidMetalTool: ToolDef = {
     { param: 'speed', label: 'Speed', kind: 'slider', min: 0.1, max: 3, step: 0.1 },
     { param: 'roughness', label: 'Roughness', kind: 'slider', min: 0, max: 1, step: 0.1 },
   ],
-  render: (_ctx, frame, item, _audio, _stack, gl) => {
+  render: (_ctx, frame, item, audio, _stack, gl) => {
     if (!gl) return
 
     const r = getRenderer(gl)
@@ -50,6 +50,7 @@ export const liquidMetalTool: ToolDef = {
       u_blobs: Number(params.blobs ?? 5),
       u_speed: Number(params.speed ?? 1),
       u_roughness: Number(params.roughness ?? 0.3),
+      u_audioLevel: audio.level,
       u_res: [w, h]
     })
   }

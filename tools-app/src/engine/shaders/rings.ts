@@ -1,19 +1,56 @@
-// tools-app/src/engine/shaders/rings.ts
-import { NOISE_GLSL } from './noise'
-
+// Rings: concentric warped rings with iridescent coloring.
 export const RINGS_FRAG = `#version 300 es
 precision highp float;
-${NOISE_GLSL}
-uniform vec2 u_res; uniform float u_time; uniform float u_count; uniform float u_thick; uniform float u_warp; uniform float u_speed;
-in vec2 v_uv; out vec4 fragColor;
-void main(){
-  vec2 uv=(v_uv-0.5)*2.0;
-  float r=length(uv);
-  float t=u_time*u_speed;
-  float w=fbm(uv*u_warp+t,3);
-  float rings=sin((r+w*0.1)*u_count*10.0-t*2.0);
-  float mask=smoothstep(u_thick,0.0,abs(rings));
-  vec3 col=hsv2rgb(vec3(fract(r+t*0.05),0.8,mask));
-  fragColor=vec4(col,1.0);
+
+uniform vec2 u_res;
+uniform float u_time;
+uniform float u_count;
+uniform float u_thick;
+uniform float u_warp;
+uniform float u_speed;
+uniform float u_audioLevel;
+in vec2 v_uv;
+out vec4 fragColor;
+
+float hash(vec2 p) {
+  return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
 }
-`;
+
+float noise(vec2 p) {
+  vec2 i = floor(p);
+  vec2 f = fract(p);
+  f = f * f * (3.0 - 2.0 * f);
+  return mix(
+    mix(hash(i), hash(i + vec2(1.0, 0.0)), f.x),
+    mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), f.x),
+    f.y
+  );
+}
+
+float fbm(vec2 p) {
+  float v = 0.0;
+  float a = 0.5;
+  for (int i = 0; i < 3; i++) {
+    v += a * noise(p);
+    p *= 2.0;
+    a *= 0.5;
+  }
+  return v;
+}
+
+void main() {
+  vec2 uv = (v_uv - 0.5) * 2.0;
+  float r = length(uv);
+  float t = u_time * u_speed * (1.0 + u_audioLevel * 0.3);
+
+  float w = fbm(uv * u_warp + t);
+  float rings = sin((r + w * 0.1) * u_count * 10.0 - t * 2.0);
+  float mask = smoothstep(u_thick, 0.0, abs(rings));
+
+  vec3 col = 0.5 + 0.5 * cos(6.28 * (r * 0.3 + t * 0.02 + vec3(0.0, 0.33, 0.67)));
+  col *= mask * (0.8 + u_audioLevel * 0.4);
+
+  float alpha = smoothstep(0.0, 0.05, mask);
+  fragColor = vec4(col, alpha);
+}
+`

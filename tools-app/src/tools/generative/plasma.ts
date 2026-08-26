@@ -26,7 +26,7 @@ export const plasmaTool: ToolDef = {
     { param: 'speed', label: 'Speed', kind: 'slider', min: 0.1, max: 3, step: 0.1 },
     { param: 'colorShift', label: 'Color', kind: 'slider', min: 0, max: 1, step: 0.05 },
   ],
-  render: (ctx, frame, item, _audio, _stack, gl) => {
+  render: (ctx, frame, item, audio, _stack, gl) => {
     if (!gl) return
 
     const r = getRenderer(gl)
@@ -47,6 +47,7 @@ export const plasmaTool: ToolDef = {
       u_scale: Number(p.scale ?? 8),
       u_speed: Number(p.speed ?? 1),
       u_colorShift: Number(p.colorShift ?? 0),
+      u_audioLevel: audio.level,
       u_res: [w, h]
     })
   }

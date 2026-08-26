@@ -26,7 +26,7 @@ export const moleculesTool: ToolDef = {
     { param: 'speed', label: 'Speed', kind: 'slider', min: 0.1, max: 3, step: 0.1 },
     { param: 'radius', label: 'Radius', kind: 'slider', min: 0.02, max: 0.3, step: 0.01 },
   ],
-  render: (ctx, frame, item, _audio, _stack, gl) => {
+  render: (ctx, frame, item, audio, _stack, gl) => {
     if (!gl) return
 
     const r = getRenderer(gl)
@@ -47,6 +47,7 @@ export const moleculesTool: ToolDef = {
       u_count: Number(p.count ?? 8),
       u_speed: Number(p.speed ?? 1),
       u_radius: Number(p.radius ?? 0.12),
+      u_audioLevel: audio.level,
       u_res: [w, h]
     })
   }

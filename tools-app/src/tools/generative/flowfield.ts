@@ -28,7 +28,7 @@ export const flowfieldTool: ToolDef = {
     { param: 'trails', label: 'Trails', kind: 'slider', min: 0, max: 1, step: 0.1 }
   ],
   defaultParams: { scale: 8, speed: 1, particles: 500, color: 0, trails: 0.5 },
-  render: (ctx, frame, item, _audio, _stack, gl) => {
+  render: (ctx, frame, item, audio, _stack, gl) => {
     if (!gl) return
 
     const r = getRenderer(gl)
@@ -52,6 +52,7 @@ export const flowfieldTool: ToolDef = {
       u_speed: Number(params.speed ?? 1),
       u_particles: Number(params.particles ?? 500),
       u_color: Number(params.color ?? 0),
+      u_audioLevel: audio.level,
       u_res: [w, h]
     })
   }

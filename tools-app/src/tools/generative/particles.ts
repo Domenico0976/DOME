@@ -31,7 +31,7 @@ export const particlesTool: ToolDef = {
     { param: 'freq', label: 'Frequency', kind: 'slider', min: 0.5, max: 4, step: 0.1 },
     { param: 'density', label: 'Density', kind: 'slider', min: 1, max: 20, step: 1 }
   ],
-  render: (ctx, frame, item, _audio, _stack, gl) => {
+  render: (ctx, frame, item, audio, _stack, gl) => {
     if (!gl) return
 
     const r = getRenderer(gl)
@@ -57,6 +57,7 @@ export const particlesTool: ToolDef = {
       u_n: Number(params.n ?? 2),
       u_freq: Number(params.freq ?? 1.5),
       u_density: Number(params.density ?? 10),
+      u_audioLevel: audio.level,
       u_res: [w, h]
     })
   }
