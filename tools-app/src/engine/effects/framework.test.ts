@@ -1,7 +1,7 @@
 import { describe, test, expect } from 'vitest'
 import { collectActiveEffects, EFFECT_ORDER, EFFECTS } from './index'
 import type { EffectPassDef } from './index'
-import type { StackItem, EffectInstance } from '../../core/types'
+import type { StackItem, EffectInstance, AudioBinding } from '../../core/types'
 
 const stubDef = (type: EffectInstance['type']): EffectPassDef => ({
   type,
