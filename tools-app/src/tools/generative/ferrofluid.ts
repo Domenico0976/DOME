@@ -133,7 +133,7 @@ export const ferrofluidTool: ToolDef = {
         }
 
         // Pass 4: Render to canvas
-        r.renderToCanvas(renderProg, fbos.texA, w, h, {
+        r.renderToCanvas(renderProg, readTex, w, h, {
           u_accent: hexToRgbArray(accentHex)
         })
         return
