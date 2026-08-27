@@ -13,6 +13,13 @@ function getRenderer(gl: WebGL2RenderingContext): ToolRenderer {
   return renderer
 }
 
+function hexToRgb(hex: string): number[] {
+  const m = /^#?([0-9a-f]{6})$/i.exec(hex.trim())
+  if (!m) return [1, 1, 1]
+  const int = parseInt(m[1], 16)
+  return [(int >> 16) & 255, (int >> 8) & 255, int & 255].map(v => v / 255)
+}
+
 export const ringsTool: ToolDef = {
   id: 'rings',
   kind: 'generative',
@@ -20,13 +27,14 @@ export const ringsTool: ToolDef = {
   label: 'Rings',
   icon: 'orbit',
   category: 'Generative',
-  defaultParams: { count: 8, thick: 0.15, warp: 4, speed: 1, hueShift: 0 },
+  defaultParams: { count: 8, thick: 0.15, warp: 4, speed: 1, hueShift: 0, color: '#ffffff' },
   controls: [
     { param: 'count', label: 'Count', kind: 'slider', min: 2, max: 20, step: 1 },
     { param: 'thick', label: 'Thickness', kind: 'slider', min: 0.02, max: 0.5, step: 0.01 },
     { param: 'warp', label: 'Warp', kind: 'slider', min: 1, max: 15, step: 0.5 },
     { param: 'speed', label: 'Speed', kind: 'slider', min: 0.1, max: 3, step: 0.1 },
     { param: 'hueShift', label: 'Hue Shift', kind: 'slider', min: 0, max: 1, step: 0.05 },
+    { param: 'color', label: 'Color', kind: 'color' },
   ],
   render: (ctx, frame, item, audio, _stack, gl) => {
     if (!gl) return
@@ -51,6 +59,7 @@ export const ringsTool: ToolDef = {
       u_warp: Number(p.warp ?? 4),
       u_speed: Number(p.speed ?? 1),
       u_hueShift: Number(p.hueShift ?? 0),
+      u_color: hexToRgb(String(p.color ?? '#ffffff')),
       u_audioLevel: audio.level,
       u_res: [w, h]
     })

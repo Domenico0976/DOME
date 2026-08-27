@@ -1,0 +1,130 @@
+- generic [active] [ref=f3e1]:
+  - generic [ref=f3e2]:
+    - generic [ref=f3e3]:
+      - link "Skip to content" [ref=f3e4] [cursor=pointer]:
+        - /url: "#start-of-content"
+      - banner [ref=f3e9]:
+        - heading "Navigation Menu" [level=2] [ref=f3e10]
+        - generic [ref=f3e12]:
+          - button "Toggle navigation" [ref=f3e14] [cursor=pointer]
+          - link "Homepage" [ref=f3e18] [cursor=pointer]:
+            - /url: /
+          - generic [ref=f3e21]:
+            - link "Sign in" [ref=f3e22] [cursor=pointer]:
+              - /url: /login?return_to=https%3A%2F%2Fgithub.com%2Fpaper-design%2Fshaders%2Ftree%2Fmain%2Fpackages
+            - button "Appearance settings" [ref=f3e25] [cursor=pointer]
+    - main [ref=f3e32]:
+      - generic [ref=f3e33]:
+        - generic [ref=f3e34]:
+          - generic [ref=f3e36]:
+            - link "paper-design" [ref=f3e40] [cursor=pointer]:
+              - /url: /paper-design
+            - generic [ref=f3e41]: /
+            - strong [ref=f3e42]:
+              - link "shaders" [ref=f3e43] [cursor=pointer]:
+                - /url: /paper-design/shaders
+            - generic [ref=f3e44]: Public
+          - generic [ref=f3e45]:
+            - list:
+              - listitem [ref=f3e46]:
+                - link "You must be signed in to change notification settings" [ref=f3e47] [cursor=pointer]:
+                  - /url: /login?return_to=%2Fpaper-design%2Fshaders
+                  - text: Notifications
+              - listitem [ref=f3e50]:
+                - link "Fork 146" [ref=f3e51] [cursor=pointer]:
+                  - /url: /login?return_to=%2Fpaper-design%2Fshaders
+                  - text: Fork
+                  - generic "146" [ref=f3e54]
+              - listitem [ref=f3e55]:
+                - link "You must be signed in to star a repository" [ref=f3e57] [cursor=pointer]:
+                  - /url: /login?return_to=%2Fpaper-design%2Fshaders
+                  - text: Star
+                  - generic "3382 users starred this repository" [ref=f3e60]: 3.4k
+        - navigation "Repository" [ref=f3e61]:
+          - list [ref=f3e62]:
+            - listitem [ref=f3e63]:
+              - link "Code" [ref=f3e64] [cursor=pointer]:
+                - /url: /paper-design/shaders
+            - listitem [ref=f3e68]:
+              - link "Issues 2" [ref=f3e69] [cursor=pointer]:
+                - /url: /paper-design/shaders/issues
+                - generic [ref=f3e73]: Issues
+                - generic "2" [ref=f3e74]
+            - listitem [ref=f3e75]:
+              - link "Pull requests 12" [ref=f3e76] [cursor=pointer]:
+                - /url: /paper-design/shaders/pulls
+                - generic [ref=f3e79]: Pull requests
+                - generic "12" [ref=f3e80]
+            - listitem [ref=f3e81]:
+              - link "Actions" [ref=f3e82] [cursor=pointer]:
+                - /url: /paper-design/shaders/actions
+            - listitem [ref=f3e86]:
+              - link "Projects" [ref=f3e87] [cursor=pointer]:
+                - /url: /paper-design/shaders/projects
+            - listitem [ref=f3e91]:
+              - link "Security and quality" [ref=f3e92] [cursor=pointer]:
+                - /url: /paper-design/shaders/security
+            - listitem [ref=f3e96]:
+              - link "Insights" [ref=f3e97] [cursor=pointer]:
+                - /url: /paper-design/shaders/pulse
+      - generic [ref=f3e111]:
+        - generic [ref=f3e115]:
+          - generic [ref=f3e116]:
+            - heading "Expand file tree" [level=2] [ref=f3e118]:
+              - button "Expand file tree" [ref=f3e119] [cursor=pointer]
+            - button "main branch" [ref=f3e124] [cursor=pointer]:
+              - generic [ref=f3e125]: main
+            - generic [ref=f3e130]:
+              - navigation [ref=f3e131]:
+                - heading "Breadcrumbs" [level=2] [ref=f3e132]
+                - list [ref=f3e133]:
+                  - listitem [ref=f3e134]:
+                    - link "shaders" [ref=f3e135] [cursor=pointer]:
+                      - /url: /paper-design/shaders/tree/main
+              - generic [ref=f3e136]:
+                - text: /
+                - heading "packages" [level=1] [ref=f3e137]
+                - text: /
+              - button "Copy path" [ref=f3e138] [cursor=pointer]
+          - generic [ref=f3e144]:
+            - heading "Directory actions" [level=2] [ref=f3e145]
+            - combobox "Go to file" [ref=f3e152]
+            - heading "More options" [level=2] [ref=f3e153]
+            - button "More options" [ref=f3e154] [cursor=pointer]
+        - generic [ref=f3e157]:
+          - generic [ref=f3e159]:
+            - heading "Latest commit" [level=2] [ref=f3e160]
+            - generic [ref=f3e163]:
+              - heading "History" [level=2] [ref=f3e164]
+              - link "View commit history for this file." [ref=f3e166] [cursor=pointer]:
+                - /url: /paper-design/shaders/commits/main/packages
+          - generic [ref=f3e169]:
+            - heading "Folders and files" [level=2] [ref=f3e170]
+            - table "Folders and files" [ref=f3e171]:
+              - rowgroup [ref=f3e172]:
+                - row [ref=f3e173]:
+                  - columnheader "Name" [ref=f3e174]
+                  - columnheader "Last commit message" [ref=f3e175]
+                  - columnheader "Last commit date" [ref=f3e177]
+              - rowgroup [ref=f3e179]:
+                - row [ref=f3e180]:
+                  - cell [ref=f3e181]:
+                    - heading "parent directory" [level=3] [ref=f3e182]
+                    - link "Parent directory" [ref=f3e183] [cursor=pointer]:
+                      - /url: /paper-design/shaders/tree/main
+                      - generic [ref=f3e184]: ..
+                - row "shaders-react, (Directory)" [ref=f3e187]:
+                  - cell [ref=f3e188]:
+                    - link "shaders-react, (Directory)" [ref=f3e195] [cursor=pointer]:
+                      - /url: /paper-design/shaders/tree/main/packages/shaders-react
+                      - text: shaders-react
+                  - cell [ref=f3e196]
+                  - cell [ref=f3e198]
+                - row "shaders, (Directory)" [ref=f3e201]:
+                  - cell [ref=f3e202]:
+                    - link "shaders, (Directory)" [ref=f3e209] [cursor=pointer]:
+                      - /url: /paper-design/shaders/tree/main/packages/shaders
+                      - text: shaders
+                  - cell [ref=f3e210]
+                  - cell [ref=f3e212]
+  - alert [ref=f3e218]

@@ -18,8 +18,11 @@ export function evaluateStack(
     const tool = resolveTool(item.toolId, item.toolVersion)
     if (!tool) continue
     ctx.save()
-    ctx.globalCompositeOperation = (item.blendMode ?? 'source-over') as GlobalCompositeOperation
-    ctx.globalAlpha = item.opacity ?? 1
+    const isWebGL = !!gl
+    if (!isWebGL) {
+      ctx.globalCompositeOperation = (item.blendMode ?? 'source-over') as GlobalCompositeOperation
+      ctx.globalAlpha = item.opacity ?? 1
+    }
     tool.render(ctx, frame, item, audio, {
       width: ctx.canvas.width,
       height: ctx.canvas.height,
@@ -29,6 +32,8 @@ export function evaluateStack(
     // onto the 2D canvas so the display logic always has content to show.
     if (gl) {
       ctx.drawImage(gl.canvas, 0, 0)
+      ctx.globalCompositeOperation = (item.blendMode ?? 'source-over') as GlobalCompositeOperation
+      ctx.globalAlpha = item.opacity ?? 1
     }
     ctx.restore()
   }

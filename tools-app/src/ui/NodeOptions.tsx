@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { AudioLines, KeyRound, MousePointerClick, Trash2, Loader2 } from 'lucide-react'
+import { AudioLines, ChevronDown, ChevronUp, KeyRound, MousePointerClick, Trash2, Loader2, Palette } from 'lucide-react'
 import { useProjectStore } from '../state/projectStore'
 import { resolveTool } from '../core/registry'
 import { learnNextCc } from '../audio/midi'
@@ -13,6 +13,73 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs'
 import { NodeOptionsEffects } from './NodeOptionsEffects'
 
 const AUDIO_SOURCES = ['bass', 'mid', 'treble', 'level', 'spectrum', 'bpm'] as const
+
+function ColorsPanel({ item, updateParam }: { item: StackItem; updateParam: (uid: string, param: string, value: number | string | string[]) => void }) {
+  const currentColors = (item.params.colors as string[] | undefined) ?? ['#000000']
+  const [colorsExpanded, setColorsExpanded] = useState(currentColors.length > 1)
+  const setColors = (next: string[]) => updateParam(item.uid, 'colors', next)
+
+  return (
+    <>
+      <Separator />
+      <div className="space-y-2">
+        <button
+          type="button"
+          onClick={() => setColorsExpanded((v) => !v)}
+          className="flex w-full items-center justify-between text-[11px] font-semibold uppercase tracking-wide text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <span className="flex items-center gap-1.5">
+            <Palette className="h-3.5 w-3.5" />
+            Colors
+          </span>
+          {colorsExpanded ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
+        </button>
+        {colorsExpanded && (
+          <div className="space-y-2 pt-1">
+            {currentColors.map((c, i) => (
+              <div key={i} className="flex items-center gap-2">
+                <input
+                  type="color"
+                  value={c}
+                  onChange={(e) => {
+                    const next = [...currentColors]
+                    next[i] = e.target.value
+                    setColors(next)
+                  }}
+                  className="h-8 w-10 cursor-pointer rounded border border-border bg-surface-2 p-0.5"
+                />
+                <span className="text-[11px] font-mono text-muted-foreground uppercase flex-1 truncate">
+                  {c}
+                </span>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-6 w-6 shrink-0 text-muted-foreground hover:text-danger"
+                  disabled={currentColors.length <= 1}
+                  aria-label={`Remove color ${i + 1}`}
+                  onClick={() => setColors(currentColors.filter((_, j) => j !== i))}
+                >
+                  <Trash2 className="h-3 w-3" />
+                </Button>
+              </div>
+            ))}
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-full text-[11px] gap-1 border-dashed"
+              disabled={currentColors.length >= 4}
+              onClick={() => setColors([...currentColors, '#000000'])}
+              aria-label={`Add Color (${currentColors.length}/4)`}
+            >
+              <Palette className="h-3 w-3" />
+              Add Color ({currentColors.length}/4)
+            </Button>
+          </div>
+        )}
+      </div>
+    </>
+  )
+}
 
 const BLEND_MODES = [
   { label: 'Normal', value: 'source-over' },
@@ -208,6 +275,11 @@ export function NodeOptions({ item }: { item: StackItem }) {
               )}
             </div>
           ))}
+
+          {/* Colors panel */}
+          {def.category === 'Generative' && (
+            <ColorsPanel key={JSON.stringify(item.params.colors)} item={item} updateParam={updateParam} />
+          )}
 
           {/* Audio Reactivity section */}
           {item.audio.length > 0 && (

@@ -11,16 +11,18 @@ export const kaleidoscopeTool: ToolDef = {
   label: 'Kaleidoscope',
   icon: 'hexagon',
   category: 'Generative',
-  defaultParams: { wedges: 6, hue: 320, speed: 1 },
+  defaultParams: { wedges: 6, hue: 320, speed: 1, color: '#ffffff' },
   controls: [
     { param: 'wedges', label: 'Wedges', kind: 'slider', min: 2, max: 12, step: 1 },
     { param: 'hue', label: 'Hue', kind: 'slider', min: 0, max: 360, step: 1 },
     { param: 'speed', label: 'Speed', kind: 'slider', min: 0.1, max: 3, step: 0.1 },
+    { param: 'color', label: 'Color', kind: 'color' },
   ],
   render(ctx, frame, item, audio, stack) {
     const { width, height } = stack
     const wedges = Number(item.params.wedges ?? 6)
     const speed = Number(item.params.speed ?? 1)
+    const color = String(item.params.color ?? '#ffffff')
     const t = frame.timeSec * speed * (1.0 + audio.level * 0.3)
 
     // Capture the current canvas content as the source for reflection
@@ -60,5 +62,15 @@ export const kaleidoscopeTool: ToolDef = {
     }
 
     ctx.restore()
+
+    // Apply color tint overlay
+    const hex = color.replace('#', '')
+    const r = parseInt(hex.substring(0, 2), 16)
+    const g = parseInt(hex.substring(2, 4), 16)
+    const b = parseInt(hex.substring(4, 6), 16)
+    ctx.globalCompositeOperation = 'source-atop'
+    ctx.fillStyle = `rgba(${r},${g},${b},0.3)`
+    ctx.fillRect(0, 0, width, height)
+    ctx.globalCompositeOperation = 'source-over'
   },
 }

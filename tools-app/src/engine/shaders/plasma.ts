@@ -7,6 +7,7 @@ uniform float u_time;
 uniform float u_scale;
 uniform float u_speed;
 uniform float u_colorShift;
+uniform vec3 u_color;
 uniform float u_audioLevel;
 in vec2 v_uv;
 out vec4 fragColor;
@@ -54,6 +55,7 @@ void main() {
   v += fbm(uv * s * 0.8 + t * 0.1) * 0.2;
 
   vec3 col = 0.5 + 0.5 * cos(6.28 * (v * 0.7 + u_colorShift + vec3(0.0, 0.33, 0.67) + t * 0.01));
+  col *= u_color;
   col *= 0.85 + u_audioLevel * 0.3;
 
   fragColor = vec4(col, 1.0);

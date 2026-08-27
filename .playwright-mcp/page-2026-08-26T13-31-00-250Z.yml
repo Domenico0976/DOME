@@ -1,0 +1,252 @@
+- generic [ref=f9e3]:
+  - complementary [ref=f9e4]:
+    - generic "DOME" [ref=f9e5]: D
+    - generic [ref=f9e6]:
+      - button "Undo" [ref=f9e315] [cursor=pointer]
+      - button "Redo" [disabled]
+  - generic [ref=f9e7]:
+    - banner [ref=f9e8]:
+      - combobox "Preview quality" [ref=f9e9] [cursor=pointer]:
+        - generic: High · 1080p
+      - generic [ref=f9e12]:
+        - button "Tips" [ref=f9e13] [cursor=pointer]
+        - button "Support" [ref=f9e17] [cursor=pointer]
+        - button "Templates" [ref=f9e25] [cursor=pointer]
+        - button "Save project" [ref=f9e30] [cursor=pointer]: Unsaved changes
+        - button "Sign in" [ref=f9e35] [cursor=pointer]
+        - button "Toggle theme" [ref=f9e36] [cursor=pointer]
+    - main [ref=f9e43]:
+      - generic [ref=f9e49]:
+        - button "Zoom out" [ref=f9e50] [cursor=pointer]: "-"
+        - generic [ref=f9e51]: 100%
+        - button "Zoom in" [ref=f9e52] [cursor=pointer]: +
+        - button "Reset zoom" [ref=f9e53] [cursor=pointer]: Reset
+    - generic "Export menu" [ref=f9e56]:
+      - button "Export PNG" [ref=f9e57] [cursor=pointer]
+      - button "Instagram" [ref=f9e61] [cursor=pointer]
+      - button "Spotify Canvas" [ref=f9e65] [cursor=pointer]
+      - button "Fullscreen" [ref=f9e69] [cursor=pointer]
+      - button "Reset" [ref=f9e75] [cursor=pointer]
+    - contentinfo "Audio Reactivity Panel" [ref=f9e79]:
+      - generic [ref=f9e80]:
+        - generic [ref=f9e81]:
+          - button "Play/Pause" [ref=f9e82] [cursor=pointer]
+          - button "Stop" [ref=f9e85] [cursor=pointer]
+          - button "Loop" [ref=f9e88] [cursor=pointer]
+        - generic [ref=f9e94]:
+          - button "Load" [ref=f9e95] [cursor=pointer]
+          - button [ref=f9e99] [cursor=pointer]
+          - button [ref=f9e103] [cursor=pointer]
+        - generic [ref=f9e106]:
+          - generic [ref=f9e107]:
+            - generic [ref=f9e108]: BPM
+            - spinbutton "BPM" [ref=f9e109]: "120"
+          - button "Tap" [ref=f9e110] [cursor=pointer]
+      - generic [ref=f9e111]:
+        - generic [ref=f9e113] [cursor=pointer]
+        - generic [ref=f9e114]:
+          - slider [ref=f9e118]
+          - generic [ref=f9e119]: 0.0s / 60.0s
+      - generic [ref=f9e120]:
+        - generic [ref=f9e121]:
+          - generic [ref=f9e122]:
+            - generic [ref=f9e123]: Presets
+            - button "Add Preset" [ref=f9e124] [cursor=pointer]
+          - generic [ref=f9e126]: No presets
+        - generic [ref=f9e128]:
+          - generic [ref=f9e129]: B
+          - generic [ref=f9e132]: M
+          - generic [ref=f9e135]: T
+          - generic [ref=f9e138]: L
+  - generic [ref=f9e141]:
+    - generic [ref=f9e142]:
+      - generic [ref=f9e143]: Stack
+      - button "Add tool to stack" [active] [ref=f9e144] [cursor=pointer]
+    - generic [ref=f9e146]:
+      - generic [ref=f9e1050]:
+        - generic [ref=f9e1051]: Particles
+        - generic [ref=f9e1056]:
+          - button "Switch tool" [ref=f9e1057] [cursor=pointer]
+          - button "Hide node" [ref=f9e1064] [cursor=pointer]
+          - button "Remove node" [ref=f9e1070] [cursor=pointer]
+          - button "Add tool above" [ref=f9e1074] [cursor=pointer]
+      - generic [ref=f9e820]:
+        - generic [ref=f9e821]: Liquid Metal
+        - generic [ref=f9e826]:
+          - button "Switch tool" [ref=f9e827] [cursor=pointer]
+          - button "Hide node" [ref=f9e834] [cursor=pointer]
+          - button "Remove node" [ref=f9e840] [cursor=pointer]
+          - button "Add tool above" [ref=f9e844] [cursor=pointer]
+      - generic [ref=f9e601]:
+        - generic [ref=f9e602]: Plasma
+        - generic [ref=f9e607]:
+          - button "Switch tool" [ref=f9e608] [cursor=pointer]
+          - button "Hide node" [ref=f9e615] [cursor=pointer]
+          - button "Remove node" [ref=f9e621] [cursor=pointer]
+          - button "Add tool above" [ref=f9e625] [cursor=pointer]
+      - generic [ref=f9e319]:
+        - generic [ref=f9e320]: Ferrofluid
+        - generic [ref=f9e326]:
+          - button "Switch tool" [ref=f9e327] [cursor=pointer]
+          - button "Hide node" [ref=f9e334] [cursor=pointer]
+          - button "Remove node" [ref=f9e340] [cursor=pointer]
+          - button "Add tool above" [ref=f9e344] [cursor=pointer]
+    - dialog "Tool catalog" [ref=f9e1169]:
+      - generic [ref=f9e1170]:
+        - heading "Inputs" [level=4] [ref=f9e1171]
+        - button "Add Audio File" [ref=f9e1172] [cursor=pointer]:
+          - generic [ref=f9e1177]: Audio File
+        - button "Add Camera" [ref=f9e1178] [cursor=pointer]:
+          - generic [ref=f9e1182]: Camera
+        - button "Add Gradient" [ref=f9e1183] [cursor=pointer]:
+          - generic [ref=f9e1190]: Gradient
+        - button "Add Image / Video" [ref=f9e1191] [cursor=pointer]:
+          - generic [ref=f9e1196]: Image / Video
+        - button "Add Solid Color" [ref=f9e1197] [cursor=pointer]:
+          - generic [ref=f9e1200]: Solid Color
+        - button "Add Text" [ref=f9e1201] [cursor=pointer]:
+          - generic [ref=f9e1204]: Text
+      - generic [ref=f9e1205]:
+        - heading "Generative" [level=4] [ref=f9e1206]
+        - button "Add Brutalist" [ref=f9e1207] [cursor=pointer]:
+          - generic [ref=f9e1210]: Brutalist
+        - button "Add Doodle" [ref=f9e1211] [cursor=pointer]:
+          - generic [ref=f9e1216]: Doodle
+        - button "Add Ferrofluid" [ref=f9e1217] [cursor=pointer]:
+          - generic [ref=f9e1222]: Ferrofluid
+        - button "Add Flowfield" [ref=f9e1223] [cursor=pointer]:
+          - generic [ref=f9e1228]: Flowfield
+        - button "Add Kaleidoscope" [ref=f9e1229] [cursor=pointer]:
+          - generic [ref=f9e1232]: Kaleidoscope
+        - button "Add Liquid Metal" [ref=f9e1233] [cursor=pointer]:
+          - generic [ref=f9e1237]: Liquid Metal
+        - button "Add Molecules" [ref=f9e1238] [cursor=pointer]:
+          - generic [ref=f9e1244]: Molecules
+        - button "Add Particles" [ref=f9e1245] [cursor=pointer]:
+          - generic [ref=f9e1249]: Particles
+        - button "Add Particles 2" [ref=f9e1250] [cursor=pointer]:
+          - generic [ref=f9e1264]: Particles 2
+        - button "Add Plasma" [ref=f9e1265] [cursor=pointer]:
+          - generic [ref=f9e1269]: Plasma
+        - button "Add Rings" [ref=f9e1270] [cursor=pointer]:
+          - generic [ref=f9e1277]: Rings
+        - button "Add Shaders" [ref=f9e1278] [cursor=pointer]:
+          - generic [ref=f9e1285]: Shaders
+        - button "Add Starfield" [ref=f9e1286] [cursor=pointer]:
+          - generic [ref=f9e1289]: Starfield
+        - button "Add Tunnel" [ref=f9e1290] [cursor=pointer]:
+          - generic [ref=f9e1300]: Tunnel
+      - generic [ref=f9e1301]:
+        - heading "Filters" [level=4] [ref=f9e1302]
+        - button "Add Facets" [ref=f9e1303] [cursor=pointer]:
+          - generic [ref=f9e1306]: Facets
+        - button "Add Halftone" [ref=f9e1307] [cursor=pointer]:
+          - generic [ref=f9e1318]: Halftone
+        - button "Add Pixelator" [ref=f9e1319] [cursor=pointer]:
+          - generic [ref=f9e1322]: Pixelator
+        - button "Add Re-Light" [ref=f9e1323] [cursor=pointer]:
+          - generic [ref=f9e1326]: Re-Light
+        - button "Add Thermal" [ref=f9e1327] [cursor=pointer]:
+          - generic [ref=f9e1330]: Thermal
+        - button "Add Type Shape" [ref=f9e1331] [cursor=pointer]:
+          - generic [ref=f9e1334]: Type Shape
+  - generic [ref=f9e346]:
+    - generic [ref=f9e347]:
+      - generic [ref=f9e348]: Node Options
+      - button "Close panel" [ref=f9e349] [cursor=pointer]
+    - generic [ref=f9e354]:
+      - heading "Particles" [level=3] [ref=f9e1079]
+      - generic [ref=f9e362]:
+        - generic [ref=f9e363]: Blend mode
+        - combobox "Blend mode" [ref=f9e364]:
+          - option "Normal" [selected]
+          - option "Darken"
+          - option "Multiply"
+          - option "Plus darker"
+          - option "Color burn"
+          - option "Lighten"
+          - option "Screen"
+          - option "Plus lighter"
+          - option "Color dodge"
+          - option "Overlay"
+          - option "Soft light"
+          - option "Hard light"
+          - option "Difference"
+          - option "Exclusion"
+          - option "Hue"
+          - option "Saturation"
+          - option "Color"
+          - option "Luminosity"
+        - generic [ref=f9e365]: Opacity
+        - slider "Opacity" [ref=f9e366] [cursor=pointer]: "1"
+      - generic [ref=f9e367]:
+        - tablist [ref=f9e368]:
+          - tab "Controls" [selected] [ref=f9e369] [cursor=pointer]
+          - tab "Effects" [ref=f9e370] [cursor=pointer]
+        - tabpanel "Controls" [ref=f9e371]:
+          - generic [ref=f9e375]:
+            - generic [ref=f9e1080]:
+              - generic [ref=f9e1081]:
+                - generic [ref=f9e1082]: Count
+                - generic [ref=f9e1083]:
+                  - button "Bind audio for count" [ref=f9e1084] [cursor=pointer]
+                  - button "Learn MIDI for count" [disabled]
+                  - button "Add keyframe for count" [ref=f9e1086] [cursor=pointer]
+              - slider "Count" [ref=f9e1090] [cursor=pointer]: "500"
+            - generic [ref=f9e1091]:
+              - generic [ref=f9e1092]:
+                - generic [ref=f9e1093]: Size
+                - generic [ref=f9e1094]:
+                  - button "Bind audio for size" [ref=f9e1095] [cursor=pointer]
+                  - button "Learn MIDI for size" [disabled]
+                  - button "Add keyframe for size" [ref=f9e1097] [cursor=pointer]
+              - slider "Size" [ref=f9e1101] [cursor=pointer]: "3"
+            - generic [ref=f9e1102]:
+              - generic [ref=f9e1103]:
+                - generic [ref=f9e1104]: A
+                - generic [ref=f9e1105]:
+                  - button "Bind audio for a" [ref=f9e1106] [cursor=pointer]
+                  - button "Learn MIDI for a" [disabled]
+                  - button "Add keyframe for a" [ref=f9e1108] [cursor=pointer]
+              - slider "A" [ref=f9e1112] [cursor=pointer]: "3"
+            - generic [ref=f9e1113]:
+              - generic [ref=f9e1114]:
+                - generic [ref=f9e1115]: B
+                - generic [ref=f9e1116]:
+                  - button "Bind audio for b" [ref=f9e1117] [cursor=pointer]
+                  - button "Learn MIDI for b" [disabled]
+                  - button "Add keyframe for b" [ref=f9e1119] [cursor=pointer]
+              - slider "B" [ref=f9e1123] [cursor=pointer]: "2"
+            - generic [ref=f9e1124]:
+              - generic [ref=f9e1125]:
+                - generic [ref=f9e1126]: M
+                - generic [ref=f9e1127]:
+                  - button "Bind audio for m" [ref=f9e1128] [cursor=pointer]
+                  - button "Learn MIDI for m" [disabled]
+                  - button "Add keyframe for m" [ref=f9e1130] [cursor=pointer]
+              - slider "M" [ref=f9e1134] [cursor=pointer]: "3"
+            - generic [ref=f9e1135]:
+              - generic [ref=f9e1136]:
+                - generic [ref=f9e1137]: "N"
+                - generic [ref=f9e1138]:
+                  - button "Bind audio for n" [ref=f9e1139] [cursor=pointer]
+                  - button "Learn MIDI for n" [disabled]
+                  - button "Add keyframe for n" [ref=f9e1141] [cursor=pointer]
+              - slider "N" [ref=f9e1145] [cursor=pointer]: "2"
+            - generic [ref=f9e1146]:
+              - generic [ref=f9e1147]:
+                - generic [ref=f9e1148]: Frequency
+                - generic [ref=f9e1149]:
+                  - button "Bind audio for freq" [ref=f9e1150] [cursor=pointer]
+                  - button "Learn MIDI for freq" [disabled]
+                  - button "Add keyframe for freq" [ref=f9e1152] [cursor=pointer]
+              - slider "Frequency" [ref=f9e1156] [cursor=pointer]: "1.5"
+            - generic [ref=f9e1157]:
+              - generic [ref=f9e1158]:
+                - generic [ref=f9e1159]: Density
+                - generic [ref=f9e1160]:
+                  - button "Bind audio for density" [ref=f9e1161] [cursor=pointer]
+                  - button "Learn MIDI for density" [disabled]
+                  - button "Add keyframe for density" [ref=f9e1163] [cursor=pointer]
+              - slider "Density" [ref=f9e1167] [cursor=pointer]: "10"
+    - button "Resize panel" [ref=f9e431]

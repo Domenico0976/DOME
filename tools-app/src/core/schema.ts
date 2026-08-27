@@ -4,7 +4,7 @@ export const SCHEMA_VERSION = 2
 
 export const TOOL_PARAM_MIGRATIONS: Record<
   string,
-  (params: Record<string, number | string>) => Record<string, number | string>
+  (params: Record<string, number | string | string[]>) => Record<string, number | string | string[]>
 > = {}
 
 export function hslToHex(h: number, s: number, l: number): string {

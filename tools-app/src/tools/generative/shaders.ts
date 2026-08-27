@@ -13,6 +13,13 @@ function getRenderer(gl: WebGL2RenderingContext): ToolRenderer {
   return renderer
 }
 
+function hexToRgb(hex: string): number[] {
+  const m = /^#?([0-9a-f]{6})$/i.exec(hex.trim())
+  if (!m) return [1, 1, 1]
+  const int = parseInt(m[1], 16)
+  return [(int >> 16) & 255, (int >> 8) & 255, int & 255].map(v => v / 255)
+}
+
 export const shadersTool: ToolDef = {
   id: 'shaders',
   kind: 'generative',
@@ -20,12 +27,13 @@ export const shadersTool: ToolDef = {
   label: 'Shaders',
   icon: 'aperture',
   category: 'Generative',
-  defaultParams: { noiseScale: 4, warp: 1, colorShift: 0, complexity: 4 },
+  defaultParams: { noiseScale: 4, warp: 1, colorShift: 0, complexity: 4, color: '#ffffff' },
   controls: [
     { param: 'noiseScale', label: 'Scale', kind: 'slider', min: 1, max: 10, step: 0.5 },
     { param: 'warp', label: 'Warp', kind: 'slider', min: 0, max: 5, step: 0.1 },
     { param: 'colorShift', label: 'Hue Shift', kind: 'slider', min: 0, max: 1, step: 0.05 },
     { param: 'complexity', label: 'Complexity', kind: 'slider', min: 1, max: 8, step: 0.5 },
+    { param: 'color', label: 'Color', kind: 'color' },
   ],
   render: (ctx, frame, item, audio, _stack, gl) => {
     if (!gl) return
@@ -51,6 +59,7 @@ export const shadersTool: ToolDef = {
       u_warp: Number(params.warp ?? 1),
       u_colorShift: Number(params.colorShift ?? 0),
       u_complexity: Number(params.complexity ?? 4),
+      u_color: hexToRgb(String(params.color ?? '#ffffff')),
       u_audioLevel: audio.level,
       u_res: [w, h]
     })

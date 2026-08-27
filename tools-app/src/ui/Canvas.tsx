@@ -21,6 +21,7 @@ export function Canvas() {
   const aspect = useProjectStore((s) => s.canvas.aspect)
   const quality = useProjectStore((s) => s.canvas.quality)
   const stackLen = useProjectStore((s) => s.stack.length)
+  const stack = useProjectStore((s) => s.stack)
   const effectCount = useProjectStore(
     (s) => s.stack.reduce((n, i) => n + (i.effects?.filter((e) => e.enabled).length ?? 0), 0),
   )
@@ -111,7 +112,7 @@ export function Canvas() {
     }
     raf = requestAnimationFrame(loop)
     return () => cancelAnimationFrame(raf)
-  }, [aspect, quality, stackLen, effectCount])
+  }, [aspect, quality, stack, stackLen, effectCount])
 
   return (
     <div id="stage-canvas" data-testid="stage-canvas" className="relative inline-block">

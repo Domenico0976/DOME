@@ -19,7 +19,7 @@ export interface ProjectStore extends ProjectState {
   moveTool: (uid: string, dir: 'up' | 'down') => void
   toggleSwitch: (uid: string) => void
   switchTool: (uid: string, newToolId: string) => void
-  updateParam: (uid: string, param: string, value: number | string) => void
+  updateParam: (uid: string, param: string, value: number | string | string[]) => void
   addAudioBinding: (uid: string, binding: AudioBinding) => void
   removeAudioBinding: (uid: string, param: string) => void
   addAutomation: (uid: string, automation: Automation) => void

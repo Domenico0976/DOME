@@ -16,7 +16,7 @@ const TEMPLATES: { name: string; stack: unknown[] }[] = [
   {
     name: 'Particles',
     stack: [
-      { toolId: 'particles', toolVersion: '1.0.0', params: { density: 160 }, audio: [], automations: [], hidden: false },
+      { toolId: 'particles', toolVersion: '3.0.0', params: { density: 160 }, audio: [], automations: [], hidden: false },
     ],
   },
   {

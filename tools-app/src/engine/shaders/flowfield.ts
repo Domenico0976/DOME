@@ -6,7 +6,7 @@ uniform vec2 u_res;
 uniform float u_time;
 uniform float u_scale;
 uniform float u_speed;
-uniform float u_color;
+uniform vec3 u_color;
 uniform float u_particles;
 uniform float u_trails;
 uniform float u_audioLevel;
@@ -70,7 +70,8 @@ void main() {
   density = clamp(density, 0.0, 1.0);
 
   float angle = atan(flow.y, flow.x);
-  vec3 col = 0.5 + 0.5 * cos(6.28 * (angle / 6.28 + u_color + t * 0.02 + vec3(0.0, 0.33, 0.67)));
+  vec3 col = 0.5 + 0.5 * cos(6.28 * (angle / 6.28 + t * 0.02 + vec3(0.0, 0.33, 0.67)));
+  col *= u_color;
   col *= density * (0.8 + u_audioLevel * 0.4);
 
   float alpha = density * u_trails;

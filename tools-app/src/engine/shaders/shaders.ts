@@ -8,6 +8,7 @@ uniform float u_noiseScale;
 uniform float u_warp;
 uniform float u_colorShift;
 uniform float u_complexity;
+uniform vec3 u_color;
 uniform float u_audioLevel;
 in vec2 v_uv;
 out vec4 fragColor;
@@ -80,6 +81,7 @@ void main() {
   vec3 voronoiColor = 0.5 + 0.5 * cos(6.28 * (v * 0.4 + u_colorShift + vec3(0.1, 0.4, 0.7)));
 
   vec3 col = mix(noiseColor, voronoiColor, voronoiEdge * 0.35);
+  col *= u_color;
   col *= 0.85 + u_audioLevel * 0.3;
 
   fragColor = vec4(col, 1.0);

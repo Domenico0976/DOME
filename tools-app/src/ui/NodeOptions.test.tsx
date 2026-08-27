@@ -81,4 +81,64 @@ describe('NodeOptions', () => {
     const { getByText } = render(<NodeOptions item={useProjectStore.getState().stack[0]} />)
     expect(getByText('1 keys')).toBeTruthy()
   })
+
+  test('shows Colors section header for generative tools', () => {
+    const { getByText } = render(<NodeOptions item={useProjectStore.getState().stack[0]} />)
+    expect(getByText('Colors')).toBeTruthy()
+  })
+
+  test('renders default single color fallback', () => {
+    const item = useProjectStore.getState().stack[0]
+    expect(item.params.colors).toBeUndefined()
+  })
+
+  test('adds a color when Add Color is clicked', () => {
+    const item = useProjectStore.getState().stack[0]
+    useProjectStore.getState().updateParam(item.uid, 'colors', ['#000000', '#ffffff'])
+    const { getByLabelText } = render(<NodeOptions item={useProjectStore.getState().stack[0]} />)
+    fireEvent.click(getByLabelText('Add Color (2/4)'))
+    const colors = useProjectStore.getState().stack[0].params.colors as string[]
+    expect(colors).toHaveLength(3)
+    expect(colors[2]).toBe('#000000')
+  })
+
+  test('removes a color when Remove is clicked', () => {
+    const item = useProjectStore.getState().stack[0]
+    useProjectStore.getState().updateParam(item.uid, 'colors', ['#ff0000', '#00ff00'])
+    const { getAllByLabelText } = render(<NodeOptions item={useProjectStore.getState().stack[0]} />)
+    fireEvent.click(getAllByLabelText('Remove color 2')[0])
+    const colors = useProjectStore.getState().stack[0].params.colors as string[]
+    expect(colors).toHaveLength(1)
+    expect(colors[0]).toBe('#ff0000')
+  })
+
+  test('disables remove button when only one color remains', () => {
+    const item = useProjectStore.getState().stack[0]
+    useProjectStore.getState().updateParam(item.uid, 'colors', ['#ff0000', '#00ff00'])
+    const { getByLabelText, rerender } = render(<NodeOptions item={useProjectStore.getState().stack[0]} />)
+    fireEvent.click(getByLabelText('Remove color 2'))
+    rerender(<NodeOptions item={useProjectStore.getState().stack[0]} />)
+    const storeItem = useProjectStore.getState().stack[0]
+    expect(storeItem.params.colors).toHaveLength(1)
+    useProjectStore.getState().updateParam(storeItem.uid, 'colors', ['#ff0000', '#0000ff'])
+    rerender(<NodeOptions item={useProjectStore.getState().stack[0]} />)
+    fireEvent.click(getByLabelText('Remove color 2'))
+    rerender(<NodeOptions item={useProjectStore.getState().stack[0]} />)
+    const singleItem = useProjectStore.getState().stack[0]
+    useProjectStore.getState().updateParam(singleItem.uid, 'colors', ['#ff0000', '#0000ff'])
+    render(<NodeOptions item={useProjectStore.getState().stack[0]} />)
+    const removeBtn = getByLabelText('Remove color 2') as HTMLButtonElement
+    fireEvent.click(removeBtn)
+    const finalItem = useProjectStore.getState().stack[0]
+    expect(finalItem.params.colors).toHaveLength(1)
+    expect(finalItem.params.colors).toEqual(['#ff0000'])
+  })
+
+  test('disables add button at max colors', () => {
+    const item = useProjectStore.getState().stack[0]
+    useProjectStore.getState().updateParam(item.uid, 'colors', ['#rr', '#gg', '#bb', '#dd'])
+    const { getByLabelText } = render(<NodeOptions item={useProjectStore.getState().stack[0]} />)
+    const addBtn = getByLabelText('Add Color (4/4)') as HTMLButtonElement
+    expect(addBtn.disabled).toBe(true)
+  })
 })

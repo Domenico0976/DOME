@@ -8,6 +8,7 @@ uniform float u_count;
 uniform float u_speed;
 uniform float u_radius;
 uniform float u_hueShift;
+uniform vec3 u_color;
 uniform float u_audioLevel;
 in vec2 v_uv;
 out vec4 fragColor;
@@ -69,6 +70,7 @@ void main() {
   float rim = smoothstep(0.3, 0.0, minDist) * 0.5;
 
   vec3 col = cellColor * edge * (0.6 + inner * 0.4) + cellColor * glow + vec3(0.8, 0.9, 1.0) * rim;
+  col *= u_color;
   col *= 0.85 + u_audioLevel * 0.3;
 
   float alpha = max(edge, glow);

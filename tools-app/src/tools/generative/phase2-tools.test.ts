@@ -6,7 +6,7 @@ import type { Frame, AudioFrame, StackRenderContext, StackItem } from '../../cor
 const frame: Frame = { timeSec: 1, dt: 1 / 60, bpm: 120 }
 const audio: AudioFrame = { bass: 0, mid: 0, treble: 0, level: 0, spectrum: new Float32Array(0), bpm: 120 }
 const stack: StackRenderContext = { width: 200, height: 200, quality: 'high' }
-const mk = (uid: string, toolId: string, params: Record<string, number | string>): StackItem => ({
+const mk = (uid: string, toolId: string, params: Record<string, number | string | string[]>): StackItem => ({
   uid,
   toolId,
   toolVersion: '1.0.0',

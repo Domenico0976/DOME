@@ -1,0 +1,141 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]:
+        - link [ref=e7] [cursor=pointer]:
+          - /url: https://paper.design/
+        - link [ref=e11] [cursor=pointer]:
+          - /url: https://github.com/paper-design/shaders
+      - generic [ref=e14]:
+        - heading "Paper Shaders" [level=1] [ref=e15]
+        - paragraph [ref=e16]: ultra fast zero-dependency shaders for your designs
+      - generic [ref=e17]:
+        - generic [ref=e18]: npm i @paper-design/shaders-react
+        - button "Copy to clipboard" [ref=e20] [cursor=pointer]
+    - main [ref=e26]:
+      - generic [ref=e27]:
+        - heading "Image Filters" [level=2] [ref=e28]
+        - generic [ref=e29]:
+          - link "Preview of paper texture paper texture" [ref=e30] [cursor=pointer]:
+            - /url: /paper-texture
+            - img "Preview of paper texture" [ref=e32]
+            - generic [ref=e33]: paper texture
+          - link "Preview of fluted glass fluted glass" [ref=e34] [cursor=pointer]:
+            - /url: /fluted-glass
+            - img "Preview of fluted glass" [ref=e36]
+            - generic [ref=e37]: fluted glass
+          - link "Preview of water water" [ref=e38] [cursor=pointer]:
+            - /url: /water
+            - img "Preview of water" [ref=e40]
+            - generic [ref=e41]: water
+          - link "Preview of image dithering image dithering" [ref=e42] [cursor=pointer]:
+            - /url: /image-dithering
+            - img "Preview of image dithering" [ref=e44]
+            - generic [ref=e45]: image dithering
+          - link "Preview of halftone dots halftone dots" [ref=e46] [cursor=pointer]:
+            - /url: /halftone-dots
+            - img "Preview of halftone dots" [ref=e48]
+            - generic [ref=e49]: halftone dots
+          - link "Preview of halftone cmyk halftone cmyk" [ref=e50] [cursor=pointer]:
+            - /url: /halftone-cmyk
+            - img "Preview of halftone cmyk" [ref=e52]
+            - generic [ref=e53]: halftone cmyk
+          - link "Preview of lens distortion lens distortion" [ref=e54] [cursor=pointer]:
+            - /url: /lens-distortion
+            - img "Preview of lens distortion" [ref=e56]
+            - generic [ref=e57]: lens distortion
+      - generic [ref=e58]:
+        - heading "Logo Animations" [level=2] [ref=e59]
+        - generic [ref=e60]:
+          - link "Preview of heatmap heatmap" [ref=e61] [cursor=pointer]:
+            - /url: /heatmap
+            - img "Preview of heatmap" [ref=e63]
+            - generic [ref=e64]: heatmap
+          - link "Preview of liquid metal liquid metal" [ref=e65] [cursor=pointer]:
+            - /url: /liquid-metal
+            - img "Preview of liquid metal" [ref=e67]
+            - generic [ref=e68]: liquid metal
+          - link "Preview of gem smoke gem smoke" [ref=e69] [cursor=pointer]:
+            - /url: /gem-smoke
+            - img "Preview of gem smoke" [ref=e71]
+            - generic [ref=e72]: gem smoke
+      - generic [ref=e73]:
+        - heading "Effects" [level=2] [ref=e74]
+        - generic [ref=e75]:
+          - link "Preview of mesh gradient mesh gradient" [ref=e76] [cursor=pointer]:
+            - /url: /mesh-gradient
+            - img "Preview of mesh gradient" [ref=e78]
+            - generic [ref=e79]: mesh gradient
+          - link "Preview of static mesh gradient static mesh gradient" [ref=e80] [cursor=pointer]:
+            - /url: /static-mesh-gradient
+            - img "Preview of static mesh gradient" [ref=e82]
+            - generic [ref=e83]: static mesh gradient
+          - link "Preview of static radial gradient static radial gradient" [ref=e84] [cursor=pointer]:
+            - /url: /static-radial-gradient
+            - img "Preview of static radial gradient" [ref=e86]
+            - generic [ref=e87]: static radial gradient
+          - link "dithering" [ref=e88] [cursor=pointer]:
+            - /url: /dithering
+          - link "grain gradient" [ref=e93] [cursor=pointer]:
+            - /url: /grain-gradient
+          - link "Preview of dot orbit dot orbit" [ref=e98] [cursor=pointer]:
+            - /url: /dot-orbit
+            - img "Preview of dot orbit" [ref=e100]
+            - generic [ref=e101]: dot orbit
+          - link "Preview of dot grid dot grid" [ref=e102] [cursor=pointer]:
+            - /url: /dot-grid
+            - img "Preview of dot grid" [ref=e104]
+            - generic [ref=e105]: dot grid
+          - link "Preview of warp warp" [ref=e106] [cursor=pointer]:
+            - /url: /warp
+            - img "Preview of warp" [ref=e108]
+            - generic [ref=e109]: warp
+          - link "Preview of spiral spiral" [ref=e110] [cursor=pointer]:
+            - /url: /spiral
+            - img "Preview of spiral" [ref=e112]
+            - generic [ref=e113]: spiral
+          - link "Preview of swirl swirl" [ref=e114] [cursor=pointer]:
+            - /url: /swirl
+            - img "Preview of swirl" [ref=e116]
+            - generic [ref=e117]: swirl
+          - link "Preview of waves waves" [ref=e118] [cursor=pointer]:
+            - /url: /waves
+            - img "Preview of waves" [ref=e120]
+            - generic [ref=e121]: waves
+          - link "Preview of neuro noise neuro noise" [ref=e122] [cursor=pointer]:
+            - /url: /neuro-noise
+            - img "Preview of neuro noise" [ref=e124]
+            - generic [ref=e125]: neuro noise
+          - link "Preview of perlin perlin" [ref=e126] [cursor=pointer]:
+            - /url: /perlin-noise
+            - img "Preview of perlin" [ref=e128]
+            - generic [ref=e129]: perlin
+          - link "Preview of simplex noise simplex noise" [ref=e130] [cursor=pointer]:
+            - /url: /simplex-noise
+            - img "Preview of simplex noise" [ref=e132]
+            - generic [ref=e133]: simplex noise
+          - link "Preview of voronoi voronoi" [ref=e134] [cursor=pointer]:
+            - /url: /voronoi
+            - img "Preview of voronoi" [ref=e136]
+            - generic [ref=e137]: voronoi
+          - link "Preview of pulsing border pulsing border" [ref=e138] [cursor=pointer]:
+            - /url: /pulsing-border
+            - img "Preview of pulsing border" [ref=e140]
+            - generic [ref=e141]: pulsing border
+          - link "Preview of metaballs metaballs" [ref=e142] [cursor=pointer]:
+            - /url: /metaballs
+            - img "Preview of metaballs" [ref=e144]
+            - generic [ref=e145]: metaballs
+          - link "Preview of color panels color panels" [ref=e146] [cursor=pointer]:
+            - /url: /color-panels
+            - img "Preview of color panels" [ref=e148]
+            - generic [ref=e149]: color panels
+          - link "Preview of smoke ring smoke ring" [ref=e150] [cursor=pointer]:
+            - /url: /smoke-ring
+            - img "Preview of smoke ring" [ref=e152]
+            - generic [ref=e153]: smoke ring
+          - link "Preview of god rays god rays" [ref=e154] [cursor=pointer]:
+            - /url: /god-rays
+            - img "Preview of god rays" [ref=e156]
+            - generic [ref=e157]: god rays
+  - alert [ref=e158]

@@ -13,6 +13,13 @@ function getRenderer(gl: WebGL2RenderingContext): ToolRenderer {
   return renderer
 }
 
+function hexToRgb(hex: string): number[] {
+  const m = /^#?([0-9a-f]{6})$/i.exec(hex.trim())
+  if (!m) return [0, 0, 0]
+  const int = parseInt(m[1], 16)
+  return [(int >> 16) & 255, (int >> 8) & 255, int & 255].map(v => v / 255)
+}
+
 export const tunnelTool: ToolDef = {
   id: 'tunnel',
   kind: 'generative',
@@ -20,12 +27,13 @@ export const tunnelTool: ToolDef = {
   label: 'Tunnel',
   icon: 'circle-dashed',
   category: 'Generative',
-  defaultParams: { speed: 1, twist: 3, density: 1, hueShift: 0 },
+  defaultParams: { speed: 1, twist: 3, density: 1, hueShift: 0, color: '#000000' },
   controls: [
     { param: 'speed', label: 'Speed', kind: 'slider', min: 0.1, max: 3, step: 0.1 },
     { param: 'twist', label: 'Twist', kind: 'slider', min: 1, max: 10, step: 0.5 },
     { param: 'density', label: 'Density', kind: 'slider', min: 0.1, max: 2, step: 0.05 },
     { param: 'hueShift', label: 'Hue Shift', kind: 'slider', min: 0, max: 1, step: 0.05 },
+    { param: 'color', label: 'Color', kind: 'color' },
   ],
   render: (ctx, frame, item, audio, _stack, gl) => {
     if (!gl) return
@@ -49,6 +57,7 @@ export const tunnelTool: ToolDef = {
       u_twist: Number(p.twist ?? 3),
       u_density: Number(p.density ?? 1),
       u_hueShift: Number(p.hueShift ?? 0),
+      u_color: hexToRgb(String(p.color ?? '#000000')),
       u_audioLevel: audio.level,
       u_res: [w, h]
     })

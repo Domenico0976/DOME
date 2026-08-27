@@ -1,0 +1,147 @@
+- generic [ref=f9e3]:
+  - complementary [ref=f9e4]:
+    - generic "DOME" [ref=f9e5]: D
+    - generic [ref=f9e6]:
+      - button "Undo" [ref=f9e315] [cursor=pointer]
+      - button "Redo" [disabled]
+  - generic [ref=f9e7]:
+    - banner [ref=f9e8]:
+      - combobox "Preview quality" [ref=f9e9] [cursor=pointer]:
+        - generic: High · 1080p
+      - generic [ref=f9e12]:
+        - button "Tips" [ref=f9e13] [cursor=pointer]
+        - button "Support" [ref=f9e17] [cursor=pointer]
+        - button "Templates" [ref=f9e25] [cursor=pointer]
+        - button "Save project" [ref=f9e30] [cursor=pointer]: Unsaved changes
+        - button "Sign in" [ref=f9e35] [cursor=pointer]
+        - button "Toggle theme" [ref=f9e36] [cursor=pointer]
+    - main [ref=f9e43]:
+      - generic [ref=f9e49]:
+        - button "Zoom out" [ref=f9e50] [cursor=pointer]: "-"
+        - generic [ref=f9e51]: 100%
+        - button "Zoom in" [ref=f9e52] [cursor=pointer]: +
+        - button "Reset zoom" [ref=f9e53] [cursor=pointer]: Reset
+    - generic "Export menu" [ref=f9e56]:
+      - button "Export PNG" [ref=f9e57] [cursor=pointer]
+      - button "Instagram" [ref=f9e61] [cursor=pointer]
+      - button "Spotify Canvas" [ref=f9e65] [cursor=pointer]
+      - button "Fullscreen" [ref=f9e69] [cursor=pointer]
+      - button "Reset" [ref=f9e75] [cursor=pointer]
+    - contentinfo "Audio Reactivity Panel" [ref=f9e79]:
+      - generic [ref=f9e80]:
+        - generic [ref=f9e81]:
+          - button "Play/Pause" [ref=f9e82] [cursor=pointer]
+          - button "Stop" [ref=f9e85] [cursor=pointer]
+          - button "Loop" [ref=f9e88] [cursor=pointer]
+        - generic [ref=f9e94]:
+          - button "Load" [ref=f9e95] [cursor=pointer]
+          - button [ref=f9e99] [cursor=pointer]
+          - button [ref=f9e103] [cursor=pointer]
+        - generic [ref=f9e106]:
+          - generic [ref=f9e107]:
+            - generic [ref=f9e108]: BPM
+            - spinbutton "BPM" [ref=f9e109]: "120"
+          - button "Tap" [ref=f9e110] [cursor=pointer]
+      - generic [ref=f9e111]:
+        - generic [ref=f9e113] [cursor=pointer]
+        - generic [ref=f9e114]:
+          - slider [ref=f9e118]
+          - generic [ref=f9e119]: 0.0s / 60.0s
+      - generic [ref=f9e120]:
+        - generic [ref=f9e121]:
+          - generic [ref=f9e122]:
+            - generic [ref=f9e123]: Presets
+            - button "Add Preset" [ref=f9e124] [cursor=pointer]
+          - generic [ref=f9e126]: No presets
+        - generic [ref=f9e128]:
+          - generic [ref=f9e129]: B
+          - generic [ref=f9e132]: M
+          - generic [ref=f9e135]: T
+          - generic [ref=f9e138]: L
+  - generic [ref=f9e141]:
+    - generic [ref=f9e142]:
+      - generic [ref=f9e143]: Stack
+      - button "Add tool to stack" [ref=f9e144] [cursor=pointer]
+    - generic [ref=f9e319]:
+      - generic [ref=f9e320]: Ferrofluid
+      - generic [ref=f9e326]:
+        - button "Switch tool" [ref=f9e327] [cursor=pointer]
+        - button "Hide node" [ref=f9e334] [cursor=pointer]
+        - button "Remove node" [ref=f9e340] [cursor=pointer]
+        - button "Add tool above" [ref=f9e344] [cursor=pointer]
+  - generic [ref=f9e346]:
+    - generic [ref=f9e347]:
+      - generic [ref=f9e348]: Node Options
+      - button "Close panel" [ref=f9e349] [cursor=pointer]
+    - generic [ref=f9e354]:
+      - heading "Ferrofluid" [level=3] [ref=f9e361]
+      - generic [ref=f9e362]:
+        - generic [ref=f9e363]: Blend mode
+        - combobox "Blend mode" [ref=f9e364]:
+          - option "Normal" [selected]
+          - option "Darken"
+          - option "Multiply"
+          - option "Plus darker"
+          - option "Color burn"
+          - option "Lighten"
+          - option "Screen"
+          - option "Plus lighter"
+          - option "Color dodge"
+          - option "Overlay"
+          - option "Soft light"
+          - option "Hard light"
+          - option "Difference"
+          - option "Exclusion"
+          - option "Hue"
+          - option "Saturation"
+          - option "Color"
+          - option "Luminosity"
+        - generic [ref=f9e365]: Opacity
+        - slider "Opacity" [ref=f9e366] [cursor=pointer]: "1"
+      - generic [ref=f9e367]:
+        - tablist [ref=f9e368]:
+          - tab "Controls" [selected] [ref=f9e369] [cursor=pointer]
+          - tab "Effects" [ref=f9e370] [cursor=pointer]
+        - tabpanel "Controls" [ref=f9e371]:
+          - generic [ref=f9e375]:
+            - generic [ref=f9e376]:
+              - generic [ref=f9e377]:
+                - generic [ref=f9e378]: Feed
+                - generic [ref=f9e379]:
+                  - button "Bind audio for feed" [ref=f9e380] [cursor=pointer]
+                  - button "Learn MIDI for feed" [disabled]
+                  - button "Add keyframe for feed" [ref=f9e382] [cursor=pointer]
+              - slider "Feed" [ref=f9e386] [cursor=pointer]: "0.055"
+            - generic [ref=f9e387]:
+              - generic [ref=f9e388]:
+                - generic [ref=f9e389]: Kill
+                - generic [ref=f9e390]:
+                  - button "Bind audio for kill" [ref=f9e391] [cursor=pointer]
+                  - button "Learn MIDI for kill" [disabled]
+                  - button "Add keyframe for kill" [ref=f9e393] [cursor=pointer]
+              - slider "Kill" [ref=f9e397] [cursor=pointer]: "0.062"
+            - generic [ref=f9e398]:
+              - generic [ref=f9e399]:
+                - generic [ref=f9e400]: Speed
+                - generic [ref=f9e401]:
+                  - button "Bind audio for speed" [ref=f9e402] [cursor=pointer]
+                  - button "Learn MIDI for speed" [disabled]
+                  - button "Add keyframe for speed" [ref=f9e404] [cursor=pointer]
+              - slider "Speed" [ref=f9e408] [cursor=pointer]: "1"
+            - generic [ref=f9e409]:
+              - generic [ref=f9e410]:
+                - generic [ref=f9e411]: Attractors
+                - generic [ref=f9e412]:
+                  - button "Bind audio for attractors" [ref=f9e413] [cursor=pointer]
+                  - button "Learn MIDI for attractors" [disabled]
+                  - button "Add keyframe for attractors" [ref=f9e415] [cursor=pointer]
+              - slider "Attractors" [ref=f9e419] [cursor=pointer]: "5"
+            - generic [ref=f9e420]:
+              - generic [ref=f9e421]:
+                - generic [ref=f9e422]: Accent
+                - generic [ref=f9e423]:
+                  - button "Bind audio for accent" [ref=f9e424] [cursor=pointer]
+                  - button "Learn MIDI for accent" [disabled]
+                  - button "Add keyframe for accent" [ref=f9e426] [cursor=pointer]
+              - textbox "Accent" [ref=f9e430] [cursor=pointer]: "#f2790c"
+    - button "Resize panel" [ref=f9e431]

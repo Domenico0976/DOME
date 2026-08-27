@@ -9,6 +9,7 @@ uniform float u_blobs;
 uniform float u_speed;
 uniform float u_roughness;
 uniform float u_hueShift;
+uniform vec3 u_color;
 uniform float u_audioLevel;
 in vec2 v_uv;
 out vec4 fragColor;
@@ -83,6 +84,7 @@ void main() {
   vec3 base = mix(chrome, warm, fresnel * 0.35);
 
   vec3 col = base * (0.15 + lighting * 0.5 + spec * 0.5) + vec3(1.0) * spec * 0.4 + fresnel * 0.25;
+  col *= u_color;
   col *= 0.85 + u_audioLevel * 0.3;
 
   float alpha = smoothstep(0.0, 0.08, edge);

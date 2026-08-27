@@ -12,6 +12,7 @@ uniform float u_density;
 uniform float u_count;
 uniform float u_size;
 uniform float u_hueShift;
+uniform vec3 u_color;
 uniform float u_audioLevel;
 in vec2 v_uv;
 out vec4 fragColor;
@@ -62,6 +63,7 @@ void main() {
   vec3 baseCol = vec3(0.2, 0.8, 1.0);
   baseCol = 0.5 + 0.5 * cos(6.28 * (baseCol + u_hueShift + vec3(0.0, 0.33, 0.67)));
   vec3 col = vec3(density) * baseCol;
+  col *= u_color;
   col *= 0.8 + u_audioLevel * 0.4;
 
   fragColor = vec4(col, density);

@@ -45,7 +45,7 @@ export type StackItem = {
   uid: string
   toolId: string
   toolVersion: string
-  params: Record<string, number | string>
+  params: Record<string, number | string | string[]>
   audio: AudioBinding[]
   automations: Automation[]
   hidden: boolean
@@ -85,7 +85,7 @@ export type ToolDef = {
   label: string
   icon: string
   category: 'Inputs' | 'Generative' | 'Filters'
-  defaultParams: Record<string, number | string>
+  defaultParams: Record<string, number | string | string[]>
   controls: ControlDef[]
   render(ctx: CanvasRenderingContext2D, frame: Frame, item: StackItem, audio: AudioFrame, stack: StackRenderContext, gl?: WebGL2RenderingContext): void
 }

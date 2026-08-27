@@ -1,0 +1,211 @@
+- generic [active] [ref=f1e1]:
+  - generic [ref=f1e4]:
+    - generic [ref=f1e5]:
+      - link [ref=f1e6] [cursor=pointer]:
+        - /url: /
+      - link [ref=f1e18] [cursor=pointer]:
+        - /url: https://github.com/paper-design/shaders
+    - main [ref=f1e21]:
+      - heading "Liquid Metal" [level=1] [ref=f1e24]
+      - generic [ref=f1e30]:
+        - generic [ref=f1e31]:
+          - generic [ref=f1e32]:
+            - heading "Installation" [level=2] [ref=f1e33]
+            - button "Copy to clipboard" [ref=f1e34] [cursor=pointer]
+          - generic [ref=f1e40]: npm i @paper-design/shaders-react
+        - generic [ref=f1e41]:
+          - generic [ref=f1e42]:
+            - heading "Code" [level=2] [ref=f1e43]
+            - button "Copy to clipboard" [ref=f1e44] [cursor=pointer]
+          - generic [ref=f1e50]: "import { LiquidMetal } from '@paper-design/shaders-react'; <LiquidMetal width={1280} height={720} image=\"https://shaders.paper.design/images/logos/diamond.svg\" colorBack=\"#aaaaac\" colorTint=\"#ffffff\" shape=\"diamond\" repetition={2} softness={0.1} shiftRed={0.3} shiftBlue={0.3} distortion={0.07} contour={0.4} angle={70} speed={1} scale={0.6} fit=\"contain\" />"
+        - generic [ref=f1e53]:
+          - heading "Shader Props" [level=2] [ref=f1e54]
+          - table [ref=f1e56]:
+            - rowgroup [ref=f1e57]:
+              - row [ref=f1e58]:
+                - columnheader "Name" [ref=f1e59]
+                - columnheader "Description" [ref=f1e60]
+                - columnheader "Type" [ref=f1e61]
+                - columnheader "Values" [ref=f1e62]
+            - rowgroup [ref=f1e63]:
+              - row [ref=f1e64]:
+                - cell "colorBack" [ref=f1e65]
+                - cell "Background color" [ref=f1e66]
+                - cell [ref=f1e67]:
+                  - code [ref=f1e68]: string
+                - cell "Hex, RGB, or HSL color" [ref=f1e69]
+              - row [ref=f1e70]:
+                - cell "colorTint" [ref=f1e71]
+                - cell "Overlay color (color burn blending used)" [ref=f1e72]
+                - cell [ref=f1e73]:
+                  - code [ref=f1e74]: string
+                - cell "Hex, RGB, or HSL color" [ref=f1e75]
+              - row [ref=f1e76]:
+                - cell "image" [ref=f1e77]
+                - cell "An optional image used as an effect mask. A transparent background is required." [ref=f1e78]
+                - cell [ref=f1e79]:
+                  - code [ref=f1e80]: HTMLImageElement | string
+                - cell "Image object or URL" [ref=f1e81]
+              - row [ref=f1e82]:
+                - cell "shape" [ref=f1e83]
+                - cell "The predefined shape used as an effect mask (none = the effect fills the canvas), needs no image" [ref=f1e84]
+                - cell [ref=f1e85]:
+                  - code [ref=f1e86]: enum
+                - cell [ref=f1e87]:
+                  - generic [ref=f1e88]:
+                    - generic [ref=f1e89]:
+                      - text: "|"
+                      - code [ref=f1e90]: "\"none\""
+                    - generic [ref=f1e91]:
+                      - text: "|"
+                      - code [ref=f1e92]: "\"circle\""
+                    - generic [ref=f1e93]:
+                      - text: "|"
+                      - code [ref=f1e94]: "\"daisy\""
+                    - generic [ref=f1e95]:
+                      - text: "|"
+                      - code [ref=f1e96]: "\"diamond\""
+                    - generic [ref=f1e97]:
+                      - text: "|"
+                      - code [ref=f1e98]: "\"metaballs\""
+              - row [ref=f1e99]:
+                - cell "repetition" [ref=f1e100]
+                - cell "Density of pattern stripes" [ref=f1e101]
+                - cell [ref=f1e102]:
+                  - code [ref=f1e103]: number
+                - cell "1 to 10" [ref=f1e104]
+              - row [ref=f1e106]:
+                - cell "softness" [ref=f1e107]
+                - cell "Color transition sharpness (0 = hard edge, 1 = smooth gradient)" [ref=f1e108]
+                - cell [ref=f1e109]:
+                  - code [ref=f1e110]: number
+                - cell "0 to 1" [ref=f1e111]
+              - row [ref=f1e113]:
+                - cell "shiftRed" [ref=f1e114]
+                - cell "R-channel dispersion" [ref=f1e115]
+                - cell [ref=f1e116]:
+                  - code [ref=f1e117]: number
+                - cell "-1 to 1" [ref=f1e118]
+              - row [ref=f1e120]:
+                - cell "shiftBlue" [ref=f1e121]
+                - cell "B-channel dispersion" [ref=f1e122]
+                - cell [ref=f1e123]:
+                  - code [ref=f1e124]: number
+                - cell "-1 to 1" [ref=f1e125]
+              - row [ref=f1e127]:
+                - cell "distortion" [ref=f1e128]
+                - cell "Noise distortion over the stripes pattern" [ref=f1e129]
+                - cell [ref=f1e130]:
+                  - code [ref=f1e131]: number
+                - cell "0 to 1" [ref=f1e132]
+              - row [ref=f1e134]:
+                - cell "contour" [ref=f1e135]
+                - cell "Strength of the distortion on the shape edges" [ref=f1e136]
+                - cell [ref=f1e137]:
+                  - code [ref=f1e138]: number
+                - cell "0 to 1" [ref=f1e139]
+              - row [ref=f1e141]:
+                - cell "angle" [ref=f1e142]
+                - cell "The direction of pattern animation (angle relative to the shape)" [ref=f1e143]
+                - cell [ref=f1e144]:
+                  - code [ref=f1e145]: number
+                - cell "0 to 360" [ref=f1e146]
+        - generic [ref=f1e149]:
+          - heading "Common Props" [level=2] [ref=f1e150]
+          - table [ref=f1e152]:
+            - rowgroup [ref=f1e153]:
+              - row [ref=f1e154]:
+                - columnheader "Name" [ref=f1e155]
+                - columnheader "Description" [ref=f1e156]
+                - columnheader "Type" [ref=f1e157]
+                - columnheader "Values" [ref=f1e158]
+            - rowgroup [ref=f1e159]:
+              - row [ref=f1e160]:
+                - cell "speed" [ref=f1e161]
+                - cell "Controls how fast the animation runs. speed=0 stops the animation loop, and speed=1 defines frame prop as timestamp in milliseconds" [ref=f1e162]
+                - cell [ref=f1e163]:
+                  - code [ref=f1e164]: number
+                - cell "—" [ref=f1e165]
+              - row [ref=f1e166]:
+                - cell "frame" [ref=f1e167]
+                - cell "Starting point of the animation. When speed=1, this value is treated as start time in milliseconds (try large frame values to see the difference). When speed=0 frame fully defines the state of static shader" [ref=f1e168]
+                - cell [ref=f1e169]:
+                  - code [ref=f1e170]: number
+                - cell "—" [ref=f1e171]
+              - row [ref=f1e172]:
+                - cell "scale" [ref=f1e173]
+                - cell "Overall zoom level of the graphics" [ref=f1e174]
+                - cell [ref=f1e175]:
+                  - code [ref=f1e176]: number
+                - cell "0.1 to 4" [ref=f1e177]
+              - row [ref=f1e179]:
+                - cell "rotation" [ref=f1e180]
+                - cell "Overall rotation angle of the graphics" [ref=f1e181]
+                - cell [ref=f1e182]:
+                  - code [ref=f1e183]: number
+                - cell "0 to 360" [ref=f1e184]
+              - row [ref=f1e186]:
+                - cell "offsetX" [ref=f1e187]
+                - cell "Horizontal offset of the graphics center" [ref=f1e188]
+                - cell [ref=f1e189]:
+                  - code [ref=f1e190]: number
+                - cell "-1 to 1" [ref=f1e191]
+              - row [ref=f1e193]:
+                - cell "offsetY" [ref=f1e194]
+                - cell "Vertical offset of the graphics center" [ref=f1e195]
+                - cell [ref=f1e196]:
+                  - code [ref=f1e197]: number
+                - cell "-1 to 1" [ref=f1e198]
+              - row [ref=f1e200]:
+                - cell "width" [ref=f1e201]
+                - cell "CSS width style of the shader element" [ref=f1e202]
+                - cell [ref=f1e203]:
+                  - code [ref=f1e204]: number | string
+                - cell "—" [ref=f1e205]
+              - row [ref=f1e206]:
+                - cell "height" [ref=f1e207]
+                - cell "CSS height style of the shader element" [ref=f1e208]
+                - cell [ref=f1e209]:
+                  - code [ref=f1e210]: number | string
+                - cell "—" [ref=f1e211]
+              - row [ref=f1e212]:
+                - cell "fit" [ref=f1e213]
+                - cell "How to fit the rendered shader into the canvas dimensions" [ref=f1e214]
+                - cell [ref=f1e215]:
+                  - code [ref=f1e216]: enum
+                - cell [ref=f1e217]:
+                  - generic [ref=f1e218]:
+                    - generic [ref=f1e219]:
+                      - text: "|"
+                      - code [ref=f1e220]: "\"contain\""
+                    - generic [ref=f1e221]:
+                      - text: "|"
+                      - code [ref=f1e222]: "\"cover\""
+              - row [ref=f1e223]:
+                - cell "originX" [ref=f1e224]
+                - cell "Reference point for positioning world width in the canvas" [ref=f1e225]
+                - cell [ref=f1e226]:
+                  - code [ref=f1e227]: number
+                - cell "0 to 1" [ref=f1e228]
+              - row [ref=f1e230]:
+                - cell "originY" [ref=f1e231]
+                - cell "Reference point for positioning world height in the canvas" [ref=f1e232]
+                - cell [ref=f1e233]:
+                  - code [ref=f1e234]: number
+                - cell "0 to 1" [ref=f1e235]
+              - row [ref=f1e237]:
+                - cell "minPixelRatio" [ref=f1e238]
+                - cell "Minimum pixel ratio to use when rendering the shader (default is 2 for double resolution)" [ref=f1e239]
+                - cell [ref=f1e240]:
+                  - code [ref=f1e241]: number
+                - cell "—" [ref=f1e242]
+              - row [ref=f1e243]:
+                - cell "maxPixelCount" [ref=f1e244]
+                - cell "Maximum pixel count that the shader may process" [ref=f1e245]
+                - cell [ref=f1e246]:
+                  - code [ref=f1e247]: number
+                - cell "—" [ref=f1e248]
+        - generic [ref=f1e249]:
+          - heading "Description" [level=2] [ref=f1e250]
+          - paragraph [ref=f1e251]: Futuristic liquid metal material applied to uploaded logo or abstract shape.
+  - alert [ref=f1e252]

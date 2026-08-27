@@ -6,6 +6,7 @@ uniform float u_time;
 uniform float u_grid;
 uniform float u_noise;
 uniform float u_speed;
+uniform vec3 u_color;
 uniform float u_audioLevel;
 in vec2 v_uv;
 out vec4 fragColor;
@@ -37,6 +38,7 @@ void main() {
   float pulse = 0.5 + 0.5 * sin(t * 2.0 + v * 6.28);
   float threshold = 0.5 - u_audioLevel * 0.15;
   vec3 col = vec3(v > threshold ? 0.95 : 0.08);
+  col *= u_color;
   col *= 0.8 + pulse * 0.2 * u_audioLevel;
   fragColor = vec4(col, 1.0);
 }

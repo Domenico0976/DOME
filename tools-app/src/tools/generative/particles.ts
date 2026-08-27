@@ -13,6 +13,13 @@ function getRenderer(gl: WebGL2RenderingContext): ToolRenderer {
   return renderer
 }
 
+function hexToRgb(hex: string): number[] {
+  const m = /^#?([0-9a-f]{6})$/i.exec(hex.trim())
+  if (!m) return [1, 1, 1]
+  const int = parseInt(m[1], 16)
+  return [(int >> 16) & 255, (int >> 8) & 255, int & 255].map(v => v / 255)
+}
+
 export const particlesTool: ToolDef = {
   id: 'particles',
   kind: 'generative',
@@ -20,7 +27,7 @@ export const particlesTool: ToolDef = {
   label: 'Particles',
   icon: 'sparkles',
   category: 'Generative',
-  defaultParams: { count: 500, size: 3, a: 3, b: 2, m: 3, n: 2, freq: 1.5, density: 10, hueShift: 0 },
+  defaultParams: { count: 500, size: 3, a: 3, b: 2, m: 3, n: 2, freq: 1.5, density: 10, hueShift: 0, color: '#ffffff' },
   controls: [
     { param: 'count', label: 'Modes', kind: 'slider', min: 1, max: 4, step: 1 },
     { param: 'size', label: 'Node Size', kind: 'slider', min: 1, max: 10, step: 0.5 },
@@ -31,6 +38,7 @@ export const particlesTool: ToolDef = {
     { param: 'freq', label: 'Frequency', kind: 'slider', min: 0.5, max: 4, step: 0.1 },
     { param: 'density', label: 'Density', kind: 'slider', min: 1, max: 20, step: 1 },
     { param: 'hueShift', label: 'Hue Shift', kind: 'slider', min: 0, max: 1, step: 0.05 },
+    { param: 'color', label: 'Color', kind: 'color' },
   ],
   render: (ctx, frame, item, audio, _stack, gl) => {
     if (!gl) return
@@ -61,6 +69,7 @@ export const particlesTool: ToolDef = {
       u_count: Number(params.count ?? 500),
       u_size: Number(params.size ?? 3),
       u_hueShift: Number(params.hueShift ?? 0),
+      u_color: hexToRgb(String(params.color ?? '#ffffff')),
       u_audioLevel: audio.level,
       u_res: [w, h]
     })

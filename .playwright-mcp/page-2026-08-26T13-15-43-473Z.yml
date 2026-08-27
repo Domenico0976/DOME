@@ -1,0 +1,139 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic "DOME" [ref=e5]: D
+    - generic [ref=e6]:
+      - button "Undo" [ref=e315] [cursor=pointer]
+      - button "Redo" [disabled]
+  - generic [ref=e7]:
+    - banner [ref=e8]:
+      - combobox "Preview quality" [ref=e9] [cursor=pointer]:
+        - generic: High · 1080p
+      - generic [ref=e12]:
+        - button "Tips" [ref=e13] [cursor=pointer]
+        - button "Support" [ref=e17] [cursor=pointer]
+        - button "Templates" [ref=e25] [cursor=pointer]
+        - button "Save project" [ref=e30] [cursor=pointer]: Unsaved changes
+        - button "Sign in" [ref=e35] [cursor=pointer]
+        - button "Toggle theme" [ref=e36] [cursor=pointer]
+    - main [ref=e43]:
+      - generic [ref=e49]:
+        - button "Zoom out" [ref=e50] [cursor=pointer]: "-"
+        - generic [ref=e51]: 100%
+        - button "Zoom in" [ref=e52] [cursor=pointer]: +
+        - button "Reset zoom" [ref=e53] [cursor=pointer]: Reset
+    - generic "Export menu" [ref=e56]:
+      - button "Export PNG" [ref=e57] [cursor=pointer]
+      - button "Instagram" [ref=e61] [cursor=pointer]
+      - button "Spotify Canvas" [ref=e65] [cursor=pointer]
+      - button "Fullscreen" [ref=e69] [cursor=pointer]
+      - button "Reset" [ref=e75] [cursor=pointer]
+    - contentinfo "Audio Reactivity Panel" [ref=e79]:
+      - generic [ref=e80]:
+        - generic [ref=e81]:
+          - button "Play/Pause" [ref=e82] [cursor=pointer]
+          - button "Stop" [ref=e85] [cursor=pointer]
+          - button "Loop" [ref=e88] [cursor=pointer]
+        - generic [ref=e94]:
+          - button "Load" [ref=e95] [cursor=pointer]
+          - button [ref=e99] [cursor=pointer]
+          - button [ref=e103] [cursor=pointer]
+        - generic [ref=e106]:
+          - generic [ref=e107]:
+            - generic [ref=e108]: BPM
+            - spinbutton "BPM" [ref=e109]: "120"
+          - button "Tap" [ref=e110] [cursor=pointer]
+      - generic [ref=e111]:
+        - generic [ref=e113] [cursor=pointer]
+        - generic [ref=e114]:
+          - slider [ref=e118]
+          - generic [ref=e119]: 0.0s / 60.0s
+      - generic [ref=e120]:
+        - generic [ref=e121]:
+          - generic [ref=e122]:
+            - generic [ref=e123]: Presets
+            - button "Add Preset" [ref=e124] [cursor=pointer]
+          - generic [ref=e126]: No presets
+        - generic [ref=e128]:
+          - generic [ref=e129]: B
+          - generic [ref=e132]: M
+          - generic [ref=e135]: T
+          - generic [ref=e138]: L
+  - generic [ref=e141]:
+    - generic [ref=e142]:
+      - generic [ref=e143]: Stack
+      - button "Add tool to stack" [ref=e144] [cursor=pointer]
+    - generic [ref=e146]:
+      - generic [ref=e601]:
+        - generic [ref=e602]: Plasma
+        - generic [ref=e607]:
+          - button "Switch tool" [ref=e608] [cursor=pointer]
+          - button "Hide node" [ref=e615] [cursor=pointer]
+          - button "Remove node" [ref=e621] [cursor=pointer]
+          - button "Add tool above" [ref=e625] [cursor=pointer]
+      - generic [ref=e319]:
+        - generic [ref=e320]: Ferrofluid
+        - generic [ref=e326]:
+          - button "Switch tool" [ref=e327] [cursor=pointer]
+          - button "Hide node" [ref=e334] [cursor=pointer]
+          - button "Remove node" [ref=e340] [cursor=pointer]
+          - button "Add tool above" [ref=e344] [cursor=pointer]
+  - generic [ref=e346]:
+    - generic [ref=e347]:
+      - generic [ref=e348]: Node Options
+      - button "Close panel" [ref=e349] [cursor=pointer]
+    - generic [ref=e354]:
+      - heading "Plasma" [level=3] [ref=e630]
+      - generic [ref=e362]:
+        - generic [ref=e363]: Blend mode
+        - combobox "Blend mode" [ref=e364]:
+          - option "Normal" [selected]
+          - option "Darken"
+          - option "Multiply"
+          - option "Plus darker"
+          - option "Color burn"
+          - option "Lighten"
+          - option "Screen"
+          - option "Plus lighter"
+          - option "Color dodge"
+          - option "Overlay"
+          - option "Soft light"
+          - option "Hard light"
+          - option "Difference"
+          - option "Exclusion"
+          - option "Hue"
+          - option "Saturation"
+          - option "Color"
+          - option "Luminosity"
+        - generic [ref=e365]: Opacity
+        - slider "Opacity" [ref=e366] [cursor=pointer]: "1"
+      - generic [ref=e367]:
+        - tablist [ref=e368]:
+          - tab "Controls" [selected] [ref=e369] [cursor=pointer]
+          - tab "Effects" [ref=e370] [cursor=pointer]
+        - tabpanel "Controls" [ref=e371]:
+          - generic [ref=e375]:
+            - generic [ref=e631]:
+              - generic [ref=e632]:
+                - generic [ref=e633]: Scale
+                - generic [ref=e634]:
+                  - button "Bind audio for scale" [ref=e635] [cursor=pointer]
+                  - button "Learn MIDI for scale" [disabled]
+                  - button "Add keyframe for scale" [ref=e637] [cursor=pointer]
+              - slider "Scale" [ref=e641] [cursor=pointer]: "8"
+            - generic [ref=e398]:
+              - generic [ref=e399]:
+                - generic [ref=e400]: Speed
+                - generic [ref=e401]:
+                  - button "Bind audio for speed" [ref=e402] [cursor=pointer]
+                  - button "Learn MIDI for speed" [disabled]
+                  - button "Add keyframe for speed" [ref=e404] [cursor=pointer]
+              - slider "Speed" [ref=e408] [cursor=pointer]: "1"
+            - generic [ref=e642]:
+              - generic [ref=e643]:
+                - generic [ref=e644]: Color
+                - generic [ref=e645]:
+                  - button "Bind audio for colorShift" [ref=e646] [cursor=pointer]
+                  - button "Learn MIDI for colorShift" [disabled]
+                  - button "Add keyframe for colorShift" [ref=e648] [cursor=pointer]
+              - slider "Color" [ref=e652] [cursor=pointer]: "0"
+    - button "Resize panel" [ref=e431]
