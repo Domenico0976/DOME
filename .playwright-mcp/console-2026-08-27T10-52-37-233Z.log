@@ -1,0 +1,30 @@
+[     114ms] [INFO] %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold @ http://localhost:5173/tools/node_modules/.vite/deps/chunk-2MWANQQC.js?v=86519fd1:21550
+[   22023ms] [ERROR] Warning: Received `%s` for a non-boolean attribute `%s`.
+
+If you want to write it to the DOM, pass a string instead: %s="%s" or %s={value.toString()}.%s true max-w-md max-w-md true max-w-md 
+    at div
+    at http://localhost:5173/tools/node_modules/.vite/deps/chunk-ICCSOK3K.js?v=86519fd1:45:13
+    at DismissableLayer (http://localhost:5173/tools/node_modules/.vite/deps/chunk-RXBI2TQU.js?v=86519fd1:52:7)
+    at http://localhost:5173/tools/node_modules/.vite/deps/chunk-LHUCU6Z6.js?v=86519fd1:58:11
+    at http://localhost:5173/tools/node_modules/.vite/deps/chunk-ICCSOK3K.js?v=86519fd1:45:13
+    at FocusScope (http://localhost:5173/tools/node_modules/.vite/deps/chunk-RXBI2TQU.js?v=86519fd1:388:7)
+    at DialogContentImpl (http://localhost:5173/tools/node_modules/.vite/deps/@radix-ui_react-dialog.js?v=86519fd1:244:13)
+    at DialogContentModal (http://localhost:5173/tools/node_modules/.vite/deps/@radix-ui_react-dialog.js?v=86519fd1:165:58)
+    at Presence (http://localhost:5173/tools/node_modules/.vite/deps/chunk-7SNYG3IJ.js?v=86519fd1:40:11)
+    at DialogContent (http://localhost:5173/tools/node_modules/.vite/deps/@radix-ui_react-dialog.js?v=86519fd1:156:64)
+    at http://localhost:5173/tools/node_modules/.vite/deps/chunk-LHUCU6Z6.js?v=86519fd1:58:11
+    at http://localhost:5173/tools/node_modules/.vite/deps/chunk-ICCSOK3K.js?v=86519fd1:45:13
+    at Portal (http://localhost:5173/tools/node_modules/.vite/deps/chunk-RXBI2TQU.js?v=86519fd1:610:24)
+    at Presence (http://localhost:5173/tools/node_modules/.vite/deps/chunk-7SNYG3IJ.js?v=86519fd1:40:11)
+    at Provider (http://localhost:5173/tools/node_modules/.vite/deps/chunk-JJM7P5JL.js?v=86519fd1:99:15)
+    at DialogPortal (http://localhost:5173/tools/node_modules/.vite/deps/@radix-ui_react-dialog.js?v=86519fd1:117:11)
+    at _c3 (http://localhost:5173/tools/src/components/ui/dialog.tsx:49:12)
+    at Provider (http://localhost:5173/tools/node_modules/.vite/deps/chunk-JJM7P5JL.js?v=86519fd1:99:15)
+    at Dialog (http://localhost:5173/tools/node_modules/.vite/deps/@radix-ui_react-dialog.js?v=86519fd1:53:5)
+    at Templates (http://localhost:5173/tools/src/ui/Templates.tsx?t=1787826496655:48:23)
+    at div
+    at header
+    at TopBar (http://localhost:5173/tools/src/ui/TopBar.tsx?t=1787826496655:48:19)
+    at div
+    at div
+    at App (http://localhost:5173/tools/src/App.tsx?t=1787826496655:30:37) @ http://localhost:5173/tools/node_modules/.vite/deps/chunk-2MWANQQC.js?v=86519fd1:520
