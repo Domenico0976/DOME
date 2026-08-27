@@ -8,6 +8,7 @@ uniform float u_morph;
 uniform float u_blobs;
 uniform float u_speed;
 uniform float u_roughness;
+uniform float u_hueShift;
 uniform float u_audioLevel;
 in vec2 v_uv;
 out vec4 fragColor;
@@ -77,6 +78,8 @@ void main() {
   float n2 = fbm(uv * 3.5 - time * 0.1);
   vec3 chrome = mix(vec3(0.72, 0.78, 0.85), vec3(0.95, 0.97, 1.0), n1 * 0.6);
   vec3 warm = mix(vec3(0.9, 0.6, 0.3), vec3(1.0, 0.85, 0.7), n2);
+  chrome = 0.5 + 0.5 * cos(6.28 * (chrome + u_hueShift + vec3(0.0, 0.33, 0.67)));
+  warm = 0.5 + 0.5 * cos(6.28 * (warm + u_hueShift + vec3(0.0, 0.33, 0.67)));
   vec3 base = mix(chrome, warm, fresnel * 0.35);
 
   vec3 col = base * (0.15 + lighting * 0.5 + spec * 0.5) + vec3(1.0) * spec * 0.4 + fresnel * 0.25;

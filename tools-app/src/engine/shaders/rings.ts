@@ -8,6 +8,7 @@ uniform float u_count;
 uniform float u_thick;
 uniform float u_warp;
 uniform float u_speed;
+uniform float u_hueShift;
 uniform float u_audioLevel;
 in vec2 v_uv;
 out vec4 fragColor;
@@ -49,7 +50,7 @@ void main() {
   float rings = sin((r + w * 0.1) * u_count * 10.0 - t * 2.0);
   float mask = smoothstep(u_thick, 0.0, abs(rings));
 
-  vec3 col = 0.5 + 0.5 * cos(6.28 * (r * 0.3 + t * 0.02 + vec3(0.0, 0.33, 0.67)));
+  vec3 col = 0.5 + 0.5 * cos(6.28 * (r * 0.3 + t * 0.02 + u_hueShift + vec3(0.0, 0.33, 0.67)));
   col *= mask * (0.8 + u_audioLevel * 0.4);
 
   float alpha = smoothstep(0.0, 0.05, mask);

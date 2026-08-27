@@ -24,7 +24,7 @@ export const shadersTool: ToolDef = {
   controls: [
     { param: 'noiseScale', label: 'Scale', kind: 'slider', min: 1, max: 10, step: 0.5 },
     { param: 'warp', label: 'Warp', kind: 'slider', min: 0, max: 5, step: 0.1 },
-    { param: 'colorShift', label: 'Color', kind: 'slider', min: 0, max: 1, step: 0.05 },
+    { param: 'colorShift', label: 'Hue Shift', kind: 'slider', min: 0, max: 1, step: 0.05 },
     { param: 'complexity', label: 'Complexity', kind: 'slider', min: 1, max: 8, step: 0.5 },
   ],
   render: (ctx, frame, item, audio, _stack, gl) => {

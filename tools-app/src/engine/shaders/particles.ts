@@ -11,6 +11,7 @@ uniform float u_freq;
 uniform float u_density;
 uniform float u_count;
 uniform float u_size;
+uniform float u_hueShift;
 uniform float u_audioLevel;
 in vec2 v_uv;
 out vec4 fragColor;
@@ -58,7 +59,9 @@ void main() {
   float nodeSize = u_size * 0.01;
   density = smoothstep(nodeSize, nodeSize + 0.3, density);
 
-  vec3 col = vec3(density) * vec3(0.2, 0.8, 1.0);
+  vec3 baseCol = vec3(0.2, 0.8, 1.0);
+  baseCol = 0.5 + 0.5 * cos(6.28 * (baseCol + u_hueShift + vec3(0.0, 0.33, 0.67)));
+  vec3 col = vec3(density) * baseCol;
   col *= 0.8 + u_audioLevel * 0.4;
 
   fragColor = vec4(col, density);

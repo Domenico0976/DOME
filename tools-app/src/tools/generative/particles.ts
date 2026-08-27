@@ -20,16 +20,17 @@ export const particlesTool: ToolDef = {
   label: 'Particles',
   icon: 'sparkles',
   category: 'Generative',
-  defaultParams: { count: 500, size: 3, a: 3, b: 2, m: 3, n: 2, freq: 1.5, density: 10 },
+  defaultParams: { count: 500, size: 3, a: 3, b: 2, m: 3, n: 2, freq: 1.5, density: 10, hueShift: 0 },
   controls: [
-    { param: 'count', label: 'Count', kind: 'slider', min: 50, max: 2000, step: 10 },
-    { param: 'size', label: 'Size', kind: 'slider', min: 1, max: 8, step: 0.5 },
-    { param: 'a', label: 'A', kind: 'slider', min: 1, max: 6, step: 1 },
-    { param: 'b', label: 'B', kind: 'slider', min: 1, max: 6, step: 1 },
-    { param: 'm', label: 'M', kind: 'slider', min: 1, max: 8, step: 1 },
-    { param: 'n', label: 'N', kind: 'slider', min: 1, max: 8, step: 1 },
+    { param: 'count', label: 'Modes', kind: 'slider', min: 1, max: 4, step: 1 },
+    { param: 'size', label: 'Node Size', kind: 'slider', min: 1, max: 10, step: 0.5 },
+    { param: 'a', label: 'Amplitude A', kind: 'slider', min: 1, max: 6, step: 1 },
+    { param: 'b', label: 'Amplitude B', kind: 'slider', min: 1, max: 6, step: 1 },
+    { param: 'm', label: 'Freq X', kind: 'slider', min: 1, max: 8, step: 1 },
+    { param: 'n', label: 'Freq Y', kind: 'slider', min: 1, max: 8, step: 1 },
     { param: 'freq', label: 'Frequency', kind: 'slider', min: 0.5, max: 4, step: 0.1 },
-    { param: 'density', label: 'Density', kind: 'slider', min: 1, max: 20, step: 1 }
+    { param: 'density', label: 'Density', kind: 'slider', min: 1, max: 20, step: 1 },
+    { param: 'hueShift', label: 'Hue Shift', kind: 'slider', min: 0, max: 1, step: 0.05 },
   ],
   render: (ctx, frame, item, audio, _stack, gl) => {
     if (!gl) return
@@ -59,6 +60,7 @@ export const particlesTool: ToolDef = {
       u_density: Number(params.density ?? 10),
       u_count: Number(params.count ?? 500),
       u_size: Number(params.size ?? 3),
+      u_hueShift: Number(params.hueShift ?? 0),
       u_audioLevel: audio.level,
       u_res: [w, h]
     })

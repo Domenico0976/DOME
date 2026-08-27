@@ -7,6 +7,7 @@ uniform float u_time;
 uniform float u_speed;
 uniform float u_density;
 uniform float u_zoom;
+uniform float u_hueShift;
 uniform float u_audioLevel;
 in vec2 v_uv;
 out vec4 fragColor;
@@ -44,6 +45,7 @@ void main() {
   vec3 warm = vec3(1.0, 0.95, 0.8);
   vec3 cool = vec3(0.7, 0.8, 1.0);
   vec3 starCol = mix(warm, cool, hash(floor(p + t)) * 0.6);
+  starCol = 0.5 + 0.5 * cos(6.28 * (starCol + u_hueShift + vec3(0.0, 0.33, 0.67)));
 
   vec3 col = starCol * s * (0.8 + n * 0.4 + u_audioLevel * 0.3) + vec3(0.02, 0.03, 0.08);
   float alpha = max(s, 0.05);

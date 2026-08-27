@@ -20,11 +20,12 @@ export const tunnelTool: ToolDef = {
   label: 'Tunnel',
   icon: 'circle-dashed',
   category: 'Generative',
-  defaultParams: { speed: 1, twist: 3, density: 1 },
+  defaultParams: { speed: 1, twist: 3, density: 1, hueShift: 0 },
   controls: [
     { param: 'speed', label: 'Speed', kind: 'slider', min: 0.1, max: 3, step: 0.1 },
     { param: 'twist', label: 'Twist', kind: 'slider', min: 1, max: 10, step: 0.5 },
     { param: 'density', label: 'Density', kind: 'slider', min: 0.1, max: 2, step: 0.05 },
+    { param: 'hueShift', label: 'Hue Shift', kind: 'slider', min: 0, max: 1, step: 0.05 },
   ],
   render: (ctx, frame, item, audio, _stack, gl) => {
     if (!gl) return
@@ -47,6 +48,7 @@ export const tunnelTool: ToolDef = {
       u_speed: Number(p.speed ?? 1),
       u_twist: Number(p.twist ?? 3),
       u_density: Number(p.density ?? 1),
+      u_hueShift: Number(p.hueShift ?? 0),
       u_audioLevel: audio.level,
       u_res: [w, h]
     })

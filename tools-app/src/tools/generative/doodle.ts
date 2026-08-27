@@ -19,16 +19,18 @@ export const doodleTool: ToolDef = {
   label: 'Doodle',
   icon: 'brush',
   category: 'Generative',
-  defaultParams: { strokes: 24, jitter: 2, width: 3 },
+  defaultParams: { strokes: 24, jitter: 2, width: 3, color: '#ffffff' },
   controls: [
     { param: 'strokes', label: 'Strokes', kind: 'slider', min: 4, max: 80, step: 1 },
     { param: 'jitter', label: 'Jitter', kind: 'slider', min: 0.5, max: 6, step: 0.5 },
     { param: 'width', label: 'Width', kind: 'slider', min: 1, max: 10, step: 0.5 },
+    { param: 'color', label: 'Stroke Color', kind: 'color' },
   ],
   render(ctx, frame, item, audio, stack) {
     const strokeN = Math.round(Number(item.params.strokes ?? 24))
     const jitter = Number(item.params.jitter ?? 2)
     const width = Number(item.params.width ?? 3)
+    const color = String(item.params.color ?? '#ffffff')
 
     let ink = inkCache.get(item.uid)
     const sig = `${strokeN}`
@@ -55,7 +57,12 @@ export const doodleTool: ToolDef = {
 
     ctx.save()
     if ('filter' in ctx) ctx.filter = 'blur(0.6px)'
-    ctx.strokeStyle = `rgba(255,255,255,${0.75 + audio.treble * 0.2})`
+    const alpha = 0.75 + audio.treble * 0.2
+    const hex = color.replace('#', '')
+    const r = parseInt(hex.substring(0, 2), 16)
+    const g = parseInt(hex.substring(2, 4), 16)
+    const b = parseInt(hex.substring(4, 6), 16)
+    ctx.strokeStyle = `rgba(${r},${g},${b},${alpha})`
     const wobble = Math.sin(frame.timeSec * 0.8) * 0.4
     for (const pts of ink.strokes) {
       ctx.lineWidth = width + wobble

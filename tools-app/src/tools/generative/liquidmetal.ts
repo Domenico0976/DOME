@@ -19,12 +19,13 @@ export const liquidMetalTool: ToolDef = {
   label: 'Liquid Metal',
   icon: 'gem',
   category: 'Generative',
-  defaultParams: { blobs: 5, morph: 0.5, speed: 1, roughness: 0.3 },
+  defaultParams: { blobs: 5, morph: 0.5, speed: 1, roughness: 0.3, hueShift: 0 },
   controls: [
     { param: 'blobs', label: 'Blobs', kind: 'slider', min: 2, max: 8, step: 1 },
     { param: 'morph', label: 'Morph', kind: 'slider', min: 0.1, max: 1, step: 0.05 },
     { param: 'speed', label: 'Speed', kind: 'slider', min: 0.1, max: 3, step: 0.1 },
     { param: 'roughness', label: 'Roughness', kind: 'slider', min: 0, max: 1, step: 0.1 },
+    { param: 'hueShift', label: 'Hue Shift', kind: 'slider', min: 0, max: 1, step: 0.05 },
   ],
   render: (_ctx, frame, item, audio, _stack, gl) => {
     if (!gl) return
@@ -50,6 +51,7 @@ export const liquidMetalTool: ToolDef = {
       u_blobs: Number(params.blobs ?? 5),
       u_speed: Number(params.speed ?? 1),
       u_roughness: Number(params.roughness ?? 0.3),
+      u_hueShift: Number(params.hueShift ?? 0),
       u_audioLevel: audio.level,
       u_res: [w, h]
     })

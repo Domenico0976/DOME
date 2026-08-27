@@ -7,6 +7,7 @@ uniform float u_time;
 uniform float u_count;
 uniform float u_speed;
 uniform float u_radius;
+uniform float u_hueShift;
 uniform float u_audioLevel;
 in vec2 v_uv;
 out vec4 fragColor;
@@ -62,7 +63,7 @@ void main() {
   float cellNoise = noise(uv * 8.0 + closestId * 10.0 + t * 0.05);
   float hue = fract(closestId * 0.1618 + cellNoise * 0.15 + t * 0.01);
 
-  vec3 cellColor = 0.5 + 0.5 * cos(6.28 * (hue + vec3(0.0, 0.33, 0.67)));
+  vec3 cellColor = 0.5 + 0.5 * cos(6.28 * (hue + u_hueShift + vec3(0.0, 0.33, 0.67)));
 
   float glow = exp(-field * 0.8) * 0.4;
   float rim = smoothstep(0.3, 0.0, minDist) * 0.5;

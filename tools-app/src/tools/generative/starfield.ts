@@ -20,11 +20,12 @@ export const starfieldTool: ToolDef = {
   label: 'Starfield',
   icon: 'star',
   category: 'Generative',
-  defaultParams: { speed: 1, density: 1, zoom: 3 },
+  defaultParams: { speed: 1, density: 1, zoom: 3, hueShift: 0 },
   controls: [
     { param: 'speed', label: 'Speed', kind: 'slider', min: 0.1, max: 3, step: 0.1 },
     { param: 'density', label: 'Density', kind: 'slider', min: 0.1, max: 3, step: 0.05 },
     { param: 'zoom', label: 'Zoom', kind: 'slider', min: 1, max: 10, step: 0.5 },
+    { param: 'hueShift', label: 'Hue Shift', kind: 'slider', min: 0, max: 1, step: 0.05 },
   ],
   render: (ctx, frame, item, audio, _stack, gl) => {
     if (!gl) return
@@ -47,6 +48,7 @@ export const starfieldTool: ToolDef = {
       u_speed: Number(p.speed ?? 1),
       u_density: Number(p.density ?? 1),
       u_zoom: Number(p.zoom ?? 3),
+      u_hueShift: Number(p.hueShift ?? 0),
       u_audioLevel: audio.level,
       u_res: [w, h]
     })

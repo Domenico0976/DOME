@@ -7,6 +7,7 @@ uniform float u_time;
 uniform float u_speed;
 uniform float u_twist;
 uniform float u_density;
+uniform float u_hueShift;
 uniform float u_audioLevel;
 in vec2 v_uv;
 out vec4 fragColor;
@@ -54,7 +55,7 @@ void main() {
 
   float fade = exp(-r * 1.8) * u_density;
 
-  vec3 col = 0.5 + 0.5 * cos(6.28 * (n * 0.5 + vec3(0.0, 0.33, 0.67) + t * 0.02));
+  vec3 col = 0.5 + 0.5 * cos(6.28 * (n * 0.5 + u_hueShift + vec3(0.0, 0.33, 0.67) + t * 0.02));
   col = mix(col * 0.3, col * 1.2, ring);
   col *= fade;
   col *= 0.85 + u_audioLevel * 0.3;

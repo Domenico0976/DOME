@@ -24,7 +24,7 @@ export const plasmaTool: ToolDef = {
   controls: [
     { param: 'scale', label: 'Scale', kind: 'slider', min: 2, max: 20, step: 1 },
     { param: 'speed', label: 'Speed', kind: 'slider', min: 0.1, max: 3, step: 0.1 },
-    { param: 'colorShift', label: 'Color', kind: 'slider', min: 0, max: 1, step: 0.05 },
+    { param: 'colorShift', label: 'Hue Shift', kind: 'slider', min: 0, max: 1, step: 0.05 },
   ],
   render: (ctx, frame, item, audio, _stack, gl) => {
     if (!gl) return
