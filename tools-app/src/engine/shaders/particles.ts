@@ -107,6 +107,10 @@ float hash(vec2 p) {
   return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
 }
 
+float hash(vec3 p) {
+  return fract(sin(dot(p, vec3(127.1, 311.7, 74.2))) * 43758.5453);
+}
+
 float noise(vec3 p) {
   vec3 i = floor(p);
   vec3 f = fract(p);
