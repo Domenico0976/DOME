@@ -6,8 +6,9 @@ uniform vec2 u_res;
 uniform float u_time;
 uniform float u_noiseScale;
 uniform float u_warp;
-uniform float u_colorShift;
 uniform float u_complexity;
+uniform float u_speed;
+uniform int u_preset;
 uniform vec3 u_color;
 uniform float u_audioLevel;
 in vec2 v_uv;
@@ -32,7 +33,7 @@ float fbm(vec2 p) {
   float v = 0.0;
   float a = 0.5;
   vec2 shift = vec2(100.0);
-  for (int i = 0; i < 5; i++) {
+  for (int i = 0; i < 6; i++) {
     v += a * noise(p);
     p = p * 2.0 + shift;
     a *= 0.5;
@@ -63,25 +64,61 @@ float voronoi(vec2 x, float t) {
   return md;
 }
 
+// Preset domain warpers
+vec2 warp_turbulence(vec2 p, float t, float warp) {
+  return domainWarp(p + t * 0.05, warp);
+}
+
+vec2 warp_wind(vec2 p, float t, float warp) {
+  vec2 q = vec2(fbm(p + vec2(0.0, 0.0)), fbm(p + vec2(5.2, 1.3)));
+  return p + warp * vec2(sin(p.y * 2.0 + t), cos(p.x * 2.0 + t * 0.7));
+}
+
+vec2 warp_pulse(vec2 p, float t, float warp) {
+  float pulse = 0.5 + 0.5 * sin(t * 1.5);
+  return domainWarp(p * (1.0 + pulse * warp * 0.5), warp * (0.5 + pulse * 0.5));
+}
+
+vec2 warp_spiral(vec2 p, float t, float warp) {
+  float angle = t * 0.3 + length(p) * warp;
+  float c = cos(angle);
+  float s = sin(angle);
+  vec2 spiraled = vec2(p.x * c - p.y * s, p.x * s + p.y * c);
+  return domainWarp(spiraled + t * 0.05, warp * 0.8);
+}
+
+vec2 warp_breathe(vec2 p, float t, float warp) {
+  float breath = 0.5 + 0.5 * sin(t * 0.8);
+  vec2 q = vec2(fbm(p + breath * warp), fbm(p + vec2(3.0, 7.0) + breath * warp));
+  return p + warp * 0.5 * vec2(sin(q.x + t * 0.2), cos(q.y + t * 0.15));
+}
+
 void main() {
   vec2 uv = v_uv;
   float aspect = u_res.x / max(u_res.y, 1.0);
   uv.x *= aspect;
-  float t = u_time * (0.8 + u_audioLevel * 0.3);
+  float t = u_time * u_speed * (0.8 + u_audioLevel * 0.3);
   float scale = u_noiseScale * (1.0 + u_audioLevel * 0.15);
 
   vec2 p = uv * scale;
-  vec2 warped = domainWarp(p + t * 0.08, u_warp);
+
+  vec2 warped;
+  if (u_preset == 0) warped = warp_turbulence(p, t, u_warp);
+  else if (u_preset == 1) warped = warp_wind(p, t, u_warp);
+  else if (u_preset == 2) warped = warp_pulse(p, t, u_warp);
+  else if (u_preset == 3) warped = warp_spiral(p, t, u_warp);
+  else warped = warp_breathe(p, t, u_warp);
+
   float n = fbm(warped * u_complexity);
 
   float v = voronoi(uv * 3.0 + t * 0.05, t);
   float voronoiEdge = smoothstep(0.02, 0.08, v);
 
-  vec3 noiseColor = 0.5 + 0.5 * cos(6.28 * (n * 0.6 + u_colorShift + vec3(0.0, 0.33, 0.67) + t * 0.015));
-  vec3 voronoiColor = 0.5 + 0.5 * cos(6.28 * (v * 0.4 + u_colorShift + vec3(0.1, 0.4, 0.7)));
+  vec3 noiseColor = 0.5 + 0.5 * cos(6.28 * (n * 0.6 + vec3(0.0, 0.33, 0.67) + t * 0.015));
+  vec3 voronoiColor = 0.5 + 0.5 * cos(6.28 * (v * 0.4 + vec3(0.1, 0.4, 0.7)));
 
   vec3 col = mix(noiseColor, voronoiColor, voronoiEdge * 0.35);
-  col *= u_color;
+  col = mix(col, u_color, 0.3);
   col *= 0.85 + u_audioLevel * 0.3;
 
   fragColor = vec4(col, 1.0);

@@ -27,12 +27,13 @@ export const shadersTool: ToolDef = {
   label: 'Shaders',
   icon: 'aperture',
   category: 'Generative',
-  defaultParams: { noiseScale: 4, warp: 1, colorShift: 0, complexity: 4, color: '#ffffff' },
+  defaultParams: { noiseScale: 4, warp: 1, complexity: 4, speed: 1, preset: 0, color: '#8b5cf6' },
   controls: [
+    { param: 'preset', label: 'Motion', kind: 'select', options: ['turbulence', 'wind', 'pulse', 'spiral', 'breathe'] },
     { param: 'noiseScale', label: 'Scale', kind: 'slider', min: 1, max: 10, step: 0.5 },
     { param: 'warp', label: 'Warp', kind: 'slider', min: 0, max: 5, step: 0.1 },
-    { param: 'colorShift', label: 'Hue Shift', kind: 'slider', min: 0, max: 1, step: 0.05 },
     { param: 'complexity', label: 'Complexity', kind: 'slider', min: 1, max: 8, step: 0.5 },
+    { param: 'speed', label: 'Speed', kind: 'slider', min: 0.1, max: 3, step: 0.1 },
     { param: 'color', label: 'Color', kind: 'color' },
   ],
   render: (ctx, frame, item, audio, _stack, gl) => {
@@ -52,14 +53,18 @@ export const shadersTool: ToolDef = {
     if (!prog) return
 
     const time = frame.timeSec
+    const presetNames = ['turbulence', 'wind', 'pulse', 'spiral', 'breathe']
+    const presetIndex = presetNames.indexOf(String(params.preset ?? 'turbulence'))
+    const preset = presetIndex >= 0 ? presetIndex : 0
 
     r.renderToCanvas(prog, fbos.texA, w, h, {
       u_time: time,
       u_noiseScale: Number(params.noiseScale ?? 4),
       u_warp: Number(params.warp ?? 1),
-      u_colorShift: Number(params.colorShift ?? 0),
       u_complexity: Number(params.complexity ?? 4),
-      u_color: hexToRgb(String(params.color ?? '#ffffff')),
+      u_speed: Number(params.speed ?? 1),
+      u_preset: preset,
+      u_color: hexToRgb(String(params.color ?? '#8b5cf6')),
       u_audioLevel: audio.level,
       u_res: [w, h]
     })

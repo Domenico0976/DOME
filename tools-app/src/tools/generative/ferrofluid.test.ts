@@ -30,7 +30,7 @@ function stubCtx(): CanvasRenderingContext2D {
   ) as unknown as CanvasRenderingContext2D
 }
 
-describe('ferrofluid 2.0.0', () => {
+describe('ferrofluid 3.0.0', () => {
   test('renders without throwing on proxy ctx (fallback path in jsdom)', () => {
     expect(() => ferrofluidTool.render(stubCtx(), frame, item, audio, stack)).not.toThrow()
   })

@@ -27,12 +27,14 @@ export const plasmaTool: ToolDef = {
   label: 'Plasma',
   icon: 'droplets',
   category: 'Generative',
-  defaultParams: { scale: 8, speed: 1, colorShift: 0, color: '#ffffff' },
+  defaultParams: { scale: 8, speed: 1, roughness: 0.5, baseColor: '#1a0a2e', accentColor: '#ff6b35', color: '#ffffff' },
   controls: [
     { param: 'scale', label: 'Scale', kind: 'slider', min: 2, max: 20, step: 1 },
     { param: 'speed', label: 'Speed', kind: 'slider', min: 0.1, max: 3, step: 0.1 },
-    { param: 'colorShift', label: 'Hue Shift', kind: 'slider', min: 0, max: 1, step: 0.05 },
-    { param: 'color', label: 'Color', kind: 'color' },
+    { param: 'roughness', label: 'Roughness', kind: 'slider', min: 0, max: 1, step: 0.05 },
+    { param: 'baseColor', label: 'Base Color', kind: 'color' },
+    { param: 'accentColor', label: 'Accent Color', kind: 'color' },
+    { param: 'color', label: 'Overlay', kind: 'color' },
   ],
   render: (ctx, frame, item, audio, _stack, gl) => {
     if (!gl) return
@@ -54,7 +56,9 @@ export const plasmaTool: ToolDef = {
       u_time: frame.timeSec,
       u_scale: Number(p.scale ?? 8),
       u_speed: Number(p.speed ?? 1),
-      u_colorShift: Number(p.colorShift ?? 0),
+      u_roughness: Number(p.roughness ?? 0.5),
+      u_baseColor: hexToRgb(String(p.baseColor ?? '#1a0a2e')),
+      u_accentColor: hexToRgb(String(p.accentColor ?? '#ff6b35')),
       u_color: hexToRgb(String(p.color ?? '#ffffff')),
       u_audioLevel: audio.level,
       u_res: [w, h]

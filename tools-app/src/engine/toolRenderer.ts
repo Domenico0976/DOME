@@ -159,7 +159,7 @@ export class ToolRenderer {
     outputFBO: WebGLFramebuffer,
     width: number,
     height: number,
-    uniforms: Record<string, number | number[]> = {}
+    uniforms: Record<string, number | number[] | WebGLTexture> = {}
   ): void {
     const gl = this.gl
     gl.bindFramebuffer(gl.FRAMEBUFFER, outputFBO)
@@ -174,6 +174,7 @@ export class ToolRenderer {
     gl.uniform1i(gl.getUniformLocation(program, 'u_tex'), 0)
 
     // Set uniforms
+    let texUnit = 1
     for (const [name, value] of Object.entries(uniforms)) {
       const loc = gl.getUniformLocation(program, name)
       if (loc === null) continue
@@ -183,6 +184,11 @@ export class ToolRenderer {
         if (value.length === 2) gl.uniform2fv(loc, value)
         else if (value.length === 3) gl.uniform3fv(loc, value)
         else if (value.length === 4) gl.uniform4fv(loc, value)
+      } else if (value instanceof WebGLTexture) {
+        gl.activeTexture(gl.TEXTURE0 + texUnit)
+        gl.bindTexture(gl.TEXTURE_2D, value)
+        gl.uniform1i(loc, texUnit)
+        texUnit++
       }
     }
 

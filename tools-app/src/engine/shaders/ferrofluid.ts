@@ -30,24 +30,29 @@ uniform vec2 u_res;
 uniform float u_time;
 uniform float u_feed;
 uniform float u_audioLevel;
+uniform int u_attractors;
+uniform float u_attractorSeed;
 in vec2 v_uv;
 out vec4 fragColor;
+
+float hash(float n) { return fract(sin(n) * 43758.5453); }
 
 void main() {
   vec2 uv = v_uv;
   vec4 prev = texture(u_tex, uv);
-  
+
   float feed = u_feed * (1.0 + u_audioLevel * 0.3);
   float blob = 0.0;
-  for (int i = 0; i < 4; i++) {
+  for (int i = 0; i < 12; i++) {
+    if (i >= u_attractors) break;
     vec2 center = vec2(
-      0.5 + 0.3 * cos(u_time * 0.5 + float(i) * 1.57),
-      0.5 + 0.3 * sin(u_time * 0.7 + float(i) * 1.57)
+      0.5 + 0.4 * sin(float(i) * 1.5 + u_time * 0.1 + hash(u_attractorSeed + float(i)) * 6.28),
+      0.5 + 0.4 * cos(float(i) * 1.3 + u_time * 0.1 + hash(u_attractorSeed + float(i) * 2.7) * 6.28)
     );
     float d = length(uv - center);
-    blob += u_feed * exp(-d * d * 50.0);
+    blob += feed * exp(-d * d * 40.0);
   }
-  
+
   fragColor = vec4(prev.rgb + vec3(blob), 1.0);
 }
 `

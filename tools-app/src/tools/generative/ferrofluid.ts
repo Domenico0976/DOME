@@ -112,11 +112,13 @@ export const ferrofluidTool: ToolDef = {
           u_time: time,
           u_feed: f,
           u_audioLevel: audio.level,
+          u_attractors: targetAttractors,
+          u_attractorSeed: Math.random(),
           u_res: [w, h]
         })
 
-        // Pass 3: Reaction-Diffusion (multiple iterations)
-        const iterations = Math.floor(speed * 3) + 1
+        // Pass 3: Reaction-Diffusion (multiple iterations, speed-driven)
+        const iterations = Math.max(1, Math.min(20, Math.floor(speed * 3) + 1))
         let readTex = fbos.texA
         let writeFbo = fbos.fboB
         for (let i = 0; i < iterations; i++) {
@@ -145,22 +147,33 @@ export const ferrofluidTool: ToolDef = {
     // CPU fallback: Gray-Scott reaction-diffusion
     const size = SIZE_BY_QUALITY[stack.quality]
     const accent = hexToRgbArray(accentHex)
+    const uid = item.uid
 
-    let sim = sims.get(item.uid)
-    if (!sim || sim.size !== size) {
+    let sim = sims.get(uid)
+    if (!sim) {
       const tmp = document.createElement('canvas')
       tmp.width = size
       tmp.height = size
       sim = {
         rd: new ReactionDiffusion(size),
-        rng: mulberry32(strHash(item.uid)),
+        rng: mulberry32(strHash(uid)),
         size,
         seededAttractors: 0,
         img: new ImageData(size, size),
         tmp,
         tctx: tmp.getContext('2d'),
       }
-      sims.set(item.uid, sim)
+      sims.set(uid, sim)
+    }
+
+    if (sim.size !== size) {
+      sim.rd = new ReactionDiffusion(size)
+      sim.size = size
+      sim.seededAttractors = 0
+      for (let k = 0; k < targetAttractors; k++) {
+        sim.rd.stampBlobs(1, sim.rng)
+      }
+      sim.seededAttractors = targetAttractors
     }
 
     while (sim.seededAttractors < targetAttractors) {
@@ -168,7 +181,7 @@ export const ferrofluidTool: ToolDef = {
       sim.seededAttractors += 1
     }
 
-    const iterations = Math.min(20, Math.max(1, Math.round(2 + speed * 4)))
+    const iterations = Math.max(1, Math.min(20, Math.floor(speed * 3) + 1))
     const f = Math.min(0.12, Math.max(0.01, feed * (1 + audio.bass * 0.15)))
     for (let i = 0; i < iterations; i++) sim.rd.step(f, kill)
 

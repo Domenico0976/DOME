@@ -8,7 +8,8 @@ uniform float u_speed;
 uniform float u_density;
 uniform float u_zoom;
 uniform float u_hueShift;
-uniform vec3 u_color;
+uniform vec3 u_starColor;
+uniform vec3 u_nebulaColor;
 uniform float u_audioLevel;
 in vec2 v_uv;
 out vec4 fragColor;
@@ -47,10 +48,13 @@ void main() {
   vec3 cool = vec3(0.7, 0.8, 1.0);
   vec3 starCol = mix(warm, cool, hash(floor(p + t)) * 0.6);
   starCol = 0.5 + 0.5 * cos(6.28 * (starCol + u_hueShift + vec3(0.0, 0.33, 0.67)));
+  starCol *= u_starColor;
 
-  vec3 col = starCol * s * (0.8 + n * 0.4 + u_audioLevel * 0.3) + vec3(0.02, 0.03, 0.08);
-  col *= u_color;
-  float alpha = max(s, 0.05);
+  float nebula = smoothstep(0.4, 0.7, n) * 0.15;
+  vec3 col = starCol * s * (0.8 + n * 0.4 + u_audioLevel * 0.3);
+  col += nebula * u_nebulaColor;
+
+  float alpha = max(s, 0.02);
   fragColor = vec4(col * u_density, alpha);
 }
 `

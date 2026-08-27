@@ -1,3 +1,5 @@
+// Liquid Metal: SDF raymarching with metallic chrome material.
+// Renders animated blob fields as molten metallic reflections with fresnel highlights.
 import { ToolDef } from '../../core/types'
 import { ToolRenderer } from '../../engine/toolRenderer'
 import { LIQUIDMETAL_SDF_FRAG } from '../../engine/shaders/liquidmetal'
@@ -26,14 +28,23 @@ export const liquidMetalTool: ToolDef = {
   label: 'Liquid Metal',
   icon: 'gem',
   category: 'Generative',
-  defaultParams: { blobs: 5, morph: 0.5, speed: 1, roughness: 0.3, hueShift: 0, color: '#000000' },
+  defaultParams: {
+    blobs: 5,
+    morph: 0.5,
+    speed: 1,
+    roughness: 0.3,
+    zoom: 1,
+    rotation: 0,
+    color: '#c0c8d4',
+  },
   controls: [
     { param: 'blobs', label: 'Blobs', kind: 'slider', min: 2, max: 8, step: 1 },
     { param: 'morph', label: 'Morph', kind: 'slider', min: 0.1, max: 1, step: 0.05 },
     { param: 'speed', label: 'Speed', kind: 'slider', min: 0.1, max: 3, step: 0.1 },
-    { param: 'roughness', label: 'Roughness', kind: 'slider', min: 0, max: 1, step: 0.1 },
-    { param: 'hueShift', label: 'Hue Shift', kind: 'slider', min: 0, max: 1, step: 0.05 },
-    { param: 'color', label: 'Color', kind: 'color' },
+    { param: 'roughness', label: 'Roughness', kind: 'slider', min: 0, max: 1, step: 0.05 },
+    { param: 'zoom', label: 'Zoom', kind: 'slider', min: 0.5, max: 3, step: 0.1 },
+    { param: 'rotation', label: 'Rotation', kind: 'slider', min: 0, max: 360, step: 1 },
+    { param: 'color', label: 'Metallic Tint', kind: 'color' },
   ],
   render: (_ctx, frame, item, audio, _stack, gl) => {
     if (!gl) return
@@ -59,8 +70,9 @@ export const liquidMetalTool: ToolDef = {
       u_blobs: Number(params.blobs ?? 5),
       u_speed: Number(params.speed ?? 1),
       u_roughness: Number(params.roughness ?? 0.3),
-      u_hueShift: Number(params.hueShift ?? 0),
-      u_color: hexToRgb(String(params.color ?? '#000000')),
+      u_zoom: Number(params.zoom ?? 1),
+      u_rotation: (Number(params.rotation ?? 0) * Math.PI) / 180,
+      u_color: hexToRgb(String(params.color ?? '#c0c8d4')),
       u_audioLevel: audio.level,
       u_res: [w, h]
     })

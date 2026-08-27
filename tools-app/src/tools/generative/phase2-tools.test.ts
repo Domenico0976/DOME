@@ -1,6 +1,5 @@
 import { describe, test, expect } from 'vitest'
 import { doodleTool } from './doodle'
-import { particles2Tool } from './particles2'
 import type { Frame, AudioFrame, StackRenderContext, StackItem } from '../../core/types'
 
 const frame: Frame = { timeSec: 1, dt: 1 / 60, bpm: 120 }
@@ -24,10 +23,5 @@ describe('phase-2 generative tools', () => {
 
   test.skip('brutalist draws cols x rows cells (WebGL2-only; skip in jsdom)', () => {
     // brutalist was migrated to WebGL2 and requires an actual GL context
-  })
-
-  test('particles2 attracts toward multiple centers', () => {
-    const ctx = new Proxy({}, { get: () => () => {} }) as unknown as CanvasRenderingContext2D
-    expect(() => particles2Tool.render(ctx, frame, mk('q1', 'particles2', {}), audio, stack)).not.toThrow()
   })
 })

@@ -41,6 +41,7 @@ float fbm(vec2 p) {
 }
 
 void main() {
+  if (u_thick <= 0.001) discard;
   vec2 uv = (v_uv - 0.5) * 2.0;
   float aspect = u_res.x / max(u_res.y, 1.0);
   uv.x *= aspect;

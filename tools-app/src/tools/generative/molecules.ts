@@ -27,13 +27,21 @@ export const moleculesTool: ToolDef = {
   label: 'Molecules',
   icon: 'network',
   category: 'Generative',
-  defaultParams: { count: 8, speed: 1, radius: 0.12, hueShift: 0, color: '#ffffff' },
+  defaultParams: {
+    count: 16,
+    speed: 1,
+    radius: 0.04,
+    connectionDist: 0.2,
+    nodeColor: '#4fc3f7',
+    lineColor: '#81d4fa',
+  },
   controls: [
-    { param: 'count', label: 'Count', kind: 'slider', min: 1, max: 16, step: 1 },
+    { param: 'count', label: 'Nodes', kind: 'slider', min: 4, max: 32, step: 1 },
     { param: 'speed', label: 'Speed', kind: 'slider', min: 0.1, max: 3, step: 0.1 },
-    { param: 'radius', label: 'Radius', kind: 'slider', min: 0.02, max: 0.3, step: 0.01 },
-    { param: 'hueShift', label: 'Hue Shift', kind: 'slider', min: 0, max: 1, step: 0.05 },
-    { param: 'color', label: 'Color', kind: 'color' },
+    { param: 'radius', label: 'Node Size', kind: 'slider', min: 0.02, max: 0.3, step: 0.01 },
+    { param: 'connectionDist', label: 'Connection Distance', kind: 'slider', min: 0.1, max: 0.5, step: 0.01 },
+    { param: 'nodeColor', label: 'Node Color', kind: 'color' },
+    { param: 'lineColor', label: 'Line Color', kind: 'color' },
   ],
   render: (ctx, frame, item, audio, _stack, gl) => {
     if (!gl) return
@@ -53,11 +61,12 @@ export const moleculesTool: ToolDef = {
 
     r.renderToCanvas(prog, fbos.texA, w, h, {
       u_time: frame.timeSec,
-      u_count: Number(p.count ?? 8),
+      u_count: Number(p.count ?? 16),
       u_speed: Number(p.speed ?? 1),
-      u_radius: Number(p.radius ?? 0.12),
-      u_hueShift: Number(p.hueShift ?? 0),
-      u_color: hexToRgb(String(p.color ?? '#ffffff')),
+      u_radius: Number(p.radius ?? 0.04),
+      u_connectionDist: Number(p.connectionDist ?? 0.2),
+      u_nodeColor: hexToRgb(String(p.nodeColor ?? '#4fc3f7')),
+      u_lineColor: hexToRgb(String(p.lineColor ?? '#81d4fa')),
       u_audioLevel: audio.level,
       u_res: [w, h]
     })

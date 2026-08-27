@@ -27,12 +27,13 @@ export const tunnelTool: ToolDef = {
   label: 'Tunnel',
   icon: 'circle-dashed',
   category: 'Generative',
-  defaultParams: { speed: 1, twist: 3, density: 1, hueShift: 0, color: '#000000' },
+  defaultParams: { speed: 1, twist: 3, density: 1, shape: 0, horizon: 0, color: '#ff6b35' },
   controls: [
     { param: 'speed', label: 'Speed', kind: 'slider', min: 0.1, max: 3, step: 0.1 },
     { param: 'twist', label: 'Twist', kind: 'slider', min: 1, max: 10, step: 0.5 },
     { param: 'density', label: 'Density', kind: 'slider', min: 0.1, max: 2, step: 0.05 },
-    { param: 'hueShift', label: 'Hue Shift', kind: 'slider', min: 0, max: 1, step: 0.05 },
+    { param: 'shape', label: 'Shape', kind: 'select', options: ['circle', 'triangle', 'square', 'hexagon', 'ellipse', 'rectangle'] },
+    { param: 'horizon', label: 'Horizon', kind: 'slider', min: -1, max: 1, step: 0.05 },
     { param: 'color', label: 'Color', kind: 'color' },
   ],
   render: (ctx, frame, item, audio, _stack, gl) => {
@@ -51,13 +52,18 @@ export const tunnelTool: ToolDef = {
     const prog = r.compileProgram('tunnel', TUNNEL_FRAG)
     if (!prog) return
 
+    const shapeNames = ['circle', 'triangle', 'square', 'hexagon', 'ellipse', 'rectangle']
+    const shapeIndex = shapeNames.indexOf(String(p.shape ?? 'circle'))
+    const shape = shapeIndex >= 0 ? shapeIndex : 0
+
     r.renderToCanvas(prog, fbos.texA, w, h, {
       u_time: frame.timeSec,
       u_speed: Number(p.speed ?? 1),
       u_twist: Number(p.twist ?? 3),
       u_density: Number(p.density ?? 1),
-      u_hueShift: Number(p.hueShift ?? 0),
-      u_color: hexToRgb(String(p.color ?? '#000000')),
+      u_horizon: Number(p.horizon ?? 0),
+      u_shape: shape,
+      u_color: hexToRgb(String(p.color ?? '#ff6b35')),
       u_audioLevel: audio.level,
       u_res: [w, h]
     })
