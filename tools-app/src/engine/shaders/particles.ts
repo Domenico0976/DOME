@@ -10,17 +10,11 @@ uniform float u_m;
 uniform float u_n;
 uniform float u_freq;
 uniform float u_density;
-uniform float u_count;
 uniform float u_size;
 uniform float u_hueShift;
 uniform vec3 u_color;
 uniform vec3 u_bgColor;
 uniform float u_audioLevel;
-// Handle controls
-uniform float u_handleX;
-uniform float u_handleY;
-uniform float u_vibration;
-uniform float u_vibrationArea;
 in vec2 v_uv;
 out vec4 fragColor;
 
@@ -43,45 +37,25 @@ void main() {
   vec2 uv = v_uv;
   float aspect = u_res.x / max(u_res.y, 1.0);
   uv.x *= aspect;
-  vec2 norm = uv * 2.0 - 1.0;
+  vec2 p = uv * 2.0 - 1.0;
   float t = u_time * (1.0 + u_audioLevel * 0.4);
 
-  // Handle X → deformation offset, Handle Y → frequency asymmetry
-  float deforma = u_handleX * 0.5;
-  float asym = 1.0 + u_handleY * 0.5;
+  // Classic continuous Chladni figure: zero-crossings form nodal lines
+  float chladni = u_a * sin(u_m * u_freq * p.x) * sin(u_n * u_freq * p.y)
+                - u_b * sin(u_n * u_freq * p.x) * sin(u_m * u_freq * p.y);
 
-  float f = u_freq * 3.14159265;
-  float chladni = u_a * sin(u_m * f * (norm.x + deforma)) * sin(u_n * asym * f * norm.y)
-                - u_b * sin(u_n * asym * f * (norm.x + deforma)) * sin(u_m * f * norm.y);
+  // Add subtle organic movement along the lines
+  float n = noise(p * 4.0 + t * 0.15) * 0.04;
+  float edge = abs(chladni + n);
 
-  // Vibration: time-based perturbation near handle point
-  float vibDist = length(norm - vec2(u_handleX * 0.5 - 0.5, u_handleY * 0.5 - 0.5));
-  float vibEnvelope = smoothstep(u_vibrationArea, 0.0, vibDist);
-  float vib = sin(t * 8.0 + vibDist * 10.0) * u_vibration * vibEnvelope;
-  chladni += vib;
-
-  float edge = abs(chladni);
-  float density = exp(-edge * u_density * 10.0);
-
-  float modes = max(u_count, 1.0);
-  for (int i = 1; i < 4; i++) {
-    float fi = float(i);
-    if (fi >= modes) break;
-    density += 0.15 * exp(-abs(sin((u_m + fi) * f * (norm.x + deforma)) * sin((u_n + fi) * asym * f * norm.y)
-                              - sin((u_n + fi) * asym * f * (norm.x + deforma)) * sin((u_m + fi) * f * norm.y)) * u_density * 8.0);
-  }
-
-  float n = noise(uv * 20.0 + t * 0.1) * 0.2;
-  density += n * 0.3;
-
-  float nodeSize = u_size * 0.01;
-  density = smoothstep(nodeSize, nodeSize + 0.3, density);
+  // Density controls line thickness: higher density -> thinner, sharper lines
+  float thickness = 1.0 / max(u_density, 0.1);
+  float density = 1.0 - smoothstep(0.0, thickness, edge);
+  density *= (0.4 + u_size * 0.15) * (1.0 + u_audioLevel * 0.4);
 
   vec3 baseCol = vec3(0.2, 0.8, 1.0);
   baseCol = 0.5 + 0.5 * cos(6.28 * (baseCol + u_hueShift + vec3(0.0, 0.33, 0.67)));
-  vec3 col = vec3(density) * baseCol;
-  col *= u_color;
-  col *= 0.8 + u_audioLevel * 0.4;
+  vec3 col = baseCol * u_color;
 
   fragColor = vec4(mix(u_bgColor, col, clamp(density, 0.0, 1.0)), 1.0);
 }
@@ -132,7 +106,7 @@ void main() {
   float t = u_time * u_rotationSpeed * (1.0 + u_audioLevel * 0.3);
 
   float count = max(u_density, 1.0);
-  float sz = u_size * 0.015;
+  float sz = u_size * 0.06;
   vec3 col = vec3(0.0);
   float alpha = 0.0;
 
@@ -143,7 +117,6 @@ void main() {
     float phi = hash(vec2(fi, 1.0)) * 3.14159;
     float r = u_radius * (0.8 + 0.2 * sin(t + fi));
 
-    // Organic noise perturbation
     vec3 noisedPos = vec3(theta, phi, r) + noise(vec3(theta, phi, r) * 2.0) * u_organic;
     float th = noisedPos.x;
     float ph = noisedPos.y;
@@ -155,23 +128,22 @@ void main() {
       rr * cos(ph)
     );
 
-    // Rotate around Y
     float cy = cos(t * 0.5), sy = sin(t * 0.5);
     vec3 rp = vec3(p.x * cy + p.z * sy, p.y, -p.x * sy + p.z * cy);
 
-    // Rotate around X
     float cx = cos(t * 0.3), sx = sin(t * 0.3);
     vec3 finalP = vec3(rp.x, rp.y * cx - rp.z * sx, rp.y * sx + rp.z * cx);
 
     vec2 proj = finalP.xy / (1.0 + finalP.z * 0.3);
-    float d = length(proj - uv * 2.0 + 1.0);
-    float brightness = exp(-d * 8.0 / sz);
+    float d = length(proj - (uv * 2.0 - 1.0));
+    float brightness = exp(-d * 4.0 / sz);
     col += brightness * u_color;
     alpha += brightness;
   }
 
   col *= 0.7 + u_audioLevel * 0.5;
-  fragColor = vec4(mix(u_bgColor, col, min(alpha * 0.02, 1.0)), 1.0);
+  vec3 finalColor = mix(u_bgColor, col, clamp(alpha, 0.0, 1.0));
+  fragColor = vec4(finalColor, 1.0);
 }
 `
 
@@ -213,11 +185,11 @@ void main() {
   float t = u_time * u_rotationSpeed * (1.0 + u_audioLevel * 0.3);
 
   float scale = u_density;
-  float size = u_size * 0.02;
+  float size = u_size * 0.06;
   float depth = u_depth;
   vec2 grid = fract(uv * scale) - 0.5;
   vec2 ig = floor(uv * scale);
-  vec2 center = vec2(0.5);
+  vec2 center = vec2(0.0);
   float d = length(grid - center);
 
   // Organic noise perturbation on grid

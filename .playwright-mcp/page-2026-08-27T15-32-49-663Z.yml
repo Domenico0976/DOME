@@ -1,0 +1,124 @@
+- generic [ref=f4e3]:
+  - complementary [ref=f4e4]:
+    - generic "DOME" [ref=f4e5]: D
+    - generic [ref=f4e6]:
+      - button "Undo" [disabled]
+      - button "Redo" [disabled]
+  - generic [ref=f4e7]:
+    - banner [ref=f4e8]:
+      - combobox "Preview quality" [ref=f4e9] [cursor=pointer]:
+        - generic: High · 1080p
+      - generic [ref=f4e12]:
+        - button "Tips" [ref=f4e13] [cursor=pointer]
+        - button "Support" [ref=f4e17] [cursor=pointer]
+        - button "Templates" [ref=f4e25] [cursor=pointer]
+        - button "Save project" [ref=f4e30] [cursor=pointer]: Save Project
+        - button "Sign in" [ref=f4e35] [cursor=pointer]
+        - button "Toggle theme" [ref=f4e36] [cursor=pointer]
+    - main [ref=f4e43]:
+      - generic [ref=f4e44]:
+        - generic [ref=f4e49]:
+          - button "Zoom out" [ref=f4e50] [cursor=pointer]: "-"
+          - generic [ref=f4e51]: 100%
+          - button "Zoom in" [ref=f4e52] [cursor=pointer]: +
+          - button "Reset zoom" [ref=f4e53] [cursor=pointer]: Reset
+        - generic [ref=f4e54]: Select a node to edit its parameters
+    - generic "Export menu" [ref=f4e56]:
+      - button "Export PNG" [ref=f4e57] [cursor=pointer]
+      - button "Instagram" [ref=f4e61] [cursor=pointer]
+      - button "Spotify Canvas" [ref=f4e65] [cursor=pointer]
+      - button "Fullscreen" [ref=f4e69] [cursor=pointer]
+      - button "Reset" [ref=f4e75] [cursor=pointer]
+    - contentinfo "Audio Reactivity Panel" [ref=f4e79]:
+      - generic [ref=f4e80]:
+        - generic [ref=f4e81]:
+          - button "Play/Pause" [ref=f4e82] [cursor=pointer]
+          - button "Stop" [ref=f4e85] [cursor=pointer]
+          - button "Loop" [ref=f4e88] [cursor=pointer]
+        - generic [ref=f4e94]:
+          - button "Load" [ref=f4e95] [cursor=pointer]
+          - button [ref=f4e99] [cursor=pointer]
+          - button [ref=f4e103] [cursor=pointer]
+        - generic [ref=f4e106]:
+          - generic [ref=f4e107]:
+            - generic [ref=f4e108]: BPM
+            - spinbutton "BPM" [ref=f4e109]: "120"
+          - button "Tap" [ref=f4e110] [cursor=pointer]
+      - generic [ref=f4e111]:
+        - generic [ref=f4e113] [cursor=pointer]
+        - generic [ref=f4e114]:
+          - slider [ref=f4e118]
+          - generic [ref=f4e119]: 0.0s / 60.0s
+      - generic [ref=f4e120]:
+        - generic [ref=f4e121]:
+          - generic [ref=f4e122]:
+            - generic [ref=f4e123]: Presets
+            - button "Add Preset" [ref=f4e124] [cursor=pointer]
+          - generic [ref=f4e126]: No presets
+        - generic [ref=f4e128]:
+          - generic [ref=f4e129]: B
+          - generic [ref=f4e132]: M
+          - generic [ref=f4e135]: T
+          - generic [ref=f4e138]: L
+  - generic [ref=f4e141]:
+    - generic [ref=f4e142]:
+      - generic [ref=f4e143]: Stack
+      - button "Add tool to stack" [active] [ref=f4e144] [cursor=pointer]
+    - generic [ref=f4e146]: Add a tool with + to begin
+    - dialog "Tool catalog" [ref=f4e149]:
+      - generic [ref=f4e150]:
+        - heading "Inputs" [level=4] [ref=f4e151]
+        - button "Add Audio File" [ref=f4e152] [cursor=pointer]:
+          - generic [ref=f4e157]: Audio File
+        - button "Add Camera" [ref=f4e158] [cursor=pointer]:
+          - generic [ref=f4e162]: Camera
+        - button "Add Gradient" [ref=f4e163] [cursor=pointer]:
+          - generic [ref=f4e170]: Gradient
+        - button "Add Image / Video" [ref=f4e171] [cursor=pointer]:
+          - generic [ref=f4e176]: Image / Video
+        - button "Add Solid Color" [ref=f4e177] [cursor=pointer]:
+          - generic [ref=f4e180]: Solid Color
+        - button "Add Text" [ref=f4e181] [cursor=pointer]:
+          - generic [ref=f4e184]: Text
+      - generic [ref=f4e185]:
+        - heading "Generative" [level=4] [ref=f4e186]
+        - button "Add Brutalist" [ref=f4e187] [cursor=pointer]:
+          - generic [ref=f4e190]: Brutalist
+        - button "Add Doodle" [ref=f4e191] [cursor=pointer]:
+          - generic [ref=f4e196]: Doodle
+        - button "Add Ferrofluid" [ref=f4e197] [cursor=pointer]:
+          - generic [ref=f4e202]: Ferrofluid
+        - button "Add Flowfield" [ref=f4e203] [cursor=pointer]:
+          - generic [ref=f4e208]: Flowfield
+        - button "Add Kaleidoscope" [ref=f4e209] [cursor=pointer]:
+          - generic [ref=f4e212]: Kaleidoscope
+        - button "Add Liquid Metal" [ref=f4e213] [cursor=pointer]:
+          - generic [ref=f4e217]: Liquid Metal
+        - button "Add Molecules" [ref=f4e218] [cursor=pointer]:
+          - generic [ref=f4e224]: Molecules
+        - button "Add Particles" [ref=f4e225] [cursor=pointer]:
+          - generic [ref=f4e229]: Particles
+        - button "Add Plasma" [ref=f4e230] [cursor=pointer]:
+          - generic [ref=f4e234]: Plasma
+        - button "Add Rings" [ref=f4e235] [cursor=pointer]:
+          - generic [ref=f4e242]: Rings
+        - button "Add Shaders" [ref=f4e243] [cursor=pointer]:
+          - generic [ref=f4e250]: Shaders
+        - button "Add Starfield" [ref=f4e251] [cursor=pointer]:
+          - generic [ref=f4e254]: Starfield
+        - button "Add Tunnel" [ref=f4e255] [cursor=pointer]:
+          - generic [ref=f4e265]: Tunnel
+      - generic [ref=f4e266]:
+        - heading "Filters" [level=4] [ref=f4e267]
+        - button "Add Facets" [ref=f4e268] [cursor=pointer]:
+          - generic [ref=f4e271]: Facets
+        - button "Add Halftone" [ref=f4e272] [cursor=pointer]:
+          - generic [ref=f4e283]: Halftone
+        - button "Add Pixelator" [ref=f4e284] [cursor=pointer]:
+          - generic [ref=f4e287]: Pixelator
+        - button "Add Re-Light" [ref=f4e288] [cursor=pointer]:
+          - generic [ref=f4e291]: Re-Light
+        - button "Add Thermal" [ref=f4e292] [cursor=pointer]:
+          - generic [ref=f4e295]: Thermal
+        - button "Add Type Shape" [ref=f4e296] [cursor=pointer]:
+          - generic [ref=f4e299]: Type Shape

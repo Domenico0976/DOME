@@ -8,14 +8,14 @@ const stack: StackRenderContext = { width: 200, height: 200, quality: 'high' }
 const item: StackItem = {
   uid: 'p1',
   toolId: 'particles',
-  toolVersion: '2.0.0',
-  params: { count: 400, size: 2, speed: 1, hue: 200, a: 3, b: 4, m: 5, n: 6, damping: 0.96 },
+  toolVersion: '3.0.0',
+  params: { mode: 'chladni', a: 3, b: 4, m: 5, n: 6, freq: 1.5, density: 10, size: 2, color: '#ffffff', bgColor: '#000000' },
   audio: [],
   automations: [],
   hidden: false,
 }
 
-describe('particles 2.0.0 chladni', () => {
+describe('particles 3.0.0 chladni', () => {
   test('renders without throwing and is deterministic given same uid', () => {
     const run = () => {
       const calls: unknown[] = []

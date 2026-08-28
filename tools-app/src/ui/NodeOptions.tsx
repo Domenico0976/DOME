@@ -179,7 +179,9 @@ export function NodeOptions({ item }: { item: StackItem }) {
         <TabsContent value="controls" className="mt-0 min-h-0 flex-1">
           <ScrollArea className="h-full">
         <div className="space-y-5 p-4">
-          {def.controls.map((c: ControlDef) => (
+          {def.controls
+            .filter((c: ControlDef) => !c.modes || c.modes.includes(String(item.params.mode ?? '')))
+            .map((c: ControlDef) => (
             <div key={c.param} className="space-y-1.5">
               <div className="flex items-center justify-between">
                 <label htmlFor={c.param} className="text-[12px] font-medium text-muted-foreground">

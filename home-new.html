@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" type="image/x-icon" href="/icon.png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DOME|design</title>
+  <link rel="stylesheet" href="main.css">
+  <link rel="stylesheet" href="main-home.css">
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/split-type@0.3.4/umd/index.min.js"></script>
+    <script src="js/dottedGrid.js"></script>
+</head>
+
+<body class="noscroll">
+
+  <h1 class="counter" id="items">0</h1>  
+  <div class="background">
+    <div class="bar-1"></div>
+    <div class="bar-2"></div>
+    <div class="bar-3"></div>
+    <div class="bar-4"></div>
+    <div class="bar-5"></div>
+    <div class="bar-6"></div>
+    <div class="bar-7"></div>
+    <div class="bar-8"></div>
+    <div class="bar-9"></div>
+    <div class="bar-10"></div>
+
+    <div class="container">
+      <div class="DIV">
+        <h1 class="my-tu">DomenicoFusto</h1>
+        <h3 class="my-tu2">whooo?</h3>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero section">
+
+  </div>    
+
+  <footer class="dotted-grid-footer">
+    <div style="display: flex;justify-content: center;margin-bottom: -20px;z-index: 3;position: absolute;bottom: 14%;transform: translateX(-50%);left: 50%; padding: 16px; background-color: rgba(255, 255, 255, 0.432); border-radius: 2px; ">    
+      <p class="title-text card-text-subtitle" style="font-weight: 400;">CLICK TO CHANGE SHAPE</p>
+  </div>
+  <canvas id="dotted-grid-bg"></canvas>
+  <div class="flex-2" style="background: transparent; padding: 10px 24px 24px 24px; position: relative; z-index: 1;">
+    <p class="title-text card-text-subtitle" style="font-weight: 600;">© 2024 by Domenico Fusto</p>
+    <p class="title-text card-text-subtitle" style="margin-top: 8px;">Made with ❤️</p>
+  </div>
+
+</footer>
+
+</body>
+
+<script src="https://cdn.jsdelivr.net/npm/split-type@0.3.4/umd/index.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
+
+<script type="module" src="./js/splineViewer.js"></script>
+
+<script src="./js/loadingPage.js" type="module"></script>
+
+
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+
+<script>
+  // ─── FIREBASE CONFIG ────────────────────────────────────────────────────────
+  var firebaseConfig = {
+    apiKey: "___FIREBASE_API_KEY___",
+    authDomain: "___FIREBASE_AUTH_DOMAIN___",
+    databaseURL: "___FIREBASE_DATABASE_URL___",
+    projectId: "___FIREBASE_PROJECT_ID___",
+    storageBucket: "___FIREBASE_STORAGE_BUCKET___",
+    messagingSenderId: "___FIREBASE_MESSAGING_SENDER_ID___",
+    appId: "___FIREBASE_APP_ID___"
+  };
+  // ────────────────────────────────────────────────────────────────────────────
+
+  firebase.initializeApp(firebaseConfig);
+  var db = firebase.database();
+
+  (function initOpglLike() {
+    var CONSOLE_KEY = 'opgl_like_logged';
+
+    document.querySelectorAll('.opgl-stage').forEach(function(stage, stageIndex) {
+      var btn = stage.querySelector('[data-opgl-like]');
+      if (!btn) return;
+
+      var countSpan = btn.querySelector('.opgl-like-count');
+      var dbRef = db.ref('likes/stage_' + stageIndex);
+
+      // Ascolta in tempo reale: aggiorna il contatore per tutti gli utenti connessi
+      dbRef.on('value', function(snapshot) {
+        var count = snapshot.val() || 0;
+        countSpan.textContent = count;
+        if (count > 0) btn.classList.add('is-liked');
+      });
+
+      btn.addEventListener('click', function() {
+        // runTransaction garantisce incremento atomico senza race condition tra utenti
+        dbRef.transaction(function(current) {
+          return (current || 0) + 1;
+        });
+
+        if (!sessionStorage.getItem(CONSOLE_KEY)) {
+          sessionStorage.setItem(CONSOLE_KEY, '1');
+          console.log('Grazie, non abbiamo preso nessun dato e nessun tracker ti ha intercettato.');
+        }
+      });
+    });
+  })();
+
+  (function initOpglNav() {
+    document.querySelectorAll('.opgl-stage').forEach(function(stage) {
+      var wrapper = stage.querySelector('.wrapper');
+      if (!wrapper) return;
+
+      var cards = wrapper.querySelectorAll('.image-squ');
+      var totalCards = cards.length;
+      var visibleCards = 3;
+      var maxOffset = Math.max(0, totalCards - visibleCards);
+      var currentOffset = 0;
+
+      var prevBtn = stage.querySelector('[data-opgl-nav="prev"]');
+      var nextBtn = stage.querySelector('[data-opgl-nav="next"]');
+
+      function updateNav() {
+        wrapper.style.setProperty('--nav-offset', currentOffset);
+        if (prevBtn) prevBtn.disabled = currentOffset <= 0;
+      }
+
+      if (prevBtn) {
+        prevBtn.addEventListener('click', function() {
+          currentOffset = Math.max(0, currentOffset - 1);
+          updateNav();
+        });
+      }
+
+      if (nextBtn) {
+        nextBtn.addEventListener('click', function() {
+          if (currentOffset >= maxOffset) {
+            currentOffset = 0;
+          } else {
+            currentOffset += 1;
+          }
+          updateNav();
+        });
+      }
+
+      updateNav();
+    });
+  })();
+
+  (function initWrappers() {
+    document.querySelectorAll('.wrapper').forEach(function(wrapper) {
+      var cards = Array.from(wrapper.children);
+      var count = cards.length;
+      wrapper.style.setProperty('--cards', count);
+      var center = (count - 1) / 2;
+      cards.forEach(function(card, i) {
+        card.style.setProperty('--card-i', i + 1);
+        var dist = Math.abs(i - center);
+        card.style.zIndex = Math.round(center - dist);
+      });
+    });
+  })();
+</script>
+</html>

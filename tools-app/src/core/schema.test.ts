@@ -43,15 +43,15 @@ describe('legacy ferrofluid migration', () => {
 })
 
 describe('legacy flowfield migration', () => {
-  test('legacy flowfield migrates to 2.0.0 params', () => {
+  test('legacy flowfield migrates to particles mode flow', () => {
     const p = migrateProject({
       stack: [{ uid: 'ffl', toolId: 'flowfield', toolVersion: '1.0.0', params: { density: 14, hue: 90 }, audio: [], automations: [], hidden: false }],
     })
-    expect(p.stack[0].toolVersion).toBe('2.0.0')
-    expect(p.stack[0].params.segments).toBe(560)
-    expect(p.stack[0].params.steplen).toBe(2.5)
-    expect(p.stack[0].params.curl).toBe(1)
-    expect(p.stack[0].params.hue).toBe(90)
+    expect(p.stack[0].toolId).toBe('particles')
+    expect(p.stack[0].toolVersion).toBe('3.0.0')
+    expect(p.stack[0].params.mode).toBe('flow')
+    expect(p.stack[0].params.density).toBe(14)
+    expect(p.stack[0].params.color).toMatch(/^#[0-9a-f]{6}$/)
   })
 })
 

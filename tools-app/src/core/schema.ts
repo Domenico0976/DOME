@@ -54,6 +54,34 @@ function normalizeItem(raw: Partial<StackItem>): StackItem {
   }
 }
 
+function remapLegacyToolIds(item: StackItem): StackItem {
+  if (item.toolId === 'flowfield') {
+    const p = item.params
+    return {
+      ...item,
+      toolId: 'particles',
+      toolVersion: '3.0.0',
+      params: {
+        mode: 'flow',
+        density: Number(p.density ?? 14),
+        color: typeof p.hue === 'number' ? hslToHex(Number(p.hue), 80, 55) : '#00b4d8',
+        speed: Number(p.speed ?? 1),
+        flowWaves: 0,
+        flowRandomize: 0,
+        flowWaveSpeed: 1,
+        flowRotation: 0,
+        flowZoom: 1,
+        flowDepth: 0,
+        size: 3,
+        hueShift: 0,
+        opacity: 1,
+        bgColor: '#000000',
+      },
+    }
+  }
+  return item
+}
+
 // migrateProject normalizes any stored project blob into the current shape and
 // applies registered per-tool parameter migrations for legacy major versions.
 export function migrateProject(input: unknown): ProjectState {
@@ -61,13 +89,15 @@ export function migrateProject(input: unknown): ProjectState {
   const stack: StackItem[] = Array.isArray(raw.stack) ? raw.stack.map(normalizeItem) : []
   return {
     schemaVersion: SCHEMA_VERSION,
-    stack: stack.map((item) => {
-      const migrate = TOOL_PARAM_MIGRATIONS[item.toolId]
-      if (migrate && item.toolVersion.startsWith('1.')) {
-        return { ...item, toolVersion: '2.0.0', params: migrate(item.params) }
-      }
-      return item
-    }),
+    stack: stack
+      .map(remapLegacyToolIds)
+      .map((item) => {
+        const migrate = TOOL_PARAM_MIGRATIONS[item.toolId]
+        if (migrate && item.toolVersion.startsWith('1.')) {
+          return { ...item, toolVersion: '2.0.0', params: migrate(item.params) }
+        }
+        return item
+      }),
     selectedUid: raw.selectedUid ?? null,
     timeline: {
       durationSec: raw.timeline?.durationSec ?? 60,

@@ -8,6 +8,7 @@ export type ControlDef = {
   max?: number
   step?: number
   options?: string[]
+  modes?: string[]
 }
 
 export type AudioBinding = {
