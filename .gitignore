@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+
+# Vite build output (built in CI, never committed)
+dist/
+
+# Logs
+*.log
+logs/
+
+# Agent / tooling directories (local-only state)
+.omo/
+.playwright-mcp/
+.kilo/
+.codegraph/
+.opencode/
+.superpowers/
+.freebuff/
+.file-versions/
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store

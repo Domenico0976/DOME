@@ -1,27 +1,50 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" href="/asset/icon.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>DOME | Domenico Fusto</title>
-    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/split-type@0.3.4/umd/index.min.js"></script>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-    <!-- Load GSAP-dependent scripts AFTER React bundle -->
-    <script src="/js/loadingPage.js" type="module"></script>
-    <script src="/js/weather.js"></script>
-    <script src="/js/popIt.js"></script>
-    <script src="/js/progressBar.js"></script>
-    <script src="/js/masonry.js"></script>
-    <script src="/js/slotCounter.js"></script>
-    <script src="/js/slider.js"></script>
-    <script src="/js/fluidHover.js"></script>
-    <script src="/js/cardCanvasGL.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
-  </body>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#083D2A">
+  <title>DOME | Portfolio</title>
+  <meta name="description" content="Art direction, interactive design and UI for studios, brands and agencies.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Darker+Grotesque:wght@300..900&family=Hedvig+Letters+Serif:opsz@12..24&display=swap">
+
+  <link rel="icon" type="image/gif" href="/assets/favicon/favicon-gif.gif" sizes="any">
+
+  <!-- Preloader: sync gate runs BEFORE first paint. If this is a returning
+       tab/session, mark <html> so the static shell is hidden immediately. -->
+  <script>
+    try { if (sessionStorage.getItem('pp:visited')) document.documentElement.classList.add('no-preload'); } catch (e) {}
+  </script>
+  <!-- Strip powerPreference on Windows (crbug.com/369219127 — Chrome ignores it, triggers a console warning) -->
+  <script>
+  try{if(navigator.gpu&&typeof navigator.gpu.requestAdapter==='function'&&/Windows|Win32|Win64/.test(navigator.userAgent)){var _ra=navigator.gpu.requestAdapter;navigator.gpu.requestAdapter=function(o){if(o&&typeof o==='object'){var c={};for(var k in o){if(Object.prototype.hasOwnProperty.call(o,k)&&k!=='powerPreference')c[k]=o[k]}return _ra.call(this,c)}return _ra.call(this,o)}}}catch(e){}
+  </script>
+  <style>
+    /* Critical pre-paint styles for the first-landing preloader shell. */
+    html{background:#F5F1EA;}
+    #preloader{position:fixed;inset:0;z-index:9999;background:#F5F1EA;display:flex;align-items:flex-end;justify-content:flex-end;overflow:hidden;pointer-events:none;}
+    #preloader.preloader--reveal{background:transparent;}
+    html.no-preload #preloader{display:none!important;}
+    .preloader__canvas{position:absolute;inset:0;width:100%;height:100%;}
+    .preloader__gl{display:block;width:100%;height:100%;}
+    .preloader__sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;}
+    .preloader__fallback{display:none;font-family:ui-monospace,'SFMono-Regular',Menlo,Consolas,monospace;font-weight:700;font-size:clamp(64px,18vw,220px);color:#111;padding:clamp(24px,5vw,80px);line-height:0.9;letter-spacing:-0.02em;}
+    .preloader--no-gl .preloader__fallback{display:block;}
+  </style>
+  <noscript><style>#preloader{display:none!important}</style></noscript>
+</head>
+<body>
+  <div id="preloader" class="preloader" aria-hidden="true">
+    <div class="preloader__canvas"></div>
+    <div class="preloader__sr" aria-live="polite"></div>
+    <div class="preloader__fallback" aria-hidden="true"></div>
+  </div>
+  <div id="root"></div>
+  <script src="/js/dottedGrid.js?v=6" defer></script>
+  <script type="module" src="/src/preloader/index.js"></script>
+  <script type="module" src="/src/main.jsx"></script>
+</body>
 </html>

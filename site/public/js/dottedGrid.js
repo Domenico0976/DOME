@@ -38,6 +38,19 @@
     RANDOM_TIME + COLLECT_TIME + SHAPE_HOLD_TIME + GRAY_DISPERSE_TIME;
   const TOTAL_SHAPES = 5;
 
+  // ponytail: top-band dissolve zone — GRID-LOCKED + ORDER-SAFE. Dots never
+  // leave lattice positions and scale is a monotonic function of the row
+  // within each column (sizes always grow downward — never big-under-small).
+  // Motion comes from the whole gradient sliding + breathing on seamless
+  // integer harmonics; organic feel from per-column offsets (grid hashes).
+  // Rows 1–3 are always scale 0; the animation spans rows 4–12.
+  const BAND_ROWS = 12;             // guaranteed rows in dissolve zone
+  const BAND_FRAC_CAP = 0.35;       // max fraction for very tall canvases
+  const FEATHER_ROWS = 2;           // feather rows at band bottom edge
+  const MASTER_PERIOD = 4.0;        // seconds — one seamless wave loop
+  const TAU = Math.PI * 2;
+  const HALF_PI = Math.PI / 2;
+
   // ── Math helpers ──────────────────────────────────────────────────
   const lerp = (a, b, t) => a + (b - a) * t;
   const clamp01 = (v) => Math.max(0, Math.min(1, v));
@@ -264,6 +277,9 @@
       this.backgroundColor =
         options.backgroundColor ?? DEFAULTS.backgroundColor;
       this.id = options.id ?? DEFAULTS.id;
+      // ponytail: explicit options win; otherwise geometry scales with width
+      // (see _applyResponsive) so small screens keep dense, legible shapes.
+      this._opt = options;
 
       this.canvas = null;
       this.ctx = null;
@@ -281,6 +297,11 @@
         active: false,
         trail: [],
         _sampleCount: 0,
+        // ponytail: last viewport coords (always fresh). Canvas-space
+        // targets derive from these + the cached rect, so scrolling under a
+        // stationary cursor re-maps instead of going stale.
+        clientX: null,
+        clientY: null,
       };
       this.pattern = {
         currentShapeIndex: 0,
@@ -321,12 +342,21 @@
       // Pointer events (stored handlers so destroy() can actually remove them)
       this._handlers = {
         pointermove: (e) => this._onPointerMove(e),
-        pointerleave: () => (this.mouse.active = false),
+        deactivate: () => {
+          this.mouse.active = false;
+        },
         click: () => this._onClick(),
         resize: () => this._scheduleResize(),
       };
-      this.canvas.addEventListener("pointermove", this._handlers.pointermove);
-      this.canvas.addEventListener("pointerleave", this._handlers.pointerleave);
+      // ponytail: window-level tracking + geometric hit test (not
+      // canvas-only listeners): the cursor position stays known even while
+      // the page scrolls underneath a stationary pointer, and engagement
+      // follows the canvas instead of sticking to a stale spot.
+      window.addEventListener("pointermove", this._handlers.pointermove, {
+        passive: true,
+      });
+      document.addEventListener("pointerleave", this._handlers.deactivate);
+      window.addEventListener("blur", this._handlers.deactivate);
       this.canvas.addEventListener("click", this._handlers.click);
       window.addEventListener("resize", this._handlers.resize);
 
@@ -336,7 +366,28 @@
       this._scrollTick = 0;
       this._scrollDebounce = null;
       this._onScroll = () => {
+        // ponytail: the page moved under a possibly stationary cursor — the
+        // cached rect AND every canvas-space coordinate go stale together.
+        // Translate them by the scroll delta so hover/trail stay glued, then
+        // re-evaluate engagement (a scrolled-under cursor engages without
+        // moving; a scrolled-away one releases through the decay lerp).
+        const oldRect = this._rect;
         this._cacheRect();
+        if (oldRect && this._rect) {
+          const dx = oldRect.left - this._rect.left;
+          const dy = oldRect.top - this._rect.top;
+          if (dx !== 0 || dy !== 0) {
+            this.mouse.targetX += dx;
+            this.mouse.targetY += dy;
+            this.mouse.x += dx;
+            this.mouse.y += dy;
+            for (let i = 0; i < this.mouse.trail.length; i++) {
+              this.mouse.trail[i].x += dx;
+              this.mouse.trail[i].y += dy;
+            }
+          }
+        }
+        this._updateMouseFromClient({ trail: false });
         this._scrolling = true;
         if (this._scrollDebounce) clearTimeout(this._scrollDebounce);
         this._scrollDebounce = setTimeout(() => {
@@ -362,6 +413,19 @@
       this._loop();
     }
 
+    _applyResponsive() {
+      // ponytail: denser, smaller dots on small screens so the shapes stay
+      // legible — gap and size shrink by the same factor, density preserved.
+      // Runs inside _resize (debounced), so rotation/resize rebuilds the grid.
+      const w = this.width || window.innerWidth || DEFAULTS.spacing * 70;
+      const s = this._opt.spacing ?? (w < 640 ? 12 : w < 1024 ? 16 : DEFAULTS.spacing);
+      const k = s / DEFAULTS.spacing;
+      this.spacing = s;
+      this.baseRadius = this._opt.baseRadius ?? DEFAULTS.baseRadius * k;
+      this.mouseRadius = this._opt.mouseRadius ?? HOVER.radius * k;
+      this.trailRadius = this._opt.trailRadius ?? DEFAULTS.trailRadius * k;
+    }
+
     _resize() {
       const rect = this.canvas.getBoundingClientRect();
       this.width = rect.width;
@@ -371,6 +435,7 @@
       this.canvas.height = Math.floor(this.height * this.dpr);
       this.ctx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
       this._rect = rect;
+      this._applyResponsive();
       this._createDots();
     }
 
@@ -389,14 +454,55 @@
     _createDots() {
       this.dots = [];
       this.shapeCache = [];
+      const bandTop = Math.min(BAND_ROWS * this.spacing, BAND_FRAC_CAP * this.height);
+      this._bandTop = bandTop;
+      this._feather = FEATHER_ROWS * this.spacing;
+
+      // ponytail: grid-locked wave tables — fixed row phase offsets (crest
+      // travels 8→1 as waveNorm advances), per-column phase shifts for organic
+      // misalignment, per-row amplitude emphasis (which rows bulge each cycle).
+      this._rowPhaseOffset = [];
+      for (let r = 0; r < BAND_ROWS; r++) this._rowPhaseOffset.push(r / BAND_ROWS);
+      const numCols = Math.max(1, Math.round(this.width / this.spacing));
+      this._colPhaseShift = [];
+      for (let c = 0; c <= numCols; c++) {
+        const h = ((Math.imul(c + 1, 0x9e3779b9) >>> 0) / 0x100000000);
+        this._colPhaseShift.push(h * 0.3 - 0.15); // ±0.15 cycle stagger
+      }
+      this._ampEmphasis = [];
+      for (let r = 0; r < BAND_ROWS; r++) {
+        const h = ((Math.imul(r + 7, 0x5bd1e995) >>> 0) / 0x100000000);
+        this._ampEmphasis.push(0.4 + h * 0.6); // [0.4, 1.0]
+      }
+
+      // ponytail: virtual top-edge effectors — fixed points along the first
+      // visible row, reusing the hover radial falloff with time-varying
+      // strength (same visual language as cursor hover / trail).
+      this._topEffectors = [];
+      const effCount = Math.max(3, Math.floor(this.width / (this.spacing * 6)));
+      for (let i = 0; i < effCount; i++) {
+        this._topEffectors.push({
+          x: ((i + 0.5) / effCount) * this.width,
+          y: this.spacing * 0.5,
+          phase: i / effCount,
+        });
+      }
+
       for (let y = this.spacing / 2; y < this.height; y += this.spacing) {
         for (let x = this.spacing / 2; x < this.width; x += this.spacing) {
+          const ci0 = Math.round((x - this.spacing / 2) / this.spacing);
+          const ri0 = Math.round((y - this.spacing / 2) / this.spacing);
           this.dots.push({
             x,
             y,
-            phase: Math.random() * Math.PI * 2,
-            speed: 0.3 + Math.random() * 1.0,
-            randomOffset: Math.random() * 10,
+            // ponytail: lattice indices pin every wave lookup — positions
+            // never animated, only radius.
+            _colIdx: ci0,
+            _rowIdx: ri0,
+            // ponytail: per-dot noise salts (constant per dot) — drive
+            // lifecycle/speed/size variation without breaking the loop.
+            _noiseA: ((Math.imul(ci0 + 13, 0x85ebca6b) ^ Math.imul(ri0 + 7, 0xc2b2ae35)) >>> 0) / 0x100000000,
+            _noiseB: ((Math.imul(ci0 + 71, 0x27d4eb2f) ^ Math.imul(ri0 + 37, 0x165667b1)) >>> 0) / 0x100000000,
             currentShapeStrength: 0,
             currentMouseStrength: 0,
             currentTrailStrength: 0,
@@ -407,18 +513,46 @@
     }
 
     _onPointerMove(e) {
+      this.mouse.clientX = e.clientX;
+      this.mouse.clientY = e.clientY;
+      this._updateMouseFromClient({ trail: true });
+    }
+
+    // ponytail: single choke point mapping viewport coords to canvas space.
+    // fromScroll (scroll handler) never samples trail points — scrolling
+    // is not pointer motion.
+    _updateMouseFromClient({ trail } = {}) {
+      if (this.reduceMotion) {
+        this.mouse.active = false;
+        return false;
+      }
+      const cx = this.mouse.clientX;
+      const cy = this.mouse.clientY;
+      if (cx === null || cx === undefined || cy === null || cy === undefined) {
+        return false;
+      }
       const rect = this._rect || this.canvas.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
+      const inside =
+        cx >= rect.left && cx <= rect.right && cy >= rect.top && cy <= rect.bottom;
+      if (!inside) {
+        // Cursor geometrically off-canvas (moved away, or the page scrolled
+        // it out from under a stationary pointer): graceful release through
+        // the existing decay lerp, no snap.
+        this.mouse.active = false;
+        return false;
+      }
+      const x = cx - rect.left;
+      const y = cy - rect.top;
       this.mouse.targetX = x;
       this.mouse.targetY = y;
       this.mouse.active = true;
-      if (++this.mouse._sampleCount % this.trailSampleRate === 0) {
+      if (trail && ++this.mouse._sampleCount % this.trailSampleRate === 0) {
         this.mouse.trail.push({ x, y, t: performance.now() });
         if (this.mouse.trail.length > this.trailLength) {
           this.mouse.trail.shift();
         }
       }
+      return true;
     }
 
     _onClick() {
@@ -524,12 +658,14 @@
       const mouse = this.mouse;
       const now = performance.now();
 
-      if (!ambient) {
-        mouse.x = lerp(mouse.x, mouse.targetX, 0.12);
-        mouse.y = lerp(mouse.y, mouse.targetY, 0.12);
-      }
+      // ponytail: the smoothed head ALWAYS follows — ambient scroll frames
+      // must track too, or the cursor detaches mid-scroll and re-engages late.
+      mouse.x = lerp(mouse.x, mouse.targetX, 0.12);
+      mouse.y = lerp(mouse.y, mouse.targetY, 0.12);
 
-      this.ctx.fillStyle = "#ffffff";
+      // Theme field, not white: difference needs an opaque base (on transparency
+      // the white graphic would vanish), and this removes the white block.
+      this.ctx.fillStyle = "#F5F1EA";
       this.ctx.fillRect(0, 0, this.width, this.height);
       this.ctx.globalCompositeOperation = "difference";
       // ponytail: white bg + difference → dark src = gray grid, white src = black graphic
@@ -556,10 +692,62 @@
         trailCull = true;
       }
 
+      const bandTop = this._bandTop;
+      const feather = this._feather;
+      // ponytail: master wave clock — always (time / PERIOD) % 1, never bare
+      // time, so every row returns to its exact start each loop (zero pop).
+      const waveNorm = (time / MASTER_PERIOD) % 1;
+      const effRadius = this.mouseRadius * 0.7;
+      const effRadiusSq = effRadius * effRadius;
+
       const buckets = new Map();
 
       for (let i = 0; i < this.dots.length; i++) {
         const dot = this.dots[i];
+
+        // ponytail: GRID-LOCKED wave — dot.x/dot.y never change. Only the
+        // radius animates: a sine crest travels 8→1 (band bottom→top edge) as
+        // waveNorm advances, staggered per column, amplified per row.
+        const bandK = 1 - smoothstep(bandTop - feather, bandTop, dot.y);
+        const inBand = bandK > 0 && !this.reduceMotion;
+        let waveScale = 1;
+        let effectorShrink = 0;
+        if (inBand) {
+          const r = dot._rowIdx < BAND_ROWS ? dot._rowIdx : BAND_ROWS - 1;
+          // ponytail: rows 1–3 (top edge) are always scale 0 — dead zone,
+          // the visible wave lives on rows 4–12.
+          if (r < 3) {
+            waveScale = 0;
+          } else {
+          const ci = Math.max(0, Math.min(this._colPhaseShift.length - 1, dot._colIdx));
+          // ponytail: ORDER-SAFE wave — scale is a pure monotonic function of
+          // the row within each column (gradient ramp), so sizes always grow
+          // downward by construction. The ramp slides + breathes on seamless
+          // integer harmonics: continuous horizontal wave, zero pops.
+          const w1 = waveNorm * TAU;
+          const slide = 1.1 * Math.sin(w1 + 0.7) + 0.5 * Math.sin(w1 * 3 + 2.1);
+          const rampW = 9.0 * (1 + 0.14 * Math.sin(w1 * 2 + 4.0));
+          const colStatic = (this._colPhaseShift[ci] / 0.15) * 0.75;
+          const colDrift = 0.35 * Math.sin(w1 * 2 + ci * 0.45);
+          const rampStart = 2.5 + slide + colStatic + colDrift;
+          const colJit = 1 + this._colPhaseShift[ci] * 0.8;
+          const bandScale = clamp01(Math.pow(smoothstep(rampStart, rampStart + rampW, dot._rowIdx), 0.9) * colJit);
+          waveScale = lerp(1, bandScale, bandK);
+          // ponytail: virtual top-edge effectors reuse the hover radial
+          // falloff with time-varying strength (same language as cursor).
+          for (let e = 0; e < this._topEffectors.length; e++) {
+            const eff = this._topEffectors[e];
+            const ex = dot.x - eff.x, ey = dot.y - eff.y;
+            const dSq = ex * ex + ey * ey;
+            if (dSq < effRadiusSq) {
+              const fall = 1 - dSq / effRadiusSq;
+              const effStr = 0.5 + 0.5 * Math.sin((waveNorm + eff.phase) * TAU);
+              const s = fall * fall * effStr;
+              if (s > effectorShrink) effectorShrink = s;
+            }
+          }
+          }
+        }
 
         if (updateShape) {
           this.shapeCache[i] = this._getShapeData(dot.x, dot.y, time, this._shapeGeo).shapeStrength;
@@ -567,18 +755,22 @@
         const shapeStrength = this.shapeCache[i];
 
         if (this.reduceMotion) {
-          const topFade = clamp01(smoothstep(0, 5 * this.spacing, dot.y));
-          const bottomFade = clamp01(smoothstep(0, 5 * this.spacing, this.height - dot.y));
-          const edgeFade = topFade * bottomFade;
+          // Static circles everywhere (no animation); frozen height envelope
+          // in the band so the dissolve still reads, bottom fade only.
+          const edgeFade = clamp01(smoothstep(0, 5 * this.spacing, this.height - dot.y));
           const brightness = clamp01(shapeStrength) * edgeFade;
-          const radius = this.baseRadius + shapeStrength * 1.25;
+          const frozenGrad = dot._rowIdx < 3 ? 0 : (dot.y >= bandTop ? 1 : Math.pow(smoothstep(2.5, 11.5, dot._rowIdx), 0.9));
+          const radius = (this.baseRadius + shapeStrength * 1.25) * frozenGrad;
           this._drawDot(dot.x, dot.y, radius, brightness, 0, 0, 0, edgeFade, buckets);
           continue;
         }
 
         dot.currentShapeStrength = lerp(dot.currentShapeStrength, shapeStrength, 0.12);
 
-        if (!ambient) {
+        // ponytail: head influence runs at any frame rate (full or ambient
+        // scroll) so hover never detaches mid-scroll; only the trail
+        // recompute stays full-rate gated (frozen glow decays right after).
+        {
           // Cursor head influence: flat collapse plateau + crisp smoothstep edge
           let targetMouseStrength = 0;
           if (mouse.active) {
@@ -603,7 +795,9 @@
             targetMouseStrength,
             kMouse
           );
+        }
 
+        if (!ambient) {
           // Trail influence (distSq — no sqrt)
           // ponytail: spatial culling — skip dots far from any trail point
           let targetTrailStrength = 0;
@@ -629,16 +823,22 @@
           dot.currentTrailStrength = lerp(dot.currentTrailStrength, targetTrailStrength, 0.08);
         }
 
-        const topFade = clamp01(smoothstep(0, 5 * this.spacing, dot.y));
-        const bottomFade = clamp01(smoothstep(0, 5 * this.spacing, this.height - dot.y));
-        const edgeFade = topFade * bottomFade;
+        // Bottom fade only: the top white fade is gone — the band dissolves by
+        // scale, blending homogeneously into the page.
+        const edgeFade = clamp01(smoothstep(0, 5 * this.spacing, this.height - dot.y));
         const brightness = clamp01(dot.currentShapeStrength) * edgeFade;
 
         const mouseShrink = 1 - dot.currentMouseStrength * (1 - HOVER.minScale);
         const trailShrink = 1 - dot.currentTrailStrength * 0.65;
-        const stableRadius = this.baseRadius + dot.currentShapeStrength * 1.25;
-        const radius = stableRadius * mouseShrink * trailShrink;
+        const stableRadius =
+          (this.baseRadius + dot.currentShapeStrength * 1.25) * waveScale * (1 - effectorShrink * 0.85);
+        let radius = stableRadius * mouseShrink * trailShrink;
+        // ponytail: rows 1–3 are ALWAYS zero — hard clamp at the single choke
+        // point so no wave/effector/hover path can ever resurrect them.
+        if (dot._rowIdx < 3) radius = 0;
 
+        // ponytail: dead rows / fully-shrunk dots cost zero fill work.
+        if (radius > 0.01) {
         this._drawDot(
           dot.x,
           dot.y,
@@ -650,6 +850,7 @@
           edgeFade,
           buckets
         );
+        }
       }
 
       // ponytail: one fill() per style bucket instead of thousands per frame
@@ -669,8 +870,9 @@
       if (this._resizeTimer) clearTimeout(this._resizeTimer);
       window.removeEventListener("scroll", this._onScroll);
       if (this._handlers) {
-        this.canvas.removeEventListener("pointermove", this._handlers.pointermove);
-        this.canvas.removeEventListener("pointerleave", this._handlers.pointerleave);
+        window.removeEventListener("pointermove", this._handlers.pointermove);
+        document.removeEventListener("pointerleave", this._handlers.deactivate);
+        window.removeEventListener("blur", this._handlers.deactivate);
         this.canvas.removeEventListener("click", this._handlers.click);
         window.removeEventListener("resize", this._handlers.resize);
       }
@@ -678,12 +880,18 @@
   }
 
   // ── Auto-init when DOM ready ──────────────────────────────────────
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", () => {
-      window.dottedGridInstance = new DottedGrid();
-    });
-  } else {
+  // ponytail: auto-init only for unmanaged canvases — a canvas with
+  // data-managed is owned by its component (e.g. Footer.jsx), which
+  // constructs + destroys the instance itself. Prevents double loops.
+  function autoInit() {
+    const el = document.getElementById("dotted-grid-bg");
+    if (!el || el.hasAttribute("data-managed")) return;
     window.dottedGridInstance = new DottedGrid();
+  }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", autoInit);
+  } else {
+    autoInit();
   }
 
   // Expose globally for customisation

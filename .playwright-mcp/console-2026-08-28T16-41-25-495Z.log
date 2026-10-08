@@ -1,5 +1,0 @@
-[    3503ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://127.0.0.1:5174/src/pages/Home.tsx:0
-[    3504ms] [WARNING] GSAP target .counter not found. https://greensock.com @ https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js:9
-[    3504ms] [WARNING] GSAP target  not found. https://greensock.com @ https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js:9
-[    3504ms] [WARNING] GSAP target .background .container not found. https://greensock.com @ https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js:9
-[    3504ms] [WARNING] GSAP target .counter not found. https://greensock.com @ https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js:9
