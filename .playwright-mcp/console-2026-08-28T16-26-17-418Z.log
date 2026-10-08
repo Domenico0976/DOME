@@ -1,0 +1,51 @@
+[    4010ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:5174/node_modules/.vite/deps/react-dom_client.js?v=f29acc37:14335
+[    4342ms] [ERROR] [2026-08-28T16:26:21.758Z]  @firebase/database: FIREBASE FATAL ERROR: Cannot parse Firebase url. Please use https://<YOUR FIREBASE>.firebaseio.com  @ https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js:0
+[    4351ms] Uncaught Error: FIREBASE FATAL ERROR: Cannot parse Firebase url. Please use https://<YOUR FIREBASE>.firebaseio.com 
+    at fe (https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js:0:16440)
+    at os (https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js:0:131534)
+    at Js (https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js:0:147608)
+    at <anonymous> (https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js:0:152670)
+    at getOrInitializeService (https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js:0:10269)
+    at getImmediate (https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js:0:8269)
+    at INTERNAL.registerComponent.x.setServiceProps.Reference (https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js:0:165677)
+    at getOrInitializeService (https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js:0:10269)
+    at getImmediate (https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js:0:8269)
+    at _getService (https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js:0:29029)
+    at r.type.i.<computed> (https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js:0:30170)
+    at e (https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js:0:30037)
+    at <anonymous> (http://localhost:5174/src/pages/Home.tsx:27:21)
+    at react_stack_bottom_frame (http://localhost:5174/node_modules/.vite/deps/react-dom_client.js?v=f29acc37:12901:12)
+    at runWithFiberInDEV (http://localhost:5174/node_modules/.vite/deps/react-dom_client.js?v=f29acc37:850:65)
+    at commitHookEffectListMount (http://localhost:5174/node_modules/.vite/deps/react-dom_client.js?v=f29acc37:6616:152)
+    at commitHookPassiveMountEffects (http://localhost:5174/node_modules/.vite/deps/react-dom_client.js?v=f29acc37:6651:54)
+    at commitPassiveMountOnFiber (http://localhost:5174/node_modules/.vite/deps/react-dom_client.js?v=f29acc37:7617:21)
+    at recursivelyTraversePassiveMountEffects (http://localhost:5174/node_modules/.vite/deps/react-dom_client.js?v=f29acc37:7605:4)
+    at commitPassiveMountOnFiber (http://localhost:5174/node_modules/.vite/deps/react-dom_client.js?v=f29acc37:7671:13)
+    at recursivelyTraversePassiveMountEffects (http://localhost:5174/node_modules/.vite/deps/react-dom_client.js?v=f29acc37:7605:4)
+    at commitPassiveMountOnFiber (http://localhost:5174/node_modules/.vite/deps/react-dom_client.js?v=f29acc37:7616:5)
+    at recursivelyTraversePassiveMountEffects (http://localhost:5174/node_modules/.vite/deps/react-dom_client.js?v=f29acc37:7605:4)
+    at commitPassiveMountOnFiber (http://localhost:5174/node_modules/.vite/deps/react-dom_client.js?v=f29acc37:7616:5)
+    at recursivelyTraversePassiveMountEffects (http://localhost:5174/node_modules/.vite/deps/react-dom_client.js?v=f29acc37:7605:4)
+    at commitPassiveMountOnFiber (http://localhost:5174/node_modules/.vite/deps/react-dom_client.js?v=f29acc37:7671:13)
+    at recursivelyTraversePassiveMountEffects (http://localhost:5174/node_modules/.vite/deps/react-dom_client.js?v=f29acc37:7605:4)
+    at commitPassiveMountOnFiber (http://localhost:5174/node_modules/.vite/deps/react-dom_client.js?v=f29acc37:7671:13)
+    at recursivelyTraversePassiveMountEffects (http://localhost:5174/node_modules/.vite/deps/react-dom_client.js?v=f29acc37:7605:4)
+    at commitPassiveMountOnFiber (http://localhost:5174/node_modules/.vite/deps/react-dom_client.js?v=f29acc37:7616:5)
+    at recursivelyTraversePassiveMountEffects (http://localhost:5174/node_modules/.vite/deps/react-dom_client.js?v=f29acc37:7605:4)
+    at commitPassiveMountOnFiber (http://localhost:5174/node_modules/.vite/deps/react-dom_client.js?v=f29acc37:7616:5)
+    at recursivelyTraversePassiveMountEffects (http://localhost:5174/node_modules/.vite/deps/react-dom_client.js?v=f29acc37:7605:4)
+    at commitPassiveMountOnFiber (http://localhost:5174/node_modules/.vite/deps/react-dom_client.js?v=f29acc37:7616:5)
+    at recursivelyTraversePassiveMountEffects (http://localhost:5174/node_modules/.vite/deps/react-dom_client.js?v=f29acc37:7605:4)
+    at commitPassiveMountOnFiber (http://localhost:5174/node_modules/.vite/deps/react-dom_client.js?v=f29acc37:7626:5)
+    at flushPassiveEffects (http://localhost:5174/node_modules/.vite/deps/react-dom_client.js?v=f29acc37:8807:4)
+    at <anonymous> (http://localhost:5174/node_modules/.vite/deps/react-dom_client.js?v=f29acc37:8561:5)
+    at performWorkUntilDeadline (http://localhost:5174/node_modules/.vite/deps/react-dom_client.js?v=f29acc37:35:37)
+[    4351ms] [WARNING] %s
+
+%s
+ An error occurred in the <Home> component. Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries. @ http://localhost:5174/node_modules/.vite/deps/react-dom_client.js?v=f29acc37:5257
+[    4432ms] [WARNING] GSAP target .counter not found. https://greensock.com @ https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js:9
+[    4434ms] [WARNING] GSAP target  not found. https://greensock.com @ https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js:9
+[    4434ms] [WARNING] GSAP target .background .container not found. https://greensock.com @ https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js:9
+[    4434ms] [WARNING] GSAP target .counter not found. https://greensock.com @ https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js:9

@@ -1,0 +1,224 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic "DOME" [ref=e5]: D
+    - generic [ref=e6]:
+      - button "Undo" [ref=e300] [cursor=pointer]
+      - button "Redo" [disabled]
+  - generic [ref=e7]:
+    - banner [ref=e8]:
+      - combobox "Preview quality" [ref=e9] [cursor=pointer]:
+        - generic: High · 1080p
+      - generic [ref=e12]:
+        - button "Tips" [ref=e13] [cursor=pointer]
+        - button "Support" [ref=e17] [cursor=pointer]
+        - button "Templates" [ref=e25] [cursor=pointer]
+        - button "Save project" [ref=e30] [cursor=pointer]: Unsaved changes
+        - button "Sign in" [ref=e35] [cursor=pointer]
+        - button "Toggle theme" [ref=e36] [cursor=pointer]
+    - main [ref=e43]:
+      - generic [ref=e49]:
+        - button "Zoom out" [ref=e50] [cursor=pointer]: "-"
+        - generic [ref=e51]: 100%
+        - button "Zoom in" [ref=e52] [cursor=pointer]: +
+        - button "Reset zoom" [ref=e53] [cursor=pointer]: Reset
+    - generic "Export menu" [ref=e56]:
+      - button "Export PNG" [ref=e57] [cursor=pointer]
+      - button "Instagram" [ref=e61] [cursor=pointer]
+      - button "Spotify Canvas" [ref=e65] [cursor=pointer]
+      - button "Fullscreen" [ref=e69] [cursor=pointer]
+      - button "Reset" [ref=e75] [cursor=pointer]
+    - contentinfo "Audio Reactivity Panel" [ref=e79]:
+      - generic [ref=e80]:
+        - generic [ref=e81]:
+          - button "Play/Pause" [ref=e82] [cursor=pointer]
+          - button "Stop" [ref=e85] [cursor=pointer]
+          - button "Loop" [ref=e88] [cursor=pointer]
+        - generic [ref=e94]:
+          - button "Load" [ref=e95] [cursor=pointer]
+          - button [ref=e99] [cursor=pointer]
+          - button [ref=e103] [cursor=pointer]
+        - generic [ref=e106]:
+          - generic [ref=e107]:
+            - generic [ref=e108]: BPM
+            - spinbutton "BPM" [ref=e109]: "120"
+          - button "Tap" [ref=e110] [cursor=pointer]
+      - generic [ref=e111]:
+        - generic [ref=e113] [cursor=pointer]
+        - generic [ref=e114]:
+          - slider [ref=e118]
+          - generic [ref=e119]: 0.0s / 60.0s
+      - generic [ref=e120]:
+        - generic [ref=e121]:
+          - generic [ref=e122]:
+            - generic [ref=e123]: Presets
+            - button "Add Preset" [ref=e124] [cursor=pointer]
+          - generic [ref=e126]: No presets
+        - generic [ref=e128]:
+          - generic [ref=e129]: B
+          - generic [ref=e132]: M
+          - generic [ref=e135]: T
+          - generic [ref=e138]: L
+  - generic [ref=e141]:
+    - generic [ref=e142]:
+      - generic [ref=e143]: Stack
+      - button "Add tool to stack" [ref=e144] [cursor=pointer]
+    - generic [ref=e304]:
+      - generic [ref=e305]: Particles
+      - generic [ref=e310]:
+        - button "Switch tool" [ref=e311] [cursor=pointer]
+        - button "Hide node" [ref=e318] [cursor=pointer]
+        - button "Remove node" [ref=e324] [cursor=pointer]
+        - button "Add tool above" [ref=e328] [cursor=pointer]
+  - generic [ref=e330]:
+    - generic [ref=e331]:
+      - generic [ref=e332]: Node Options
+      - button "Close panel" [ref=e333] [cursor=pointer]
+    - generic [ref=e338]:
+      - heading "Particles" [level=3] [ref=e344]
+      - generic [ref=e345]:
+        - generic [ref=e346]: Blend mode
+        - combobox "Blend mode" [ref=e347]:
+          - option "Normal" [selected]
+          - option "Darken"
+          - option "Multiply"
+          - option "Plus darker"
+          - option "Color burn"
+          - option "Lighten"
+          - option "Screen"
+          - option "Plus lighter"
+          - option "Color dodge"
+          - option "Overlay"
+          - option "Soft light"
+          - option "Hard light"
+          - option "Difference"
+          - option "Exclusion"
+          - option "Hue"
+          - option "Saturation"
+          - option "Color"
+          - option "Luminosity"
+        - generic [ref=e348]: Opacity
+        - slider "Opacity Opacity" [ref=e349] [cursor=pointer]: "1"
+      - generic [ref=e350]:
+        - tablist [ref=e351]:
+          - tab "Controls" [selected] [ref=e352] [cursor=pointer]
+          - tab "Effects" [ref=e353] [cursor=pointer]
+        - tabpanel "Controls" [ref=e354]:
+          - generic [ref=e358]:
+            - generic [ref=e359]:
+              - generic [ref=e360]:
+                - generic [ref=e361]: Mode
+                - generic [ref=e362]:
+                  - button "Bind audio for mode" [ref=e363] [cursor=pointer]
+                  - button "Learn MIDI for mode" [disabled]
+                  - button "Add keyframe for mode" [ref=e365] [cursor=pointer]
+              - combobox "Mode" [ref=e369]:
+                - option "chladni"
+                - option "sphere"
+                - option "cube"
+                - option "flow" [selected]
+            - generic [ref=e615]:
+              - generic [ref=e616]:
+                - generic [ref=e617]: Density
+                - generic [ref=e618]:
+                  - button "Bind audio for density" [ref=e619] [cursor=pointer]
+                  - button "Learn MIDI for density" [disabled]
+                  - button "Add keyframe for density" [ref=e621] [cursor=pointer]
+              - slider "Density" [ref=e625] [cursor=pointer]: "10"
+            - generic [ref=e626]:
+              - generic [ref=e627]:
+                - generic [ref=e628]: Size
+                - generic [ref=e629]:
+                  - button "Bind audio for size" [ref=e630] [cursor=pointer]
+                  - button "Learn MIDI for size" [disabled]
+                  - button "Add keyframe for size" [ref=e632] [cursor=pointer]
+              - slider "Size" [ref=e636] [cursor=pointer]: "3"
+            - generic [ref=e637]:
+              - generic [ref=e638]:
+                - generic [ref=e639]: Speed
+                - generic [ref=e640]:
+                  - button "Bind audio for speed" [ref=e641] [cursor=pointer]
+                  - button "Learn MIDI for speed" [disabled]
+                  - button "Add keyframe for speed" [ref=e643] [cursor=pointer]
+              - slider "Speed" [ref=e647] [cursor=pointer]: "1"
+            - generic [ref=e648]:
+              - generic [ref=e649]:
+                - generic [ref=e650]: Waves
+                - generic [ref=e651]:
+                  - button "Bind audio for flowWaves" [ref=e652] [cursor=pointer]
+                  - button "Learn MIDI for flowWaves" [disabled]
+                  - button "Add keyframe for flowWaves" [ref=e654] [cursor=pointer]
+              - slider "Waves" [ref=e658] [cursor=pointer]: "0"
+            - generic [ref=e659]:
+              - generic [ref=e660]:
+                - generic [ref=e661]: Randomize
+                - generic [ref=e662]:
+                  - button "Bind audio for flowRandomize" [ref=e663] [cursor=pointer]
+                  - button "Learn MIDI for flowRandomize" [disabled]
+                  - button "Add keyframe for flowRandomize" [ref=e665] [cursor=pointer]
+              - slider "Randomize" [ref=e669] [cursor=pointer]: "0"
+            - generic [ref=e670]:
+              - generic [ref=e671]:
+                - generic [ref=e672]: Wave Speed
+                - generic [ref=e673]:
+                  - button "Bind audio for flowWaveSpeed" [ref=e674] [cursor=pointer]
+                  - button "Learn MIDI for flowWaveSpeed" [disabled]
+                  - button "Add keyframe for flowWaveSpeed" [ref=e676] [cursor=pointer]
+              - slider "Wave Speed" [ref=e680] [cursor=pointer]: "1"
+            - generic [ref=e681]:
+              - generic [ref=e682]:
+                - generic [ref=e683]: Rotation
+                - generic [ref=e684]:
+                  - button "Bind audio for flowRotation" [ref=e685] [cursor=pointer]
+                  - button "Learn MIDI for flowRotation" [disabled]
+                  - button "Add keyframe for flowRotation" [ref=e687] [cursor=pointer]
+              - slider "Rotation" [ref=e691] [cursor=pointer]: "0.01"
+            - generic [ref=e692]:
+              - generic [ref=e693]:
+                - generic [ref=e694]: Zoom
+                - generic [ref=e695]:
+                  - button "Bind audio for flowZoom" [ref=e696] [cursor=pointer]
+                  - button "Learn MIDI for flowZoom" [disabled]
+                  - button "Add keyframe for flowZoom" [ref=e698] [cursor=pointer]
+              - slider "Zoom" [ref=e702] [cursor=pointer]: "1"
+            - generic [ref=e703]:
+              - generic [ref=e704]:
+                - generic [ref=e705]: Depth
+                - generic [ref=e706]:
+                  - button "Bind audio for flowDepth" [ref=e707] [cursor=pointer]
+                  - button "Learn MIDI for flowDepth" [disabled]
+                  - button "Add keyframe for flowDepth" [ref=e709] [cursor=pointer]
+              - slider "Depth" [ref=e713] [cursor=pointer]: "0"
+            - generic [ref=e447]:
+              - generic [ref=e448]:
+                - generic [ref=e449]: Hue Shift
+                - generic [ref=e450]:
+                  - button "Bind audio for hueShift" [ref=e451] [cursor=pointer]
+                  - button "Learn MIDI for hueShift" [disabled]
+                  - button "Add keyframe for hueShift" [ref=e453] [cursor=pointer]
+              - slider "Hue Shift" [ref=e457] [cursor=pointer]: "0"
+            - generic [ref=e458]:
+              - generic [ref=e459]:
+                - generic [ref=e460]: Opacity
+                - generic [ref=e461]:
+                  - button "Bind audio for opacity" [ref=e462] [cursor=pointer]
+                  - button "Learn MIDI for opacity" [disabled]
+                  - button "Add keyframe for opacity" [ref=e464] [cursor=pointer]
+              - slider [ref=e468] [cursor=pointer]: "1"
+            - generic [ref=e469]:
+              - generic [ref=e470]:
+                - generic [ref=e471]: Particle Color
+                - generic [ref=e472]:
+                  - button "Bind audio for color" [ref=e473] [cursor=pointer]
+                  - button "Learn MIDI for color" [disabled]
+                  - button "Add keyframe for color" [ref=e475] [cursor=pointer]
+              - textbox "Particle Color" [ref=e479] [cursor=pointer]: "#ffffff"
+            - generic [ref=e480]:
+              - generic [ref=e481]:
+                - generic [ref=e482]: Background Color
+                - generic [ref=e483]:
+                  - button "Bind audio for bgColor" [ref=e484] [cursor=pointer]
+                  - button "Learn MIDI for bgColor" [disabled]
+                  - button "Add keyframe for bgColor" [ref=e486] [cursor=pointer]
+              - textbox "Background Color" [ref=e490] [cursor=pointer]: "#000000"
+            - button "Colors" [ref=e492] [cursor=pointer]
+    - button "Resize panel" [ref=e502]

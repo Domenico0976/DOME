@@ -1,0 +1,132 @@
+[      79ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:5174/node_modules/.vite/deps/react-dom_client.js?v=f29acc37:14335
+[      85ms] [WARNING] GSAP target .counter not found. https://greensock.com @ https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js:9
+[      85ms] [WARNING] GSAP target  not found. https://greensock.com @ https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js:9
+[      85ms] [WARNING] GSAP target .background .container not found. https://greensock.com @ https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js:9
+[      86ms] [WARNING] GSAP target .counter not found. https://greensock.com @ https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js:9
+[     183ms] [WARNING] [Spline] #spline-canvas not found — skipping viewer @ http://localhost:5174/js/splineViewer.js:22
+[     228ms] [ERROR] [2026-08-28T15:58:43.972Z]  @firebase/database: FIREBASE FATAL ERROR: Cannot parse Firebase url. Please use https://<YOUR FIREBASE>.firebaseio.com  @ https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js:0
+[     241ms] Uncaught Error: FIREBASE FATAL ERROR: Cannot parse Firebase url. Please use https://<YOUR FIREBASE>.firebaseio.com 
+    at fe (https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js:0:16440)
+    at os (https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js:0:131534)
+    at Js (https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js:0:147608)
+    at <anonymous> (https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js:0:152670)
+    at getOrInitializeService (https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js:0:10269)
+    at getImmediate (https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js:0:8269)
+    at INTERNAL.registerComponent.x.setServiceProps.Reference (https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js:0:165677)
+    at getOrInitializeService (https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js:0:10269)
+    at getImmediate (https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js:0:8269)
+    at _getService (https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js:0:29029)
+    at r.type.i.<computed> (https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js:0:30170)
+    at e (https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js:0:30037)
+    at loadNext (http://localhost:5174/src/pages/Home.tsx:46:23)
+[     360ms] [LOG] [vite] server connection lost. Polling for restart... @ http://localhost:5174/@vite/client:1002
+[    4744ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:5174/node_modules/.vite/deps/react-dom_client.js?v=f29acc37:14335
+[    4749ms] [WARNING] GSAP target .counter not found. https://greensock.com @ https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js:9
+[    4749ms] [WARNING] GSAP target  not found. https://greensock.com @ https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js:9
+[    4749ms] [WARNING] GSAP target .background .container not found. https://greensock.com @ https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js:9
+[    4749ms] [WARNING] GSAP target .counter not found. https://greensock.com @ https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js:9
+[    4820ms] [WARNING] [Spline] #spline-canvas not found — skipping viewer @ http://localhost:5174/js/splineViewer.js:22
+[    4843ms] [ERROR] [2026-08-28T15:58:48.587Z]  @firebase/database: FIREBASE FATAL ERROR: Cannot parse Firebase url. Please use https://<YOUR FIREBASE>.firebaseio.com  @ https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js:0
+[    4842ms] Uncaught Error: FIREBASE FATAL ERROR: Cannot parse Firebase url. Please use https://<YOUR FIREBASE>.firebaseio.com 
+    at fe (https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js:0:16440)
+    at os (https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js:0:131534)
+    at Js (https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js:0:147608)
+    at <anonymous> (https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js:0:152670)
+    at getOrInitializeService (https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js:0:10269)
+    at getImmediate (https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js:0:8269)
+    at INTERNAL.registerComponent.x.setServiceProps.Reference (https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js:0:165677)
+    at getOrInitializeService (https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js:0:10269)
+    at getImmediate (https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js:0:8269)
+    at _getService (https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js:0:29029)
+    at r.type.i.<computed> (https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js:0:30170)
+    at e (https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js:0:30037)
+    at loadNext (http://localhost:5174/src/pages/Home.tsx:46:23)
+[  125635ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:5174/node_modules/.vite/deps/react-dom_client.js?v=f29acc37:14335
+[  125644ms] [WARNING] GSAP target .counter not found. https://greensock.com @ https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js:9
+[  125644ms] [WARNING] GSAP target  not found. https://greensock.com @ https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js:9
+[  125644ms] [WARNING] GSAP target .background .container not found. https://greensock.com @ https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js:9
+[  125645ms] [WARNING] GSAP target .counter not found. https://greensock.com @ https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js:9
+[  125916ms] [WARNING] [Spline] #spline-canvas not found — skipping viewer @ http://localhost:5174/js/splineViewer.js:22
+[  125958ms] [ERROR] [2026-08-28T16:00:49.702Z]  @firebase/database: FIREBASE FATAL ERROR: Cannot parse Firebase url. Please use https://<YOUR FIREBASE>.firebaseio.com  @ https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js:0
+[  125958ms] Uncaught Error: FIREBASE FATAL ERROR: Cannot parse Firebase url. Please use https://<YOUR FIREBASE>.firebaseio.com 
+    at fe (https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js:0:16440)
+    at os (https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js:0:131534)
+    at Js (https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js:0:147608)
+    at <anonymous> (https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js:0:152670)
+    at getOrInitializeService (https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js:0:10269)
+    at getImmediate (https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js:0:8269)
+    at INTERNAL.registerComponent.x.setServiceProps.Reference (https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js:0:165677)
+    at getOrInitializeService (https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js:0:10269)
+    at getImmediate (https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js:0:8269)
+    at _getService (https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js:0:29029)
+    at r.type.i.<computed> (https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js:0:30170)
+    at e (https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js:0:30037)
+    at loadNext (http://localhost:5174/src/pages/Home.tsx:46:23)
+[  130107ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:5174/node_modules/.vite/deps/react-dom_client.js?v=f29acc37:14335
+[  130117ms] [WARNING] GSAP target .counter not found. https://greensock.com @ https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js:9
+[  130118ms] [WARNING] GSAP target  not found. https://greensock.com @ https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js:9
+[  130118ms] [WARNING] GSAP target .background .container not found. https://greensock.com @ https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js:9
+[  130118ms] [WARNING] GSAP target .counter not found. https://greensock.com @ https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js:9
+[  130208ms] [WARNING] [Spline] #spline-canvas not found — skipping viewer @ http://localhost:5174/js/splineViewer.js:22
+[  130242ms] [ERROR] [2026-08-28T16:00:53.987Z]  @firebase/database: FIREBASE FATAL ERROR: Cannot parse Firebase url. Please use https://<YOUR FIREBASE>.firebaseio.com  @ https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js:0
+[  130244ms] Uncaught Error: FIREBASE FATAL ERROR: Cannot parse Firebase url. Please use https://<YOUR FIREBASE>.firebaseio.com 
+    at fe (https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js:0:16440)
+    at os (https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js:0:131534)
+    at Js (https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js:0:147608)
+    at <anonymous> (https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js:0:152670)
+    at getOrInitializeService (https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js:0:10269)
+    at getImmediate (https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js:0:8269)
+    at INTERNAL.registerComponent.x.setServiceProps.Reference (https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js:0:165677)
+    at getOrInitializeService (https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js:0:10269)
+    at getImmediate (https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js:0:8269)
+    at _getService (https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js:0:29029)
+    at r.type.i.<computed> (https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js:0:30170)
+    at e (https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js:0:30037)
+    at loadNext (http://localhost:5174/src/pages/Home.tsx:46:23)
+[  159274ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:5174/node_modules/.vite/deps/react-dom_client.js?v=f29acc37:14335
+[  159422ms] [WARNING] [Spline] #spline-canvas not found — skipping viewer @ http://localhost:5174/js/splineViewer.js:22
+[  159467ms] [ERROR] [2026-08-28T16:01:23.211Z]  @firebase/database: FIREBASE FATAL ERROR: Cannot parse Firebase url. Please use https://<YOUR FIREBASE>.firebaseio.com  @ https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js:0
+[  159467ms] Uncaught Error: FIREBASE FATAL ERROR: Cannot parse Firebase url. Please use https://<YOUR FIREBASE>.firebaseio.com 
+    at fe (https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js:0:16440)
+    at os (https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js:0:131534)
+    at Js (https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js:0:147608)
+    at <anonymous> (https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js:0:152670)
+    at getOrInitializeService (https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js:0:10269)
+    at getImmediate (https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js:0:8269)
+    at INTERNAL.registerComponent.x.setServiceProps.Reference (https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js:0:165677)
+    at getOrInitializeService (https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js:0:10269)
+    at getImmediate (https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js:0:8269)
+    at _getService (https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js:0:29029)
+    at r.type.i.<computed> (https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js:0:30170)
+    at e (https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js:0:30037)
+    at loadNext (http://localhost:5174/src/pages/Home.tsx:46:23)
+[  362801ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:5174/node_modules/.vite/deps/react-dom_client.js?v=f29acc37:14335
+[  362811ms] [WARNING] GSAP target .counter not found. https://greensock.com @ https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js:9
+[  362811ms] [WARNING] GSAP target  not found. https://greensock.com @ https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js:9
+[  362811ms] [WARNING] GSAP target .background .container not found. https://greensock.com @ https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js:9
+[  362811ms] [WARNING] GSAP target .counter not found. https://greensock.com @ https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js:9
+[  363327ms] [WARNING] [Spline] #spline-canvas not found — skipping viewer @ http://localhost:5174/js/splineViewer.js:22
+[  363347ms] Identifier 'WeatherCard' has already been declared
+[  363350ms] Identifier 'PopItGame' has already been declared
+[  363353ms] Identifier 'ProgressBarManager' has already been declared
+[  363356ms] Identifier 'MasonryLayout' has already been declared
+[  363360ms] Identifier 'SlotCounter' has already been declared
+[  363377ms] [WARNING] [2026-08-28T16:04:47.117Z]  @firebase/app-compat: 
+    Warning: Firebase is already defined in the global scope. Please make sure
+    Firebase library is only loaded once.
+   @ https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js:0
+[  363380ms] [ERROR] [2026-08-28T16:04:47.124Z]  @firebase/database: FIREBASE FATAL ERROR: Cannot parse Firebase url. Please use https://<YOUR FIREBASE>.firebaseio.com  @ https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js:0
+[  363380ms] Uncaught Error: FIREBASE FATAL ERROR: Cannot parse Firebase url. Please use https://<YOUR FIREBASE>.firebaseio.com 
+    at fe (https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js:0:16440)
+    at os (https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js:0:131534)
+    at Js (https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js:0:147608)
+    at <anonymous> (https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js:0:152670)
+    at getOrInitializeService (https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js:0:10269)
+    at getImmediate (https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js:0:8269)
+    at INTERNAL.registerComponent.x.setServiceProps.Reference (https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js:0:165677)
+    at getOrInitializeService (https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js:0:10269)
+    at getImmediate (https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js:0:8269)
+    at _getService (https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js:0:29029)
+    at r.type.i.<computed> (https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js:0:30170)
+    at e (https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js:0:30037)
+    at loadNext (http://localhost:5174/src/pages/Home.tsx:46:23)

@@ -1,0 +1,60 @@
+[      33ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://127.0.0.1:5174/node_modules/.vite/deps/react-dom_client.js?v=f29acc37:14335
+[      40ms] [WARNING] GSAP target .counter not found. https://greensock.com @ https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js:9
+[      40ms] [WARNING] GSAP target  not found. https://greensock.com @ https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js:9
+[      40ms] [WARNING] GSAP target .background .container not found. https://greensock.com @ https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js:9
+[      40ms] [WARNING] GSAP target .counter not found. https://greensock.com @ https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js:9
+[      44ms] [LOG] HOME RENDER @ http://127.0.0.1:5174/src/pages/Home.tsx:6
+[     112ms] [ERROR] [2026-08-28T16:53:42.619Z]  @firebase/database: FIREBASE FATAL ERROR: Cannot parse Firebase url. Please use https://<YOUR FIREBASE>.firebaseio.com  @ https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js:0
+[     113ms] Uncaught Error: FIREBASE FATAL ERROR: Cannot parse Firebase url. Please use https://<YOUR FIREBASE>.firebaseio.com 
+    at fe (https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js:0:16440)
+    at os (https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js:0:131534)
+    at Js (https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js:0:147608)
+    at <anonymous> (https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js:0:152670)
+    at getOrInitializeService (https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js:0:10269)
+    at getImmediate (https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js:0:8269)
+    at <anonymous> (https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js:0:165677)
+    at getOrInitializeService (https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js:0:10269)
+    at getImmediate (https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js:0:8269)
+    at _getService (https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js:0:29029)
+    at <anonymous> (https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js:0:30170)
+    at e (https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js:0:30037)
+    at <anonymous> (http://127.0.0.1:5174/src/pages/Home.tsx:25:21)
+    at react_stack_bottom_frame (http://127.0.0.1:5174/node_modules/.vite/deps/react-dom_client.js?v=f29acc37:12901:12)
+    at runWithFiberInDEV (http://127.0.0.1:5174/node_modules/.vite/deps/react-dom_client.js?v=f29acc37:850:65)
+    at commitHookEffectListMount (http://127.0.0.1:5174/node_modules/.vite/deps/react-dom_client.js?v=f29acc37:6616:152)
+    at commitHookPassiveMountEffects (http://127.0.0.1:5174/node_modules/.vite/deps/react-dom_client.js?v=f29acc37:6651:54)
+    at commitPassiveMountOnFiber (http://127.0.0.1:5174/node_modules/.vite/deps/react-dom_client.js?v=f29acc37:7617:21)
+    at recursivelyTraversePassiveMountEffects (http://127.0.0.1:5174/node_modules/.vite/deps/react-dom_client.js?v=f29acc37:7605:4)
+    at commitPassiveMountOnFiber (http://127.0.0.1:5174/node_modules/.vite/deps/react-dom_client.js?v=f29acc37:7671:13)
+    at recursivelyTraversePassiveMountEffects (http://127.0.0.1:5174/node_modules/.vite/deps/react-dom_client.js?v=f29acc37:7605:4)
+    at commitPassiveMountOnFiber (http://127.0.0.1:5174/node_modules/.vite/deps/react-dom_client.js?v=f29acc37:7616:5)
+    at recursivelyTraversePassiveMountEffects (http://127.0.0.1:5174/node_modules/.vite/deps/react-dom_client.js?v=f29acc37:7605:4)
+    at commitPassiveMountOnFiber (http://127.0.0.1:5174/node_modules/.vite/deps/react-dom_client.js?v=f29acc37:7616:5)
+    at recursivelyTraversePassiveMountEffects (http://127.0.0.1:5174/node_modules/.vite/deps/react-dom_client.js?v=f29acc37:7605:4)
+    at commitPassiveMountOnFiber (http://127.0.0.1:5174/node_modules/.vite/deps/react-dom_client.js?v=f29acc37:7671:13)
+    at recursivelyTraversePassiveMountEffects (http://127.0.0.1:5174/node_modules/.vite/deps/react-dom_client.js?v=f29acc37:7605:4)
+    at commitPassiveMountOnFiber (http://127.0.0.1:5174/node_modules/.vite/deps/react-dom_client.js?v=f29acc37:7671:13)
+    at recursivelyTraversePassiveMountEffects (http://127.0.0.1:5174/node_modules/.vite/deps/react-dom_client.js?v=f29acc37:7605:4)
+    at commitPassiveMountOnFiber (http://127.0.0.1:5174/node_modules/.vite/deps/react-dom_client.js?v=f29acc37:7616:5)
+    at recursivelyTraversePassiveMountEffects (http://127.0.0.1:5174/node_modules/.vite/deps/react-dom_client.js?v=f29acc37:7605:4)
+    at commitPassiveMountOnFiber (http://127.0.0.1:5174/node_modules/.vite/deps/react-dom_client.js?v=f29acc37:7616:5)
+    at recursivelyTraversePassiveMountEffects (http://127.0.0.1:5174/node_modules/.vite/deps/react-dom_client.js?v=f29acc37:7605:4)
+    at commitPassiveMountOnFiber (http://127.0.0.1:5174/node_modules/.vite/deps/react-dom_client.js?v=f29acc37:7616:5)
+    at recursivelyTraversePassiveMountEffects (http://127.0.0.1:5174/node_modules/.vite/deps/react-dom_client.js?v=f29acc37:7605:4)
+    at commitPassiveMountOnFiber (http://127.0.0.1:5174/node_modules/.vite/deps/react-dom_client.js?v=f29acc37:7626:5)
+    at flushPassiveEffects (http://127.0.0.1:5174/node_modules/.vite/deps/react-dom_client.js?v=f29acc37:8807:4)
+    at <anonymous> (http://127.0.0.1:5174/node_modules/.vite/deps/react-dom_client.js?v=f29acc37:8561:5)
+    at performWorkUntilDeadline (http://127.0.0.1:5174/node_modules/.vite/deps/react-dom_client.js?v=f29acc37:35:37)
+[     114ms] [WARNING] %s
+
+%s
+ An error occurred in the <Home> component. Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries. @ http://127.0.0.1:5174/node_modules/.vite/deps/react-dom_client.js?v=f29acc37:5257
+[   60195ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://127.0.0.1:5174/src/pages/Home.tsx?t=1787936082669:0
+[   60195ms] [ERROR] [vite] Failed to reload /src/pages/Home.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above) @ http://127.0.0.1:5174/@vite/client:935
+[   78711ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://127.0.0.1:5174/src/pages/Home.tsx?t=1787936101186:0
+[   78711ms] [ERROR] [vite] Failed to reload /src/pages/Home.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above) @ http://127.0.0.1:5174/@vite/client:935
+[  106175ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://127.0.0.1:5174/src/pages/Home.tsx?t=1787936128651:0
+[  106175ms] [ERROR] [vite] Failed to reload /src/pages/Home.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above) @ http://127.0.0.1:5174/@vite/client:935
+[  216739ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://127.0.0.1:5174/src/pages/Home.tsx?t=1787936239213:0
+[  216739ms] [ERROR] [vite] Failed to reload /src/pages/Home.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above) @ http://127.0.0.1:5174/@vite/client:935

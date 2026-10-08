@@ -1,0 +1,23 @@
+- generic [active] [ref=f7e1]:
+  - heading "8" [level=1]
+  - generic [ref=f7e14]:
+    - heading "D o m e n i c o F u s t o" [level=1] [ref=f7e15]:
+      - generic [ref=f7e16]: D
+      - generic [ref=f7e17]: o
+      - generic [ref=f7e18]: m
+      - generic [ref=f7e19]: e
+      - generic [ref=f7e20]: "n"
+      - generic [ref=f7e21]: i
+      - generic [ref=f7e22]: c
+      - generic [ref=f7e23]: o
+      - generic [ref=f7e24]: F
+      - generic [ref=f7e25]: u
+      - generic [ref=f7e26]: s
+      - generic [ref=f7e27]: t
+      - generic [ref=f7e28]: o
+    - heading "whooo?" [level=3] [ref=f7e29]
+  - contentinfo [ref=f7e30]:
+    - paragraph [ref=f7e32]: CLICK TO CHANGE SHAPE
+    - generic [ref=f7e34]:
+      - paragraph [ref=f7e35]: © 2024 by Domenico Fusto
+      - paragraph [ref=f7e36]: Made with ❤️

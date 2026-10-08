@@ -1,0 +1,297 @@
+- generic [ref=f8e2]:
+  - heading "100" [level=1]
+  - generic [ref=f8e15]:
+    - heading "D o m e n i c o F u s t o" [level=1] [ref=f8e16]:
+      - generic [ref=f8e17]: D
+      - generic [ref=f8e18]: o
+      - generic [ref=f8e19]: m
+      - generic [ref=f8e20]: e
+      - generic [ref=f8e21]: "n"
+      - generic [ref=f8e22]: i
+      - generic [ref=f8e23]: c
+      - generic [ref=f8e24]: o
+      - generic [ref=f8e25]: F
+      - generic [ref=f8e26]: u
+      - generic [ref=f8e27]: s
+      - generic [ref=f8e28]: t
+      - generic [ref=f8e29]: o
+    - heading "whooo?" [level=3] [ref=f8e30]
+  - generic [ref=f8e38]:
+    - paragraph [ref=f8e40]: 🚧 Website Under Construction
+    - generic [ref=f8e42]:
+      - link ".in" [ref=f8e44] [cursor=pointer]:
+        - /url: https://www.linkedin.com/in/domenico-fusto-a74273189/
+      - link ".be" [ref=f8e46] [cursor=pointer]:
+        - /url: https://www.behance.net/domenicofusto
+      - link ".@" [ref=f8e48] [cursor=pointer]:
+        - /url: mailto:domenicofusto55@gmail.com
+    - generic [ref=f8e49]:
+      - generic [ref=f8e50]:
+        - generic [ref=f8e51]:
+          - generic [ref=f8e52]:
+            - paragraph [ref=f8e53]: Domenico Fusto
+            - paragraph [ref=f8e54]: 25/05/1998
+          - generic [ref=f8e58]:
+            - paragraph [ref=f8e59]: "28"
+            - paragraph [ref=f8e60]: years
+        - generic [ref=f8e63]:
+          - generic [ref=f8e64]:
+            - paragraph [ref=f8e65]: UX/UI Designer
+            - paragraph [ref=f8e66]: Software Skills
+          - generic [ref=f8e70]:
+            - paragraph [ref=f8e71]: "95"
+            - paragraph [ref=f8e72]: "% Skills"
+      - generic [ref=f8e76] [cursor=pointer]:
+        - generic [ref=f8e77]:
+          - generic [ref=f8e78]: "--:--:--"
+          - generic [ref=f8e82]: "--/--/----"
+          - generic [ref=f8e86]: "--%"
+          - generic [ref=f8e90]: "-- km/h"
+          - generic [ref=f8e94]: "--%"
+          - generic [ref=f8e98]: "--"
+          - generic [ref=f8e102]: "--:--:--"
+          - generic [ref=f8e106]: "--:--:--"
+          - generic [ref=f8e110]: "--, --"
+          - generic [ref=f8e114]: "--%"
+        - generic [ref=f8e118]:
+          - textbox "Cerca città..." [ref=f8e119]: Milano
+          - button ">" [ref=f8e120]
+        - generic [ref=f8e121]: Milano
+        - generic [ref=f8e134]:
+          - generic [ref=f8e135]: "--°C"
+          - generic [ref=f8e136]:
+            - button "°C" [ref=f8e137]
+            - button "°F" [ref=f8e138]
+      - group [ref=f8e140]:
+        - paragraph [ref=f8e142]: Software i use
+        - generic [ref=f8e145] [cursor=pointer]:
+          - generic [ref=f8e154]: WordPress
+          - generic: 0%
+          - radio "WordPress 0%" [ref=f8e156]
+        - generic [ref=f8e157] [cursor=pointer]:
+          - generic [ref=f8e165]: Figma
+          - generic [ref=f8e166]: 0%
+          - radio "Figma 0%" [checked] [ref=f8e169]
+        - generic [ref=f8e170] [cursor=pointer]:
+          - generic [ref=f8e174]: Adobe Suite
+          - generic: 0%
+          - radio "Adobe Suite 0%" [ref=f8e176]
+        - generic [ref=f8e177] [cursor=pointer]:
+          - generic [ref=f8e181]: Visual Code
+          - generic: 0%
+          - radio "Visual Code 0%" [ref=f8e183]
+        - generic [ref=f8e184] [cursor=pointer]:
+          - generic [ref=f8e188]: TouchDesigner
+          - generic: 0%
+          - radio "TouchDesigner 0%" [ref=f8e190]
+        - generic [ref=f8e191] [cursor=pointer]:
+          - generic [ref=f8e195]: Blender
+          - generic: 0%
+          - radio "Blender 0%" [ref=f8e197]
+      - generic [ref=f8e198]:
+        - generic [ref=f8e199]:
+          - generic [ref=f8e200]:
+            - paragraph [ref=f8e201]: Design Experience
+            - paragraph [ref=f8e202]: UX/UI, Frontend, CMS
+          - generic [ref=f8e206]:
+            - paragraph [ref=f8e207]: "7"
+            - paragraph [ref=f8e208]: years
+        - generic [ref=f8e209]:
+          - generic [ref=f8e210]:
+            - paragraph [ref=f8e211]: Web Dev
+            - paragraph [ref=f8e212]: From 2022
+          - generic [ref=f8e216]:
+            - paragraph [ref=f8e217]: "40.816"
+            - paragraph [ref=f8e218]: hours
+        - generic [ref=f8e219]:
+          - generic [ref=f8e220]:
+            - paragraph [ref=f8e221]: Revenue
+            - paragraph [ref=f8e222]: Accepted 👍🏼
+          - generic [ref=f8e226]:
+            - paragraph [ref=f8e227]: "1.600"
+            - paragraph [ref=f8e228]: €/Months
+        - generic [ref=f8e229]:
+          - generic [ref=f8e230]:
+            - paragraph [ref=f8e231]: Education
+            - paragraph [ref=f8e232]: Bachelor's Degree
+          - generic [ref=f8e236]:
+            - paragraph [ref=f8e237]: "5"
+            - paragraph [ref=f8e238]: years
+      - generic [ref=f8e239]:
+        - paragraph [ref=f8e240]: Online Works
+        - generic [ref=f8e241]:
+          - generic [ref=f8e242]:
+            - paragraph [ref=f8e243]: Dulcis in fundo
+            - paragraph [ref=f8e244]: Online
+          - paragraph [ref=f8e245]: E-commerce site maded with WooCommerce for a local pastry shop based in Vallecrosia (IM) Imperia, Liguria.
+          - generic [ref=f8e246]:
+            - generic [ref=f8e247]:
+              - paragraph [ref=f8e248]: Production Time
+              - generic [ref=f8e249]:
+                - paragraph [ref=f8e250]: "3"
+                - paragraph [ref=f8e251]: /months
+            - link "Website" [ref=f8e252] [cursor=pointer]:
+              - /url: https://dulcisinfundo.store
+        - generic [ref=f8e253]:
+          - generic [ref=f8e254]:
+            - paragraph [ref=f8e255]: Sielco
+            - paragraph [ref=f8e256]: Online
+          - paragraph [ref=f8e257]: Sielco is a leader in IT and data center management, providing tailored services to both private and public sectors.
+          - generic [ref=f8e258]:
+            - generic [ref=f8e259]:
+              - paragraph [ref=f8e260]: Production Time
+              - generic [ref=f8e261]:
+                - paragraph [ref=f8e262]: "4"
+                - paragraph [ref=f8e263]: /months
+            - link "Website" [ref=f8e264] [cursor=pointer]:
+              - /url: https://sielco.it
+        - generic [ref=f8e265]:
+          - generic [ref=f8e266]:
+            - paragraph [ref=f8e267]: Collezione Cagnola
+            - paragraph [ref=f8e268]: Online
+          - paragraph [ref=f8e269]: Bespoke museum booking solution with real-time inventory management and automated overbooking prevention.
+          - generic [ref=f8e270]:
+            - generic [ref=f8e271]:
+              - paragraph [ref=f8e272]: Production Time
+              - generic [ref=f8e273]:
+                - paragraph [ref=f8e274]: "3"
+                - paragraph [ref=f8e275]: /months
+            - link "Website" [ref=f8e276] [cursor=pointer]:
+              - /url: https://collezionecagnola.it/
+        - generic [ref=f8e277]:
+          - generic [ref=f8e278]:
+            - paragraph [ref=f8e279]: CYP Wheels
+            - paragraph [ref=f8e280]: Online
+          - paragraph [ref=f8e281]: E-commerce for fully customizable bicycle wheels, accessories, and individual components, featuring a configurator integrated with WooCommerce.
+          - generic [ref=f8e282]:
+            - generic [ref=f8e283]:
+              - paragraph [ref=f8e284]: Production Time
+              - generic [ref=f8e285]:
+                - paragraph [ref=f8e286]: "7"
+                - paragraph [ref=f8e287]: /months
+            - link "Website" [ref=f8e288] [cursor=pointer]:
+              - /url: https://cypwheels.com
+        - generic [ref=f8e289]:
+          - generic [ref=f8e290]:
+            - paragraph [ref=f8e291]: Marabini Recuperi
+            - paragraph [ref=f8e292]: Online
+          - paragraph [ref=f8e293]: Website for a company specialized in the recovery of waste and various materials, with a focus on sustainability and environmental responsibility.
+          - generic [ref=f8e294]:
+            - generic [ref=f8e295]:
+              - paragraph [ref=f8e296]: Production Time
+              - generic [ref=f8e297]:
+                - paragraph [ref=f8e298]: "3"
+                - paragraph [ref=f8e299]: /months
+            - link "Website" [ref=f8e300] [cursor=pointer]:
+              - /url: https://marabinirecuperi.it
+      - generic [ref=f8e301]:
+        - paragraph [ref=f8e302]: Awards
+        - generic [ref=f8e304] [cursor=pointer]:
+          - link [ref=f8e308]:
+            - /url: https://www.behance.net/gallery/192543821/ALFLY-Share-your-transport-ticket
+            - paragraph [ref=f8e309]: AlFly | UX Awards Berlin 2023
+            - paragraph [ref=f8e310]: Finalist 2°
+          - link:
+            - /url: https://www.behance.net/gallery/192543821/ALFLY-Share-your-transport-ticket
+        - generic [ref=f8e312] [cursor=pointer]:
+          - link [ref=f8e316]:
+            - /url: https://www.linkedin.com/feed/update/urn:li:activity:7052537877905174528?utm_source=share&utm_medium=member_desktop&rcm=ACoAACxa-TgBrXnvKQhqvINMYoB0lXngcx8GZZg
+            - paragraph [ref=f8e317]: SISALFUNCLUB | NABA Milan
+            - paragraph [ref=f8e318]: Project Winner
+          - link:
+            - /url: https://www.linkedin.com/feed/update/urn:li:activity:7052537877905174528?utm_source=share&utm_medium=member_desktop&rcm=ACoAACxa-TgBrXnvKQhqvINMYoB0lXngcx8GZZg
+        - generic [ref=f8e320] [cursor=pointer]:
+          - link [ref=f8e324]:
+            - /url: https://www.behance.net/gallery/175397833/UXUI-Design-Policlinico-di-Milano
+            - paragraph [ref=f8e325]: Policlinico di Milano | NABA Milan
+            - paragraph [ref=f8e326]: Project Winner
+          - link:
+            - /url: https://www.behance.net/gallery/175397833/UXUI-Design-Policlinico-di-Milano
+      - generic [ref=f8e327]:
+        - paragraph [ref=f8e328]: Educational Experience
+        - generic [ref=f8e334] [cursor=pointer]:
+          - paragraph [ref=f8e335]: NABA Milan | Bachelor's Degree
+          - paragraph [ref=f8e336]: 2022/2024
+        - generic [ref=f8e342] [cursor=pointer]:
+          - paragraph [ref=f8e343]: Graphic Design | ABA Catanzaro
+          - paragraph [ref=f8e344]: 2018/2021
+      - generic [ref=f8e345]:
+        - paragraph [ref=f8e347]: Student Projects
+        - generic [ref=f8e348]:
+          - generic [ref=f8e350]:
+            - generic:
+              - generic:
+                - generic:
+                  - img "Slide 1"
+              - generic:
+                - generic:
+                  - img "Slide 2"
+              - generic:
+                - generic:
+                  - img "Slide 3"
+              - generic:
+                - generic:
+                  - img "Slide 4"
+          - generic [ref=f8e352]:
+            - generic [ref=f8e353]:
+              - heading [level=1]
+              - heading [level=2]
+            - generic [ref=f8e354]:
+              - generic [ref=f8e355]:
+                - heading "01" [level=2] [ref=f8e357]
+                - generic:
+                  - heading [level=2]
+              - generic [ref=f8e358]:
+                - button "previous slide" [ref=f8e359] [cursor=pointer]
+                - button "next slide" [ref=f8e360] [cursor=pointer]
+    - heading "When the AI doesn't exist..." [level=1] [ref=f8e362]
+    - generic [ref=f8e363]:
+      - generic [ref=f8e364]:
+        - generic [ref=f8e366]:
+          - img "Elephant Rocket" [ref=f8e368] [cursor=pointer]
+          - img "Heart Washing Machine" [ref=f8e370] [cursor=pointer]
+          - img "Spatial Monkey" [ref=f8e372] [cursor=pointer]
+          - img "Bomb Shark" [ref=f8e374] [cursor=pointer]
+          - img "Spatial Giraffe" [ref=f8e376] [cursor=pointer]
+          - img "Brain Tank" [ref=f8e378] [cursor=pointer]
+        - generic [ref=f8e379]:
+          - generic [ref=f8e380]:
+            - heading "no god save you" [level=1] [ref=f8e381]
+            - generic [ref=f8e382]:
+              - button "Like" [ref=f8e383] [cursor=pointer]:
+                - generic: "0"
+              - button "previous slide" [ref=f8e384] [cursor=pointer]
+              - button "next slide" [ref=f8e385] [cursor=pointer]
+          - generic [ref=f8e389] [cursor=pointer]:
+            - img "Photoshop" [ref=f8e390]
+            - paragraph [ref=f8e392]: Photoshop
+          - paragraph [ref=f8e393]: Reimagin the view of the world with a surrealistic touch.A collection of photos manipulated and taken in different places and moments, edited to create a new vision of reality with different things.
+      - generic [ref=f8e394]:
+        - generic [ref=f8e396]:
+          - img "Cactus Banana" [ref=f8e398] [cursor=pointer]
+          - img "Medieval Space" [ref=f8e400] [cursor=pointer]
+          - img "Giant Monkey in City" [ref=f8e402] [cursor=pointer]
+          - img "Palm Tree Soldiers" [ref=f8e404] [cursor=pointer]
+          - img "Hide Mokey" [ref=f8e406] [cursor=pointer]
+          - img "Reversed Acquarium" [ref=f8e408] [cursor=pointer]
+          - img "Machintos Acquarium" [ref=f8e410] [cursor=pointer]
+        - generic [ref=f8e411]:
+          - generic [ref=f8e412]:
+            - heading "Surrealism" [level=1] [ref=f8e413]
+            - generic [ref=f8e414]:
+              - button "Like" [ref=f8e415] [cursor=pointer]:
+                - generic: "0"
+              - button "previous slide" [ref=f8e416] [cursor=pointer]
+              - button "next slide" [ref=f8e417] [cursor=pointer]
+          - generic [ref=f8e421] [cursor=pointer]:
+            - img "Photoshop" [ref=f8e422]
+            - paragraph [ref=f8e424]: Photoshop
+          - paragraph [ref=f8e425]: Place and time are just a concept, a vision of what are real and what are true. Different moments, different places, different things, but nothing are false. Maybe.
+    - generic [ref=f8e426]:
+      - paragraph [ref=f8e427]: 💖 Thank you
+      - paragraph [ref=f8e428]: Thanks for visiting my website. I'm currently working on the other internal pages, so they're not available yet. Hope to see you again soon.
+  - contentinfo [ref=f8e31]:
+    - paragraph [ref=f8e33]: CLICK TO CHANGE SHAPE
+    - generic [ref=f8e35]:
+      - paragraph [ref=f8e36]: © 2024 by Domenico Fusto
+      - paragraph [ref=f8e37]: Made with ❤️
