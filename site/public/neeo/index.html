@@ -1,0 +1,114 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#F5F1EA">
+  <title>Neeo | DOME</title>
+  <link rel="icon" href="https://neeo-gamma.vercel.app/icon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Darker+Grotesque:wght@300..900&display=swap">
+  <style>
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100dvh;
+      background: #F5F1EA;
+      color: #111;
+      font-family: "Bricolage Grotesque", system-ui, sans-serif;
+    }
+    .bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: max(10px, env(safe-area-inset-top)) 20px 10px;
+      border-bottom: 1px solid rgba(17, 17, 17, 0.12);
+      flex: 0 0 auto;
+    }
+    .bar a {
+      color: #083D2A;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 15px;
+      letter-spacing: 0.02em;
+    }
+    .bar a:hover { text-decoration: underline; }
+    .brand {
+      font-weight: 700;
+      font-size: 15px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+    .stage { position: relative; flex: 1 1 auto; min-height: 0; }
+    iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      background: #fff;
+      z-index: 2;
+      display: block;
+    }
+    .loader {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #F5F1EA;
+      transition: opacity 0.35s ease;
+    }
+    .loader.is-hidden { opacity: 0; pointer-events: none; }
+    .loader p {
+      margin: 0;
+      font-size: clamp(18px, 4vw, 28px);
+      font-weight: 600;
+      color: #083D2A;
+      letter-spacing: 0.04em;
+    }
+    .loader p::after {
+      content: "";
+      animation: dots 1.2s steps(4, end) infinite;
+    }
+    @keyframes dots {
+      0% { content: ""; }
+      25% { content: "."; }
+      50% { content: ".."; }
+      75% { content: "..."; }
+    }
+  </style>
+  <noscript><style>.loader { display: none; }</style></noscript>
+</head>
+<body>
+  <header class="bar">
+    <a class="back" href="../">&larr; DOME</a>
+    <span class="brand">Neeo</span>
+    <a class="ext" href="https://neeo-gamma.vercel.app/" target="_blank" rel="noopener">Apri ↗</a>
+  </header>
+  <div class="stage">
+    <div class="loader" id="loader"><p>Caricamento Neeo</p></div>
+    <iframe
+      id="neeo"
+      src="https://neeo-gamma.vercel.app/"
+      title="Neeo"
+      allow="clipboard-read; clipboard-write"
+      referrerpolicy="no-referrer-when-downgrade"></iframe>
+  </div>
+  <script>
+    (function () {
+      var f = document.getElementById("neeo");
+      var l = document.getElementById("loader");
+      function hide() { l.classList.add("is-hidden"); }
+      f.addEventListener("load", hide);
+      setTimeout(hide, 8000);
+    })();
+  </script>
+</body>
+</html>
