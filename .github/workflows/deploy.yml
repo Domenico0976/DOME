@@ -29,15 +29,45 @@ jobs:
         with:
           node-version: 22
           cache: npm
-          cache-dependency-path: site/package-lock.json
+          cache-dependency-path: |
+            site/package-lock.json
+            tools-app/package-lock.json
 
-      - name: Install dependencies
+      - name: Install dependencies (site)
         run: npm ci
         working-directory: site
 
-      - name: Build
+      - name: Build site
         run: npm run build
         working-directory: site
+
+      # tools-app: built like the old site-old pipeline (ci + test + build),
+      # then staged at /tools/ inside the site artifact — same path it had
+      # on the previous site. vite base is '/tools/' (tools-app/vite.config.ts).
+      - name: Install dependencies (tools-app)
+        run: npm ci
+        working-directory: tools-app
+
+      - name: Test tools-app
+        run: npm run test
+        working-directory: tools-app
+
+      - name: Build tools-app
+        run: npm run build
+        working-directory: tools-app
+
+      - name: Stage tools build at dist/tools/
+        run: |
+          rm -rf site/dist/tools
+          mkdir -p site/dist/tools
+          cp -r tools-app/dist/* site/dist/tools/
+
+      # Assert the /tools/ path is present and correctly based — mirrors the
+      # site-old "Assert tools build present" gate.
+      - name: Assert tools build present
+        run: |
+          test -f site/dist/tools/index.html || { echo "tools build missing in artifact"; exit 1; }
+          grep -q "/tools/assets/" site/dist/tools/index.html || { echo "asset base path wrong"; exit 1; }
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
