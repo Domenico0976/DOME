@@ -4,9 +4,10 @@ import { useCanvasPanZoom } from '../hooks/useCanvasPanZoom'
 export interface CanvasAreaProps {
   children: React.ReactNode
   className?: string
+  onKeyDown?: (e: React.KeyboardEvent) => void
 }
 
-export function CanvasArea({ children, className }: CanvasAreaProps) {
+export function CanvasArea({ children, className, onKeyDown }: CanvasAreaProps) {
   const {
     pan,
     zoom,
@@ -20,21 +21,29 @@ export function CanvasArea({ children, className }: CanvasAreaProps) {
     zoomIn,
     zoomOut,
     resetZoom,
+    onKeyDown: hookKeyDown,
   } = useCanvasPanZoom()
 
   const gridId = `grid-${useId().replace(/:/g, '')}`
 
   return (
-    <div
-      ref={containerRef}
-      className={`relative flex-1 overflow-hidden bg-background select-none ${className ?? ''}`}
-      onMouseDown={onMouseDown}
-      onMouseMove={onMouseMove}
-      onMouseUp={onMouseUp}
-      onMouseLeave={onMouseLeave}
-      onWheel={onWheel}
-      onDoubleClick={onDoubleClick}
-    >
+      <div
+        ref={containerRef}
+        className={`relative flex-1 overflow-hidden bg-background select-none ${className ?? ''}`}
+        onMouseDown={onMouseDown}
+        onMouseMove={onMouseMove}
+        onMouseUp={onMouseUp}
+        onMouseLeave={onMouseLeave}
+        onWheel={onWheel}
+        onDoubleClick={onDoubleClick}
+        onKeyDown={(e) => {
+          hookKeyDown(e)
+          onKeyDown?.(e)
+        }}
+        role="application"
+        aria-label="Drag to pan canvas"
+        tabIndex={0}
+      >
       <svg className="absolute inset-0 h-full w-full pointer-events-none">
         <defs>
           <pattern id={gridId} width="20" height="20" patternUnits="userSpaceOnUse">

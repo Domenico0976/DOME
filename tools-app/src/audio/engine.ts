@@ -13,11 +13,14 @@ const ANALYSER_FFT_SIZE = 2048
 const MIN_DECIBELS = -85
 const MAX_DECIBELS = -10
 const SMOOTHING_TIME_CONSTANT = 0.7
+const DEFAULT_VOLUME = 1
 
 let context: AudioContext | null = null
 let analyserNode: AnalyserNode | null = null
 let frequencyData: Uint8Array | null = null
 let bandRanges: ReturnType<typeof computeBandRanges> | null = null
+let gainNode: GainNode | null = null
+let volume = DEFAULT_VOLUME
 const spectrumBuffer = new Float32Array(BANDS_LENGTH)
 const mediaSources = new Map<HTMLMediaElement, MediaElementAudioSourceNode>()
 
@@ -31,6 +34,9 @@ export function ensureAudioContext(): AudioContext {
     analyserNode.smoothingTimeConstant = SMOOTHING_TIME_CONSTANT
     frequencyData = new Uint8Array(analyserNode.frequencyBinCount)
     bandRanges = computeBandRanges(context.sampleRate, analyserNode.frequencyBinCount)
+    gainNode = context.createGain()
+    gainNode.gain.value = DEFAULT_VOLUME
+    gainNode.connect(context.destination)
   }
   return context
 }
@@ -45,8 +51,26 @@ export async function resumeIfSuspended(): Promise<void> {
   }
 }
 
-export function attachMediaElement(element: HTMLMediaElement): void {
-  if (context === null || analyserNode === null) {
+export function audioContextState(): string {
+  if (context === null) return 'missing'
+  return context.state
+}
+
+export function setVolume(value: number): void {
+  if (!Number.isFinite(value)) return
+  volume = Math.max(0, Math.min(1, value))
+  if (gainNode) {
+    const t = context?.currentTime ?? 0
+    gainNode.gain.setTargetAtTime(volume, t, 0.02)
+  }
+}
+
+export function getVolume(): number {
+  return volume
+}
+
+export function connectToDestination(element: HTMLMediaElement): void {
+  if (context === null || analyserNode === null || gainNode === null) {
     throw new AudioEngineError(
       'Call ensureAudioContext() inside a user gesture before attaching elements',
     )
@@ -55,21 +79,33 @@ export function attachMediaElement(element: HTMLMediaElement): void {
   if (existing !== undefined) return
   const source = context.createMediaElementSource(element)
   mediaSources.set(element, source)
+  // Analyser taps the pre-gain signal so audio-reactivity is independent of
+  // the volume control (spec §4.6). The gain node then drives the destination.
   source.connect(analyserNode)
+  source.connect(gainNode)
 }
 
-export function isInitialized(): boolean {
-  return context !== null && analyserNode !== null && frequencyData !== null && bandRanges !== null
-}
-
-export function attachStream(stream: MediaStream): void {
-  if (context === null || analyserNode === null) {
+export function connectStreamToDestination(stream: MediaStream): void {
+  if (context === null || analyserNode === null || gainNode === null) {
     throw new AudioEngineError(
       'Call ensureAudioContext() inside a user gesture before attaching streams',
     )
   }
   const source = context.createMediaStreamSource(stream)
   source.connect(analyserNode)
+  source.connect(gainNode)
+}
+
+export function isInitialized(): boolean {
+  return context !== null && analyserNode !== null && frequencyData !== null && bandRanges !== null
+}
+
+export function attachMediaElement(element: HTMLMediaElement): void {
+  connectToDestination(element)
+}
+
+export function attachStream(stream: MediaStream): void {
+  connectStreamToDestination(stream)
 }
 
 export function readBands(): BandsSnapshot & { spectrum: { data: Float32Array } } {

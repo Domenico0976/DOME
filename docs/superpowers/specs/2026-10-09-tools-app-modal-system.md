@@ -4,7 +4,6 @@
 - Base: spec 2026-10-09 design-system (Fasi 1-4 implementate) + report Oracle modal-system
 - Input: `DESIGN.md`, `AGENTS.md`, `ERROR-prevent.md`, `Audioreactive-ux.md`, skill `ui-ux-patterns`, skill `anti-ai-design-slop`
 - Stato: 175 test verdi · `tsc` clean · dev `http://localhost:5173/tools/`
-- Vincolo produzione: deploy solo su push a `react-full-site`
 
 ## Sezione 1 — Tassonomia modale ✅ approvata
 

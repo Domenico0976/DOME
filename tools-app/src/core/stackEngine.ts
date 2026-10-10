@@ -1,5 +1,24 @@
 import { resolveTool } from './registry'
+import { resolveEffectValue } from '../engine/effects'
 import type { AudioFrame, Frame, StackItem, StackRenderContext } from './types'
+
+// Resolve every `item.audio` binding on the CPU path so tool params are
+// modulated before the tool's render() runs. GPU path already resolves via
+// buildUniforms in the compositor; this is the CPU-side equivalent.
+// Per-frame copy: never mutate store params (prevents compounding + save corruption).
+function resolveItemParams(
+  item: StackItem,
+  frame: Frame,
+  audio: AudioFrame,
+): Record<string, number | string | string[]> {
+  const resolved = { ...(item.params as Record<string, number | string | string[]>) }
+  for (const binding of item.audio) {
+    const base = (item.params as Record<string, number | string | string[]>)[binding.param]
+    if (typeof base !== 'number') continue
+    resolved[binding.param] = resolveEffectValue(base, [binding], binding.param, frame, audio)
+  }
+  return resolved
+}
 
 export function evaluateStack(
   ctx: CanvasRenderingContext2D,
@@ -17,23 +36,22 @@ export function evaluateStack(
     if (item.hidden) continue
     const tool = resolveTool(item.toolId, item.toolVersion)
     if (!tool) continue
+    const renderItem = item.audio.length > 0 ? { ...item, params: resolveItemParams(item, frame, audio) } : item
     ctx.save()
     const isWebGL = !!gl
     if (!isWebGL) {
       ctx.globalCompositeOperation = (item.blendMode ?? 'source-over') as GlobalCompositeOperation
       ctx.globalAlpha = item.opacity ?? 1
     }
-    tool.render(ctx, frame, item, audio, {
+    tool.render(ctx, frame, renderItem, audio, {
       width: ctx.canvas.width,
       height: ctx.canvas.height,
       quality,
     }, gl)
-    // After a GPU tool renders to the WebGL framebuffer, composite it back
-    // onto the 2D canvas so the display logic always has content to show.
     if (gl) {
-      ctx.drawImage(gl.canvas, 0, 0)
       ctx.globalCompositeOperation = (item.blendMode ?? 'source-over') as GlobalCompositeOperation
       ctx.globalAlpha = item.opacity ?? 1
+      ctx.drawImage(gl.canvas, 0, 0)
     }
     ctx.restore()
   }

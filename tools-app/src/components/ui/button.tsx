@@ -14,6 +14,7 @@ const buttonVariants = cva(
         destructive: 'bg-destructive text-destructive-foreground hover:bg-danger/90',
         outline: 'border border-border-strong bg-transparent hover:bg-surface-2',
         link: 'text-primary underline-offset-4 hover:underline',
+        audio: 'bg-[var(--button-bg-audio)] border border-[var(--button-border-audio)] text-[var(--button-text-audio)] hover:bg-[var(--button-border-audio)]/30',
       },
       size: {
         default: 'h-9 px-4 py-2',

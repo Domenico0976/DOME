@@ -11,6 +11,7 @@ vi.mock('gsap', () => {
     gsap: {
       registerPlugin: vi.fn(),
       set: vi.fn(),
+      to: vi.fn(),
     },
   }
 })
@@ -49,7 +50,7 @@ describe('FloatingPanel', () => {
     const item = useProjectStore.getState().stack[0]
     const { getByText, getByTestId } = render(<FloatingPanel item={item} onClose={() => {}} />)
     expect(getByTestId('floating-panel')).toBeTruthy()
-    expect(getByText('Gen')).toBeTruthy()
+    expect(getByText('Gen · #0')).toBeTruthy()
   })
 
   test('does not render when item is null', () => {
@@ -71,5 +72,30 @@ describe('FloatingPanel', () => {
     const panel = getByTestId('floating-panel')
     const header = panel.querySelector('.cursor-move')
     expect(header).toBeTruthy()
+  })
+
+  test('ESC key closes panel', () => {
+    const item = useProjectStore.getState().stack[0]
+    const onClose = vi.fn()
+    const { getByTestId } = render(<FloatingPanel item={item} onClose={onClose} />)
+    const panel = getByTestId('floating-panel')
+    fireEvent.keyDown(panel, { key: 'Escape', code: 'Escape' })
+    expect(onClose).toHaveBeenCalledTimes(1)
+  })
+
+  test('panel respects viewport clamp on resize', () => {
+    const item = useProjectStore.getState().stack[0]
+    const { getByTestId } = render(<FloatingPanel item={item} onClose={() => {}} />)
+    const panel = getByTestId('floating-panel')
+    expect(panel).toBeTruthy()
+  })
+
+  test('keyboard arrows resize panel', () => {
+    const item = useProjectStore.getState().stack[0]
+    const { getByTestId } = render(<FloatingPanel item={item} onClose={() => {}} />)
+    const panel = getByTestId('floating-panel') as HTMLElement
+    expect(panel.style.width).toBe('320px')
+    fireEvent.keyDown(panel, { key: 'ArrowRight' })
+    expect(panel.style.width).toBe('328px')
   })
 })

@@ -42,6 +42,15 @@ export type EffectInstance = {
   params: Record<string, number>
 }
 
+export type ComponentScope = 'self' | 'above' | 'below'
+
+export type ComponentGroup = {
+  opacity: number
+  blendMode: string
+  hidden: boolean
+  scope: ComponentScope
+}
+
 export type StackItem = {
   uid: string
   toolId: string
@@ -53,17 +62,39 @@ export type StackItem = {
   effects?: EffectInstance[]
   blendMode?: string
   opacity?: number
+  component?: ComponentGroup
 }
+
+export type QuarantinedBinding = {
+  id: string
+  binding: AudioBinding
+  fromUid: string
+  effectUid: string | null
+  reason: string
+  createdAt: string
+}
+
+export type PerfLevel = 'ok' | 'degraded'
 
 export type ProjectState = {
   schemaVersion: number
   stack: StackItem[]
   selectedUid: string | null
   timeline: { durationSec: number; bpm: number; playing: boolean; timeSec: number }
-  audio: { enabled: boolean; source: 'mic' | 'file' | null; fileName?: string; midi: { enabled: boolean; bindings: MidiBinding[] } }
+  audio: {
+    enabled: boolean
+    source: 'mic' | 'file' | null
+    fileName?: string
+    volume: number
+    panelOpen: boolean
+    disabledAudioBindings: string[]
+    midi: { enabled: boolean; bindings: MidiBinding[] }
+  }
   canvas: { aspect: '1:1' | '3:4' | '9:16' | '4:3' | '16:9'; quality: 'low' | 'med' | 'high' | '4k' }
   theme: 'dark' | 'light'
   unsaved: boolean
+  quarantined: QuarantinedBinding[]
+  perf: { level: PerfLevel; reason: string | null }
 }
 
 export type Frame = { timeSec: number; dt: number; bpm: number }

@@ -94,3 +94,18 @@ export function buildUniforms(pass: ActivePass, frame: Frame, audio: AudioFrame)
   }
   return pass.def.uniforms(resolved, frame)
 }
+
+export function resolvePassParams(pass: ActivePass, frame: Frame, audio: AudioFrame): Record<string, number> {
+  const resolved: Record<string, number> = { ...pass.params }
+  for (const c of pass.def.controls) {
+    if (c.kind !== 'slider') continue
+    resolved[c.param] = resolveEffectValue(
+      pass.params[c.param] ?? pass.def.defaultParams[c.param],
+      pass.bindings,
+      `${pass.uid}.${c.param}`,
+      frame,
+      audio,
+    )
+  }
+  return resolved
+}

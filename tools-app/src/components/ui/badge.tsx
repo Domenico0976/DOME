@@ -13,6 +13,8 @@ const badgeVariants = cva(
         outline: 'border-border-strong text-foreground',
         success: 'border-transparent bg-success/15 text-success',
         warning: 'border-transparent bg-warning/15 text-warning',
+        audio: 'border-transparent bg-[var(--badge-bg-audio)] text-[var(--badge-text-audio)]',
+        selected: 'border-transparent bg-[var(--badge-bg-selected)] text-[var(--badge-text-selected)]',
       },
     },
     defaultVariants: { variant: 'default' },

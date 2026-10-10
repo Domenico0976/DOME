@@ -18,6 +18,7 @@ export interface UseCanvasPanZoomResult {
   zoomIn: () => void
   zoomOut: () => void
   resetZoom: () => void
+  onKeyDown: (e: React.KeyboardEvent) => void
 }
 
 const MIN_ZOOM = 0.5
@@ -80,6 +81,28 @@ export function useCanvasPanZoom(): UseCanvasPanZoomResult {
     setZoom(1)
   }, [])
 
+  const onKeyDown = useCallback((e: React.KeyboardEvent) => {
+    const step = e.shiftKey ? 32 : 8
+    switch (e.key) {
+      case 'ArrowLeft':
+        e.preventDefault()
+        setPan((prev) => ({ x: prev.x + step, y: prev.y }))
+        break
+      case 'ArrowRight':
+        e.preventDefault()
+        setPan((prev) => ({ x: prev.x - step, y: prev.y }))
+        break
+      case 'ArrowUp':
+        e.preventDefault()
+        setPan((prev) => ({ x: prev.x, y: prev.y - step }))
+        break
+      case 'ArrowDown':
+        e.preventDefault()
+        setPan((prev) => ({ x: prev.x, y: prev.y + step }))
+        break
+    }
+  }, [])
+
   return {
     pan,
     zoom,
@@ -93,5 +116,6 @@ export function useCanvasPanZoom(): UseCanvasPanZoomResult {
     zoomIn,
     zoomOut,
     resetZoom,
+    onKeyDown,
   }
 }

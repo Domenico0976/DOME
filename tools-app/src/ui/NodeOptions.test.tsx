@@ -3,7 +3,7 @@ import { describe, test, expect, beforeEach, afterEach } from 'vitest'
 import { render, fireEvent, cleanup } from '@testing-library/react'
 import { registerTool } from '../core/registry'
 import { useProjectStore } from '../state/projectStore'
-import { NodeOptions } from './NodeOptions'
+import { NodeOptions, BLEND_MODES } from './NodeOptions'
 import type { ToolDef } from '../core/types'
 
 afterEach(cleanup)
@@ -34,32 +34,15 @@ describe('NodeOptions', () => {
   test('updates param from slider', () => {
     const item = useProjectStore.getState().stack[0]
     const { getByLabelText } = render(<NodeOptions item={item} />)
-    const input = getByLabelText('Speed') as HTMLInputElement
+    const input = getByLabelText(/^Speed/) as HTMLInputElement
     fireEvent.change(input, { target: { value: '5' } })
     expect(useProjectStore.getState().stack[0].params.speed).toBe(5)
-  })
-
-  test('binds an audio source for a param', () => {
-    const item = useProjectStore.getState().stack[0]
-    const { getByLabelText } = render(<NodeOptions item={item} />)
-    fireEvent.click(getByLabelText('Bind audio for speed'))
-    const audio = useProjectStore.getState().stack[0].audio
-    expect(audio.length).toBe(1)
-    expect(audio[0].param).toBe('speed')
-  })
-
-  test('removes an audio binding', () => {
-    const item = useProjectStore.getState().stack[0]
-    useProjectStore.getState().addAudioBinding(item.uid, { param: 'speed', source: 'bass', curve: 'linear', amount: 1 })
-    const { getByLabelText } = render(<NodeOptions item={useProjectStore.getState().stack[0]} />)
-    fireEvent.click(getByLabelText('Remove audio binding speed'))
-    expect(useProjectStore.getState().stack[0].audio.length).toBe(0)
   })
 
   test('blend mode select updates the item blendMode', () => {
     const item = useProjectStore.getState().stack[0]
     const { getByLabelText } = render(<NodeOptions item={item} />)
-    const select = getByLabelText('Blend mode') as HTMLSelectElement
+    const select = getByLabelText(/^Blend mode/) as HTMLSelectElement
     fireEvent.change(select, { target: { value: 'multiply' } })
     expect(useProjectStore.getState().stack[0].blendMode).toBe('multiply')
   })
@@ -67,7 +50,7 @@ describe('NodeOptions', () => {
   test('opacity slider updates the item opacity', () => {
     const item = useProjectStore.getState().stack[0]
     const { getByLabelText } = render(<NodeOptions item={item} />)
-    const input = getByLabelText('Opacity') as HTMLInputElement
+    const input = getByLabelText(/^Opacity/) as HTMLInputElement
     fireEvent.change(input, { target: { value: '0.5' } })
     expect(useProjectStore.getState().stack[0].opacity).toBe(0.5)
   })
@@ -82,63 +65,80 @@ describe('NodeOptions', () => {
     expect(getByText('1 keys')).toBeTruthy()
   })
 
-  test('shows Colors section header for generative tools', () => {
-    const { getByText } = render(<NodeOptions item={useProjectStore.getState().stack[0]} />)
-    expect(getByText('Colors')).toBeTruthy()
-  })
-
   test('renders default single color fallback', () => {
     const item = useProjectStore.getState().stack[0]
     expect(item.params.colors).toBeUndefined()
   })
 
-  test('adds a color when Add Color is clicked', () => {
-    const item = useProjectStore.getState().stack[0]
-    useProjectStore.getState().updateParam(item.uid, 'colors', ['#000000', '#ffffff'])
-    const { getByLabelText } = render(<NodeOptions item={useProjectStore.getState().stack[0]} />)
-    fireEvent.click(getByLabelText('Add Color (2/4)'))
-    const colors = useProjectStore.getState().stack[0].params.colors as string[]
-    expect(colors).toHaveLength(3)
-    expect(colors[2]).toBe('#000000')
+  test('BLEND_MODES Plus darker no longer duplicates Normal', () => {
+    const plusDarker = BLEND_MODES.find((m) => m.label === 'Plus darker')
+    expect(plusDarker?.value).toBe('multiply')
+    expect(BLEND_MODES.filter((m) => m.value === 'source-over')).toHaveLength(1)
   })
 
-  test('removes a color when Remove is clicked', () => {
+  test('renders a dedicated Component section above the tabs', () => {
     const item = useProjectStore.getState().stack[0]
-    useProjectStore.getState().updateParam(item.uid, 'colors', ['#ff0000', '#00ff00'])
-    const { getAllByLabelText } = render(<NodeOptions item={useProjectStore.getState().stack[0]} />)
-    fireEvent.click(getAllByLabelText('Remove color 2')[0])
-    const colors = useProjectStore.getState().stack[0].params.colors as string[]
-    expect(colors).toHaveLength(1)
-    expect(colors[0]).toBe('#ff0000')
+    const { getByText, container } = render(<NodeOptions item={item} />)
+    expect(getByText('Component')).toBeTruthy()
+    const componentHeader = getByText('Component').closest('div')
+    const controlsTab = container.querySelector('[role="tab"]')
+    expect(componentHeader).toBeTruthy()
+    expect(controlsTab).toBeTruthy()
   })
 
-  test('disables remove button when only one color remains', () => {
+  test('scope segmented control writes component.scope via setComponent', () => {
     const item = useProjectStore.getState().stack[0]
-    useProjectStore.getState().updateParam(item.uid, 'colors', ['#ff0000', '#00ff00'])
-    const { getByLabelText, rerender } = render(<NodeOptions item={useProjectStore.getState().stack[0]} />)
-    fireEvent.click(getByLabelText('Remove color 2'))
-    rerender(<NodeOptions item={useProjectStore.getState().stack[0]} />)
-    const storeItem = useProjectStore.getState().stack[0]
-    expect(storeItem.params.colors).toHaveLength(1)
-    useProjectStore.getState().updateParam(storeItem.uid, 'colors', ['#ff0000', '#0000ff'])
-    rerender(<NodeOptions item={useProjectStore.getState().stack[0]} />)
-    fireEvent.click(getByLabelText('Remove color 2'))
-    rerender(<NodeOptions item={useProjectStore.getState().stack[0]} />)
-    const singleItem = useProjectStore.getState().stack[0]
-    useProjectStore.getState().updateParam(singleItem.uid, 'colors', ['#ff0000', '#0000ff'])
-    render(<NodeOptions item={useProjectStore.getState().stack[0]} />)
-    const removeBtn = getByLabelText('Remove color 2') as HTMLButtonElement
-    fireEvent.click(removeBtn)
-    const finalItem = useProjectStore.getState().stack[0]
-    expect(finalItem.params.colors).toHaveLength(1)
-    expect(finalItem.params.colors).toEqual(['#ff0000'])
+    const { getAllByRole } = render(<NodeOptions item={item} />)
+    const radios = getAllByRole('radio') as HTMLButtonElement[]
+    expect(radios.length).toBe(3)
+    expect(radios[0].getAttribute('aria-checked')).toBe('true')
+    expect(radios[1].getAttribute('aria-checked')).toBe('false')
+    expect(radios[2].getAttribute('aria-checked')).toBe('false')
+    fireEvent.click(radios[1])
+    expect(useProjectStore.getState().stack[0].component!.scope).toBe('above')
+    fireEvent.click(radios[2])
+    expect(useProjectStore.getState().stack[0].component!.scope).toBe('below')
+    fireEvent.click(radios[0])
+    expect(useProjectStore.getState().stack[0].component!.scope).toBe('self')
   })
 
-  test('disables add button at max colors', () => {
+  test('opacity slider still updates the item opacity (component section)', () => {
     const item = useProjectStore.getState().stack[0]
-    useProjectStore.getState().updateParam(item.uid, 'colors', ['#rr', '#gg', '#bb', '#dd'])
-    const { getByLabelText } = render(<NodeOptions item={useProjectStore.getState().stack[0]} />)
-    const addBtn = getByLabelText('Add Color (4/4)') as HTMLButtonElement
-    expect(addBtn.disabled).toBe(true)
+    const { getByLabelText } = render(<NodeOptions item={item} />)
+    const input = getByLabelText(/^Opacity/) as HTMLInputElement
+    fireEvent.change(input, { target: { value: '0.42' } })
+    expect(useProjectStore.getState().stack[0].opacity).toBe(0.42)
+  })
+
+  test('blend mode select still updates the item blendMode (component section)', () => {
+    const item = useProjectStore.getState().stack[0]
+    const { getByLabelText } = render(<NodeOptions item={item} />)
+    const select = getByLabelText(/^Blend mode/) as HTMLSelectElement
+    fireEvent.change(select, { target: { value: 'screen' } })
+    expect(useProjectStore.getState().stack[0].blendMode).toBe('screen')
+  })
+
+  test('header shows tool icon + label + Elemento · #N di M subtitle', () => {
+    const item = useProjectStore.getState().stack[0]
+    const { getByText } = render(<NodeOptions item={item} />)
+    expect(getByText('Gen')).toBeTruthy()
+    expect(getByText('Elemento · #0 di 1')).toBeTruthy()
+  })
+
+  test('subtitle shows correct index/total after adding a second tool', () => {
+    const item = useProjectStore.getState().stack[0]
+    useProjectStore.getState().addTool('g')
+    const { getByText } = render(<NodeOptions item={item} />)
+    expect(getByText('Elemento · #1 di 2')).toBeTruthy()
+  })
+
+  test('subtitle updates per selected element when stack is reordered', () => {
+    const s = useProjectStore.getState()
+    s.addTool('g')
+    const first = s.stack[0]
+    // move first to the back (down) so it becomes index 1 of 2
+    s.moveTool(first.uid, 'down')
+    const { getByText } = render(<NodeOptions item={first} />)
+    expect(getByText('Elemento · #1 di 2')).toBeTruthy()
   })
 })

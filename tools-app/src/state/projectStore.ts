@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import type { AudioBinding, Automation, EffectType, MidiBinding, ProjectState, StackItem } from '../core/types'
+import type { AudioBinding, Automation, EffectType, MidiBinding, ProjectState, StackItem, PerfLevel, ComponentGroup, ComponentScope } from '../core/types'
 import { migrateProject } from '../core/schema'
 import { resolveTool } from '../core/registry'
 import { disposeFerrofluidSim, pruneFerrofluidSims } from '../tools/generative/ferrofluid'
@@ -8,6 +8,11 @@ let counter = 0
 function makeUid(): string {
   counter += 1
   return `n_${Date.now().toString(36)}_${counter}`
+}
+
+function makeQuarantineId(): string {
+  counter += 1
+  return `q_${Date.now().toString(36)}_${counter}`
 }
 
 export interface ProjectStore extends ProjectState {
@@ -37,11 +42,31 @@ export interface ProjectStore extends ProjectState {
   setTheme: (theme: 'dark' | 'light') => void
   setPlaying: (playing: boolean) => void
   setTime: (timeSec: number) => void
+  setAudioSource: (source: ProjectState['audio']['source']) => void
+  setAudioFileName: (fileName: string | undefined) => void
+  setAudioEnabled: (enabled: boolean) => void
+  setVolume: (volume: number) => void
+  setAudioPanelOpen: (open: boolean) => void
+  setDuration: (durationSec: number) => void
   markSaved: () => void
   loadProject: (raw: unknown) => void
   reset: () => void
   undo: () => void
   redo: () => void
+  restoreBinding: (id: string) => void
+  deleteBinding: (id: string) => void
+  setPerf: (perf: { level: PerfLevel; reason: string | null }) => void
+  setComponent: (uid: string, patch: Partial<ComponentGroup>) => void
+  applyComponentToRange: (uid: string, patch: Partial<ComponentGroup>, scope: ComponentScope) => void
+}
+
+function defaultComponent(item: StackItem): ComponentGroup {
+  return {
+    opacity: item.opacity ?? 1,
+    blendMode: item.blendMode ?? 'source-over',
+    hidden: item.hidden ?? false,
+    scope: 'self',
+  }
 }
 
 function patchItem(stack: StackItem[], uid: string, fn: (item: StackItem) => StackItem): StackItem[] {
@@ -77,6 +102,7 @@ export const useProjectStore = create<ProjectStore>((setOriginal, get) => {
           audio: [],
           automations: [],
           hidden: false,
+          component: { opacity: 1, blendMode: 'source-over', hidden: false, scope: 'self' },
         }
         const idx = s.selectedUid ? s.stack.findIndex((i) => i.uid === s.selectedUid) : -1
         const stack = [...s.stack]
@@ -107,7 +133,7 @@ export const useProjectStore = create<ProjectStore>((setOriginal, get) => {
       }),
 
     toggleSwitch: (uid) =>
-      set((s) => ({ stack: patchItem(s.stack, uid, (i) => ({ ...i, hidden: !i.hidden })), unsaved: true })),
+      set((s) => ({ stack: patchItem(s.stack, uid, (i) => ({ ...i, hidden: !i.hidden, component: { ...defaultComponent(i), hidden: !i.hidden } })), unsaved: true })),
 
     switchTool: (uid, newToolId) =>
       set((s) => {
@@ -127,8 +153,8 @@ export const useProjectStore = create<ProjectStore>((setOriginal, get) => {
     updateParam: (uid, param, value) =>
       set((s) => ({
         stack: patchItem(s.stack, uid, (i) => {
-          if (param === '_blendMode') return { ...i, blendMode: String(value) }
-          if (param === '_opacity') return { ...i, opacity: Number(value) }
+          if (param === '_blendMode') return { ...i, blendMode: String(value), component: { ...defaultComponent(i), blendMode: String(value) } }
+          if (param === '_opacity') return { ...i, opacity: Number(value), component: { ...defaultComponent(i), opacity: Number(value) } }
           return { ...i, params: { ...i.params, [param]: value } }
         }),
         unsaved: true,
@@ -174,10 +200,28 @@ export const useProjectStore = create<ProjectStore>((setOriginal, get) => {
       })),
 
     removeEffect: (uid, effectUid) =>
-      set((s) => ({
-        stack: patchItem(s.stack, uid, (i) => ({ ...i, effects: (i.effects ?? []).filter((e) => e.uid !== effectUid) })),
-        unsaved: true,
-      })),
+      set((s) => {
+        const item = s.stack.find((i) => i.uid === uid)
+        const moved: AudioBinding[] = []
+        const kept: AudioBinding[] = []
+        for (const b of item?.audio ?? []) {
+          if (b.param.startsWith(`${effectUid}.`)) moved.push(b)
+          else kept.push(b)
+        }
+        const quarantined = moved.map((b) => ({
+          id: makeQuarantineId(),
+          binding: b,
+          fromUid: uid,
+          effectUid,
+          reason: 'Effect removed',
+          createdAt: new Date().toISOString(),
+        }))
+        return {
+          stack: patchItem(s.stack, uid, (i) => ({ ...i, effects: (i.effects ?? []).filter((e) => e.uid !== effectUid), audio: kept })),
+          quarantined: [...s.quarantined, ...quarantined],
+          unsaved: true,
+        }
+      }),
 
     setEffectParam: (uid, effectUid, param, value) =>
       set((s) => ({
@@ -215,12 +259,19 @@ export const useProjectStore = create<ProjectStore>((setOriginal, get) => {
         unsaved: true,
       })),
 
-    setBpm: (bpm) => set((s) => ({ timeline: { ...s.timeline, bpm }, unsaved: true })),
+    setBpm: (bpm) => set((s) => ({ timeline: { ...s.timeline, bpm: Math.max(20, Math.min(300, Number(bpm) || 120)) }, unsaved: true })),
     setAspect: (aspect) => set((s) => ({ canvas: { ...s.canvas, aspect }, unsaved: true })),
     setQuality: (quality) => set((s) => ({ canvas: { ...s.canvas, quality }, unsaved: true })),
     setTheme: (theme) => set({ theme, unsaved: true }),
     setPlaying: (playing) => set((s) => ({ timeline: { ...s.timeline, playing } })),
     setTime: (timeSec) => set((s) => ({ timeline: { ...s.timeline, timeSec } })),
+    setAudioSource: (source) => set((s) => ({ audio: { ...s.audio, source } })),
+    setAudioFileName: (fileName) => set((s) => ({ audio: { ...s.audio, fileName } })),
+    setAudioEnabled: (enabled) => set((s) => ({ audio: { ...s.audio, enabled } })),
+    setVolume: (volume) => set((s) => ({ audio: { ...s.audio, volume: Math.max(0, Math.min(1, Number(volume) || 0)) } })),
+    setAudioPanelOpen: (open) => set((s) => ({ audio: { ...s.audio, panelOpen: open } })),
+    setDuration: (durationSec) =>
+      set((s) => ({ timeline: { ...s.timeline, durationSec: Math.max(0, Number(durationSec) || 0) } })),
     markSaved: () => set({ unsaved: false }),
     loadProject: (raw) => setOriginal({ ...migrateProject(raw), past: [], future: [], unsaved: false }),
     reset: () => {
@@ -254,6 +305,64 @@ export const useProjectStore = create<ProjectStore>((setOriginal, get) => {
           future: s.future.slice(1),
           unsaved: true,
         }
+      }),
+
+    restoreBinding: (id) =>
+      set((s) => {
+        const entry = s.quarantined.find((q) => q.id === id)
+        if (!entry) return {}
+        const item = s.stack.find((i) => i.uid === entry.fromUid)
+        if (!item) return {} // target item gone — keep quarantined
+        const effectStillThere = entry.effectUid
+          ? (item.effects ?? []).some((e) => e.uid === entry.effectUid)
+          : true
+        if (!effectStillThere) return {} // effect gone — keep quarantined
+        const already = item.audio.some((b) => b.param === entry.binding.param)
+        return {
+          stack: patchItem(s.stack, entry.fromUid, (i) => ({
+            ...i,
+            audio: already ? i.audio : [...i.audio, entry.binding],
+          })),
+          quarantined: s.quarantined.filter((q) => q.id !== id),
+          unsaved: true,
+        }
+      }),
+
+    deleteBinding: (id) =>
+      set((s) => ({
+        quarantined: s.quarantined.filter((q) => q.id !== id),
+        unsaved: true,
+      })),
+
+    setPerf: (perf) => setOriginal({ perf }),
+
+    setComponent: (uid, patch) =>
+      set((s) => ({
+        stack: patchItem(s.stack, uid, (i) => {
+          const component = { ...defaultComponent(i), ...patch }
+          return { ...i, component, opacity: component.opacity, blendMode: component.blendMode, hidden: component.hidden }
+        }),
+        unsaved: true,
+      })),
+
+    applyComponentToRange: (uid, patch, scope) =>
+      set((s) => {
+        const idx = s.stack.findIndex((i) => i.uid === uid)
+        if (idx < 0) return {}
+        const targets: number[] = []
+        if (scope === 'self') {
+          targets.push(idx)
+        } else if (scope === 'above') {
+          for (let i = 0; i <= idx; i++) targets.push(i)
+        } else {
+          for (let i = idx; i < s.stack.length; i++) targets.push(i)
+        }
+        const stack = s.stack.map((item, i) => {
+          if (!targets.includes(i)) return item
+          const component = { ...defaultComponent(item), ...patch }
+          return { ...item, component, opacity: component.opacity, blendMode: component.blendMode, hidden: component.hidden }
+        })
+        return { stack, unsaved: true }
       }),
   }
 })

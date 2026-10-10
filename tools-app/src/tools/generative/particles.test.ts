@@ -34,4 +34,13 @@ describe('particles 3.0.0 chladni', () => {
     const { TOOL_PARAM_MIGRATIONS } = await import('../../core/schema')
     expect(TOOL_PARAM_MIGRATIONS.particles).toBeDefined()
   })
+
+  test('has no per-tool opacity control (item-level opacity is the single control)', () => {
+    const opacityControls = particlesTool.controls.filter(c => c.param === 'opacity')
+    expect(opacityControls).toEqual([])
+  })
+
+  test('defaultParams no longer carries a duplicate opacity key', () => {
+    expect('opacity' in particlesTool.defaultParams).toBe(false)
+  })
 })

@@ -4,7 +4,8 @@ import { resolveTool, getCatalog } from '../core/registry'
 import { ToolIcon } from './toolIcon'
 import { Catalog } from './Catalog'
 import { Button } from '../components/ui/button'
-import { SwitchCamera, EyeOff, X, Plus } from 'lucide-react'
+import { SwitchCamera, EyeOff, X, Plus, Grip, ArrowUp, ArrowDown } from 'lucide-react'
+import { LayerBadges } from './Stack'
 import { cn } from '../lib/utils'
 import { gsap } from 'gsap'
 import { Draggable } from 'gsap/Draggable'
@@ -26,6 +27,7 @@ export function FloatingStack({ className }: FloatingStackProps) {
   const toggleSwitch = useProjectStore((s) => s.toggleSwitch)
   const removeTool = useProjectStore((s) => s.removeTool)
   const switchTool = useProjectStore((s) => s.switchTool)
+  const moveTool = useProjectStore((s) => s.moveTool)
 
   const trackRef = useRef<HTMLDivElement>(null)
   const itemRefs = useRef<Map<string, HTMLDivElement>>(new Map())
@@ -126,29 +128,40 @@ export function FloatingStack({ className }: FloatingStackProps) {
     const sameKind = def ? getCatalog()[def.category].filter((t) => t.id !== it.toolId) : []
 
     elements.push(
-      <div
-        key={it.uid}
-        ref={(el) => setItemRef(it.uid, el)}
-        className={cn(
-          'group relative shrink-0 rounded-lg border px-3 py-2 cursor-pointer transition-colors select-none',
-          isSelected ? 'border-primary bg-surface-2' : 'border-border bg-surface hover:bg-surface-2',
-          it.hidden && 'opacity-40 pointer-events-none',
-          draggingUid === it.uid && 'z-50 opacity-80',
-        )}
-        onClick={() => {
-          selectTool(it.uid)
-          setAddAbove(null)
-          setSwitchUid(null)
-        }}
-      >
-        <div className="flex items-center gap-2">
-          <ToolIcon name={String(def?.icon ?? 'square')} className="h-4 w-4 shrink-0" />
-          <span className="truncate font-medium text-[13px] max-w-[80px]">{def?.label ?? it.toolId}</span>
-          {it.hidden && <span className="text-[10px] text-muted-foreground">(hidden)</span>}
-        </div>
+        <div
+          key={it.uid}
+          ref={(el) => setItemRef(it.uid, el)}
+          className={cn(
+            'group relative shrink-0 rounded-lg border px-3 py-2 cursor-pointer transition-colors select-none',
+            isSelected ? 'border-primary bg-surface-2' : 'border-border bg-surface hover:bg-surface-2',
+            it.hidden && 'opacity-40 pointer-events-none',
+            draggingUid === it.uid && 'z-50 opacity-80',
+          )}
+          onClick={() => {
+            selectTool(it.uid)
+            setAddAbove(null)
+            setSwitchUid(null)
+          }}
+        >
+          {/* Grip handle for drag */}
+          <div
+            className="absolute left-1 top-1/2 -translate-y-1/2 p-1 cursor-grab active:cursor-grabbing opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity"
+            onMouseDown={(e) => e.stopPropagation()}
+            aria-label="Drag to reorder"
+            role="button"
+            tabIndex={0}
+          >
+            <Grip className="h-3 w-3 text-muted-foreground" />
+          </div>
 
-        {/* Action buttons - hover to reveal */}
-        <div className="absolute -top-9 left-1/2 -translate-x-1/2 flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity bg-elevated rounded-md border border-border shadow-sm px-1 py-0.5 z-50 pointer-events-auto">
+          <div className="flex items-center gap-2 ml-6">
+            <LayerBadges index={index} item={it} />
+            <ToolIcon name={String(def?.icon ?? 'square')} className="h-4 w-4 shrink-0" />
+            <span className="truncate font-medium text-[13px] max-w-[80px]">{def?.label ?? it.toolId}</span>
+          </div>
+
+          {/* Action buttons - hover to reveal */}
+          <div className="absolute -top-9 left-1/2 -translate-x-1/2 flex items-center gap-0.5 opacity-70 group-hover:opacity-100 focus-within:opacity-100 transition-opacity bg-elevated rounded-md border border-border shadow-sm px-1 py-0.5 z-50 pointer-events-auto">
           <Button
             variant="ghost"
             size="icon"
@@ -172,44 +185,68 @@ export function FloatingStack({ className }: FloatingStackProps) {
               toggleSwitch(it.uid)
             }}
           >
-            <EyeOff className="h-3 w-3" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-6 w-6 text-danger hover:text-danger"
-            aria-label="Remove node"
-            onClick={(e) => {
-              e.stopPropagation()
-              removeTool(it.uid)
-            }}
-          >
-            <X className="h-3 w-3" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-6 w-6"
-            aria-label="Add tool above"
-            onClick={(e) => {
-              e.stopPropagation()
-              setAddAbove(it.uid)
-              setSwitchUid(null)
-            }}
-          >
-            <Plus className="h-3 w-3" />
-          </Button>
-        </div>
-
-        {/* Inline Catalog panel */}
-        {addAbove === it.uid && (
-          <div
-            className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 z-50"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <Catalog anchorUid={it.uid} onClose={() => setAddAbove(null)} />
+              <EyeOff className="h-3 w-3" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-6 w-6 text-danger hover:text-danger"
+              aria-label="Remove node"
+              onClick={(e) => {
+                e.stopPropagation()
+                removeTool(it.uid)
+              }}
+            >
+              <X className="h-3 w-3" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-6 w-6"
+              aria-label="Add tool above"
+              onClick={(e) => {
+                e.stopPropagation()
+                setAddAbove(it.uid)
+                setSwitchUid(null)
+              }}
+            >
+              <Plus className="h-3 w-3" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-7 w-7"
+              aria-label="Move up"
+              onClick={(e) => {
+                e.stopPropagation()
+                moveTool(it.uid, 'up')
+              }}
+            >
+              <ArrowUp className="h-3.5 w-3.5" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-7 w-7"
+              aria-label="Move down"
+              onClick={(e) => {
+                e.stopPropagation()
+                moveTool(it.uid, 'down')
+              }}
+            >
+              <ArrowDown className="h-3.5 w-3.5" />
+            </Button>
           </div>
-        )}
+
+          {/* Inline Catalog panel */}
+          {addAbove === it.uid && (
+            <div
+              className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 z-50"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Catalog anchorUid={it.uid} onClose={() => setAddAbove(null)} />
+            </div>
+          )}
 
         {/* Switch picker panel */}
         {switchUid === it.uid && (

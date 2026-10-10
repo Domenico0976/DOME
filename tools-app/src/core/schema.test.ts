@@ -20,7 +20,7 @@ describe('schema v2 effects', () => {
   test('adds effects: [] to legacy stack items', () => {
     const legacy = { stack: [{ uid: 'a', toolId: 'solidColor', toolVersion: '1.0.0', params: {}, audio: [], automations: [], hidden: false }] }
     const p = migrateProject(legacy)
-    expect(p.schemaVersion).toBe(2)
+    expect(p.schemaVersion).toBe(SCHEMA_VERSION)
     expect(p.stack[0].effects).toEqual([])
   })
   test('preserves existing effects and applies registered tool migrations', () => {
@@ -65,5 +65,23 @@ describe('legacy tunnel migration', () => {
     expect(p.stack[0].params.speed).toBe(0.8)
     expect(p.stack[0].params.hue).toBe(300)
     expect(p.stack[0].params.shape).toBe('circle')
+  })
+})
+
+describe('blendMode + opacity preservation', () => {
+  test('normalizeItem carries blendMode and opacity through migration', () => {
+    const p = migrateProject({
+      stack: [{ uid: 'x', toolId: 'solidColor', toolVersion: '1.0.0', params: {}, audio: [], automations: [], hidden: false, blendMode: 'screen', opacity: 0.7 }],
+    })
+    expect(p.stack[0].blendMode).toBe('screen')
+    expect(p.stack[0].opacity).toBe(0.7)
+  })
+
+  test('missing blendMode/opacity stay undefined (renderer applies defaults)', () => {
+    const p = migrateProject({
+      stack: [{ uid: 'y', toolId: 'solidColor', toolVersion: '1.0.0', params: {}, audio: [], automations: [], hidden: false }],
+    })
+    expect(p.stack[0].blendMode).toBeUndefined()
+    expect(p.stack[0].opacity).toBeUndefined()
   })
 })

@@ -104,4 +104,73 @@ describe('stack engine', () => {
     evaluateStack(ctx, frame, audio, [makeItem('q')], { quality: 'low' })
     expect(receivedQuality).toBe('low')
   })
+
+  test('WebGL branch sets composite+alpha from item BEFORE drawImage', () => {
+    const calls: string[] = []
+    const tool: ToolDef = {
+      id: 'gl', kind: 'generative', version: '1.0.0', label: 'GL', icon: '', category: 'Generative',
+      defaultParams: {}, controls: [], render: () => {},
+    }
+    registerTool(tool)
+
+    const fakeGlCanvas = { width: 100, height: 100 }
+    const gl = { canvas: fakeGlCanvas } as unknown as WebGL2RenderingContext
+
+    const ctx = {
+      save() { calls.push('save') },
+      restore() { calls.push('restore') },
+      canvas: { width: 100, height: 100 },
+      set globalCompositeOperation(v: string) {
+        calls.push(`composite=${v}`)
+      },
+      set globalAlpha(v: number) {
+        calls.push(`alpha=${v}`)
+      },
+      drawImage() { calls.push('drawImage') },
+    } as unknown as CanvasRenderingContext2D
+
+    const frame = { timeSec: 0, dt: 0, bpm: 120 }
+    const audio = { bass: 0, mid: 0, treble: 0, level: 0, spectrum: new Float32Array(64), bpm: 120 }
+
+    evaluateStack(ctx, frame, audio, [{ ...makeItem('gl'), blendMode: 'multiply', opacity: 0.5 }], { gl })
+
+    const compositeIdx = calls.indexOf('composite=multiply')
+    const alphaIdx = calls.indexOf('alpha=0.5')
+    const drawIdx = calls.indexOf('drawImage')
+    expect(compositeIdx).toBeGreaterThan(-1)
+    expect(alphaIdx).toBeGreaterThan(-1)
+    expect(drawIdx).toBeGreaterThan(-1)
+    expect(compositeIdx).toBeLessThan(drawIdx)
+    expect(alphaIdx).toBeLessThan(drawIdx)
+  })
+
+  test('repeated frames do not compound bindings nor mutate store params', () => {
+    const seen: number[] = []
+    const tool: ToolDef = {
+      id: 'cmp', kind: 'generative', version: '1.0.0', label: 'Cmp', icon: '', category: 'Generative',
+      defaultParams: {}, controls: [],
+      render: (_ctx, _frame, item) => { seen.push(Number(item.params.speed)) },
+    }
+    registerTool(tool)
+    const ctx = {
+      save() {},
+      restore() {},
+      canvas: { width: 100, height: 100 },
+      globalCompositeOperation: 'source-over',
+    } as unknown as CanvasRenderingContext2D
+    const frame = { timeSec: 0, dt: 0, bpm: 120 }
+    const audio = { bass: 0.8, mid: 0, treble: 0, level: 0, spectrum: new Float32Array(64), bpm: 120 }
+    const item: StackItem = {
+      uid: 'cmp', toolId: 'cmp', toolVersion: '1.0.0',
+      params: { speed: 1 },
+      audio: [{ param: 'speed', source: 'bass', curve: 'linear', amount: 0.5 }],
+      automations: [], hidden: false,
+    }
+    evaluateStack(ctx, frame, audio, [item])
+    evaluateStack(ctx, frame, audio, [item])
+    expect(seen).toHaveLength(2)
+    expect(seen[0]).toBe(seen[1])
+    expect(seen[0]).toBeCloseTo(1.4)
+    expect(item.params.speed).toBe(1)
+  })
 })

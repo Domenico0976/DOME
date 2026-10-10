@@ -2,10 +2,11 @@ import { useEffect, useRef, useState } from 'react'
 import { useProjectStore } from '../state/projectStore'
 import { evaluateStack } from '../core/stackEngine'
 import { useAudio } from '../audio/useAudio'
-import { collectActiveEffects } from '../engine/effects'
+import { collectActiveEffects, resolvePassParams } from '../engine/effects'
 import { createCompositor, hasWebGL2 } from '../engine/compositor'
 import type { Compositor } from '../engine/compositor'
 import { applyAdjustmentsCPU, applyGrainCPU, applyWavesCPU } from '../engine/cpu-fallback'
+import { resumeIfSuspended } from '../audio/engine'
 import { Badge } from '../components/ui/badge'
 
 export const RATIO = { '1:1': 1, '3:4': 3 / 4, '9:16': 9 / 16, '4:3': 4 / 3, '16:9': 16 / 9 } as const
@@ -48,6 +49,7 @@ export function Canvas() {
     let t = 0
     const scale = quality === 'low' ? 0.5 : quality === 'med' ? 0.75 : 1
     const loop = () => {
+      void resumeIfSuspended()
       t += 1 / 60
       const st = useProjectStore.getState()
       const bpm = st.timeline.bpm
@@ -97,9 +99,10 @@ export function Canvas() {
         if (cpuPasses.length > 0) {
           const img = fctx.getImageData(0, 0, W, H)
           for (const p of cpuPasses) {
-            if (p.type === 'adjustments') applyAdjustmentsCPU(img, p.params)
-            else if (p.type === 'waves') applyWavesCPU(img, p.params, effFrame.timeSec)
-            else if (p.type === 'grain') applyGrainCPU(img, p.params, Math.floor(effFrame.timeSec * 60))
+            const resolved = resolvePassParams(p, effFrame, a)
+            if (p.type === 'adjustments') applyAdjustmentsCPU(img, resolved)
+            else if (p.type === 'waves') applyWavesCPU(img, resolved, effFrame.timeSec)
+            else if (p.type === 'grain') applyGrainCPU(img, resolved, Math.floor(effFrame.timeSec * 60))
           }
           fctx.putImageData(img, 0, 0)
         }
@@ -114,8 +117,21 @@ export function Canvas() {
     return () => cancelAnimationFrame(raf)
   }, [aspect, quality, stack, stackLen, effectCount])
 
+  const [isDragging, setIsDragging] = useState(false)
+
+  const handleMouseDown = () => setIsDragging(true)
+  const handleMouseUp = () => setIsDragging(false)
+  const handleMouseLeave = () => setIsDragging(false)
+
   return (
-    <div id="stage-canvas" data-testid="stage-canvas" className="relative inline-block">
+    <div
+      id="stage-canvas"
+      data-testid="stage-canvas"
+      className={`relative inline-block ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
+      onMouseDown={handleMouseDown}
+      onMouseUp={handleMouseUp}
+      onMouseLeave={handleMouseLeave}
+    >
       {gpuRequired && (
         <Badge variant="warning" className="absolute left-2 top-2 z-10" data-testid="gpu-required-badge">
           GPU required for effects
@@ -125,7 +141,7 @@ export function Canvas() {
         ref={flatRef}
         width={W}
         height={H}
-        className="max-h-full max-w-full rounded-lg border border-border bg-black shadow-2xl"
+        className="max-h-full max-w-full rounded-lg border border-border bg-[hsl(var(--bg-canvas))] shadow-2xl"
       />
       <canvas
         ref={glRef}
@@ -133,7 +149,7 @@ export function Canvas() {
         height={H}
         aria-hidden
         style={{ visibility: 'hidden' }}
-        className="absolute inset-0 max-h-full max-w-full rounded-lg border border-border bg-black shadow-2xl"
+        className="absolute inset-0 max-h-full max-w-full rounded-lg border border-border bg-[hsl(var(--bg-canvas))] shadow-2xl"
       />
     </div>
   )

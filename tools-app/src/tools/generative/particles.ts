@@ -45,7 +45,6 @@ export const particlesTool: ToolDef = {
     flowWaves: 0.0, flowRandomize: 0.0, flowWaveSpeed: 1.0,
     flowRotation: 0.0, flowZoom: 1.0, flowDepth: 0.0,
     hueShift: 0,
-    opacity: 1.0,
     color: '#ffffff',
     bgColor: '#000000',
   },
@@ -81,7 +80,6 @@ export const particlesTool: ToolDef = {
     { param: 'flowDepth', label: 'Depth', kind: 'slider', min: 0, max: 2, step: 0.1, modes: ['flow'] },
     // Shared controls
     { param: 'hueShift', label: 'Hue Shift', kind: 'slider', min: 0, max: 1, step: 0.05 },
-    { param: 'opacity', label: 'Opacity', kind: 'slider', min: 0, max: 1, step: 0.05 },
     { param: 'color', label: 'Particle Color', kind: 'color' },
     { param: 'bgColor', label: 'Background Color', kind: 'color' },
   ],

@@ -7,7 +7,8 @@ import { CanvasArea } from './ui/CanvasArea'
 import { FloatingStack } from './ui/FloatingStack'
 import { FloatingPanel } from './ui/FloatingPanel'
 import { AudioReactPanel } from './ui/AudioReactPanel'
-import { ExportMenu } from './ui/ExportMenu'
+import { PerfBanner } from './ui/PerfBanner'
+import { usePerfMonitor } from './hooks/usePerfMonitor'
 
 export default function App() {
   const [panelOpen, setPanelOpen] = useState(true)
@@ -30,13 +31,17 @@ export default function App() {
     }
   }, [])
 
+  // System-resilience hooks — observe only, never alter render output.
+  usePerfMonitor()
+
   return (
     <div className="flex h-screen w-screen overflow-hidden bg-background font-sans text-foreground">
       <Sidebar />
       <div className="flex min-w-0 flex-1 flex-col">
         <TopBar />
+        <PerfBanner />
         <main className="flex min-h-0 flex-1">
-          <section className="flex flex-col flex-1 min-w-0 relative overflow-hidden" style={{ background: 'radial-gradient(circle at 50% 40%, hsl(var(--surface-2)) 0%, hsl(var(--background)) 70%)' }}>
+          <section className="flex flex-col flex-1 min-w-0 relative overflow-hidden bg-[hsl(var(--bg-canvas))]" data-testid="canvas-container">
             <CanvasArea>
               <Canvas />
             </CanvasArea>
@@ -47,9 +52,6 @@ export default function App() {
             )}
           </section>
         </main>
-        <div className="border-t border-border bg-surface px-3 py-2">
-          <ExportMenu />
-        </div>
         <AudioReactPanel />
       </div>
       <FloatingStack className="bottom-[180px]" />

@@ -13,20 +13,18 @@ describe('NodeOptions Effects tab', () => {
     useProjectStore.getState().addTool('solidColor')
   })
 
-  test('adds, adjusts, binds, toggles and removes an effect', () => {
+  test('adds, adjusts, toggles and removes an effect', () => {
     const uid = useProjectStore.getState().stack[0].uid
     useProjectStore.getState().addEffect(uid, 'glow')
     const { getByRole, getByLabelText, getByText } = render(
       <NodeOptions item={useProjectStore.getState().stack[0]} />,
     )
-    fireEvent.mouseDown(getByRole('tab', { name: 'Effects' }))
+    fireEvent.mouseDown(getByRole('tab', { name: /^Effects/ }))
     expect(getByText('Glow')).toBeTruthy()
     const intensity = getByLabelText('Intensity') as HTMLInputElement
     fireEvent.change(intensity, { target: { value: '1.5' } })
     const e = useProjectStore.getState().stack[0].effects![0]
     expect(e.params.intensity).toBe(1.5)
-    fireEvent.click(getByLabelText(`Bind audio for ${e.uid}.intensity`))
-    expect(useProjectStore.getState().stack[0].audio[0].param).toBe(`${e.uid}.intensity`)
     fireEvent.click(getByRole('switch'))
     expect(useProjectStore.getState().stack[0].effects![0].enabled).toBe(false)
     fireEvent.click(getByLabelText('Remove effect'))

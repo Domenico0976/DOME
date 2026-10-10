@@ -133,4 +133,28 @@ describe('projectStore', () => {
     expect(state.stack).toHaveLength(0)
     expect(state.selectedUid).toBeNull()
   })
+
+  test('setBpm clamps high values to 300', () => {
+    const s = useProjectStore.getState()
+    s.setBpm(999)
+    expect(useProjectStore.getState().timeline.bpm).toBe(300)
+  })
+
+  test('setBpm clamps low values to 20', () => {
+    const s = useProjectStore.getState()
+    s.setBpm(5)
+    expect(useProjectStore.getState().timeline.bpm).toBe(20)
+  })
+
+  test('setBpm falls back to 120 for NaN', () => {
+    const s = useProjectStore.getState()
+    s.setBpm(NaN)
+    expect(useProjectStore.getState().timeline.bpm).toBe(120)
+  })
+
+  test('setBpm passes through in-range values', () => {
+    const s = useProjectStore.getState()
+    s.setBpm(115)
+    expect(useProjectStore.getState().timeline.bpm).toBe(115)
+  })
 })

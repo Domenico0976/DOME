@@ -1,6 +1,6 @@
-import type { ProjectState, StackItem } from './types'
+import type { ComponentGroup, ProjectState, StackItem } from './types'
 
-export const SCHEMA_VERSION = 2
+export const SCHEMA_VERSION = 3
 
 export const TOOL_PARAM_MIGRATIONS: Record<
   string,
@@ -40,8 +40,28 @@ TOOL_PARAM_MIGRATIONS.flowfield = (p) => ({
 TOOL_PARAM_MIGRATIONS.tunnel = (p) => ({ ...p, shape: 'circle' })
 
 let orphanCounter = 0
+
+function deriveComponent(raw: Partial<StackItem>): ComponentGroup {
+  const existing = (raw as any).component
+  if (existing && typeof existing === 'object') {
+    return {
+      opacity: typeof existing.opacity === 'number' ? existing.opacity : (typeof raw.opacity === 'number' ? raw.opacity : 1),
+      blendMode: typeof existing.blendMode === 'string' ? existing.blendMode : (typeof raw.blendMode === 'string' ? raw.blendMode : 'source-over'),
+      hidden: typeof existing.hidden === 'boolean' ? existing.hidden : Boolean(raw.hidden),
+      scope: existing.scope === 'above' || existing.scope === 'below' || existing.scope === 'self' ? existing.scope : 'self',
+    }
+  }
+  return {
+    opacity: typeof raw.opacity === 'number' ? raw.opacity : 1,
+    blendMode: typeof raw.blendMode === 'string' ? raw.blendMode : 'source-over',
+    hidden: Boolean(raw.hidden),
+    scope: 'self',
+  }
+}
+
 function normalizeItem(raw: Partial<StackItem>): StackItem {
   orphanCounter += 1
+  const component = deriveComponent(raw)
   return {
     uid: typeof raw.uid === 'string' ? raw.uid : `m_${Date.now().toString(36)}_${orphanCounter}`,
     toolId: typeof raw.toolId === 'string' ? raw.toolId : 'solidColor',
@@ -51,6 +71,9 @@ function normalizeItem(raw: Partial<StackItem>): StackItem {
     automations: Array.isArray(raw.automations) ? raw.automations : [],
     hidden: Boolean(raw.hidden),
     effects: Array.isArray(raw.effects) ? raw.effects : [],
+    blendMode: typeof raw.blendMode === 'string' ? raw.blendMode : undefined,
+    opacity: typeof raw.opacity === 'number' ? raw.opacity : undefined,
+    component,
   }
 }
 
@@ -109,6 +132,11 @@ export function migrateProject(input: unknown): ProjectState {
       enabled: raw.audio?.enabled ?? false,
       source: raw.audio?.source ?? null,
       fileName: raw.audio?.fileName,
+      volume: typeof raw.audio?.volume === 'number' ? raw.audio.volume : 1,
+      panelOpen: raw.audio?.panelOpen ?? false,
+      disabledAudioBindings: Array.isArray((raw as any).audio?.disabledAudioBindings)
+        ? (raw as any).audio.disabledAudioBindings
+        : [],
       midi: {
         enabled: raw.audio?.midi?.enabled ?? false,
         bindings: Array.isArray(raw.audio?.midi?.bindings) ? raw.audio?.midi?.bindings : [],
@@ -120,5 +148,10 @@ export function migrateProject(input: unknown): ProjectState {
     },
     theme: raw.theme ?? 'dark',
     unsaved: raw.unsaved ?? false,
+    quarantined: Array.isArray((raw as any).quarantined) ? (raw as any).quarantined : [],
+    perf: {
+      level: (raw as any)?.perf?.level === 'degraded' ? 'degraded' : 'ok',
+      reason: typeof (raw as any)?.perf?.reason === 'string' ? (raw as any).perf.reason : null,
+    },
   }
 }

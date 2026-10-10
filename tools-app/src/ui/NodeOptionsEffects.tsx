@@ -1,28 +1,63 @@
-import { useState } from 'react'
-import { learnNextCc } from '../audio/midi'
+import { useState, useEffect } from 'react'
 import { useProjectStore } from '../state/projectStore'
-import { EFFECT_ORDER, EFFECTS } from '../engine/effects'
-import type { EffectType, StackItem } from '../core/types'
+import { EFFECTS } from '../engine/effects'
+import type { EffectType, EffectInstance, StackItem } from '../core/types'
 import { Button } from '../components/ui/button'
 import { Switch } from '../components/ui/switch'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select'
-import { AudioLines, Plus, Trash2 } from 'lucide-react'
+import { Trash2, Plus, Sliders, RotateCcw, ChevronDown, ChevronUp, Droplets, Sparkles, Waves, Aperture, Hexagon } from 'lucide-react'
 
 export function NodeOptionsEffects({ item }: { item: StackItem }) {
   const addEffect = useProjectStore((s) => s.addEffect)
   const removeEffect = useProjectStore((s) => s.removeEffect)
   const setEffectParam = useProjectStore((s) => s.setEffectParam)
   const toggleEffect = useProjectStore((s) => s.toggleEffect)
-  const addAudioBinding = useProjectStore((s) => s.addAudioBinding)
-  const midiEnabled = useProjectStore((s) => s.audio.midi.enabled)
-  const [learning, setLearning] = useState<string | null>(null)
+  const removeAudioBinding = useProjectStore((s) => s.removeAudioBinding)
 
-  const learn = (key: string) => {
-    setLearning(key)
-    void learnNextCc().then((cc) => {
-      useProjectStore.getState().bindMidi(item.uid, key, cc)
-      setLearning(null)
+  const [openCards, setOpenCards] = useState<Set<string>>(() => new Set())
+
+  const toggleCard = (uid: string) => {
+    setOpenCards((prev) => {
+      const next = new Set(prev)
+      if (next.has(uid)) next.delete(uid)
+      else next.add(uid)
+      return next
     })
+  }
+
+  // Initialize first card open if none selected
+  useEffect(() => {
+    if (item.effects?.length && openCards.size === 0) {
+      setOpenCards(new Set([item.effects[0].uid]))
+    }
+  }, [item.effects, openCards.size])
+
+  const getEffectIcon = (type: EffectType) => {
+    const iconMap: Record<EffectType, any> = {
+      adjustments: Sliders,
+      aberration: Droplets,
+      glow: Sparkles,
+      waves: Waves,
+      edgeblur: Aperture,
+      lens: Aperture,
+      grain: Hexagon,
+    }
+    const Icon = iconMap[type] || Sliders
+    return Icon
+  }
+
+  const getParamSummary = (e: EffectInstance) => {
+    const def = EFFECTS[e.type]
+    if (!def) return ''
+    const sliders = def.controls.filter((c) => c.kind === 'slider')
+    if (sliders.length === 0) return 'No parameters'
+    const parts = sliders
+      .map((c) => {
+        const val = Number(e.params[c.param] ?? def.defaultParams[c.param])
+        return `${c.label} ${val.toFixed(2)}`
+      })
+      .slice(0, 3)
+    return parts.join(' · ')
   }
 
   return (
@@ -33,7 +68,7 @@ export function NodeOptionsEffects({ item }: { item: StackItem }) {
           <SelectValue placeholder="Add effect" />
         </SelectTrigger>
         <SelectContent>
-          {EFFECT_ORDER.map((t) => (
+          {(['adjustments', 'aberration', 'glow', 'waves', 'edgeblur', 'lens', 'grain'] as EffectType[]).map((t) => (
             <SelectItem key={t} value={t}>
               {EFFECTS[t]?.label ?? t}
             </SelectItem>
@@ -44,11 +79,32 @@ export function NodeOptionsEffects({ item }: { item: StackItem }) {
       {(item.effects ?? []).map((e) => {
         const def = EFFECTS[e.type]
         if (!def) return null
+        const Icon = getEffectIcon(e.type)
+        const isOpen = openCards.has(e.uid)
+        const summary = getParamSummary(e)
+
         return (
           <div key={e.uid} className="space-y-2 rounded-md border border-border bg-surface-2/50 p-3">
             <div className="flex items-center justify-between gap-2">
-              <span className="text-[13px] font-medium">{def.label}</span>
+              <span className="flex items-center gap-1.5">
+                <Icon className="h-4 w-4 text-muted-foreground" />
+                <span className="text-[13px] font-medium">{def.label}</span>
+              </span>
               <div className="flex items-center gap-2">
+                <span className="text-[11px] text-muted-foreground/80 truncate max-w-[200px]">{summary}</span>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-7 w-7 text-muted-foreground hover:text-foreground"
+                  aria-label="Reset effect"
+                  onClick={() => {
+                    for (const c of def.controls) {
+                      setEffectParam(item.uid, e.uid, c.param, def.defaultParams[c.param])
+                    }
+                  }}
+                >
+                  <RotateCcw className="h-3.5 w-3.5" />
+                </Button>
                 <Switch
                   checked={e.enabled}
                   onCheckedChange={() => toggleEffect(item.uid, e.uid)}
@@ -63,52 +119,70 @@ export function NodeOptionsEffects({ item }: { item: StackItem }) {
                 >
                   <Trash2 className="h-3.5 w-3.5" />
                 </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-7 w-7 text-muted-foreground hover:text-foreground"
+                  aria-label="Collapse section"
+                  onClick={() => toggleCard(e.uid)}
+                >
+                  {isOpen ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
+                </Button>
               </div>
             </div>
-            {def.controls.map((c) => {
-              const key = `${e.uid}.${c.param}`
-              const bound = item.audio.some((b) => b.param === key)
-              return (
-                <div key={c.param} className="space-y-1">
-                  <div className="flex items-center justify-between gap-2">
-                    <label htmlFor={key} className="text-[12px] text-muted-foreground">
-                      {c.label}
-                    </label>
-                    <div className="flex items-center gap-0.5">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className={`h-6 w-6 ${bound ? 'text-primary' : ''}`}
-                        aria-label={`Bind audio for ${key}`}
-                        onClick={() => addAudioBinding(item.uid, { param: key, source: 'bass', curve: 'linear', amount: 1 })}
-                      >
-                        <AudioLines className="h-3.5 w-3.5" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-6 w-6"
-                        aria-label={`Learn MIDI for ${key}`}
-                        disabled={!midiEnabled || learning === key}
-                        onClick={() => learn(key)}
-                      >
-                        {learning === key ? '…' : 'M'}
-                      </Button>
+            {isOpen && (
+              <div className="mt-3 space-y-2">
+                {def.controls.map((c) => {
+                  const key = `${e.uid}.${c.param}`
+                  const binding = item.audio.find((b) => b.param === key)
+
+                  return (
+                    <div key={c.param} className="space-y-1">
+                      <div className="flex items-center justify-between gap-2">
+                        <label htmlFor={key} className="text-[12px] text-muted-foreground">
+                          {c.label}
+                        </label>
+                        <div className="flex items-center gap-0.5">
+                          {binding && (
+                            <>
+                              <span
+                                className="flex items-center gap-1 text-[10px] text-primary/80"
+                                title={`${binding.source} modulation`}
+                              >
+                                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
+                                Audio · {binding.source.charAt(0).toUpperCase() + binding.source.slice(1)}
+                              </span>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-6 w-6 text-danger hover:text-danger"
+                                aria-label={`Disable modulation for ${c.label}`}
+                                onClick={() => removeAudioBinding(item.uid, key)}
+                              >
+                                <Trash2 className="h-3 w-3" />
+                              </Button>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                      {c.kind === 'slider' && (
+                        <input
+                          id={key}
+                          type="range"
+                          min={c.min}
+                          max={c.max}
+                          step={c.step}
+                          value={Number(e.params[c.param] ?? def.defaultParams[c.param])}
+                          onChange={(ev) => setEffectParam(item.uid, e.uid, c.param, Number(ev.target.value))}
+                          className="w-full accent-[hsl(var(--primary))] cursor-pointer"
+                          aria-valuetext={`${c.label}: ${Number(e.params[c.param] ?? def.defaultParams[c.param])}`}
+                        />
+                      )}
                     </div>
-                  </div>
-                  <input
-                    id={key}
-                    type="range"
-                    min={c.min}
-                    max={c.max}
-                    step={c.step}
-                    value={Number(e.params[c.param] ?? def.defaultParams[c.param])}
-                    onChange={(ev) => setEffectParam(item.uid, e.uid, c.param, Number(ev.target.value))}
-                    className="w-full accent-[hsl(var(--primary))] cursor-pointer"
-                  />
-                </div>
-              )
-            })}
+                  )
+                })}
+              </div>
+            )}
           </div>
         )
       })}

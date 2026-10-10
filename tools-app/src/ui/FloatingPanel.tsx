@@ -1,10 +1,12 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { gsap } from 'gsap'
 import { Draggable } from 'gsap/Draggable'
-import { X } from 'lucide-react'
+import { X, Grip } from 'lucide-react'
 import { NodeOptions } from './NodeOptions'
 import { cn } from '../lib/utils'
 import type { StackItem } from '../core/types'
+import { useProjectStore } from '../state/projectStore'
+import { resolveTool } from '../core/registry'
 
 gsap.registerPlugin(Draggable)
 
@@ -17,6 +19,7 @@ const DEFAULT_WIDTH = 320
 const DEFAULT_HEIGHT = 500
 const SNAP_THRESHOLD = 100
 const MIN_SIZE = 200
+const VIEWPORT_CLAMP_MARGIN = 12
 
 export function FloatingPanel({ item, onClose }: FloatingPanelProps) {
   const [size, setSize] = useState({ width: DEFAULT_WIDTH, height: DEFAULT_HEIGHT })
@@ -28,6 +31,7 @@ export function FloatingPanel({ item, onClose }: FloatingPanelProps) {
   const headerRef = useRef<HTMLDivElement>(null)
   const draggableRef = useRef<Draggable | null>(null)
   const posRef = useRef({ x: 100, y: 100 })
+  const selectedUid = useProjectStore((s) => s.selectedUid)
 
   // Create Draggable instance once on mount
   useEffect(() => {
@@ -135,7 +139,91 @@ export function FloatingPanel({ item, onClose }: FloatingPanelProps) {
     setSnapSide(null)
   }, [isSnapped, snapSide, size.width])
 
+  // Clamp position to viewport margins (12px)
+  const clampPosition = useCallback((x: number, y: number, width: number, height: number): { x: number, y: number } => {
+    const maxX = window.innerWidth - width - VIEWPORT_CLAMP_MARGIN
+    const maxY = window.innerHeight - height - VIEWPORT_CLAMP_MARGIN
+    return {
+      x: Math.max(VIEWPORT_CLAMP_MARGIN, Math.min(x, maxX)),
+      y: Math.max(VIEWPORT_CLAMP_MARGIN, Math.min(y, maxY)),
+    }
+  }, [])
+
+  // Clamp-only on selection change: full node-bbox avoidance needs the node screen rect, unavailable here.
+  useEffect(() => {
+    if (isSnapped || !panelRef.current) return
+    const rect = panelRef.current.getBoundingClientRect()
+    const clamped = clampPosition(posRef.current.x, posRef.current.y, rect.width, rect.height)
+    posRef.current = clamped
+    gsap.set(panelRef.current, { x: clamped.x, y: clamped.y })
+  }, [selectedUid, isSnapped, clampPosition])
+
+  // ESC close handler
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose()
+      }
+    }
+    document.addEventListener('keydown', handleEsc)
+    return () => document.removeEventListener('keydown', handleEsc)
+  }, [onClose])
+
+  // Focus return: record the opener on mount, restore focus on unmount.
+  const previousFocusRef = useRef<HTMLElement | null>(null)
+  useEffect(() => {
+    previousFocusRef.current = document.activeElement as HTMLElement | null
+    return () => {
+      previousFocusRef.current?.focus?.()
+    }
+  }, [])
+
+  // Keyboard resize handler
+  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+    if (!panelRef.current) return
+    const { width, height } = size
+    let newWidth = width
+    let newHeight = height
+    
+    switch (e.key) {
+      case 'ArrowUp':
+        e.preventDefault()
+        newHeight = Math.max(MIN_SIZE, height - 8)
+        break
+      case 'ArrowDown':
+        e.preventDefault()
+        newHeight = height + 8
+        break
+      case 'ArrowLeft':
+        e.preventDefault()
+        newWidth = Math.max(MIN_SIZE, width - 8)
+        break
+      case 'ArrowRight':
+        e.preventDefault()
+        newWidth = width + 8
+        break
+      default:
+        return
+    }
+    
+    // Apply viewport clamp to new size
+    const clampedSize = clampPosition(posRef.current.x, posRef.current.y, newWidth, newHeight)
+    setSize({ width: newWidth, height: newHeight })
+    posRef.current = clampedSize
+    gsap.to(panelRef.current, { x: clampedSize.x, y: clampedSize.y, duration: 0.1 })
+  }, [size, clampPosition])
+
+  const stack = useProjectStore((s) => s.stack)
+
   if (!item) return null
+
+  // Dynamic header title — spec §2: `{toolLabel} · #{index}` with ellipsis + tooltip.
+  // Index 0 = front (zero-based, matching Stack/FloatingStack #N badges).
+  const index = stack.findIndex((i) => i.uid === item.uid)
+  const def = resolveTool(item.toolId, item.toolVersion)
+  const title = `${def?.label ?? 'Node'} · #${index}`
+
+// Apply viewport clamp on mount and when size changes to ensure panel stays within 12px margins
 
   return (
     <>
@@ -161,6 +249,8 @@ export function FloatingPanel({ item, onClose }: FloatingPanelProps) {
           isSnapped ? 'relative' : 'fixed',
         )}
         data-testid="floating-panel"
+        onKeyDown={handleKeyDown}
+        tabIndex={0}
       >
         {/* Header */}
         <div
@@ -168,7 +258,15 @@ export function FloatingPanel({ item, onClose }: FloatingPanelProps) {
           className="flex items-center justify-between border-b border-border px-4 py-3 shrink-0 select-none cursor-move"
           onMouseDown={handleHeaderMouseDown}
         >
-          <span className="text-[13px] font-semibold">Node Options</span>
+          <div className="flex items-center gap-2 min-w-0">
+            <Grip className="h-4 w-4 text-muted-foreground shrink-0" />
+            <span
+              className="text-[13px] font-semibold truncate"
+              title={title}
+            >
+              {title}
+            </span>
+          </div>
           <button
             onClick={onClose}
             className="grid h-6 w-6 place-items-center rounded-md hover:bg-surface-2 transition-colors"
