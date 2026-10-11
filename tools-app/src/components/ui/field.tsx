@@ -35,6 +35,14 @@ const Field = React.forwardRef<HTMLDivElement, FieldProps>(
     const fieldId = id ?? `field-${React.useId()}`
     const labelTarget = labelId ?? (label ? `${fieldId}-label` : undefined)
     const controlTarget = typeId(controlId, control, fieldId)
+    const helperId = helper || error ? `${fieldId}-helper` : undefined
+    const controlWithA11y =
+      control && React.isValidElement(control)
+        ? React.cloneElement(control as React.ReactElement<Record<string, unknown>>, {
+            ...(helperId ? { 'aria-describedby': helperId } : null),
+            ...(invalid ? { 'aria-invalid': true } : null),
+          })
+        : control
 
     return (
       <div
@@ -61,13 +69,13 @@ const Field = React.forwardRef<HTMLDivElement, FieldProps>(
           </label>
         )}
         <div className="flex items-center gap-[var(--field-gap,8px)] min-w-0">
-          {control ?? children}
+          {controlWithA11y ?? children}
           {value != null && (
             <span
               className={cn(
                 'font-mono text-[12px] tabular-nums text-muted-foreground shrink-0',
               )}
-              aria-live="off"
+              aria-live="polite"
             >
               {value}
             </span>
@@ -75,13 +83,14 @@ const Field = React.forwardRef<HTMLDivElement, FieldProps>(
         </div>
         {(helper || error) && (
           <p
+            id={helperId}
             className={cn(
               'text-[11px] leading-tight',
               invalid ? 'text-[var(--danger)]' : 'text-muted-foreground',
             )}
             role={invalid ? 'alert' : undefined}
           >
-            {invalid ? (error ?? helper) : helper}
+            {invalid ? `⚠ ${error ?? helper}` : helper}
           </p>
         )}
       </div>

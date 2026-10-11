@@ -61,10 +61,14 @@ export function Canvas() {
       bctx.scale(scale, scale)
       const glcInner = glRef.current
       const gl = glcInner ? glcInner.getContext('webgl2') as WebGL2RenderingContext | null : null
-      evaluateStack(bctx, effFrame, a, st.stack, { quality: st.canvas.quality, gl: gl || undefined })
+      evaluateStack(bctx, effFrame, a, st.stack, {
+        quality: st.canvas.quality,
+        gl: gl || undefined,
+        muted: new Set(st.audio.disabledAudioBindings ?? []),
+      })
       bctx.restore()
 
-      const passes = collectActiveEffects(st.stack)
+      const passes = collectActiveEffects(st.stack, new Set(st.audio.disabledAudioBindings ?? []))
       const genItem = st.stack.find((i) => i.toolId === 'shaders' && !i.hidden)
       const shaderGen = genItem
         ? {

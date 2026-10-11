@@ -22,11 +22,13 @@ export interface ProjectStore extends ProjectState {
   addTool: (toolId: string, version?: string) => void
   removeTool: (uid: string) => void
   moveTool: (uid: string, dir: 'up' | 'down') => void
+  moveToolTo: (uid: string, toIndex: number) => void
   toggleSwitch: (uid: string) => void
   switchTool: (uid: string, newToolId: string) => void
   updateParam: (uid: string, param: string, value: number | string | string[]) => void
   addAudioBinding: (uid: string, binding: AudioBinding) => void
   removeAudioBinding: (uid: string, param: string) => void
+  setBindingMuted: (id: string, muted: boolean) => void
   addAutomation: (uid: string, automation: Automation) => void
   removeAutomation: (uid: string, param: string) => void
   addEffect: (uid: string, type: EffectType) => void
@@ -132,6 +134,18 @@ export const useProjectStore = create<ProjectStore>((setOriginal, get) => {
         return { stack, unsaved: true }
       }),
 
+    moveToolTo: (uid, toIndex) =>
+      set((s) => {
+        const from = s.stack.findIndex((i) => i.uid === uid)
+        if (from < 0) return {}
+        const without = s.stack.filter((i) => i.uid !== uid)
+        const clamped = Math.max(0, Math.min(toIndex, without.length))
+        if (clamped === from) return {}
+        const stack = [...without]
+        stack.splice(clamped, 0, s.stack[from])
+        return { stack, unsaved: true }
+      }),
+
     toggleSwitch: (uid) =>
       set((s) => ({ stack: patchItem(s.stack, uid, (i) => ({ ...i, hidden: !i.hidden, component: { ...defaultComponent(i), hidden: !i.hidden } })), unsaved: true })),
 
@@ -174,6 +188,20 @@ export const useProjectStore = create<ProjectStore>((setOriginal, get) => {
         stack: patchItem(s.stack, uid, (i) => ({ ...i, audio: i.audio.filter((b) => b.param !== param) })),
         unsaved: true,
       })),
+
+    setBindingMuted: (id, muted) =>
+      set((s) => {
+        const current = s.audio.disabledAudioBindings ?? []
+        return {
+          audio: {
+            ...s.audio,
+            disabledAudioBindings: muted
+              ? [...new Set([...current, id])]
+              : current.filter((x) => x !== id),
+          },
+          unsaved: true,
+        }
+      }),
 
     addAutomation: (uid, automation) =>
       set((s) => ({

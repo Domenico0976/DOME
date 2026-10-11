@@ -33,13 +33,25 @@ export default {
         popover: { DEFAULT: 'hsl(var(--popover))', foreground: 'hsl(var(--popover-foreground))' },
         card: { DEFAULT: 'hsl(var(--card))', foreground: 'hsl(var(--card-foreground))' },
         scrollbar: 'hsl(var(--scrollbar))',
+        // live-parity surface aliases (globals.css §2)
+        'surface-panel': 'hsl(var(--surface-panel))',
+        'surface-accent': 'hsl(var(--surface-accent))',
+        'surface-raised': 'hsl(var(--surface-raised))',
+        'surface-input': 'hsl(var(--surface-input))',
+        'text-primary': 'hsl(var(--text-primary))',
+        'text-secondary': 'hsl(var(--text-secondary))',
+        lime: 'hsl(var(--primary))',
       },
+      // .pen radius scale — 2 / 8 / 12 / 999
       borderRadius: {
-        sm: '6px',
-        md: '10px',
-        lg: '16px',
+        xs: '2px',
+        sm: '8px',
+        md: '12px',
+        lg: '12px',
         full: '999px',
       },
+      // ponytail: kept Geist over Inter — index.html already loads Geist + Geist Mono.
+      // Swapping fonts would mean a new <link> and a visual regression for no gain.
       fontFamily: {
         sans: ['Geist', 'ui-sans-serif', 'system-ui', 'sans-serif'],
         mono: ['Geist Mono', 'ui-monospace', 'SFMono-Regular', 'monospace'],

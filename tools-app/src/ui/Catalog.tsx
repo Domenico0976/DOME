@@ -37,6 +37,7 @@ export function Catalog({ anchorUid, onClose }: { anchorUid: string | null; onCl
       )}
       role="dialog"
       aria-label="Tool catalog"
+      aria-modal="true"
     >
       {/* Filter row: category segmented control + search */}
       <div className="col-span-1 sm:col-span-2 lg:col-span-3 flex flex-wrap items-center gap-2">
@@ -64,7 +65,7 @@ export function Catalog({ anchorUid, onClose }: { anchorUid: string | null; onCl
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="e.g. plasma"
+            placeholder="Search tools…"
             className="h-7 w-40 max-w-[40vw] rounded-md border border-border bg-surface-2 px-2 text-[13px] text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
           />
         </label>

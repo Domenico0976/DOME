@@ -10,9 +10,11 @@ function resolveItemParams(
   item: StackItem,
   frame: Frame,
   audio: AudioFrame,
+  muted?: ReadonlySet<string>,
 ): Record<string, number | string | string[]> {
   const resolved = { ...(item.params as Record<string, number | string | string[]>) }
   for (const binding of item.audio) {
+    if (muted?.has(`${item.uid}-${binding.param}`)) continue
     const base = (item.params as Record<string, number | string | string[]>)[binding.param]
     if (typeof base !== 'number') continue
     resolved[binding.param] = resolveEffectValue(base, [binding], binding.param, frame, audio)
@@ -25,7 +27,7 @@ export function evaluateStack(
   frame: Frame,
   audio: AudioFrame,
   items: StackItem[],
-  options?: { quality?: StackRenderContext['quality']; gl?: WebGL2RenderingContext },
+  options?: { quality?: StackRenderContext['quality']; gl?: WebGL2RenderingContext; muted?: ReadonlySet<string> },
 ): void {
   const quality = options?.quality ?? 'high'
   const gl = options?.gl
@@ -36,7 +38,8 @@ export function evaluateStack(
     if (item.hidden) continue
     const tool = resolveTool(item.toolId, item.toolVersion)
     if (!tool) continue
-    const renderItem = item.audio.length > 0 ? { ...item, params: resolveItemParams(item, frame, audio) } : item
+    const renderItem =
+      item.audio.length > 0 ? { ...item, params: resolveItemParams(item, frame, audio, options?.muted) } : item
     ctx.save()
     const isWebGL = !!gl
     if (!isWebGL) {

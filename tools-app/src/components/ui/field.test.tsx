@@ -19,7 +19,8 @@ describe('Field', () => {
       <Field label="BPM" error="Invalid value" invalid helper="Beats per minute" control={<input />} />,
     )
     const p = container.querySelector('p')
-    expect(p?.textContent).toBe('Invalid value')
+    expect(p?.textContent).toContain('Invalid value')
+    expect(p?.textContent).toContain('⚠')
     expect(p?.className).toContain('text-[var(--danger)]')
     expect(p?.getAttribute('role')).toBe('alert')
   })

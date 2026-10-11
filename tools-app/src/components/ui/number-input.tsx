@@ -53,7 +53,7 @@ const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
     return (
       <div
         className={cn(
-          'inline-flex items-stretch h-[72px] w-[72px] rounded-md border border-border bg-surface-2 overflow-hidden',
+          'inline-flex items-stretch h-8 w-[72px] rounded-md border border-border bg-surface-2 overflow-hidden',
           disabled && 'opacity-50 pointer-events-none',
           className,
         )}
@@ -91,7 +91,8 @@ const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
             aria-label="Increase value"
             disabled={disabled}
             onClick={() => stepBy(1)}
-            className="flex items-center justify-center h-[44px] w-full text-muted-foreground hover:text-foreground transition-colors disabled:cursor-not-allowed"
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); stepBy(1) } }}
+            className="flex items-center justify-center h-1/2 w-full text-muted-foreground hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset disabled:cursor-not-allowed"
           >
             <Plus className="w-[18px] h-[18px] shrink-0" />
           </button>
@@ -100,7 +101,8 @@ const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
             aria-label="Decrease value"
             disabled={disabled}
             onClick={() => stepBy(-1)}
-            className="flex items-center justify-center h-[44px] w-full text-muted-foreground hover:text-foreground transition-colors disabled:cursor-not-allowed"
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); stepBy(-1) } }}
+            className="flex items-center justify-center h-1/2 w-full text-muted-foreground hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset disabled:cursor-not-allowed"
           >
             <Minus className="w-[18px] h-[18px] shrink-0" />
           </button>

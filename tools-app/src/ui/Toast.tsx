@@ -111,6 +111,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
                 reduceMotion ? '' : 'animate-in slide-in-from-right-2',
               )}
               role={isError ? 'alert' : 'status'}
+              aria-atomic="true"
               data-testid={`toast-${t.kind}`}
             >
               <span className={cn('mt-0.5 shrink-0', iconColor)}>{ICONS[t.kind]}</span>
@@ -135,7 +136,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
                 type="button"
                 onClick={() => dismiss(t.id)}
                 aria-label="Dismiss notification"
-                className="shrink-0 grid place-items-center h-6 w-6 rounded-md text-muted-foreground hover:bg-surface-2 hover:text-foreground"
+                className="shrink-0 grid place-items-center h-6 w-6 rounded-md text-muted-foreground hover:bg-surface-2 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               >
                 <X className="h-3.5 w-3.5" />
               </button>

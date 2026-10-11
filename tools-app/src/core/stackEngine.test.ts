@@ -144,8 +144,7 @@ describe('stack engine', () => {
     expect(alphaIdx).toBeLessThan(drawIdx)
   })
 
-  test('repeated frames do not compound bindings nor mutate store params', () => {
-    const seen: number[] = []
+  test('repeated frames do not compound bindings nor mutate store params', () => {    const seen: number[] = []
     const tool: ToolDef = {
       id: 'cmp', kind: 'generative', version: '1.0.0', label: 'Cmp', icon: '', category: 'Generative',
       defaultParams: {}, controls: [],
@@ -172,5 +171,32 @@ describe('stack engine', () => {
     expect(seen[0]).toBe(seen[1])
     expect(seen[0]).toBeCloseTo(1.4)
     expect(item.params.speed).toBe(1)
+  })
+
+  test('muted bindings are skipped by the engine', () => {
+    const seen: number[] = []
+    const tool: ToolDef = {
+      id: 'mute', kind: 'generative', version: '1.0.0', label: 'Mute', icon: '', category: 'Generative',
+      defaultParams: {}, controls: [],
+      render: (_ctx, _frame, item) => { seen.push(Number(item.params.speed)) },
+    }
+    registerTool(tool)
+    const ctx = {
+      save() {},
+      restore() {},
+      canvas: { width: 100, height: 100 },
+      globalCompositeOperation: 'source-over',
+    } as unknown as CanvasRenderingContext2D
+    const frame = { timeSec: 0, dt: 0, bpm: 120 }
+    const audio = { bass: 0.8, mid: 0, treble: 0, level: 0, spectrum: new Float32Array(64), bpm: 120 }
+    const item: StackItem = {
+      uid: 'mute', toolId: 'mute', toolVersion: '1.0.0',
+      params: { speed: 1 },
+      audio: [{ param: 'speed', source: 'bass', curve: 'linear', amount: 0.5 }],
+      automations: [], hidden: false,
+    }
+    evaluateStack(ctx, frame, audio, [item], { muted: new Set(['mute-speed']) })
+    expect(seen).toHaveLength(1)
+    expect(seen[0]).toBe(1)
   })
 })

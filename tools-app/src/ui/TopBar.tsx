@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { useProjectStore } from '../state/projectStore'
 import type { ProjectState } from '../core/types'
-import { ThemeToggle } from './ThemeToggle'
 import { Templates } from './Templates'
 import { AuthModal } from './AuthModal'
 import { useToast } from './Toast'
@@ -15,15 +14,7 @@ import {
 } from '../components/ui/select'
 import { Button } from '../components/ui/button'
 import { Badge } from '../components/ui/badge'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '../components/ui/dropdown-menu'
-import { HelpCircle, LifeBuoy, BookOpen, Video, Users, Archive } from 'lucide-react'
+import { Sparkles, Archive } from 'lucide-react'
 
 const QUALITY_LABELS: Record<ProjectState['canvas']['quality'], string> = {
   low: 'Low · 360p',
@@ -33,6 +24,9 @@ const QUALITY_LABELS: Record<ProjectState['canvas']['quality'], string> = {
 }
 
 const QUALITIES: ProjectState['canvas']['quality'][] = ['low', 'med', 'high', '4k']
+
+const CLUSTER =
+  'pointer-events-auto flex items-center gap-2 rounded-[8px] border border-border bg-surface-panel px-2 py-1'
 
 export function TopBar() {
   const quality = useProjectStore((s) => s.canvas.quality)
@@ -62,78 +56,53 @@ export function TopBar() {
 
   return (
     <header
-      className="flex items-center justify-between gap-3 border-b border-border bg-surface px-4 py-2 h-[48px]"
+      className="pointer-events-none absolute inset-x-0 top-0 z-[var(--z-global-chrome)] flex items-start justify-between gap-3 px-5 py-2"
       role="banner"
     >
-      <Select
-        value={quality}
-        onValueChange={(v) => setQuality(v as ProjectState['canvas']['quality'])}
-      >
-        <SelectTrigger className="w-[160px]" aria-label="Preview quality">
-          <SelectValue placeholder="Select quality" />
-        </SelectTrigger>
-        <SelectContent>
-          {QUALITIES.map((q) => (
-            <SelectItem key={q} value={q}>
-              {QUALITY_LABELS[q]}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-
-      <div className="flex items-center gap-1">
-        <Button variant="ghost" size="sm" onClick={(e) => e.preventDefault()}>
-          <HelpCircle className="h-4 w-4" />
-          Tips
-        </Button>
-
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="sm">
-              <LifeBuoy className="h-4 w-4" />
-              Support
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Help &amp; resources</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <BookOpen className="h-4 w-4" />
-              Guides
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Video className="h-4 w-4" />
-              Video tutorials
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Users className="h-4 w-4" />
-              Community
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-
+      <div className={CLUSTER}>
+        <Sparkles className="h-[18px] w-[18px] text-primary" aria-hidden />
+        <Select
+          value={quality}
+          onValueChange={(v) => setQuality(v as ProjectState['canvas']['quality'])}
+        >
+          <SelectTrigger
+            className="h-8 w-[168px] border-0 bg-transparent px-2 text-[13px] shadow-none focus-visible:ring-1 focus-visible:ring-ring"
+            aria-label="Preview quality"
+          >
+            <SelectValue placeholder="Select quality" />
+          </SelectTrigger>
+          <SelectContent>
+            {QUALITIES.map((q) => (
+              <SelectItem key={q} value={q}>
+                {QUALITY_LABELS[q]}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
         <Templates />
+      </div>
 
+      <div className={CLUSTER}>
         <Button
-          variant={unsaved ? 'default' : 'secondary'}
+          variant={unsaved ? 'default' : 'outline'}
           size="sm"
+          className="h-8 rounded-[8px] text-[13px]"
           aria-label="Save project"
           onClick={save}
         >
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
-            <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
-            <path d="M14 2v4a2 2 0 0 0 2 2h4" />
-            <path d="M10 12a2 2 0 0 1 4 0" />
-          </svg>
           {unsaved ? 'Unsaved changes' : 'Save Project'}
         </Button>
 
         <Button
           variant="ghost"
-          size="sm"
-          aria-label={quarantined.length > 0 ? `Quarantined items (${quarantined.length})` : 'Quarantined items'}
+          size="icon"
+          className="relative h-8 w-8 rounded-[8px]"
+          aria-label={
+            quarantined.length > 0
+              ? `Quarantined items (${quarantined.length})`
+              : 'Quarantined items'
+          }
           onClick={reviewQuarantine}
-          className="relative"
         >
           <Archive className="h-4 w-4" />
           {quarantined.length > 0 && (
@@ -144,7 +113,6 @@ export function TopBar() {
         </Button>
 
         <AuthModal />
-        <ThemeToggle />
       </div>
       <QuarantinePanel open={panelOpen} onClose={() => setPanelOpen(false)} />
     </header>

@@ -4,10 +4,10 @@ import { render, fireEvent } from '@testing-library/react'
 import { NumberInput } from './number-input'
 
 describe('NumberInput', () => {
-  test('renders 72px height and mono font', () => {
+  test('renders 32px height (spec) and mono font', () => {
     const { container } = render(<NumberInput value={5} onChange={() => {}} />)
     const wrap = container.firstChild as HTMLElement
-    expect(wrap.className).toContain('h-[72px]')
+    expect(wrap.className).toContain('h-8')
     expect(wrap.className).toContain('w-[72px]')
     const input = container.querySelector('input')
     expect(input?.className).toContain('font-mono')

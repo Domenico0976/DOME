@@ -15,8 +15,9 @@ interface FloatingPanelProps {
   onClose: () => void
 }
 
-const DEFAULT_WIDTH = 320
-const DEFAULT_HEIGHT = 500
+// ParamsPanel/Floating spec (.pen `TCY8O`): 290×496.
+const DEFAULT_WIDTH = 290
+const DEFAULT_HEIGHT = 496
 const SNAP_THRESHOLD = 100
 const MIN_SIZE = 200
 const VIEWPORT_CLAMP_MARGIN = 12
@@ -30,7 +31,7 @@ export function FloatingPanel({ item, onClose }: FloatingPanelProps) {
   const panelRef = useRef<HTMLDivElement>(null)
   const headerRef = useRef<HTMLDivElement>(null)
   const draggableRef = useRef<Draggable | null>(null)
-  const posRef = useRef({ x: 100, y: 100 })
+  const posRef = useRef({ x: 16, y: 68 })
   const selectedUid = useProjectStore((s) => s.selectedUid)
 
   // Create Draggable instance once on mount
@@ -245,8 +246,8 @@ export function FloatingPanel({ item, onClose }: FloatingPanelProps) {
         ref={panelRef}
         style={{ width: size.width, height: size.height }}
         className={cn(
-          'flex flex-col rounded-xl border border-border bg-surface shadow-2xl',
-          isSnapped ? 'relative' : 'fixed',
+          'flex flex-col rounded-[12px] border border-border bg-surface-panel shadow-2xl',
+          isSnapped ? 'relative' : 'fixed z-50',
         )}
         data-testid="floating-panel"
         onKeyDown={handleKeyDown}
@@ -255,13 +256,13 @@ export function FloatingPanel({ item, onClose }: FloatingPanelProps) {
         {/* Header */}
         <div
           ref={headerRef}
-          className="flex items-center justify-between border-b border-border px-4 py-3 shrink-0 select-none cursor-move"
+          className="flex h-10 items-center justify-between border-b border-border px-3 shrink-0 select-none cursor-move"
           onMouseDown={handleHeaderMouseDown}
         >
           <div className="flex items-center gap-2 min-w-0">
             <Grip className="h-4 w-4 text-muted-foreground shrink-0" />
             <span
-              className="text-[13px] font-semibold truncate"
+              className="text-[13px] font-medium truncate"
               title={title}
             >
               {title}

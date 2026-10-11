@@ -78,6 +78,28 @@ describe('projectStore', () => {
     expect(item.params.speed).toBe(5)
   })
 
+  test('addAudioBinding keeps different params and replaces same param', () => {
+    const s = useProjectStore.getState()
+    s.addTool('demo')
+    const uid = useProjectStore.getState().stack[0].uid
+    s.addAudioBinding(uid, { param: 'speed', source: 'bass', curve: 'linear', amount: 1 })
+    s.addAudioBinding(uid, { param: 'density', source: 'mid', curve: 'linear', amount: 0.5 })
+    expect(useProjectStore.getState().stack[0].audio).toHaveLength(2)
+    s.addAudioBinding(uid, { param: 'speed', source: 'mid', curve: 'linear', amount: 0.5 })
+    const audio = useProjectStore.getState().stack[0].audio
+    expect(audio).toHaveLength(2)
+    expect(audio.find((b) => b.param === 'speed')).toMatchObject({ source: 'mid', amount: 0.5 })
+  })
+
+  test('setBindingMuted toggles mute ids idempotently', () => {
+    const s = useProjectStore.getState()
+    s.setBindingMuted('u1-speed', true)
+    s.setBindingMuted('u1-speed', true)
+    expect(useProjectStore.getState().audio.disabledAudioBindings).toEqual(['u1-speed'])
+    s.setBindingMuted('u1-speed', false)
+    expect(useProjectStore.getState().audio.disabledAudioBindings).toEqual([])
+  })
+
   test('moveTool reorders within the stack', () => {
     const s = useProjectStore.getState()
     s.addTool('demo')
@@ -89,6 +111,32 @@ describe('projectStore', () => {
     const after = useProjectStore.getState().stack
     expect(after[0].uid).toBe(second)
     expect(after[1].uid).toBe(first)
+  })
+
+  test('moveToolTo moves a node to an arbitrary index', () => {
+    const s = useProjectStore.getState()
+    s.addTool('demo')
+    s.addTool('demo')
+    s.addTool('demo')
+    const ids = useProjectStore.getState().stack.map((i) => i.uid)
+    s.moveToolTo(ids[0], 2)
+    const after = useProjectStore.getState().stack.map((i) => i.uid)
+    expect(after[2]).toBe(ids[0])
+    expect(useProjectStore.getState().unsaved).toBe(true)
+  })
+
+  test('moveToolTo clamps out-of-range indexes and ignores no-ops', () => {
+    const s = useProjectStore.getState()
+    s.addTool('demo')
+    s.addTool('demo')
+    const ids = useProjectStore.getState().stack.map((i) => i.uid)
+    s.moveToolTo(ids[0], 99)
+    expect(useProjectStore.getState().stack[1].uid).toBe(ids[0])
+    s.moveToolTo('missing', 0)
+    expect(useProjectStore.getState().stack).toHaveLength(2)
+    const before = useProjectStore.getState().stack.map((i) => i.uid)
+    s.moveToolTo(before[0], 0)
+    expect(useProjectStore.getState().stack.map((i) => i.uid)).toEqual(before)
   })
 
   test('updateParam writes into the node params', () => {

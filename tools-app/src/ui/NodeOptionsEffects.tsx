@@ -62,8 +62,11 @@ export function NodeOptionsEffects({ item }: { item: StackItem }) {
 
   return (
     <div className="space-y-3">
+      <label htmlFor="add-effect-select" className="text-[12px] font-medium text-muted-foreground">
+        Add effect
+      </label>
       <Select value="" onValueChange={(v) => addEffect(item.uid, v as EffectType)}>
-        <SelectTrigger className="w-full" aria-label="Add effect">
+        <SelectTrigger id="add-effect-select" className="w-full" aria-label="Add effect">
           <Plus className="h-4 w-4" />
           <SelectValue placeholder="Add effect" />
         </SelectTrigger>
@@ -84,7 +87,7 @@ export function NodeOptionsEffects({ item }: { item: StackItem }) {
         const summary = getParamSummary(e)
 
         return (
-          <div key={e.uid} className="space-y-2 rounded-md border border-border bg-surface-2/50 p-3">
+          <div key={e.uid} data-enabled={e.enabled ? 'true' : 'false'} className="space-y-2 rounded-md border border-border bg-surface-2/50 p-3 data-[enabled=false]:opacity-55">
             <div className="flex items-center justify-between gap-2">
               <span className="flex items-center gap-1.5">
                 <Icon className="h-4 w-4 text-muted-foreground" />
@@ -110,6 +113,9 @@ export function NodeOptionsEffects({ item }: { item: StackItem }) {
                   onCheckedChange={() => toggleEffect(item.uid, e.uid)}
                   aria-label={`Enable ${def.label}`}
                 />
+                <span className="text-[11px] tabular-nums text-muted-foreground" aria-live="polite">
+                  {e.enabled ? 'On' : 'Off'}
+                </span>
                 <Button
                   variant="ghost"
                   size="icon"

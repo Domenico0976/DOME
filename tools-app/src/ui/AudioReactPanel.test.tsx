@@ -103,6 +103,58 @@ describe('AudioReactPanel', () => {
     expect(audio[0]).toMatchObject({ param: 'speed', source: 'bass', amount: 1 })
   })
 
+  test('creator warns when the target already has a different driver', () => {
+    const tool: ToolDef = {
+      id: 'cx', kind: 'generative', version: '1.0.0', label: 'Cx', icon: '', category: 'Generative',
+      defaultParams: {}, controls: [{ param: 'speed', label: 'Speed', kind: 'slider', min: 0, max: 10, step: 1 }],
+      render() {},
+    }
+    registerTool(tool)
+    useProjectStore.getState().reset()
+    useProjectStore.getState().addTool('cx')
+    const uid = useProjectStore.getState().stack[0].uid
+    useProjectStore.getState().selectTool(uid)
+    useProjectStore.getState().addAudioBinding(uid, { param: 'speed', source: 'mid', curve: 'linear', amount: 1 })
+    const { getByLabelText, getByText } = render(<AudioReactPanel />)
+    fireEvent.click(getByLabelText('Add Preset'))
+    expect(getByText(/Replaces existing mid → speed/)).toBeTruthy()
+  })
+
+  test('preset mini-waveform adjusts amount with arrow keys', () => {    const tool: ToolDef = {
+      id: 'cx', kind: 'generative', version: '1.0.0', label: 'Cx', icon: '', category: 'Generative',
+      defaultParams: {}, controls: [{ param: 'speed', label: 'Speed', kind: 'slider', min: 0, max: 10, step: 1 }],
+      render() {},
+    }
+    registerTool(tool)
+    useProjectStore.getState().reset()
+    useProjectStore.getState().addTool('cx')
+    const uid = useProjectStore.getState().stack[0].uid
+    useProjectStore.getState().addAudioBinding(uid, { param: 'speed', source: 'bass', curve: 'linear', amount: 1 })
+    const { getByRole } = render(<AudioReactPanel />)
+    const strip = getByRole('slider', { name: /speed level from bass/ })
+    expect(strip.getAttribute('aria-valuenow')).toBe('100')
+    fireEvent.keyDown(strip, { key: 'ArrowRight' })
+    expect(useProjectStore.getState().stack[0].audio[0].amount).toBeCloseTo(1.05)
+  })
+
+  test('expanded preset row edits driver through shared fields', () => {
+    const tool: ToolDef = {
+      id: 'cx', kind: 'generative', version: '1.0.0', label: 'Cx', icon: '', category: 'Generative',
+      defaultParams: {}, controls: [{ param: 'speed', label: 'Speed', kind: 'slider', min: 0, max: 10, step: 1 }],
+      render() {},
+    }
+    registerTool(tool)
+    useProjectStore.getState().reset()
+    useProjectStore.getState().addTool('cx')
+    const uid = useProjectStore.getState().stack[0].uid
+    useProjectStore.getState().addAudioBinding(uid, { param: 'speed', source: 'bass', curve: 'linear', amount: 1 })
+    const { getByLabelText } = render(<AudioReactPanel />)
+    fireEvent.click(getByLabelText('Expand speed settings'))
+    const driver = getByLabelText('Audio driver') as HTMLSelectElement
+    fireEvent.change(driver, { target: { value: 'mid' } })
+    expect(useProjectStore.getState().stack[0].audio[0].source).toBe('mid')
+  })
+
   test('creator asks for a layer when nothing is selected', () => {
     useProjectStore.getState().reset()
     const { getByLabelText, getByText } = render(<AudioReactPanel />)
@@ -228,21 +280,30 @@ describe('AudioReactPanel', () => {
     expect(queryByText('Raster output')).toBeNull()
   })
 
-  test('footer has 136px height with two zones and focus-guarded shortcuts', async () => {
+  test('footer is two-tier (44px tips + 57px transport) with a collapsible panel slot', async () => {
     useProjectStore.getState().reset()
-    const { container } = render(
+    const { container, getByLabelText } = render(
       <ToastProvider>
         <AudioReactPanel />
       </ToastProvider>,
     )
     const footer = container.querySelector('footer') as HTMLElement
     expect(footer).toBeTruthy()
-    expect(footer.className).toContain('h-[136px]')
     expect(footer.className).toContain('flex-col')
-    // Zone A top row h-11
-    const zoneA = footer.querySelector('.h-11') as HTMLElement
-    expect(zoneA).toBeTruthy()
-    // Zone B (waveform row) exists below
-    expect(zoneA?.nextElementSibling).toBeTruthy()
+
+    // Tips row — h-11 (44px)
+    const tipsRow = footer.querySelector('.h-11') as HTMLElement
+    expect(tipsRow).toBeTruthy()
+
+    // Main transport bar — 57px, directly below the tips row
+    const mainBar = tipsRow?.nextElementSibling as HTMLElement
+    expect(mainBar.className).toContain('h-[57px]')
+
+    // PanelSlot starts collapsed, so the resting bar totals 44 + 57 = 101px
+    const toggle = getByLabelText('Expand panel') as HTMLElement
+    expect(toggle.getAttribute('aria-expanded')).toBe('false')
+    fireEvent.click(toggle)
+    const collapseToggle = getByLabelText('Collapse panel') as HTMLElement
+    expect(collapseToggle.getAttribute('aria-expanded')).toBe('true')
   })
 })

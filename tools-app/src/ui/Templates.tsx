@@ -34,9 +34,9 @@ export function Templates() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="sm">
+        <Button variant="ghost" size="sm" aria-label="Browse templates">
           <LayoutTemplate className="h-3.5 w-3.5" />
-          Templates
+          Browse templates
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-md">

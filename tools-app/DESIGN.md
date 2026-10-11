@@ -18,28 +18,30 @@ L’interfaccia segue un modello **“dashboard creativa”**: il contenuto prin
 
 ```text
 ┌──────────────────────────────────────────────────────────────┐
-│ TOP BAR                                                      │
-│ Logo / Brand | Progetto | Azioni principali | Account        │
+│  ┌─ cluster ─────────┐            ┌─ chip ─┐   ┌─ cluster ─┐ │  ← TopBar flottante
+│  │ ✨  Qualità  📄    │            │  scene │   │ 💾  📦  👤 │ │    (overlay, h-10)
+│  └───────────────────┘            └────────┘   └───────────┘ │
+│ ┌────┐                                            ┌─────────┐ │
+│ │Tool│              CANVAS / STAGE                │ Params  │ │
+│ │Rail│   Visualizzazione del progetto            │ Panel   │ │  ← 290×496,
+│ │ 56 │                                            │ float   │ │    left x16 y68
+│ └────┘                                            └─────────┘ │
 ├──────────────────────────────────────────────────────────────┤
-│ LEFT / TOOL RAIL (opzionale)                                 │
-│ Strumenti, template, asset, layer                             │
-├───────────────────────────────────────┬──────────────────────┤
-│ CANVAS / STAGE                        │ RIGHT INSPECTOR      │
-│ Visualizzazione del progetto          │ Proprietà selezione  │
-│                                       │ Effetti, parametri   │
-│                                       │ Audio, export        │
-├───────────────────────────────────────┴──────────────────────┤
-│ BOTTOM BAR / TIMELINE / PLAYBACK (contestuale)               │
+│  Tips & tricks                                  [ⓘ Support]  │  ← tips h-11
+│ [♪] [⋯]   [■] [▶] [track] [BPM] [🎤] [Loop]   [MIDI] [⌃]     │  ← main h-[57px]
 └──────────────────────────────────────────────────────────────┘
+   ⌃ espande il PanelSlot (h-0 → h-148px): waveform, timeline,
+     preset rail, meter B/M/T/L
 ```
 
 ### Principi di posizionamento
 
-- **Top bar**: azioni globali, non contestuali alla selezione.
+- **Top bar**: cluster flottanti sovrapposti al canvas, non una barra full-width. Azioni globali, non contestuali alla selezione.
+- **Tool rail**: barra icone stretta a sinistra (56px), sempre visibile.
 - **Canvas centrale**: area dominante, con priorità visiva massima.
-- **Pannello destro**: proprietà dell’oggetto selezionato; appare o si aggiorna quando selezioni un layer.
-- **Pannelli flottanti**: usati per strumenti secondari, preview, impostazioni e azioni che non devono interrompere il flusso creativo.
-- **Bottom area**: playback, timeline, controlli audio e stato del progetto.
+- **Params panel**: pannello flottante **a sinistra** (290×496, `x16 y68`), non un inspector a destra. Proprietà dell'oggetto selezionato: parametri, effetti, preset.
+- **Sound bar**: due tier a tutto campo in fondo — tips `44px` + main bar `57px` = `101px` a riposo. Waveform, timeline, preset e meter vivono nel PanelSlot espandibile.
+- **Bottom area**: playback, BPM, ingressi MIDI/mic e stato del progetto.
 
 ---
 
@@ -524,13 +526,13 @@ Principi:
 
 | Token | Valore consigliato | Uso |
 |---|---:|---|
-| `--bg-app` | `#0B0B0D` | Sfondo generale dell’app |
-| `--bg-canvas` | `#111114` | Area di lavoro centrale |
-| `--bg-panel` | `#16161A` | Sidebar, Inspector, pannelli |
-| `--bg-panel-raised` | `#1C1C21` | Card, modali, dropdown |
-| `--bg-input` | `#101014` | Input, select, number field |
-| `--bg-hover` | `#22222A` | Hover su righe, bottoni secondari |
-| `--bg-active` | `#2A2A33` | Stato attivo o selezionato |
+| `--background` | `75 20% 3%` (`#080906`) | Sfondo generale dell’app |
+| `--bg-canvas` | `75 20% 3%` (`#080906`) | Area di lavoro centrale |
+| `--surface-panel` | `75 7% 10%` (`#191a17`) | Sidebar, Params panel, pannelli |
+| `--surface-raised` | `78 6% 14%` | Card, modali, dropdown |
+| `--surface-input` | `78 6% 12%` (`#1e211d`) | Input, select, number field |
+| `--surface-2` | `78 6% 12%` (`#1e211d`) | Hover su righe, bottoni secondari |
+| `--surface-accent` | `75 42% 15%` (`#2b3616`) | Stato attivo o selezionato |
 
 ### Bordi
 
@@ -539,14 +541,14 @@ Principi:
 | `--border-subtle` | `rgba(255,255,255,0.06)` | Separatori interni |
 | `--border-default` | `rgba(255,255,255,0.10)` | Bordi di pannelli e input |
 | `--border-strong` | `rgba(255,255,255,0.18)` | Hover, focus, elementi importanti |
-| `--border-selected` | `#6C8CFF` | Layer o item selezionato |
+| `--border-selected` | `#b8d94a` | Layer o item selezionato |
 
 ### Testo
 
 | Token | Valore | Uso |
 |---|---:|---|
-| `--text-primary` | `#F4F4F5` | Titoli, label principali, valori |
-| `--text-secondary` | `#A1A1AA` | Descrizioni, helper text |
+| `--text-primary` | `#f8f8f5` | Titoli, label principali, valori |
+| `--text-secondary` | `#a8ac9d` | Descrizioni, helper text |
 | `--text-muted` | `#71717A` | Metadati, placeholder |
 | `--text-disabled` | `#52525B` | Controlli non disponibili |
 
@@ -554,7 +556,7 @@ Principi:
 
 | Token | Valore | Uso |
 |---|---:|---|
-| `--accent-primary` | `#6C8CFF` | Azione principale, selezione, focus |
+| `--primary` | `74 60% 57%` (`#b8d94a`) | Azione principale, selezione, focus |
 | `--accent-success` | `#34D399` | Salvato, export completato |
 | `--accent-warning` | `#FBBF24` | Avvisi, modifiche non salvate |
 | `--accent-danger` | `#F87171` | Elimina, errore, conflitto |
@@ -576,15 +578,15 @@ Usa contrasti sufficienti per testo e componenti interattivi:
 
 ```css
 /* Testo principale */
-color: #F4F4F5;
-background: #16161A;
+color: #f8f8f5;
+background: #191a17;
 
 /* Testo secondario */
-color: #A1A1AA;
-background: #16161A;
+color: #a8ac9d;
+background: #191a17;
 
 /* Bordo input */
-border: 1px solid rgba(255, 255, 255, 0.18);
+border: 1px solid #30332f;
 ```
 
 ### Focus visibile
@@ -593,7 +595,7 @@ Ogni elemento interattivo deve avere un focus ring chiaro:
 
 ```css
 :focus-visible {
-  outline: 2px solid #6C8CFF;
+  outline: 2px solid #b8d94a;
   outline-offset: 2px;
   border-radius: 6px;
 }
@@ -700,7 +702,7 @@ Lo stile deve essere moderno ma sobrio.
 
 | Variante | Uso | Stile |
 |---|---|---|
-| **Primary** | New Project, Save, Export | Sfondo `--accent-primary`, testo scuro o bianco ad alto contrasto |
+| **Primary** | New Project, Save, Export | Sfondo `--primary`, testo scuro o bianco ad alto contrasto |
 | **Secondary** | Preview, Share, Settings | Sfondo trasparente o `--bg-hover`, bordo `--border-default` |
 | **Ghost** | Azioni ricorrenti non critiche | Solo icona/testo, hover leggero |
 | **Danger** | Delete, Remove effect | Bordo o testo `--accent-danger`, conferma richiesta |
@@ -718,9 +720,9 @@ Lo stile deve essere moderno ma sobrio.
 
 ```css
 .btn-primary {
-  background: #6C8CFF;
-  color: #0B0B0D;
-  border-radius: 6px;
+  background: #b8d94a;
+  color: #080906;
+  border-radius: 8px;
   height: 32px;
   padding: 0 14px;
   font-weight: 600;
@@ -728,7 +730,7 @@ Lo stile deve essere moderno ma sobrio.
 
 .btn-secondary {
   background: transparent;
-  color: #F4F4F5;
+  color: #f8f8f5;
   border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 6px;
   height: 32px;
@@ -779,15 +781,15 @@ Helper text / error message
 }
 
 .slider-fill {
-  background: #6C8CFF;
+  background: #b8d94a;
   border-radius: 999px;
 }
 
 .slider-handle {
   width: 14px;
   height: 14px;
-  background: #F4F4F5;
-  border: 2px solid #6C8CFF;
+  background: #f8f8f5;
+  border: 2px solid #b8d94a;
   border-radius: 50%;
 }
 ```
@@ -800,8 +802,9 @@ Helper text / error message
 
 ```css
 .panel {
-  background: #16161A;
-  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  background: #191a17;
+  border: 1px solid #30332f;
+  border-radius: 12px;
   display: flex;
   flex-direction: column;
 }

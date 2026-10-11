@@ -44,7 +44,8 @@ export type ActivePass = {
 
 // Collect enabled effect instances across the stack, grouped by canonical order,
 // merging defaults with instance params and scoping bindings by "<effectUid>.<param>".
-export function collectActiveEffects(stack: StackItem[]): ActivePass[] {
+// Muted binding ids ("<itemUid>-<param>") are excluded so mute really pauses modulation.
+export function collectActiveEffects(stack: StackItem[], muted?: ReadonlySet<string>): ActivePass[] {
   const out: ActivePass[] = []
   for (const type of EFFECT_ORDER) {
     for (const item of stack) {
@@ -57,7 +58,9 @@ export function collectActiveEffects(stack: StackItem[]): ActivePass[] {
           uid: e.uid,
           type,
           params: { ...def.defaultParams, ...e.params },
-          bindings: item.audio.filter((b) => b.param.startsWith(`${e.uid}.`)),
+          bindings: item.audio.filter(
+            (b) => b.param.startsWith(`${e.uid}.`) && !(muted?.has(`${item.uid}-${b.param}`) ?? false),
+          ),
           def,
         })
       }

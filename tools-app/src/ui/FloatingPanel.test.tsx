@@ -94,8 +94,8 @@ describe('FloatingPanel', () => {
     const item = useProjectStore.getState().stack[0]
     const { getByTestId } = render(<FloatingPanel item={item} onClose={() => {}} />)
     const panel = getByTestId('floating-panel') as HTMLElement
-    expect(panel.style.width).toBe('320px')
+    expect(panel.style.width).toBe('290px')
     fireEvent.keyDown(panel, { key: 'ArrowRight' })
-    expect(panel.style.width).toBe('328px')
+    expect(panel.style.width).toBe('298px')
   })
 })

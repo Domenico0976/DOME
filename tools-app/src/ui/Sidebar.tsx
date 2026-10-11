@@ -8,7 +8,7 @@ export function Sidebar() {
   const canUndo = useProjectStore((s) => s.past.length > 0)
   const canRedo = useProjectStore((s) => s.future.length > 0)
   return (
-    <aside className="flex w-14 shrink-0 flex-col items-center gap-3 border-r border-border bg-surface py-3" role="navigation" aria-label="Main navigation">
+    <aside className="flex w-14 shrink-0 flex-col items-center gap-2 border-r border-border bg-surface py-3" role="navigation" aria-label="Main navigation">
       <div
         className="flex h-9 w-9 items-center justify-center rounded-md bg-primary text-sm font-bold text-primary-foreground"
         title="DOME"
@@ -16,10 +16,11 @@ export function Sidebar() {
         D
       </div>
 
-      <div className="flex flex-col gap-1.5">
+      <div className="flex flex-col gap-2">
         <Button
           variant="secondary"
           size="icon"
+          className="h-11 w-11"
           aria-label="Undo (Ctrl+Z)"
           disabled={!canUndo}
           onClick={() => undo()}
@@ -30,6 +31,7 @@ export function Sidebar() {
         <Button
           variant="secondary"
           size="icon"
+          className="h-11 w-11"
           aria-label="Redo (Ctrl+Y)"
           disabled={!canRedo}
           onClick={() => redo()}

@@ -31,59 +31,94 @@ Esempi:
 
 ## 2. Token globali
 
+Fonte di verità: `src/globals.css`. I valori sono triplette HSL senza `hsl()` — vanno
+riscritte come `hsl(var(--token))` in Tailwind e `var(--token)` negli stili inline.
+
+Tema unico dark (parity con `tools.sketchdesign.club`). `index.html` imposta
+`class="dark"` su `<html>`; i token stanno su `:root` e valgono con o senza quella classe.
+
 ```css
 :root {
-  /* Surfaces */
-  --surface-app: #0B0B0D;
-  --surface-canvas: #111114;
-  --surface-panel: #16161A;
-  --surface-raised: #1C1C21;
-  --surface-input: #101014;
-  --surface-overlay: rgba(11, 11, 13, 0.72);
+  /* Surfaces — olive-dark */
+  --background: 75 20% 3%;        /* #080906 bg-page */
+  --bg-canvas: 75 20% 3%;
+  --card: 75 7% 10%;              /* #191a17 bg-panel */
+  --popover: 75 7% 10%;
+  --surface: 75 7% 10%;
+  --surface-panel: 75 7% 10%;
+  --surface-2: 78 6% 12%;         /* #1e211d bg-control */
+  --surface-input: 78 6% 12%;
+  --surface-raised: 78 6% 12%;
+  --surface-accent: 75 42% 15%;   /* #2b3616 */
+  --elevated: 78 4% 16%;
 
   /* Text */
-  --text-primary: #F4F4F5;
-  --text-secondary: #A1A1AA;
-  --text-muted: #71717A;
-  --text-inverse: #0B0B0D;
-  --text-disabled: #52525B;
+  --foreground: 60 17% 96%;       /* #f8f8f5 */
+  --text-primary: 60 17% 96%;
+  --text-secondary: 75 8% 65%;    /* #a8ac9d */
+  --text-muted: 75 6% 45%;
+  --text-disabled: 75 5% 32%;
 
   /* Borders */
-  --border-subtle: rgba(255, 255, 255, 0.06);
-  --border-default: rgba(255, 255, 255, 0.10);
-  --border-strong: rgba(255, 255, 255, 0.18);
-  --border-focus: #6C8CFF;
-  --border-selected: #6C8CFF;
-  --border-danger: #F87171;
+  --border: 78 4% 19%;            /* #30332f */
+  --border-subtle: 78 4% 19%;
+  --border-strong: 78 4% 24%;
+  --input: 78 6% 12%;
+  --ring: 74 60% 57%;
 
-  /* Accent */
-  --accent-primary: #6C8CFF;
-  --accent-primary-hover: #85A0FF;
-  --accent-primary-active: #5575E6;
-  --accent-success: #34D399;
-  --accent-warning: #FBBF24;
-  --accent-danger: #F87171;
-  --accent-audio: #A78BFA;
+  /* Accent — lime */
+  --primary: 74 60% 57%;          /* #b8d94a */
+  --primary-foreground: 75 20% 3%;
+  --secondary: 78 6% 12%;
+  --secondary-foreground: 60 17% 96%;
+  --muted: 78 6% 12%;
+  --muted-foreground: 75 8% 65%;
+  --accent: 75 42% 15%;
+  --accent-foreground: 60 17% 96%;
+  --destructive: 11 100% 55%;     /* #ff441a */
+  --destructive-foreground: 0 0% 100%;
+  --danger: 11 100% 55%;
+  --success: 147 61% 47%;
+  --warning: 45 86% 62%;
+  --info: 210 87% 63%;
+  --scrim: 0 0% 0%;
 
-  /* Radius */
-  --radius-xs: 4px;
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 14px;
+  /* Audio-reactive */
+  --accent-audio: 74 60% 57%;
+  --audio-meter-fill-bass: 152 70% 45%;
+  --audio-meter-fill-mid: 45 95% 55%;
+  --audio-meter-fill-treble: 74 60% 57%;
+  --audio-meter-fill-level: 74 60% 57%;
+  --progress-fill: 74 60% 57%;
+  --progress-bg: 78 4% 19%;
+
+  /* Audio component tokens — i nomi sono letti da button.tsx (variante `audio`),
+     badge.tsx (varianti `audio`/`selected`), PresetRail, AudioReactPanel,
+     AudioReactivePanel + i relativi test. Restare sui nomi: rinominarli toccherebbe
+     7 file senza guadagno. */
+  --button-bg-audio: 74 60% 57% / 0.12;
+  --button-border-audio: 74 60% 57% / 0.45;
+  --button-text-audio: 74 60% 57%;
+  --badge-bg-audio: 74 60% 57% / 0.12;
+  --badge-text-audio: 74 60% 57%;
+  --badge-bg-selected: 74 60% 57% / 0.16;
+  --badge-text-selected: 74 60% 57%;
+
+  /* Geometria — vedi SOUNDBAR.md §2 */
+  --topbar-h: 48px;
+  --soundbar-height: 101px;       /* tips 44 + main 57 */
+  --soundbar-top-row: 44px;
+  --soundbar-main-h: 57px;
+  --soundbar-bottom-zone: 148px;  /* PanelSlot espanso */
+  --tabbar-h: 32px;
+
+  /* Radius — 2 / 8 / 12 / 999 */
+  --radius-xs: 2px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
   --radius-full: 999px;
-
-  /* Spacing */
-  --space-1: 4px;
-  --space-2: 8px;
-  --space-3: 12px;
-  --space-4: 16px;
-  --space-5: 20px;
-  --space-6: 24px;
-  --space-8: 32px;
-
-  /* Typography */
-  --font-ui: "Inter", system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", monospace;
+  --field-gap: 8px;
+  --color-swatch-size: 22px;
 
   /* Motion */
   --motion-fast: 120ms;
@@ -91,11 +126,24 @@ Esempi:
   --motion-slow: 240ms;
   --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
 
-  /* Shadows */
-  --shadow-panel: 0 12px 32px rgba(0, 0, 0, 0.38);
-  --shadow-modal: 0 24px 64px rgba(0, 0, 0, 0.55);
+  /* z-index */
+  --z-global-chrome: 40;
+  --z-floating-panel: 50;
+  --z-floating-picker: 55;
+  --z-modal-overlay: 60;
+  --z-modal-content: 65;
+  --z-toast: 100;
+
+  --slider-track-bg: 78 4% 19%;
+  --tab-indicator: 74 60% 57%;
+  --dialog-overlay: 0 0% 0% / 0.62;
+  --scrollbar: 0 0% 100% / 0.18;
+  --font-ui: 'Geist', system-ui, sans-serif;
 }
 ```
+
+> **Nota ponytail.** `--primary-50/100/300/600/700/900` sopravvivono su rampa lime:
+> `button.tsx` legge `primary-300` (focus ring) e `primary-600` (hover).
 
 ---
 
@@ -117,7 +165,7 @@ AppShell
 ### 3.2 Token
 
 ```css
---app-shell-bg: var(--surface-app);
+--app-shell-bg: var(--background);
 --app-shell-grid-columns: 240px 1fr 320px;
 --app-shell-grid-rows: 48px 1fr 56px;
 --app-shell-gap: 0px;
@@ -209,10 +257,10 @@ AppShell
 --button-gap: var(--space-2);
 
 /* Primary */
---button-bg-primary-default: var(--accent-primary);
---button-bg-primary-hover: var(--accent-primary-hover);
---button-bg-primary-active: var(--accent-primary-active);
---button-text-primary-default: var(--text-inverse);
+--button-bg-primary-default: var(--primary);
+--button-bg-primary-hover: var(--primary-600);
+--button-bg-primary-active: var(--primary-900);
+--button-text-primary-default: var(--primary-foreground);
 
 /* Secondary */
 --button-bg-secondary-default: transparent;
@@ -232,8 +280,8 @@ AppShell
 --button-text-danger-default: var(--accent-danger);
 
 /* Audio */
---button-bg-audio-default: rgba(167, 139, 250, 0.14);
---button-border-audio-default: rgba(167, 139, 250, 0.45);
+--button-bg-audio-default: rgba(184, 217, 74, 0.14);
+--button-border-audio-default: rgba(184, 217, 74, 0.45);
 --button-text-audio-default: var(--accent-audio);
 
 /* States */
@@ -306,7 +354,7 @@ AppShell
 --icon-button-bg-active: rgba(255, 255, 255, 0.10);
 --icon-button-color-default: var(--text-secondary);
 --icon-button-color-hover: var(--text-primary);
---icon-button-color-active: var(--accent-primary);
+--icon-button-color-active: var(--primary);
 --icon-button-color-disabled: var(--text-disabled);
 ```
 
@@ -550,10 +598,10 @@ Helper / Error
 --slider-track-height: 4px;
 --slider-track-bg: #2A2A33;
 --slider-track-radius: var(--radius-full);
---slider-fill-bg: var(--accent-primary);
+--slider-fill-bg: var(--primary);
 --slider-handle-size: 14px;
 --slider-handle-bg: var(--text-primary);
---slider-handle-border: 2px solid var(--accent-primary);
+--slider-handle-border: 2px solid var(--primary);
 --slider-value-font: var(--font-mono);
 --slider-value-color: var(--text-primary);
 ```
@@ -610,7 +658,7 @@ Helper / Error
 --switch-height: 20px;
 --switch-radius: var(--radius-full);
 --switch-bg-off: #2A2A33;
---switch-bg-on: var(--accent-primary);
+--switch-bg-on: var(--primary);
 --switch-handle-size: 14px;
 --switch-handle-bg: var(--text-primary);
 --switch-handle-offset: 3px;
@@ -746,7 +794,7 @@ Helper / Error
 --tab-text: var(--text-secondary);
 --tab-text-active: var(--text-primary);
 --tab-bg-active: rgba(255, 255, 255, 0.06);
---tab-indicator: var(--accent-primary);
+--tab-indicator: var(--primary);
 ```
 
 ### 15.2 CSS
@@ -852,7 +900,7 @@ Parameter -------------------- value
 --effect-card-title-size: 13px;
 --effect-card-title-weight: 600;
 --effect-card-disabled-opacity: 0.55;
---effect-card-mask-badge: var(--accent-primary);
+--effect-card-mask-badge: var(--primary);
 ```
 
 ### 17.3 CSS
@@ -900,8 +948,8 @@ Amount [────●────] 45%
 ### 18.2 Token
 
 ```css
---audio-binding-bg: rgba(167, 139, 250, 0.08);
---audio-binding-border: rgba(167, 139, 250, 0.24);
+--audio-binding-bg: rgba(184, 217, 74, 0.08);
+--audio-binding-border: rgba(184, 217, 74, 0.24);
 --audio-binding-radius: var(--radius-md);
 --audio-binding-padding: var(--space-3);
 --audio-binding-icon: var(--accent-audio);
@@ -951,9 +999,9 @@ Download vive solo nella sound bar.
 ### 19.2 Token
 
 ```css
---soundbar-height: 136px;
+--soundbar-height: 101px;
 --soundbar-top-row: 44px;
---soundbar-bottom-zone: 92px;
+--soundbar-bottom-zone: 148px;
 --soundbar-bg: var(--surface-panel);
 --soundbar-border-top: var(--border-subtle);
 --soundbar-padding-x: var(--space-3);
@@ -1012,7 +1060,7 @@ Download vive solo nella sound bar.
 --audio-meter-height: 6px;
 --audio-meter-bg: #2A2A33;
 --audio-meter-fill-bass: #A78BFA;
---audio-meter-fill-mid: #6C8CFF;
+--audio-meter-fill-mid: #b8d94a;
 --audio-meter-fill-high: #34D399;
 --audio-meter-label-size: 11px;
 --audio-meter-label-color: var(--text-muted);
@@ -1075,7 +1123,7 @@ Download vive solo nella sound bar.
 --badge-bg-danger: rgba(248, 113, 113, 0.14);
 --badge-text-danger: var(--accent-danger);
 
---badge-bg-audio: rgba(167, 139, 250, 0.14);
+--badge-bg-audio: rgba(184, 217, 74, 0.14);
 --badge-text-audio: var(--accent-audio);
 ```
 
@@ -1268,11 +1316,11 @@ Download vive solo nella sound bar.
 ```css
 --canvas-bg: var(--surface-canvas);
 --canvas-padding: var(--space-4);
---canvas-selection-border: var(--accent-primary);
+--canvas-selection-border: var(--primary);
 --canvas-selection-width: 1.5px;
 --canvas-handle-size: 8px;
 --canvas-handle-bg: var(--text-primary);
---canvas-handle-border: var(--accent-primary);
+--canvas-handle-border: var(--primary);
 --canvas-grid-color: rgba(255, 255, 255, 0.04);
 --canvas-empty-text: var(--text-muted);
 ```
@@ -1339,7 +1387,7 @@ Download vive solo nella sound bar.
 ```css
 --progress-height: 6px;
 --progress-bg: #2A2A33;
---progress-fill: var(--accent-primary);
+--progress-fill: var(--primary);
 --progress-radius: var(--radius-full);
 --progress-label-size: 11px;
 --progress-label-color: var(--text-secondary);

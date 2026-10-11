@@ -34,11 +34,13 @@ export function QuarantinePanel({ open, onClose }: QuarantinePanelProps) {
   return (
     <div
       className={cn(
-        'fixed right-0 top-0 z-[90] flex h-full w-[340px] max-w-[calc(100vw-2rem)] flex-col border-l border-border bg-surface shadow-2xl',
+        'fixed right-0 top-0 z-50 flex h-full w-[340px] max-w-[calc(100vw-2rem)] flex-col border-l border-border bg-surface shadow-2xl',
       )}
       data-testid="quarantine-panel"
       role="dialog"
       aria-label="Quarantined bindings"
+      aria-modal="true"
+      tabIndex={-1}
     >
       <div className="flex items-center justify-between border-b border-border px-4 py-3">
         <div className="flex items-center gap-2">

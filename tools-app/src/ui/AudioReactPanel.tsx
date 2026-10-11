@@ -8,13 +8,20 @@ import {
   Upload,
   Mic,
   Piano,
-  Plus,
   Volume2,
+  VolumeX,
   Download,
   Camera,
   Music2,
   Maximize2,
   RotateCcw,
+  MoreHorizontal,
+  Trash2,
+  ChevronUp,
+  Info,
+  BookOpen,
+  Video,
+  Users,
 } from 'lucide-react'
 import { useProjectStore } from '../state/projectStore'
 import { useAudio } from '../audio/useAudio'
@@ -36,6 +43,10 @@ import {
 } from '../components/ui/dropdown-menu'
 import { resolveTool } from '../core/registry'
 import { EFFECTS } from '../engine/effects'
+import { Popover, PopoverContent, PopoverTrigger } from '../components/ui/popover'
+import { AudioReactivePanel } from './AudioReactivePanel'
+import { PresetRail } from './PresetRail'
+import { PresetMegaMenu } from './PresetMegaMenu'
 import { useExportActions, computeRasterForced, computeGpuForced } from './exportActions'
 import { cn } from '../lib/utils'
 
@@ -44,13 +55,15 @@ interface AudioReactPanelProps {
 }
 
 const METER_CONFIG = [
-  { key: 'bass' as const, label: 'B', color: 'from-red-500 to-orange-400' },
-  { key: 'mid' as const, label: 'M', color: 'from-yellow-400 to-green-400' },
-  { key: 'treble' as const, label: 'T', color: 'from-cyan-400 to-blue-500' },
-  { key: 'level' as const, label: 'L', color: 'from-purple-400 to-pink-500' },
+  { key: 'bass' as const, label: 'Bass', short: 'B', token: '--audio-meter-fill-bass' },
+  { key: 'mid' as const, label: 'Mid', short: 'M', token: '--audio-meter-fill-mid' },
+  { key: 'treble' as const, label: 'Treble', short: 'T', token: '--audio-meter-fill-treble' },
+  { key: 'level' as const, label: 'Level', short: 'L', token: '--audio-meter-fill-level' },
 ]
 
 type MeterKey = (typeof METER_CONFIG)[number]['key']
+
+const PILL = 'flex h-9 items-center gap-1.5 rounded-[8px] border border-border bg-surface-2 px-2 text-[13px]'
 
 function computeAudioDiag(): string {
   const ctxState = audioContextState()
@@ -70,6 +83,25 @@ function computeAudioDiag(): string {
 }
 
 // Focus guard: don't hijack Space/L shortcuts on interactive or editable controls.
+function formatDuration(totalSec: number): string {
+  if (!Number.isFinite(totalSec) || totalSec <= 0) return '0:00'
+  const m = Math.floor(totalSec / 60)
+  const s = Math.floor(totalSec % 60)
+  return `${m}:${String(s).padStart(2, '0')}`
+}
+
+function cssVarHsl(name: string, fallback: string): string {
+  if (typeof window === 'undefined' || !window.getComputedStyle) return fallback
+  const v = getComputedStyle(document.documentElement).getPropertyValue(name).trim()
+  return v ? `hsl(${v})` : fallback
+}
+
+function cssVarRaw(name: string, fallback: string): string {
+  if (typeof window === 'undefined' || !window.getComputedStyle) return fallback
+  const v = getComputedStyle(document.documentElement).getPropertyValue(name).trim()
+  return v || fallback
+}
+
 function isInteractiveOrEditable(el: HTMLElement | null): boolean {
   if (!el) return true
   if (el.isContentEditable) return true
@@ -99,17 +131,22 @@ export function AudioReactPanel({ className }: AudioReactPanelProps) {
   // Store state
   const source = useProjectStore((s) => s.audio.source)
   const fileName = useProjectStore((s) => s.audio.fileName)
+  const theme = useProjectStore((s) => s.theme)
+  const quarantined = useProjectStore((s) => s.quarantined ?? [])
   const midiEnabled = useProjectStore((s) => s.audio.midi.enabled)
   const enableMidi = useProjectStore((s) => s.enableMidi)
   const bpm = useProjectStore((s) => s.timeline.bpm)
   const setBpm = useProjectStore((s) => s.setBpm)
   const playing = useProjectStore((s) => s.timeline.playing)
+  const setPlaying = useProjectStore((s) => s.setPlaying)
   const timeSec = useProjectStore((s) => s.timeline.timeSec)
   const durationSec = useProjectStore((s) => s.timeline.durationSec)
   const setTime = useProjectStore((s) => s.setTime)
   const stack = useProjectStore((s) => s.stack)
   const selectedUid = useProjectStore((s) => s.selectedUid)
-  const addAudioBinding = useProjectStore((s) => s.addAudioBinding)
+  const selectTool = useProjectStore((s) => s.selectTool)
+  const setAudioSource = useProjectStore((s) => s.setAudioSource)
+  const setAudioFileName = useProjectStore((s) => s.setAudioFileName)
   const volume = useProjectStore((s) => s.audio.volume ?? 1)
   const setVolume = useProjectStore((s) => s.setVolume)
 
@@ -121,8 +158,11 @@ export function AudioReactPanel({ className }: AudioReactPanelProps) {
   const [midiBusy, setMidiBusy] = useState(false)
   const [loop, setLoop] = useState(false)
   const [, setTapTimes] = useState<number[]>([])
-  const [disabledBindings, setDisabledBindings] = useState<Set<string>>(new Set())
   const [creatorOpen, setCreatorOpen] = useState(false)
+  const [megaOpen, setMegaOpen] = useState(false)
+  const [panelOpen, setPanelOpen] = useState(false)
+  const [slotOpen, setSlotOpen] = useState(false)
+  const [prevVolume, setPrevVolume] = useState(1)
   const [driver, setDriver] = useState<'bass' | 'mid' | 'treble' | 'level' | 'spectrum' | 'bpm'>('bass')
   const [targetParam, setTargetParam] = useState('')
   const [amount, setAmount] = useState(1)
@@ -137,48 +177,8 @@ export function AudioReactPanel({ className }: AudioReactPanelProps) {
   const sourceRef = useRef(source)
   sourceRef.current = source
 
-  // Presets derived from stack audio bindings
-  const presets = useMemo(() => {
-    const result: Array<{
-      id: string
-      toolId: string
-      toolName: string
-      param: string
-      reactTo: string
-      sensitivity: number
-      enabled: boolean
-      itemUid: string
-    }> = []
-    for (const item of stack) {
-      for (const binding of item.audio) {
-        const tool = resolveTool(item.toolId, item.toolVersion)
-        const key = `${item.uid}-${binding.param}`
-        result.push({
-          id: key,
-          toolId: item.toolId,
-          toolName: tool?.label ?? item.toolId,
-          param: binding.param,
-          reactTo: binding.source,
-          sensitivity: binding.amount,
-          enabled: !disabledBindings.has(key),
-          itemUid: item.uid,
-        })
-      }
-    }
-    return result
-  }, [stack, disabledBindings])
-
-  const togglePreset = useCallback((id: string) => {
-    setDisabledBindings((prev) => {
-      const next = new Set(prev)
-      if (next.has(id)) {
-        next.delete(id)
-      } else {
-        next.add(id)
-      }
-      return next
-    })
-  }, [])
+  // Live binding count for the Audio Reactive badge (row list lives in PresetRail)
+  const bindingCount = stack.reduce((k, i) => k + i.audio.length, 0)
 
   const selected = stack.find((i) => i.uid === selectedUid) ?? null
   const targetOptions = useMemo(() => {
@@ -273,6 +273,24 @@ export function AudioReactPanel({ className }: AudioReactPanelProps) {
     audio.seek(0)
   }, [audio])
 
+  const handleRemoveAudio = useCallback(() => {
+    audio.pause()
+    setPlaying(false)
+    setAudioSource(null)
+    setAudioFileName(undefined)
+    toast('Audio removed — bindings are kept but silent', { kind: 'warning' })
+  }, [audio, setPlaying, setAudioSource, setAudioFileName, toast])
+
+  const handlePickMegaMenu = useCallback(
+    (itemUid: string, param: string) => {
+      selectTool(itemUid)
+      setTargetParam(param)
+      setCreatorOpen(true)
+      setMegaOpen(false)
+    },
+    [selectTool],
+  )
+
   // Footer-level keyboard shortcuts: Space = play/pause, L = loop toggle.
   // Focus guard: skip when the active element is an interactive/editable control.
   const onFooterKeyDown = useCallback(
@@ -317,6 +335,15 @@ export function AudioReactPanel({ className }: AudioReactPanelProps) {
 
     resize()
     window.addEventListener('resize', resize)
+    // The PanelSlot mounts at h-0, so the canvas measures 0-height here and no window
+    // resize fires on expand. Without this the waveform stays invisible until reload.
+    const ro = new ResizeObserver(resize)
+    ro.observe(canvas)
+
+    const barColor = cssVarRaw('--soundbar-waveform-bar', 'rgba(184, 217, 74, 0.45)')
+    const playedColor = cssVarRaw('--soundbar-waveform-played', '#b8d94a')
+    const playheadColor = cssVarHsl('--foreground', '#fff')
+    const emptyColor = cssVarHsl('--text-muted', '#888')
 
     const draw = () => {
       const frame = audio.readFrame(bpmRef.current)
@@ -332,13 +359,14 @@ export function AudioReactPanel({ className }: AudioReactPanelProps) {
       ctx.clearRect(0, 0, width, height)
 
       if (sourceRef.current === null) {
-        ctx.fillStyle = '#888'
+        ctx.fillStyle = emptyColor
         ctx.font = '12px sans-serif'
         ctx.textAlign = 'center'
         ctx.textBaseline = 'middle'
         ctx.fillText('Load audio to see waveform', width / 2, height / 2)
       } else {
         const spectrum = frame.spectrum
+        const progressX = durationSecRef.current > 0 ? (timeSecRef.current / durationSecRef.current) * width : 0
         if (spectrum.length > 0) {
           const barWidth = width / spectrum.length
           for (let i = 0; i < spectrum.length; i++) {
@@ -347,10 +375,7 @@ export function AudioReactPanel({ className }: AudioReactPanelProps) {
             const x = i * barWidth
             const y = height - barHeight
 
-            const gradient = ctx.createLinearGradient(0, height, 0, 0)
-            gradient.addColorStop(0, 'rgba(100, 149, 237, 0.3)')
-            gradient.addColorStop(1, 'rgba(100, 149, 237, 0.8)')
-            ctx.fillStyle = gradient
+            ctx.fillStyle = x < progressX ? playedColor : barColor
             ctx.fillRect(x, y, Math.max(barWidth - 0.5, 0.5), barHeight)
           }
         }
@@ -359,7 +384,7 @@ export function AudioReactPanel({ className }: AudioReactPanelProps) {
       // Play position indicator line
       if (durationSecRef.current > 0) {
         const x = (timeSecRef.current / durationSecRef.current) * width
-        ctx.strokeStyle = '#fff'
+        ctx.strokeStyle = playheadColor
         ctx.lineWidth = 2
         ctx.beginPath()
         ctx.moveTo(x, 0)
@@ -374,25 +399,108 @@ export function AudioReactPanel({ className }: AudioReactPanelProps) {
 
     return () => {
       window.removeEventListener('resize', resize)
+      ro.disconnect()
       if (rafRef.current) cancelAnimationFrame(rafRef.current)
     }
-  }, [audio])
+  }, [audio, theme])
 
   return (
     <footer
       ref={footerRef}
-      className={cn('flex flex-col border-t border-border bg-surface px-3 h-[136px]', className)}
+      className={cn('flex shrink-0 flex-col border-t border-border bg-surface-panel', className)}
       aria-label="Audio Reactivity Panel"
       onKeyDown={onFooterKeyDown}
     >
-      {/* Zone A — top row (44px): transport, source, BPM, volume, Download */}
-      <div className="flex items-center gap-2 px-2 h-11 shrink-0">
-        {/* Transport controls (32px) — Space=play/pause, L=loop */}
-        <div className="flex items-center gap-1" role="group" aria-label="Transport">
+      {/* Tips row — 44px */}
+      <div className="flex h-11 shrink-0 items-center justify-between px-4">
+        <span className="text-[13px] text-muted-foreground">Tips &amp; tricks</span>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" size="sm" className="h-9 w-[100px] rounded-[8px] text-[13px]" aria-label="Get support">
+              <Info className="h-[18px] w-[18px]" />
+              Support
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Help &amp; resources</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>
+              <BookOpen className="h-4 w-4" />
+              Guides
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Video className="h-4 w-4" />
+              Video tutorials
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Users className="h-4 w-4" />
+              Community
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+
+      {/* Main bar — 57px */}
+      <div className="relative flex h-[57px] shrink-0 items-center gap-2 border-t border-border px-4 py-2.5">
+        {/* LEFT — reactive access + overflow */}
+        <div className="flex shrink-0 items-center gap-1">
+          <input ref={fileRef} type="file" accept="audio/*" hidden onChange={onFile} />
+          <Button
+            variant={slotOpen ? 'audio' : 'secondary'}
+            size="sm"
+            className="h-8 rounded-[8px] px-3 text-[13px]"
+            aria-label={bindingCount > 0 ? `Audio Reactive, ${bindingCount} bindings` : 'Audio Reactive, no bindings'}
+            aria-pressed={slotOpen}
+            onClick={() => setSlotOpen((v) => !v)}
+          >
+            <Music2 className="h-3.5 w-3.5" />
+            Audio Reactive{bindingCount > 0 ? ` · ${bindingCount}` : ''}
+            {quarantined.length > 0 && (
+              <Badge variant="warning" className="h-4 min-w-4 px-1 text-[10px]">
+                {quarantined.length}
+              </Badge>
+            )}
+          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0 rounded-[8px]" aria-label="Audio options">
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" sideOffset={4} className="min-w-[200px]">
+              <DropdownMenuGroup>
+                <DropdownMenuLabel>Audio</DropdownMenuLabel>
+                <DropdownMenuItem onSelect={() => fileRef.current?.click()}>
+                  <Upload className="h-4 w-4" />
+                  Replace audio
+                </DropdownMenuItem>
+                <DropdownMenuItem onSelect={handleRemoveAudio}>
+                  <Trash2 className="h-4 w-4" />
+                  Remove audio
+                </DropdownMenuItem>
+                <DropdownMenuItem onSelect={() => setPanelOpen(true)}>
+                  <Music2 className="h-4 w-4" />
+                  Open Audio Reactive
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+
+        {/* CENTER — transport + source + time + bpm */}
+        <div className="flex flex-1 items-center justify-center gap-2">
           <Button
             variant="ghost"
             size="icon"
-            className="h-8 w-8"
+            className="h-9 w-9 shrink-0 rounded-[8px] border border-border bg-surface-2"
+            aria-label="Stop"
+            onClick={handleStop}
+          >
+            <Square className="h-4 w-4" />
+          </Button>
+          <Button
+            size="icon"
+            className="h-9 w-9 shrink-0 rounded-[8px] bg-foreground text-background hover:bg-foreground/90"
             aria-label="Play/Pause"
             disabled={source === null}
             onClick={() => {
@@ -407,320 +515,295 @@ export function AudioReactPanel({ className }: AudioReactPanelProps) {
           >
             {playing ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
           </Button>
-          <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="Stop" onClick={handleStop}>
-            <Square className="h-4 w-4" />
+
+          <div className="min-w-0 max-w-[150px]">
+            {source === null ? (
+              <Button
+                variant="secondary"
+                size="sm"
+                className={cn(PILL, 'max-w-full text-[13px]')}
+                aria-label="Add audio"
+                onClick={() => fileRef.current?.click()}
+              >
+                <Upload className="h-4 w-4 shrink-0" />
+                <span className="truncate">Add audio</span>
+              </Button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => fileRef.current?.click()}
+                aria-label={`Replace audio track ${fileName ?? 'audio'}`}
+                title={`${fileName ?? 'audio'} · ${formatDuration(durationSec)}`}
+                className={cn(PILL, 'w-full justify-start')}
+              >
+                {source === 'mic' ? <Mic className="h-4 w-4 shrink-0" /> : <Music2 className="h-4 w-4 shrink-0" />}
+                <span className="truncate text-[13px] font-medium">{source === 'mic' ? 'Microphone' : (fileName ?? 'audio')}</span>
+              </button>
+            )}
+          </div>
+
+          <div className={cn(PILL, 'shrink-0 gap-2 font-mono tabular-nums')}>
+            <span className="text-[14px] font-semibold text-foreground">{formatDuration(timeSec)}</span>
+            <span className="text-[10px] font-semibold text-muted-foreground">{formatDuration(durationSec)}</span>
+          </div>
+
+          <div className={cn(PILL, 'shrink-0 gap-1')}>
+            <input
+              aria-label="BPM"
+              type="number"
+              min={20}
+              max={300}
+              value={bpm}
+              onChange={(e) => setBpm(Number(e.target.value))}
+              className="w-[52px] bg-transparent font-mono text-[14px] font-semibold text-foreground focus:outline-none focus:ring-1 focus:ring-ring"
+            />
+            <span className="text-[10px] font-semibold text-muted-foreground">BPM</span>
+          </div>
+
+          <Button
+            variant={source === 'mic' ? 'default' : 'secondary'}
+            size="icon"
+            className="h-9 w-9 shrink-0 rounded-[8px]"
+            aria-label="Microphone"
+            aria-pressed={source === 'mic'}
+            onClick={() => audio.enableMic()}
+          >
+            <Mic className="h-4 w-4" />
           </Button>
+          <Button variant="secondary" size="sm" className="h-9 shrink-0 rounded-[8px] text-[13px]" aria-label="Tap tempo" onClick={onTapTempo}>
+            Tap
+          </Button>
+        </div>
+
+        {/* RIGHT — loop + export + slot toggle */}
+        <div className="flex shrink-0 items-center gap-1">
           <Button
             variant={loop ? 'default' : 'ghost'}
             size="icon"
-            className="h-8 w-8"
+            className="h-8 w-8 shrink-0 rounded-[8px]"
             aria-label="Loop"
             aria-pressed={loop}
             onClick={() => setLoop(!loop)}
           >
             <Repeat className="h-4 w-4" />
           </Button>
-        </div>
 
-        {/* Source buttons */}
-        <div className="flex items-center gap-1" role="group" aria-label="Source">
-          <input ref={fileRef} type="file" accept="audio/*" hidden onChange={onFile} />
           <Button
-            variant="secondary"
+            variant={midiEnabled ? 'audio' : 'outline'}
             size="sm"
-            className="h-7 px-2 text-[11px]"
-            onClick={() => fileRef.current?.click()}
-          >
-            <Upload className="h-3 w-3" />
-            {source === 'file' ? (fileName ?? 'audio') : 'Load'}
-          </Button>
-          <Button
-            variant={source === 'mic' ? 'default' : 'secondary'}
-            size="sm"
-            className="h-7 px-2 text-[11px]"
-            onClick={() => audio.enableMic()}
-            aria-pressed={source === 'mic'}
-          >
-            <Mic className="h-3 w-3" />
-          </Button>
-          <Button
-            variant={midiEnabled ? 'default' : 'secondary'}
-            size="sm"
-            className="h-7 px-2 text-[11px]"
+            className="h-8 shrink-0 rounded-[8px] text-[13px]"
+            aria-label="MIDI"
+            aria-pressed={midiEnabled}
             disabled={midiBusy || midiEnabled}
             onClick={onMidi}
           >
-            <Piano className="h-3 w-3" />
+            <Piano className="h-4 w-4" />
+            MIDI
           </Button>
-        </div>
 
-        {/* BPM display with tap tempo */}
-        <div className="flex items-center gap-2">
-          <span className="text-[10px] uppercase tracking-wide text-muted-foreground">BPM</span>
-          <input
-            aria-label="BPM"
-            type="number"
-            min={20}
-            max={300}
-            value={bpm}
-            onChange={(e) => setBpm(Number(e.target.value))}
-            className="h-7 w-[72px] rounded-md border border-border bg-surface-2 px-2 text-center font-mono text-[14px] font-bold text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-          />
-          <Button variant="secondary" size="sm" className="h-7 px-2 text-[11px]" onClick={onTapTempo}>
-            Tap
+          <div className="flex shrink-0 items-center gap-1.5">
+            {rasterForced && (
+              <Badge variant="warning" data-testid="raster-badge">
+                Raster output
+              </Badge>
+            )}
+            {gpuForced && (
+              <Badge variant="warning" data-testid="gpu-required-badge">
+                GPU required for effects
+              </Badge>
+            )}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button size="sm" className="h-8 shrink-0 rounded-[8px] px-3">
+                  <Download className="h-3.5 w-3.5" />
+                  Download
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" sideOffset={4} className="min-w-[200px]">
+                <DropdownMenuGroup>
+                  <DropdownMenuLabel>Export</DropdownMenuLabel>
+                  <DropdownMenuItem onSelect={png}>
+                    <Download className="h-4 w-4" />
+                    PNG
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onSelect={instagram}>
+                    <Camera className="h-4 w-4" />
+                    Instagram
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onSelect={spotify}>
+                    <Music2 className="h-4 w-4" />
+                    Spotify Canvas
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+                <DropdownMenuSeparator />
+                <DropdownMenuGroup>
+                  <DropdownMenuLabel>View</DropdownMenuLabel>
+                  <DropdownMenuItem onSelect={fullscreen}>
+                    <Maximize2 className="h-4 w-4" />
+                    Fullscreen
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+                <DropdownMenuSeparator />
+                <DropdownMenuGroup>
+                  <DropdownMenuLabel>Project</DropdownMenuLabel>
+                  <DropdownMenuItem onSelect={resetView}>
+                    <RotateCcw className="h-4 w-4" />
+                    Reset
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-7 w-7 shrink-0 text-muted-foreground"
+            aria-label={slotOpen ? 'Collapse panel' : 'Expand panel'}
+            aria-expanded={slotOpen}
+            onClick={() => setSlotOpen((v) => !v)}
+          >
+            <ChevronUp className={cn('h-4 w-4 transition-transform', slotOpen && 'rotate-180')} />
           </Button>
-        </div>
-
-        {/* Volume (listen-only: never affects reactivity) */}
-        <div className="flex items-center gap-2 flex-1 min-w-0">
-          <Volume2 className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
-          <Slider
-            aria-label="Volume"
-            min={0}
-            max={100}
-            step={1}
-            value={[Math.round(volume * 100)]}
-            onValueChange={([v]) => setVolume(v / 100)}
-            className="flex-1 min-w-0"
-          />
-        </div>
-
-        {/* Download — single dropdown with badges before the trigger */}
-        <div className="flex items-center gap-1.5 shrink-0">
-          {rasterForced && (
-            <Badge variant="warning" data-testid="raster-badge">
-              Raster output
-            </Badge>
-          )}
-          {gpuForced && (
-            <Badge variant="warning" data-testid="gpu-required-badge">
-              GPU required for effects
-            </Badge>
-          )}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="default" size="sm" className="h-8 px-3">
-                <Download className="h-3.5 w-3.5" />
-                Download
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" sideOffset={4} className="min-w-[200px]">
-              <DropdownMenuGroup>
-                <DropdownMenuLabel>Export</DropdownMenuLabel>
-                <DropdownMenuItem onSelect={png}>
-                  <Download className="h-4 w-4" />
-                  PNG
-                </DropdownMenuItem>
-                <DropdownMenuItem onSelect={instagram}>
-                  <Camera className="h-4 w-4" />
-                  Instagram
-                </DropdownMenuItem>
-                <DropdownMenuItem onSelect={spotify}>
-                  <Music2 className="h-4 w-4" />
-                  Spotify Canvas
-                </DropdownMenuItem>
-              </DropdownMenuGroup>
-              <DropdownMenuSeparator />
-              <DropdownMenuGroup>
-                <DropdownMenuLabel>View</DropdownMenuLabel>
-                <DropdownMenuItem onSelect={fullscreen}>
-                  <Maximize2 className="h-4 w-4" />
-                  Fullscreen
-                </DropdownMenuItem>
-              </DropdownMenuGroup>
-              <DropdownMenuSeparator />
-              <DropdownMenuGroup>
-                <DropdownMenuLabel>Project</DropdownMenuLabel>
-                <DropdownMenuItem onSelect={resetView}>
-                  <RotateCcw className="h-4 w-4" />
-                  Reset
-                </DropdownMenuItem>
-              </DropdownMenuGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
         </div>
       </div>
 
-      {/* Zone B — unchanged: waveform/timeline/status + presets/creator/meters; 140px empty track-identity spacer */}
-      <div className="flex flex-1 min-h-0">
-        <div className="w-[140px] shrink-0" />
-        <div className="flex-1 flex flex-col py-2 min-w-0">
-          <div className="flex-1 relative rounded-md overflow-hidden bg-surface-2 border border-border">
-            <canvas
-              ref={canvasRef}
-              className="absolute inset-0 w-full h-full cursor-pointer"
-              onClick={onCanvasClick}
-            />
-          </div>
-          <div className="flex items-center gap-2 mt-1">
-            <span aria-label="Timeline" className="flex-1">
-              {durationSec > 0 ? (
-                <Slider
-                  min={0}
-                  max={durationSec}
-                  step={0.1}
-                  value={[timeSec]}
-                  onValueChange={(v) => setTime(v[0])}
-                  className="flex-1"
-                  aria-valuetext={`${timeSec.toFixed(1)}s of ${durationSec.toFixed(1)}s`}
-                />
-              ) : (
-                <div
-                  className="h-8 rounded-md border border-border bg-surface-2"
-                  aria-label="Timeline disabled, no audio loaded"
-                />
-              )}
-            </span>
-            <span className="font-mono text-[11px] tabular-nums text-muted-foreground w-[60px] text-right shrink-0">
-              {durationSec > 0 ? `${timeSec.toFixed(1)}s / ${durationSec.toFixed(1)}s` : `0.0s / 0.0s`}
-            </span>
-          </div>
-          <div className="mt-1 truncate font-mono text-[10px] text-muted-foreground" data-testid="audio-status">
-            {diag}
-          </div>
-        </div>
+      {/* PanelSlot — 0 collapsed, 148px expanded (waveform + meters + presets + volume) */}
+      <div
+        className={cn(
+          'shrink-0 overflow-hidden border-t border-border transition-[height] duration-200',
+          slotOpen ? 'h-[148px]' : 'h-0 border-t-0',
+        )}
+      >
+        <div className="flex h-[148px] gap-3 px-3 pb-2">
+          <PresetRail
+            stack={stack}
+            selected={selected}
+            targetOptions={targetOptions}
+            driver={driver}
+            setDriver={setDriver}
+            targetParam={targetParam}
+            setTargetParam={setTargetParam}
+            amount={amount}
+            setAmount={setAmount}
+            creatorOpen={creatorOpen}
+            setCreatorOpen={setCreatorOpen}
+            onOpenMegaMenu={() => setMegaOpen(true)}
+            className="w-[340px] shrink-0"
+          />
 
-        {/* Presets list + Audio meters */}
-        <div className="flex gap-3 py-2 w-[280px] shrink-0">
-          {/* Presets */}
-          <div className="flex-1 flex flex-col min-w-0">
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-[10px] uppercase tracking-wide text-muted-foreground">Presets</span>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-5 w-5"
-                aria-label="Add Preset"
-                aria-expanded={creatorOpen}
-                onClick={() => setCreatorOpen((v) => !v)}
-              >
-                <Plus className="h-3 w-3" />
-              </Button>
+          <div className="flex min-w-0 flex-1 flex-col py-2">
+            <div className="mb-1 flex items-center justify-between">
+              <span className="text-[10px] uppercase tracking-wide text-muted-foreground">Waveform</span>
+              <span className="font-mono text-[11px] tabular-nums text-muted-foreground" aria-live="off">
+                {durationSec > 0 ? `${timeSec.toFixed(1)}s / ${durationSec.toFixed(1)}s` : `0.0s / 0.0s`}
+              </span>
             </div>
-            {creatorOpen && (
-              <div className="mb-1 space-y-2 rounded-md border border-border bg-surface p-2">
-                {!selected || targetOptions.length === 0 ? (
-                  <div className="text-[11px] text-muted-foreground">Select a layer to create an audio modulation.</div>
+            <div className="relative min-h-0 flex-1 overflow-hidden rounded-[8px] border border-border bg-surface-2">
+              <canvas
+                ref={canvasRef}
+                className="absolute inset-0 h-full w-full cursor-pointer"
+                onClick={onCanvasClick}
+              />
+            </div>
+            <div className="mt-1 flex items-center gap-2">
+              <span aria-label="Timeline" className="flex-1">
+                {durationSec > 0 ? (
+                  <Slider
+                    min={0}
+                    max={durationSec}
+                    step={0.1}
+                    value={[timeSec]}
+                    onValueChange={(v) => setTime(v[0])}
+                    className="flex-1"
+                    aria-valuetext={`${timeSec.toFixed(1)}s of ${durationSec.toFixed(1)}s`}
+                  />
                 ) : (
-                  <>
-                    <label className="block text-[10px] uppercase tracking-wide text-muted-foreground">
-                      Target parameter
-                      <select
-                        aria-label="Target parameter"
-                        value={targetParam || targetOptions[0].key}
-                        onChange={(e) => setTargetParam(e.target.value)}
-                        className="mt-1 h-7 w-full rounded-md border border-border bg-surface-2 px-2 text-[12px] text-foreground"
-                      >
-                        {targetOptions.map((t) => (
-                          <option key={t.key} value={t.key}>
-                            {t.label}
-                          </option>
-                        ))}
-                      </select>
-                    </label>
-                    <label className="block text-[10px] uppercase tracking-wide text-muted-foreground">
-                      Audio driver
-                      <select
-                        aria-label="Audio driver"
-                        value={driver}
-                        onChange={(e) => setDriver(e.target.value as typeof driver)}
-                        className="mt-1 h-7 w-full rounded-md border border-border bg-surface-2 px-2 text-[12px] text-foreground"
-                      >
-                        {(['bass', 'mid', 'treble', 'level', 'spectrum', 'bpm'] as const).map((d) => (
-                          <option key={d} value={d}>
-                            {d}
-                          </option>
-                        ))}
-                      </select>
-                    </label>
-                    <div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-[10px] uppercase tracking-wide text-muted-foreground">Amount</span>
-                        <span className="font-mono text-[12px] tabular-nums text-muted-foreground">
-                          {Math.round(amount * 100)}%
-                        </span>
-                      </div>
-                      <Slider
-                        aria-label="Amount"
-                        min={0}
-                        max={2}
-                        step={0.05}
-                        value={[amount]}
-                        onValueChange={([v]) => setAmount(v)}
-                      />
+                  <div
+                    className="h-8 rounded-[8px] border border-border bg-surface-2"
+                    aria-label="Timeline disabled, no audio loaded"
+                  />
+                )}
+              </span>
+              {/* Volume (listen-only: never affects reactivity) */}
+              <div className="flex w-[150px] shrink-0 items-center gap-1.5">
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button variant="ghost" size="icon" className="h-7 w-7 shrink-0" aria-label="Volume settings">
+                      {volume === 0 ? (
+                        <VolumeX className="h-3.5 w-3.5 text-muted-foreground" />
+                      ) : (
+                        <Volume2 className="h-3.5 w-3.5 text-muted-foreground" />
+                      )}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent align="end" sideOffset={6} className="w-56">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[12px] font-medium">Volume</span>
+                      <span className="font-mono text-[12px] tabular-nums text-muted-foreground" aria-live="polite">
+                        {Math.round(volume * 100)}%
+                      </span>
                     </div>
                     <Button
                       variant="secondary"
                       size="sm"
-                      className="h-7 w-full text-[11px]"
-                      disabled={!selected}
+                      className="mt-2 h-7 w-full text-[11px]"
                       onClick={() => {
-                        const key = targetParam || targetOptions[0]?.key
-                        if (!selected || !key) return
-                        addAudioBinding(selected.uid, { param: key, source: driver, curve: 'linear', amount })
+                        if (volume === 0) setVolume(prevVolume || 1)
+                        else {
+                          setPrevVolume(volume)
+                          setVolume(0)
+                        }
                       }}
                     >
-                      Add modulation
+                      {volume === 0 ? 'Unmute' : 'Mute'}
                     </Button>
-                  </>
-                )}
+                    <p className="mt-2 text-[11px] leading-tight text-muted-foreground">
+                      Listen-only: volume never affects audio reactivity.
+                    </p>
+                  </PopoverContent>
+                </Popover>
+                <Slider
+                  aria-label="Volume"
+                  min={0}
+                  max={100}
+                  step={1}
+                  value={[Math.round(volume * 100)]}
+                  onValueChange={([v]) => setVolume(v / 100)}
+                  className="min-w-0 flex-1"
+                />
+                <span className="w-[34px] shrink-0 text-right font-mono text-[11px] tabular-nums text-muted-foreground" aria-hidden="true">
+                  {Math.round(volume * 100)}%
+                </span>
               </div>
-            )}
-            <div className="flex-1 overflow-y-auto border border-border rounded-md bg-surface-2">
-              {presets.length === 0 ? (
-                <div className="p-2 text-[11px] text-muted-foreground text-center">No presets</div>
-              ) : (
-                <div className="divide-y divide-border">
-                  {presets.map((preset) => {
-                    const idx = stack.findIndex((i) => i.uid === preset.itemUid)
-                    const label = idx >= 0 ? `#${idx} ${preset.toolName}` : preset.toolName
-                    return (
-                      <div key={preset.id} className="flex items-center gap-2 px-2 py-1 text-[11px]">
-                        <button
-                          className={cn(
-                            'w-2 h-2 rounded-full shrink-0',
-                            preset.enabled ? 'bg-green-500' : 'bg-gray-500',
-                          )}
-                          onClick={() => togglePreset(preset.id)}
-                          aria-label={preset.enabled ? 'Disable preset' : 'Enable preset'}
-                        />
-                        <div className="flex-1 min-w-0">
-                          <div className="truncate font-medium" title={label}>
-                            {label}
-                          </div>
-                          <div
-                            className="truncate text-muted-foreground"
-                            title={`${preset.param} → ${preset.reactTo} (${Math.round(preset.sensitivity * 100)}%)`}
-                          >
-                            {preset.param} &rarr; {preset.reactTo} ({Math.round(preset.sensitivity * 100)}%)
-                          </div>
-                        </div>
-                      </div>
-                    )
-                  })}
-                </div>
-              )}
+            </div>
+            <div className="mt-1 truncate font-mono text-[10px] text-muted-foreground" data-testid="audio-status">
+              {diag}
             </div>
           </div>
-          {/* Meters */}
-          <div className="flex gap-1 w-[40px] shrink-0">
+
+          {/* Meters — always visible live levels */}
+          <div className="flex w-[40px] shrink-0 gap-1 py-2" role="img" aria-label="Live audio levels: bass, mid, treble, level">
             {METER_CONFIG.map((meter) => (
-              <div key={meter.key} className="flex-1 flex flex-col items-center gap-0.5">
-                <div className="flex-1 w-full relative bg-surface-2 rounded-sm overflow-hidden">
+              <div key={meter.key} className="flex flex-1 flex-col items-center gap-0.5" title={meter.label}>
+                <div className="relative w-full flex-1 overflow-hidden rounded-sm bg-surface-2">
                   <div
                     ref={(el) => {
                       metersRef.current[meter.key] = el
                     }}
-                    className={cn('absolute bottom-0 left-0 right-0 bg-gradient-to-t', meter.color)}
-                    style={{ height: '0%' }}
+                    className="absolute inset-x-0 bottom-0"
+                    style={{ height: '0%', background: `hsl(var(${meter.token}))` }}
                   />
                 </div>
-                <span className="text-[8px] text-muted-foreground uppercase">{meter.label}</span>
+                <span className="text-[8px] uppercase text-muted-foreground" aria-hidden="true">{meter.short}</span>
               </div>
             ))}
           </div>
         </div>
       </div>
+
+      {megaOpen && <PresetMegaMenu onPick={handlePickMegaMenu} onClose={() => setMegaOpen(false)} />}
+      {panelOpen && <AudioReactivePanel onClose={() => setPanelOpen(false)} />}
     </footer>
   )
 }

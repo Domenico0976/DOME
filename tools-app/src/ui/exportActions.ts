@@ -60,9 +60,9 @@ export function useExportActions() {
       base.height = H
       const bctx = base.getContext('2d')
       if (!bctx) throw new Error('2D context unavailable')
-      evaluateStack(bctx, frame, af, state.stack)
+      evaluateStack(bctx, frame, af, state.stack, { muted: new Set(state.audio.disabledAudioBindings ?? []) })
 
-      const passes = collectActiveEffects(state.stack)
+      const passes = collectActiveEffects(state.stack, new Set(state.audio.disabledAudioBindings ?? []))
       const genItem = state.stack.find((i) => i.toolId === 'shaders' && !i.hidden)
       const shaderGen = genItem
         ? {

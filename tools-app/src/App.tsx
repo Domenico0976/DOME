@@ -4,7 +4,7 @@ import { TopBar } from './ui/TopBar'
 import { Sidebar } from './ui/Sidebar'
 import { Canvas } from './ui/Canvas'
 import { CanvasArea } from './ui/CanvasArea'
-import { FloatingStack } from './ui/FloatingStack'
+import { StackCanvasOverlay } from './ui/StackCanvasOverlay'
 import { FloatingPanel } from './ui/FloatingPanel'
 import { AudioReactPanel } from './ui/AudioReactPanel'
 import { PerfBanner } from './ui/PerfBanner'
@@ -36,15 +36,19 @@ export default function App() {
 
   return (
     <div className="flex h-screen w-screen overflow-hidden bg-background font-sans text-foreground">
+      <a href="#main-content" className="skip-link">
+        Salta al contenuto
+      </a>
       <Sidebar />
       <div className="flex min-w-0 flex-1 flex-col">
-        <TopBar />
         <PerfBanner />
-        <main className="flex min-h-0 flex-1">
+        <main id="main-content" className="flex min-h-0 flex-1" tabIndex={-1}>
           <section className="flex flex-col flex-1 min-w-0 relative overflow-hidden bg-[hsl(var(--bg-canvas))]" data-testid="canvas-container">
+            <TopBar />
             <CanvasArea>
               <Canvas />
             </CanvasArea>
+            <StackCanvasOverlay />
             {selected === null && (
               <div className="absolute bottom-24 left-1/2 -translate-x-1/2 rounded-md border border-dashed border-border bg-popover/80 px-3 py-2 text-[12px] text-muted-foreground">
                 Select a node to edit its parameters
@@ -54,7 +58,6 @@ export default function App() {
         </main>
         <AudioReactPanel />
       </div>
-      <FloatingStack className="bottom-[180px]" />
       {selected && panelOpen && (
         <FloatingPanel item={selected} onClose={() => setPanelOpen(false)} />
       )}

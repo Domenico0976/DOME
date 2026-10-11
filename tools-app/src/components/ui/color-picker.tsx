@@ -87,6 +87,7 @@ const ColorPicker = React.forwardRef<HTMLButtonElement, ColorPickerProps>(
         <div className="flex items-center gap-[var(--field-gap,8px)]">
           <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger
+              id={inputId}
               ref={ref}
               disabled={disabled}
               aria-label={ariaLabel ?? label ?? 'Pick color'}
@@ -110,7 +111,7 @@ const ColorPicker = React.forwardRef<HTMLButtonElement, ColorPickerProps>(
             >
               <div className="flex items-center gap-2">
                 <Input
-                  id={inputId}
+                  id={`${inputId}-hex`}
                   value={draft}
                   onChange={e => setDraft(e.target.value)}
                   onKeyDown={e => {

@@ -188,6 +188,9 @@ export function NodeOptions({ item }: { item: StackItem }) {
           <span className="text-[12px] font-medium text-muted-foreground">Hidden</span>
           <div className="flex items-center gap-2">
             {hidden && <Badge variant="warning">Hidden</Badge>}
+            <span className="text-[11px] tabular-nums text-muted-foreground" aria-live="polite">
+              {hidden ? 'On' : 'Off'}
+            </span>
             <button
               type="button"
               role="checkbox"
