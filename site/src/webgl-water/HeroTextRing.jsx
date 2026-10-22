@@ -59,9 +59,11 @@ export default function HeroTextRing() {
     let gLastT = 0
     let grx = 0
     let gry = 0
+    let gHero = false
     const onGizmoMove = (e) => {
       const el = wrapRef.current
       if (!el) return
+      gHero = !!(e.target && e.target.closest && e.target.closest('.hero-region'))
       const rect = cachedRect || el.getBoundingClientRect()
       const now = performance.now()
       if (gHas && gLastT) {
@@ -153,7 +155,8 @@ export default function HeroTextRing() {
         const rectNow = cachedRect || el.getBoundingClientRect()
         const restPx = ((window.innerWidth / 2) - (rectNow.left + rectNow.width / 2)) / (window.innerWidth / 2)
         const restPy = (window.innerHeight - (rectNow.top + rectNow.height / 2)) / (window.innerHeight / 2)
-        const idleMs = gHas ? now - gLastT : Infinity
+        const engaged = gHero && visible
+        const idleMs = gHas && engaged ? now - gLastT : Infinity
         const idle = Math.max(0, Math.min(1, (idleMs - 3000) / 900))
         const epx = gpx + (restPx - gpx) * idle
         const epy = gpy + (restPy - gpy) * idle
@@ -165,7 +168,7 @@ export default function HeroTextRing() {
         grx += (tgy - grx) * tk
         group.rotation.y = gry
         group.rotation.x = grx
-        if (!reduceMotion) {
+        if (!reduceMotion && gHero && visible) {
           const boost = Math.min(2400, Math.hypot(gvx, gvy)) / 600
           tex.offset.x -= SCROLL * boost * dt
         }
@@ -186,6 +189,17 @@ export default function HeroTextRing() {
         requestAnimationFrame(() => {
           rectScheduled = false
           if (!dead && el.isConnected) cachedRect = el.getBoundingClientRect()
+          const section = el.closest('.hero-region')
+          if (section && gHas) {
+            const sr = section.getBoundingClientRect()
+            gHero =
+              gLastX >= sr.left &&
+              gLastX <= sr.right &&
+              gLastY >= sr.top &&
+              gLastY <= sr.bottom
+          } else {
+            gHero = false
+          }
         })
       }
       window.addEventListener('scroll', refreshRect, { passive: true })

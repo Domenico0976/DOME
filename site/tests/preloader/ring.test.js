@@ -27,19 +27,40 @@ describe('preloader ring rig', () => {
     rig.dispose()
   })
 
+  it('rests as if the cursor sat bottom-center (no pointer yet)', () => {
+    const rig = createRingRig()
+    const t0 = performance.now()
+    for (let i = 0; i <= 60; i++) rig.update(t0 + 16 * i)
+    expect(rig.group.rotation.y).toBe(0)
+    expect(rig.group.rotation.x).toBeLessThan(-0.3)
+    rig.dispose()
+  })
+
   it('tilts toward the cursor like a gizmo (both axes, distance-weighted)', () => {
     const rig = createRingRig()
     const t0 = performance.now()
     rig.update(t0)
-    rig.update(t0 + 16)
-    expect(rig.group.rotation.x).toBe(0)
-    expect(rig.group.rotation.y).toBe(0)
     window.dispatchEvent(
       new window.MouseEvent('pointermove', { clientX: window.innerWidth, clientY: 0 }),
     )
     for (let i = 1; i <= 60; i++) rig.update(t0 + 16 * (i + 2))
     expect(rig.group.rotation.y).toBeGreaterThan(0.3)
     expect(rig.group.rotation.x).toBeGreaterThan(0.1)
+    rig.dispose()
+  })
+
+  it('eases back to the rest pose after 2s without pointer moves', () => {
+    const rig = createRingRig()
+    const t0 = performance.now()
+    window.dispatchEvent(
+      new window.MouseEvent('pointermove', { clientX: window.innerWidth, clientY: 0 }),
+    )
+    for (let i = 1; i <= 30; i++) rig.update(t0 + 16 * i)
+    expect(rig.group.rotation.y).toBeGreaterThan(0.3)
+    rig.update(t0 + 16 * 30 + 3200)
+    for (let i = 1; i <= 60; i++) rig.update(t0 + 16 * (30 + i) + 3200)
+    expect(rig.group.rotation.y).toBeLessThan(0.05)
+    expect(rig.group.rotation.x).toBeLessThan(-0.3)
     rig.dispose()
   })
 

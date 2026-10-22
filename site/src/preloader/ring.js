@@ -88,10 +88,14 @@ export function createRingRig({ ink = 0x111111 } = {}) {
   function update(now) {
     const dt = Math.min(0.05, Math.max(0, (now - last) / 1000))
     last = now
-    const mag = hasPointer ? Math.min(1, Math.hypot(px, py)) : 0
+    const idleMs = hasPointer ? now - lastPT : Infinity
+    const idle = Math.max(0, Math.min(1, (idleMs - 2000) / 900))
+    const epx = px + (0 - px) * idle
+    const epy = py + (1 - py) * idle
+    const mag = Math.min(1, Math.hypot(epx, epy))
     const k = Math.min(1, dt * 4)
-    ry += (px * TILT_Y * (0.25 + 0.75 * mag) - ry) * k
-    rx += (-py * TILT_X * (0.25 + 0.75 * mag) - rx) * k
+    ry += (epx * TILT_Y * (0.25 + 0.75 * mag) - ry) * k
+    rx += (-epy * TILT_X * (0.25 + 0.75 * mag) - rx) * k
     group.rotation.y = ry
     group.rotation.x = rx
     const speed = Math.min(2400, Math.hypot(vx, vy))
