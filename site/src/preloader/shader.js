@@ -1,22 +1,30 @@
-// Preloader WebGL shader — "Retro Bitrate" counter + fluted-glass tile wave.
+// Preloader WebGL shader — per-tile disintegration of the WHOLE preload (v3).
 //
-// Designed with the /www-gl.md skill as a COMPOSITION (G2/G3 composition lever,
-// declared fork into the preloader's single fullscreen pass — the preloader
+// ONE canvas owns everything now: pass A (scene.js) draws the text ring — the
+// same strip/geometry as HeroTextRing — into a render target; this pass B
+// composites those ring pixels + the counter digits and kills them PER TILE,
+// binary, no gradient rim: dead cells are fully transparent, alive cells fully
+// opaque, burning cells flash in one flat colour.
+//
+// Two phases share the same grid and the same per-tile machine:
+//   phase 0 (consume) — a front expands from the screen CENTRE. A tile dies the
+//     instant the front reaches its centre, burns solid for the uTrail window,
+//     then vanishes (alpha 0). Ring and digits die as one surface, centre-out:
+//     the ring (centre) first, the huge digits (bottom-right) last.
+//   phase 1 (cover)   — the same grid becomes the shrinking paper cover of the
+//     homepage reveal: a tile stays opaque paper while its centre is inside
+//     uCoverR, flashes at the rim, then drops out so the home composes through
+//     the same cells, edge -> centre. No DOM mask anywhere — the flat paper
+//     cover tiles replace the old CSS background, and the hand-over itself is
+//     invisible because both are the same paper.
+//
+// Composition levers (declared forks into this single pass — the preloader
 // draws procedural content, it does not filter a React graph):
-//   • Pixelate (effects/Pixelate.md) — tiling on repeated coordinates.
-//     The counter bitmap is already one texel per tile (counter-texture.js), so
-//     a centre tap keeps the digits chunky and grid-aligned. The explicit
-//     gap/quantisation grid that used to cover the WHOLE screen is gone: that
-//     was the visible grid the user rejected at 000.
-//   • BlockDissolve (effects/BlockDissolve.md) — mask = f(uv, p), rewritten as
-//     a wavefront band so a tile is only alive where the front is passing.
-//   • FlutedGlass (effects/FlutedGlass.md) — per-tile vertical flutes, normal
-//     from the flute gradient, fresnel rim + specular ridge.
-//   • ChromaticAberration (effects/ChromaticAberration.md) — per-channel split
-//     of the refracted tap along the flute normal.
-//   • FilmGrain (effects/FilmGrain.md) — procedural grain over the glass.
+//   - Pixelate: the counter bitmap is one texel per tile, so a centre tap keeps
+//     the digits chunky and grid-aligned.
+//   - BlockDissolve: mask = f(uv, front), rewritten as a per-tile binary step.
 //
-// GLSL ES 1.00, single pass, no feedback buffer (dpr capped in scene.js).
+// GLSL ES 1.00, no feedback buffer (dpr capped in scene.js).
 
 export const vertexShader = /* glsl */ `
 varying vec2 vUv;
@@ -29,24 +37,19 @@ void main() {
 export const fragmentShader = /* glsl */ `
 precision highp float;
 
-uniform sampler2D uCounter;   // 2D counter texture, grid-res, NEAREST (1 texel = 1 tile)
+uniform sampler2D uContent;   // pass-A render target: the star rig, full-res
+uniform sampler2D uCounter;   // grid-res counter bitmap, NEAREST (1 texel = 1 tile)
 uniform vec2  uResolution;    // CSS px (canvas client size)
-uniform float uTileSize;      // ~36.0 px
-uniform float uReveal;        // plain fade, used only when tiles are off
-uniform float uFront;         // 0..1 radial front, measured from the top-left corner
-uniform float uFrontMode;     // 0 = COUNTER_OUT, 1 = REVEAL
-uniform float uShowTiles;     // 0 = no tile at all (counting / reduced motion)
-uniform float uAberration;    // ChromaticAberration strength
-uniform float uGrain;         // FilmGrain intensity
-uniform float uBand;          // FRONT_PROFILE.band  — alive ahead of the front
-uniform float uCore;          // FRONT_PROFILE.core  — fully-lit plateau
-uniform float uTrail;         // FRONT_PROFILE.trail — alive just behind the front
-uniform float uEdge;          // feather width of the cut, in front units
-uniform vec3  uGrey;          // grey opening, consumed by the first wave
-uniform vec3  uPaper;         // #F5F1EA
-uniform vec3  uInk;           // #111
+uniform float uTileSize;      // ~42.0 px
+uniform float uFront;         // wave-1 front radius, parked off the corner
+uniform float uCoverR;        // wave-2 cover radius; 0 = fully open (home)
+uniform float uPhase;         // 0 = consume (wave 1), 1 = cover (wave 2)
+uniform float uGrain;         // film-grain intensity on the field
+uniform float uTrail;         // burn window behind the front, in radius units
+uniform vec3  uBG;            // the paper field / cover colour
+uniform vec3  uInk;           // ink counter digits
 uniform float uTime;
-uniform float uReducedMotion; // 0 = motion on, 1 = reduced
+uniform float uDigitGate;     // counter rise: 0 = below, 1 = planted
 
 varying vec2 vUv;
 
@@ -63,135 +66,52 @@ float counterInk(vec2 px) {
   return texture2D(uCounter, vec2(uv.x, 1.0 - uv.y)).a;
 }
 
-// BlockDissolve mask as a wavefront profile: alive in a band AROUND the front,
-// so a tile materialises as the front reaches it and is gone behind it.
-// Mirrors frontActivation() in wavefront.js — change both together.
-float frontGlass(float d, float front) {
-  float lead = d - front;
-  if (lead >= 0.0) {
-    if (lead >= uBand) return 0.0;
-    if (lead <= uCore) return 1.0;
-    return 1.0 - (lead - uCore) / (uBand - uCore);
-  }
-  float behind = -lead;
-  if (behind >= uTrail) return 0.0;
-  return 1.0 - behind / uTrail;
-}
-
 void main() {
-  // (0,0) = TOP-LEFT, so the front expands from the top-left corner.
+  // (0,0) = TOP-LEFT in screen px; both fronts are centred on the screen centre.
   vec2 suv = vec2(vUv.x, 1.0 - vUv.y);
   vec2 px = suv * uResolution;
 
-  float d = length(px) / max(length(uResolution), 1.0);
-  // index.js already maps the phase onto an off-screen-to-off-screen sweep
-  float front = uFront;
-  float lead = d - front;
-  float showTiles = uShowTiles;
-  float drift = uReducedMotion < 0.5 ? 1.0 : 0.0;
-  float counterGate = step(uFrontMode, 0.5); // 1 while counting out, 0 while revealing
-
-  float ink = counterInk(px);
-
-  // --- fluted-glass tile band -------------------------------------------
-  vec2 tileUv = px / uTileSize;
-  vec2 tileId = floor(tileUv);
-  vec2 cell = fract(tileUv) - 0.5;
+  // --- per-tile state, one decision per tile --------------------------------
+  vec2 tileId = floor(px / uTileSize);
+  vec2 tileCenter = (tileId + 0.5) * uTileSize;
   float jitter = hash12(tileId + 11.7);
+  float vr = length(tileCenter - uResolution * 0.5) / max(length(uResolution), 1.0);
 
-  // swelling peaks as the front crosses the tile centre
-  float swell = max(0.0, 1.0 - abs(lead) / max(uBand, 0.0001));
-  swell = sin(swell * 1.5707963) * showTiles;
+  // --- shared burn-window palette -------------------------------------------
+  float grain = hash12(px + floor(uTime * 24.0) * 37.0) - 0.5;
+  float pale = 0.34 + 0.5 * jitter; // per-tile brightness: earth-tone fragments
+  vec3 flashCol = vec3(pale) + grain * uGrain * 0.16;
 
-  // the bulge warps the front itself, so the digits and the reveal edge are
-  // deformed by the same swelling instead of staying a clean circle
-  float bulge = (jitter - 0.5) * 0.05 * swell;
-  float cut = d + bulge - front;
-  float glass = frontGlass(d + bulge, front) * showTiles;
+  if (uPhase < 0.5) {
+    // Wave 1 — consume. A tile dies when the front reaches its centre:
+    // alive -> flash solid for uTrail -> INVISIBLE (alpha 0, nothing painted).
+    float burn = uFront - vr;                 // >0 => the front has taken this tile
+    float alive = 1.0 - step(0.0, burn);
+    float flash = step(0.0, burn) * step(burn, uTrail);
 
-  // the pane lifts off the ground: it opens further along its top edge and
-  // rides upward, so it reads as a fluted tile rising rather than a blob
-  // inflating in place
-  float upBias = 1.0 + 0.85 * swell;
-  float lift = -sin(swell * 3.14159265) * 0.22;
-  vec2 lifted = vec2(cell.x, cell.y - lift);
-  float edgeGate = mix(0.40, 0.50, swell);
-  float paneX = 1.0 - smoothstep(edgeGate, edgeGate + 0.07, abs(lifted.x));
-  float paneTop = 1.0 - smoothstep(edgeGate * upBias, edgeGate * upBias + 0.07, -lifted.y);
-  float paneBot = 1.0 - smoothstep(edgeGate, edgeGate + 0.07, lifted.y);
-  float pane = min(paneX, min(paneTop, paneBot));
+    // Ring pixels live in the pass-A target; vUv is y-up like the target, so
+    // the sample stays pixel-aligned with the canvas.
+    vec4 content = texture2D(uContent, vUv);
 
-  // grey opening: behind the front the grey is already consumed, so the glass
-  // has to refract paper there and grey ahead of it. The cut is feathered over
-  // uEdge — a step() here is what produced the instantaneous transitions.
-  float ahead = smoothstep(-uEdge, uEdge, cut);
-  float consumed = 1.0 - ahead;
-  vec3 under = uFrontMode < 0.5 ? mix(uGrey, uPaper, consumed) : uPaper;
+    // Counter digits: sampled with a downward offset that collapses as the
+    // gate opens, so the count rises from below while planting itself.
+    float rise = (1.0 - uDigitGate) * uResolution.y * 0.16;
+    float ink = counterInk(px + vec2(0.0, rise)) * uDigitGate * alive;
 
-  // FlutedGlass: vertical flutes, normal from the flute gradient
-  float phase = (cell.x + 0.5) * 9.42477796
-              + sin(uTime * 0.8 + jitter * 6.2831853) * 0.35 * drift;
-  float flute = sin(phase);
-  float fluteSlope = cos(phase) * 9.42477796;
-
-  // ChromaticAberration. The split must land on the CONTINUOUS glass shading,
-  // not on the counter tap: counterInk snaps to the tile grid, so a sub-tile
-  // offset there is invisible and the aberration silently dies.
-  float ab = 0.45 * uAberration;
-  float swellGain = 0.25 + 0.75 * swell;
-  vec2 bend = vec2(fluteSlope * 0.18 * (0.6 + 0.8 * jitter) * swellGain, lift * uTileSize);
-  bend.y += sin(uTime * 0.6 + jitter * 12.0) * 1.2 * drift * swellGain;
-
-  vec2 dir = vec2(fluteSlope >= 0.0 ? 1.0 : -1.0, 0.0);
-  float tapSpread = ab * uTileSize * 0.25;
-  vec2 tap = px + bend;
-  vec3 split = vec3(
-    counterInk(clamp(tap + dir * tapSpread, vec2(0.0), uResolution)),
-    counterInk(tap),
-    counterInk(clamp(tap - dir * tapSpread, vec2(0.0), uResolution))
-  ) * counterGate;
-
-  vec3 glassCol = mix(under, uInk, split);
-
-  // per-channel specular ridge and rim: prismatic fringes on the flutes
-  vec3 spec = vec3(
-    pow(max(sin(phase + ab), 0.0), 5.0),
-    pow(max(flute, 0.0), 5.0),
-    pow(max(sin(phase - ab), 0.0), 5.0)
-  );
-  vec3 rim = vec3(
-    smoothstep(0.33, 0.47, abs(lifted.x) - ab),
-    smoothstep(0.33, 0.47, abs(lifted.x)),
-    smoothstep(0.33, 0.47, abs(lifted.x) + ab)
-  ) * (1.0 - pane);
-
-  glassCol += spec * 0.42 * (0.7 + 0.6 * jitter);
-  glassCol += rim * 0.14;
-
-  // FilmGrain
-  glassCol += (hash12(px + floor(uTime * 24.0) * 37.0) - 0.5) * uGrain * 0.16;
-
-  // --- compose ----------------------------------------------------------
-  vec3 col = uPaper;
-  float alpha = 1.0;
-
-  if (uFrontMode < 0.5) {
-    // grey opening: the front consumes the grey and leaves bare paper behind
-    col = mix(uGrey, uPaper, consumed);
-    col = mix(col, uInk, ink * ahead);
+    vec3 col = uBG + grain * uGrain * 0.08;
+    col = mix(col, content.rgb, content.a * alive);
+    col = mix(col, uInk, ink);
+    col = mix(col, flashCol, flash);
+    gl_FragColor = vec4(col, max(alive, flash));
   } else {
-    // wave 2 is the opposite: the canvas goes EMPTY and the app root's own
-    // radial mask creates the homepage, with this glass riding its border
-    alpha = 0.0;
+    // Wave 2 — cover. burn > 0 means still covered by the shrinking paper
+    // disc; the rim flashes while it is within uTrail of dying, then the tile
+    // drops out and the homepage shows through. Flat paper, no field grain:
+    // the cover must be indistinguishable from the CSS background it replaces.
+    float burn = uCoverR - vr;                // >0 => still covered
+    float alive = step(0.0, burn);            // covered
+    float flash = step(0.0, burn) * step(burn, uTrail);
+    gl_FragColor = vec4(mix(uBG, flashCol, flash), alive);
   }
-
-  float amount = glass * pane;
-  col = mix(col, glassCol, amount);
-  alpha = max(alpha, amount);
-
-  // Reduced-motion / no-tile path keeps the original plain fade.
-  alpha *= 1.0 - uReveal * (1.0 - showTiles);
-
-  gl_FragColor = vec4(col, alpha);
 }
 `

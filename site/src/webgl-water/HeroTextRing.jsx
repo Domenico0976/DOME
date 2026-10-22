@@ -2,46 +2,11 @@ import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
 import { useIsMobile } from '../hooks/useIsMobile'
 import { useCursorGate } from '../hooks/useCursorGate'
-
-const RING_PX = 440
-const TEXT = 'SOMEBODYWANT3D'
-const CYL_R = 190
-const CYL_H = 150
-const SCROLL = 0.06
+import { RING_PX, CYL_R, CYL_H, SCROLL, paintRingStrip } from './ringStrip.js'
 
 async function drawStripTexture() {
-  try {
-    await document.fonts.load('700 120px "Bricolage Grotesque"')
-  } catch {
-    // fall through: system sans fallback still draws the band
-  }
-  const W = 2048
-  const H = 256
   const cv = document.createElement('canvas')
-  cv.width = W
-  cv.height = H
-  const ctx = cv.getContext('2d')
-  const fontPx = 120
-  ctx.font = `700 ${fontPx}px "Bricolage Grotesque", sans-serif`
-  ctx.fillStyle = '#ffffff'
-  ctx.textAlign = 'center'
-  ctx.textBaseline = 'middle'
-  const track = -0.06 * fontPx
-  const unit = `${TEXT} \u2022 `
-  const unitW = ctx.measureText(unit).width + track * unit.length
-  const reps = Math.max(1, Math.round(W / unitW))
-  const str = unit.repeat(reps)
-  const raw = [...str].map((ch) => ctx.measureText(ch).width + track)
-  const total = raw.reduce((a, b) => a + b, 0)
-  // stretch advances uniformly so the strip is exactly W wide: with
-  // RepeatWrapping the horizontal scroll then loops seamlessly.
-  const k = W / total
-  let cursor = 0
-  ;[...str].forEach((ch, i) => {
-    const adv = raw[i] * k
-    ctx.fillText(ch, cursor + adv / 2, H / 2)
-    cursor += adv
-  })
+  await paintRingStrip(cv)
   const tex = new THREE.CanvasTexture(cv)
   tex.colorSpace = THREE.SRGBColorSpace
   tex.wrapS = THREE.RepeatWrapping
@@ -83,6 +48,35 @@ export default function HeroTextRing() {
     let visible = true
     let cachedRect = null
     let refreshRect = null
+    let group = null
+    let gpx = 0
+    let gpy = 0
+    let gHas = false
+    let gvx = 0
+    let gvy = 0
+    let gLastX = 0
+    let gLastY = 0
+    let gLastT = 0
+    let grx = 0
+    let gry = 0
+    const onGizmoMove = (e) => {
+      const el = wrapRef.current
+      if (!el) return
+      const rect = cachedRect || el.getBoundingClientRect()
+      const now = performance.now()
+      if (gHas && gLastT) {
+        const dt = Math.max(1, now - gLastT) / 1000
+        gvx += ((e.clientX - gLastX) / dt - gvx) * 0.2
+        gvy += ((e.clientY - gLastY) / dt - gvy) * 0.2
+      }
+      gLastX = e.clientX
+      gLastY = e.clientY
+      gLastT = now
+      gpx = (e.clientX - (rect.left + rect.width / 2)) / (window.innerWidth / 2)
+      gpy = (e.clientY - (rect.top + rect.height / 2)) / (window.innerHeight / 2)
+      gHas = true
+    }
+    window.addEventListener('pointermove', onGizmoMove, { passive: true })
 
     const boot = async () => {
       const el = wrapRef.current
@@ -119,7 +113,9 @@ export default function HeroTextRing() {
       mesh = new THREE.Mesh(
         new THREE.CylinderGeometry(CYL_R, CYL_R, CYL_H, 96, 1, true), mat,
       )
-      scene.add(mesh)
+      group = new THREE.Group()
+      group.add(mesh)
+      scene.add(group)
       const base = mesh.geometry.attributes.position.array.slice()
       const pos = mesh.geometry.attributes.position
       const reduceMotion =
@@ -154,6 +150,28 @@ export default function HeroTextRing() {
           pos.needsUpdate = true
           amp = 0
         }
+        const rectNow = cachedRect || el.getBoundingClientRect()
+        const restPx = ((window.innerWidth / 2) - (rectNow.left + rectNow.width / 2)) / (window.innerWidth / 2)
+        const restPy = (window.innerHeight - (rectNow.top + rectNow.height / 2)) / (window.innerHeight / 2)
+        const idleMs = gHas ? now - gLastT : Infinity
+        const idle = Math.max(0, Math.min(1, (idleMs - 3000) / 900))
+        const epx = gpx + (restPx - gpx) * idle
+        const epy = gpy + (restPy - gpy) * idle
+        const mag = Math.min(1, Math.hypot(epx, epy))
+        const tk = Math.min(1, dt * 4)
+        const tgx = reduceMotion ? 0 : epx * 0.7 * (0.25 + 0.75 * mag)
+        const tgy = reduceMotion ? 0 : -epy * 0.5 * (0.25 + 0.75 * mag)
+        gry += (tgx - gry) * tk
+        grx += (tgy - grx) * tk
+        group.rotation.y = gry
+        group.rotation.x = grx
+        if (!reduceMotion) {
+          const boost = Math.min(2400, Math.hypot(gvx, gvy)) / 600
+          tex.offset.x -= SCROLL * boost * dt
+        }
+        const decay = Math.exp(-dt * 3)
+        gvx *= decay
+        gvy *= decay
         if (visible) renderer.render(scene, cam)
       }
       io = new IntersectionObserver(([entry]) => {
@@ -180,6 +198,7 @@ export default function HeroTextRing() {
       dead = true
       cancelAnimationFrame(raf)
       if (io) io.disconnect()
+      window.removeEventListener('pointermove', onGizmoMove)
       if (refreshRect) {
         window.removeEventListener('scroll', refreshRect)
         window.removeEventListener('resize', refreshRect)
