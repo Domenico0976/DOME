@@ -100,17 +100,21 @@ describe('PresetMegaMenu', () => {
     expect(getByText('New preset')).toBeTruthy()
     expect(getByText('Vertical Demo')).toBeTruthy()
     fireEvent.mouseEnter(getByText('Vertical Demo'))
+    expect(getByText('Tool params (no effect)')).toBeTruthy()
+    fireEvent.mouseEnter(getByText('Tool params (no effect)'))
     expect(getByText('Speed')).toBeTruthy()
   })
 
-  test('picking a setting calls onPick with uid and param', () => {
+  test('picking a setting calls onPick with uid and param and closes', () => {
     const stack = setupStack(1)
     const onPick = vi.fn()
     const onClose = vi.fn()
     const { getByText } = render(<PresetMegaMenu onPick={onPick} onClose={onClose} />)
     fireEvent.mouseEnter(getByText('Vertical Demo'))
+    fireEvent.mouseEnter(getByText('Tool params (no effect)'))
     fireEvent.click(getByText('Speed'))
     expect(onPick).toHaveBeenCalledWith(stack[0].uid, 'speed')
+    expect(onClose).toHaveBeenCalled()
   })
 
   test('Escape closes the menu', () => {

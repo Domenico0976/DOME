@@ -1,13 +1,13 @@
 import { useEffect, useMemo, useState } from 'react'
-import { X, Search, Plus } from 'lucide-react'
+import { X, Search } from 'lucide-react'
 import { useProjectStore } from '../state/projectStore'
 import { resolveTool } from '../core/registry'
 import { readBands } from '../audio/engine'
 import { AUDIO_RECIPES, PRESET_CATEGORIES, type AudioRecipe } from '../audio/presets'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs'
 import { Button } from '../components/ui/button'
 import { Badge } from '../components/ui/badge'
 import { Slider } from '../components/ui/slider'
+import { TemplateTips } from './TemplateTips'
 import { cn } from '../lib/utils'
 
 const DRIVERS = ['bass', 'mid', 'treble', 'level', 'spectrum', 'bpm'] as const
@@ -51,7 +51,7 @@ function recipeActiveOn(recipe: AudioRecipe, itemUid: string): boolean {
   )
 }
 
-function PresetsTab() {
+function PresetsView() {
   const selected = useSelectedItem()
   const [query, setQuery] = useState('')
   const [category, setCategory] = useState<(typeof PRESET_CATEGORIES)[number]['id']>('all')
@@ -106,7 +106,6 @@ function PresetsTab() {
 }
 
 function PresetCard({ recipe, itemUid }: { recipe: AudioRecipe; itemUid: string }) {
-  // Re-render on store change so Active state stays live
   useProjectStore((s) => s.stack)
   const active = recipeActiveOn(recipe, itemUid)
 
@@ -193,14 +192,14 @@ function PresetCard({ recipe, itemUid }: { recipe: AudioRecipe; itemUid: string 
   )
 }
 
-function BindingsTab() {
+function BindingsView() {
   const stack = useProjectStore((s) => s.stack)
   const addAudioBinding = useProjectStore((s) => s.addAudioBinding)
   const removeAudioBinding = useProjectStore((s) => s.removeAudioBinding)
 
   const items = stack.filter((i) => i.audio.length > 0)
   if (items.length === 0) {
-    return <p className="px-1 py-6 text-center text-[12px] text-muted-foreground">No bindings yet — apply a preset or add one from the sound bar.</p>
+    return <p className="px-1 py-6 text-center text-[12px] text-muted-foreground">No bindings yet — create one from the sound bar.</p>
   }
 
   return (
@@ -270,7 +269,7 @@ function BindingsTab() {
   )
 }
 
-function AnalyzerTab() {
+function AnalyzerView() {
   const source = useProjectStore((s) => s.audio.source)
   const [bands, setBands] = useState<{ bass: number; mid: number; treble: number; level: number } | null>(null)
 
@@ -332,6 +331,7 @@ function AnalyzerTab() {
 
 export function AudioReactivePanel({ onClose }: { onClose: () => void }) {
   const stack = useProjectStore((s) => s.stack)
+  const selectedUid = useProjectStore((s) => s.selectedUid)
   const bindingCount = stack.reduce((k, i) => k + i.audio.length, 0)
 
   useEffect(() => {
@@ -359,42 +359,24 @@ export function AudioReactivePanel({ onClose }: { onClose: () => void }) {
           <X className="h-4 w-4" />
         </Button>
       </div>
-      <Tabs defaultValue="presets" className="flex min-h-0 flex-1 flex-col">
-        <div className="shrink-0 px-3 pt-2">
-          <TabsList className="w-full">
-            <TabsTrigger value="presets" className="flex-1">
-              Presets
-            </TabsTrigger>
-            <TabsTrigger value="bindings" className="flex-1">
+      <div className="min-h-0 flex-1 overflow-y-auto p-3">
+        <div className="flex flex-col gap-4">
+          <TemplateTips selectedUid={selectedUid} />
+          <div className="flex flex-col gap-2">
+            <span className="text-[10px] uppercase tracking-wide text-muted-foreground">Presets</span>
+            <PresetsView />
+          </div>
+          <div className="flex flex-col gap-2">
+            <span className="text-[10px] uppercase tracking-wide text-muted-foreground">
               Bindings{bindingCount > 0 ? ` (${bindingCount})` : ''}
-            </TabsTrigger>
-            <TabsTrigger value="analyzer" className="flex-1">
-              Analyzer
-            </TabsTrigger>
-          </TabsList>
+            </span>
+            <BindingsView />
+          </div>
+          <div className="flex flex-col gap-2">
+            <span className="text-[10px] uppercase tracking-wide text-muted-foreground">Analyzer</span>
+            <AnalyzerView />
+          </div>
         </div>
-        <div className="min-h-0 flex-1 overflow-y-auto p-3">
-          <TabsContent value="presets" className="mt-0">
-            <PresetsTab />
-          </TabsContent>
-          <TabsContent value="bindings" className="mt-0">
-            <BindingsTab />
-          </TabsContent>
-          <TabsContent value="analyzer" className="mt-0">
-            <AnalyzerTab />
-          </TabsContent>
-        </div>
-      </Tabs>
-      <div className="shrink-0 border-t border-border px-4 py-2">
-        <Button
-          variant="ghost"
-          size="sm"
-          className="h-7 w-full justify-start text-[11px] text-muted-foreground"
-          onClick={onClose}
-        >
-          <Plus className="h-3 w-3" />
-          Add audio modulation from the sound bar
-        </Button>
       </div>
     </div>
   )

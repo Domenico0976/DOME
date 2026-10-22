@@ -8,6 +8,7 @@ export interface PanState {
 export interface UseCanvasPanZoomResult {
   pan: PanState
   zoom: number
+  setZoom: React.Dispatch<React.SetStateAction<number>>
   containerRef: React.RefObject<HTMLDivElement>
   onMouseDown: (e: React.MouseEvent) => void
   onMouseMove: (e: React.MouseEvent) => void
@@ -21,9 +22,9 @@ export interface UseCanvasPanZoomResult {
   onKeyDown: (e: React.KeyboardEvent) => void
 }
 
-const MIN_ZOOM = 0.5
-const MAX_ZOOM = 4.0
-const ZOOM_STEP = 0.1
+export const MIN_ZOOM = 0.5
+export const MAX_ZOOM = 4.0
+export const ZOOM_STEP = 0.1
 const FINE_ZOOM_STEP = 0.02
 
 export function useCanvasPanZoom(): UseCanvasPanZoomResult {
@@ -106,6 +107,7 @@ export function useCanvasPanZoom(): UseCanvasPanZoomResult {
   return {
     pan,
     zoom,
+    setZoom,
     containerRef,
     onMouseDown,
     onMouseMove,

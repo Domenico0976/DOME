@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { describe, test, expect, afterEach } from 'vitest'
-import { render, screen, fireEvent, cleanup } from '@testing-library/react'
+import { render, screen, cleanup } from '@testing-library/react'
 import { renderHook } from '@testing-library/react'
 import { CanvasArea } from './CanvasArea'
 import { useCanvasPanZoom } from '../hooks/useCanvasPanZoom'
@@ -19,24 +19,15 @@ describe('CanvasArea', () => {
     expect(screen.getByTestId('child-content')).toBeTruthy()
   })
 
-  test('zoom buttons change zoom level', () => {
+  test('no longer renders the old zoom control (relocated to ZoomPanel)', () => {
     render(
       <CanvasArea>
         <div>Child</div>
       </CanvasArea>,
     )
-
-    expect(screen.getByText('100%')).toBeTruthy()
-
-    const zoomInBtn = screen.getByRole('button', { name: /zoom in/i })
-    fireEvent.click(zoomInBtn)
-
-    expect(screen.getByText('110%')).toBeTruthy()
-
-    const zoomOutBtn = screen.getByRole('button', { name: /zoom out/i })
-    fireEvent.click(zoomOutBtn)
-
-    expect(screen.getByText('100%')).toBeTruthy()
+    expect(screen.queryByRole('button', { name: /zoom in/i })).toBeNull()
+    expect(screen.queryByRole('button', { name: /zoom out/i })).toBeNull()
+    expect(screen.queryByRole('button', { name: /reset zoom/i })).toBeNull()
   })
 })
 

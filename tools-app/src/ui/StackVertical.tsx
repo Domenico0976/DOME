@@ -4,7 +4,13 @@ import { NodeRow } from './NodeRow'
 import { DropPlaceholder } from './DropPlaceholder'
 import { Grip } from 'lucide-react'
 
-export function StackVertical({ onNudge }: { onNudge?: (dx: number, dy: number) => void }) {
+export function StackVertical({
+  onNudge,
+  hideHeader,
+}: {
+  onNudge?: (dx: number, dy: number) => void
+  hideHeader?: boolean
+}) {
   const stack = useProjectStore((s) => s.stack)
   const moveToolTo = useProjectStore((s) => s.moveToolTo)
   const [draggingUid, setDraggingUid] = useState<string | null>(null)
@@ -67,7 +73,8 @@ export function StackVertical({ onNudge }: { onNudge?: (dx: number, dy: number) 
       }}
       onDrop={handleDrop}
     >
-      <div className="flex shrink-0 items-center gap-1.5 px-1 pb-1.5">
+      {!hideHeader && (
+        <div className="flex shrink-0 items-center gap-1.5 px-1 pb-1.5">
         <span
           data-panel-drag-handle
           role="button"
@@ -98,6 +105,7 @@ export function StackVertical({ onNudge }: { onNudge?: (dx: number, dy: number) 
           Stack · {stack.length}
         </span>
       </div>
+      )}
       <div className="flex min-h-0 flex-1 flex-col gap-1.5 overflow-y-auto pb-1" data-testid="stack-vertical-list">
         {visible.length === 0 && !draggingUid && (
           <span className="px-2 py-1 text-[12px] text-muted-foreground">Empty — add a tool to begin</span>

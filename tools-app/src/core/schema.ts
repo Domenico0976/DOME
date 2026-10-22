@@ -1,6 +1,6 @@
-import type { ComponentGroup, ProjectState, StackItem } from './types'
+import type { AudioBinding, ComponentGroup, ProjectState, StackItem } from './types'
 
-export const SCHEMA_VERSION = 3
+export const SCHEMA_VERSION = 4
 
 export const TOOL_PARAM_MIGRATIONS: Record<
   string,
@@ -59,15 +59,23 @@ function deriveComponent(raw: Partial<StackItem>): ComponentGroup {
   }
 }
 
+function ensureBindingId(b: AudioBinding): AudioBinding {
+  return {
+    ...b,
+    id: typeof b.id === 'string' && b.id.length > 0 ? b.id : `b_${Date.now().toString(36)}_${orphanCounter++}`,
+  }
+}
+
 function normalizeItem(raw: Partial<StackItem>): StackItem {
   orphanCounter += 1
   const component = deriveComponent(raw)
+  const audio = Array.isArray(raw.audio) ? raw.audio.map(ensureBindingId) : []
   return {
     uid: typeof raw.uid === 'string' ? raw.uid : `m_${Date.now().toString(36)}_${orphanCounter}`,
     toolId: typeof raw.toolId === 'string' ? raw.toolId : 'solidColor',
     toolVersion: typeof raw.toolVersion === 'string' ? raw.toolVersion : '1.0.0',
     params: raw.params && typeof raw.params === 'object' ? { ...raw.params } : {},
-    audio: Array.isArray(raw.audio) ? raw.audio : [],
+    audio,
     automations: Array.isArray(raw.automations) ? raw.automations : [],
     hidden: Boolean(raw.hidden),
     effects: Array.isArray(raw.effects) ? raw.effects : [],

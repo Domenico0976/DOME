@@ -34,6 +34,16 @@ export const EFFECTS: Record<EffectType, EffectPassDef> = {
   grain: grainDef,
 }
 
+export const EFFECT_CATEGORIES = {
+  glow: 'light',
+  grain: 'texture',
+  waves: 'distort',
+  edgeblur: 'style',
+  lens: 'style',
+  adjustments: 'color',
+  aberration: 'distort',
+} as const
+
 export type ActivePass = {
   uid: string
   type: EffectType
@@ -71,7 +81,7 @@ export function collectActiveEffects(stack: StackItem[], muted?: ReadonlySet<str
 
 // base + source * amount, inverted when curve === 'invert'.
 // Sources: bass/mid/treble/level read the band, spectrum averages bins, bpm normalizes around 120 BPM.
-export function resolveEffectValue(base: number, bindings: AudioBinding[], key: string, frame: Frame, audio: AudioFrame): number {
+export function resolveEffectValue(base: number, bindings: AudioBinding[], key: string, frame: Frame, audio: AudioFrame, paramMin?: number, paramMax?: number): number {
   const b = bindings.find((x) => x.param === key)
   if (!b) return base
   let src: number
@@ -79,7 +89,13 @@ export function resolveEffectValue(base: number, bindings: AudioBinding[], key: 
   else if (b.source === 'spectrum') {
     src = audio.spectrum.length ? Array.from(audio.spectrum).reduce((a, v) => a + v, 0) / audio.spectrum.length : 0
   } else src = audio[b.source]
-  return base + src * b.amount * (b.curve === 'invert' ? -1 : 1)
+  let value = base + src * b.amount * (b.curve === 'invert' ? -1 : 1)
+  if (b.range) {
+    value = Math.max(b.range.min, Math.min(b.range.max, value))
+    if (paramMin !== undefined) value = Math.max(value, paramMin)
+    if (paramMax !== undefined) value = Math.min(value, paramMax)
+  }
+  return value
 }
 
 // Resolve every slider control through its scoped binding (if any), then map to shader uniforms.
@@ -93,6 +109,8 @@ export function buildUniforms(pass: ActivePass, frame: Frame, audio: AudioFrame)
       `${pass.uid}.${c.param}`,
       frame,
       audio,
+      c.min,
+      c.max,
     )
   }
   return pass.def.uniforms(resolved, frame)
@@ -108,6 +126,8 @@ export function resolvePassParams(pass: ActivePass, frame: Frame, audio: AudioFr
       `${pass.uid}.${c.param}`,
       frame,
       audio,
+      c.min,
+      c.max,
     )
   }
   return resolved

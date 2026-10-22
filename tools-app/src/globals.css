@@ -104,12 +104,15 @@
     --tab-indicator: 74 60% 57%;
     --field-gap: 8px;
 
-    /* SoundBar geometry — live two-tier, 101px total (SOUNDBAR.md §2) */
+    /* SoundBar geometry — live two-tier, 101px collapsed / 390px expanded (SOUNDBAR.md §2) */
     --topbar-h: 48px;
     --soundbar-height: 101px;
     --soundbar-top-row: 44px;
     --soundbar-main-h: 57px;
-    --soundbar-bottom-zone: 148px;
+    --soundbar-main-row: 57px;
+    --soundbar-body: 289px;
+    --preset-row-height: 55px;
+    --preset-header-height: 40px;
     --tabbar-h: 32px;
 
     /* radius scale — 2 / 8 / 12 / 999 */

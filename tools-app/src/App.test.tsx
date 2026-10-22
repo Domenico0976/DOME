@@ -12,8 +12,8 @@ describe('App layout', () => {
     const { container } = render(<App />)
     // CanvasArea should exist
     expect(container.querySelector('[data-testid="stage-canvas"]')).toBeTruthy()
-    // StackCanvasOverlay should exist (canvas-background stack panel)
-    expect(container.querySelector('[data-testid="stack-canvas-overlay"]')).toBeTruthy()
+    // StackPanel should exist (absolute panel inside main)
+    expect(container.querySelector('[data-testid="stack-panel"]')).toBeTruthy()
   })
 
   test('clicking a stack row keeps every row', () => {

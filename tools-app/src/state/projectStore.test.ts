@@ -82,10 +82,10 @@ describe('projectStore', () => {
     const s = useProjectStore.getState()
     s.addTool('demo')
     const uid = useProjectStore.getState().stack[0].uid
-    s.addAudioBinding(uid, { param: 'speed', source: 'bass', curve: 'linear', amount: 1 })
-    s.addAudioBinding(uid, { param: 'density', source: 'mid', curve: 'linear', amount: 0.5 })
+    s.addAudioBinding(uid, { id: `b1`, param: 'speed', source: 'bass', curve: 'linear', amount: 1 })
+    s.addAudioBinding(uid, { id: `b2`, param: 'density', source: 'mid', curve: 'linear', amount: 0.5 })
     expect(useProjectStore.getState().stack[0].audio).toHaveLength(2)
-    s.addAudioBinding(uid, { param: 'speed', source: 'mid', curve: 'linear', amount: 0.5 })
+    s.addAudioBinding(uid, { id: `b3`, param: 'speed', source: 'mid', curve: 'linear', amount: 0.5 })
     const audio = useProjectStore.getState().stack[0].audio
     expect(audio).toHaveLength(2)
     expect(audio.find((b) => b.param === 'speed')).toMatchObject({ source: 'mid', amount: 0.5 })
@@ -204,5 +204,50 @@ describe('projectStore', () => {
     const s = useProjectStore.getState()
     s.setBpm(115)
     expect(useProjectStore.getState().timeline.bpm).toBe(115)
+  })
+
+  test('duplicateStackItem appends a deep copy with fresh uids', () => {
+    const s = useProjectStore.getState()
+    s.addTool('demo')
+    const origUid = useProjectStore.getState().stack[0].uid
+    s.addAudioBinding(origUid, { id: 'b1', param: 'speed', source: 'bass', curve: 'linear', amount: 1, range: { min: 0, max: 1 } })
+    const newUid = useProjectStore.getState().duplicateStackItem(origUid)
+    const state = useProjectStore.getState()
+    expect(newUid).not.toBe(origUid)
+    expect(state.stack).toHaveLength(2)
+    expect(state.stack[0].uid).toBe(origUid)
+    const copy = state.stack[1]
+    expect(copy.uid).toBe(newUid)
+    expect(state.selectedUid).toBe(newUid)
+    expect(copy.toolId).toBe('demo')
+    expect(copy.params).toEqual(state.stack[0].params)
+    expect(copy.params).not.toBe(state.stack[0].params)
+    expect(copy.audio).toHaveLength(1)
+    expect(copy.audio[0].id).not.toBe('b1')
+    expect(typeof copy.audio[0].id).toBe('string')
+    expect(copy.audio[0].range).toEqual({ min: 0, max: 1 })
+  })
+
+  test('duplicateStackItem copy is independent of the original', () => {
+    const s = useProjectStore.getState()
+    s.addTool('demo')
+    const origUid = useProjectStore.getState().stack[0].uid
+    s.addAudioBinding(origUid, { id: 'b1', param: 'speed', source: 'bass', curve: 'linear', amount: 1 })
+    const newUid = useProjectStore.getState().duplicateStackItem(origUid)
+    useProjectStore.getState().updateParam(newUid, 'speed', 99)
+    const after = useProjectStore.getState()
+    expect(after.stack[1].params.speed).toBe(99)
+    expect(after.stack[0].params.speed).toBe(1)
+    expect(after.stack[0].audio[0].id).toBe('b1')
+  })
+
+  test('duplicateStackItem with unknown uid leaves the stack untouched', () => {
+    const s = useProjectStore.getState()
+    s.addTool('demo')
+    const before = useProjectStore.getState().stack.map((i) => i.uid)
+    const ret = useProjectStore.getState().duplicateStackItem('missing')
+    const after = useProjectStore.getState()
+    expect(after.stack.map((i) => i.uid)).toEqual(before)
+    expect(ret).toBe('missing')
   })
 })

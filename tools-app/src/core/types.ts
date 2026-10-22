@@ -12,11 +12,13 @@ export type ControlDef = {
 }
 
 export type AudioBinding = {
+  id?: string
   param: string
   source: 'bass' | 'mid' | 'treble' | 'level' | 'spectrum' | 'bpm'
   band?: number
   curve: 'linear' | 'invert'
   amount: number
+  range?: { min: number; max: number }
 }
 
 export type Automation = {

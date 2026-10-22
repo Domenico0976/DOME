@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useProjectStore } from '../state/projectStore'
 import { EFFECTS } from '../engine/effects'
 import type { EffectType, EffectInstance, StackItem } from '../core/types'
@@ -7,7 +7,7 @@ import { Switch } from '../components/ui/switch'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select'
 import { Trash2, Plus, Sliders, RotateCcw, ChevronDown, ChevronUp, Droplets, Sparkles, Waves, Aperture, Hexagon } from 'lucide-react'
 
-export function NodeOptionsEffects({ item }: { item: StackItem }) {
+export function NodeOptionsEffects({ item, focusParam, onFocusParamClear }: { item: StackItem; focusParam?: string | null; onFocusParamClear?: () => void }) {
   const addEffect = useProjectStore((s) => s.addEffect)
   const removeEffect = useProjectStore((s) => s.removeEffect)
   const setEffectParam = useProjectStore((s) => s.setEffectParam)
@@ -15,6 +15,8 @@ export function NodeOptionsEffects({ item }: { item: StackItem }) {
   const removeAudioBinding = useProjectStore((s) => s.removeAudioBinding)
 
   const [openCards, setOpenCards] = useState<Set<string>>(() => new Set())
+  const pendingFocusRef = useRef<string | null>(null)
+  const matchedEffectUidRef = useRef<string | null>(null)
 
   const toggleCard = (uid: string) => {
     setOpenCards((prev) => {
@@ -31,6 +33,41 @@ export function NodeOptionsEffects({ item }: { item: StackItem }) {
       setOpenCards(new Set([item.effects[0].uid]))
     }
   }, [item.effects, openCards.size])
+
+  useEffect(() => {
+    if (!focusParam) return
+    const effects = item.effects ?? []
+    const matched = effects.find((e) => focusParam.startsWith(`${e.uid}.`))
+    if (!matched) {
+      console.warn(`NodeOptionsEffects: no effect matches focusParam "${focusParam}"`)
+      matchedEffectUidRef.current = null
+      onFocusParamClear?.()
+      return
+    }
+    matchedEffectUidRef.current = matched.uid
+    setOpenCards((prev) => {
+      const next = new Set(prev)
+      next.add(matched.uid)
+      return next
+    })
+    pendingFocusRef.current = focusParam
+  }, [focusParam, item.effects, onFocusParamClear])
+
+  useEffect(() => {
+    const key = pendingFocusRef.current
+    if (!key) return
+    const matched = matchedEffectUidRef.current
+    if (!matched) return
+    if (!openCards.has(matched)) return
+    const row = document.querySelector(`[data-focus-key="${CSS.escape(key)}"]`) as HTMLElement | null
+    const control = document.getElementById(key) as HTMLElement | null
+    const target = row ?? control
+    if (target && typeof target.scrollIntoView === 'function') target.scrollIntoView({ block: 'nearest' })
+    if (control) control.focus()
+    pendingFocusRef.current = null
+    matchedEffectUidRef.current = null
+    onFocusParamClear?.()
+  }, [openCards, onFocusParamClear, item.effects])
 
   const getEffectIcon = (type: EffectType) => {
     const iconMap: Record<EffectType, any> = {
@@ -143,7 +180,7 @@ export function NodeOptionsEffects({ item }: { item: StackItem }) {
                   const binding = item.audio.find((b) => b.param === key)
 
                   return (
-                    <div key={c.param} className="space-y-1">
+                    <div key={c.param} data-focus-key={key} className="space-y-1">
                       <div className="flex items-center justify-between gap-2">
                         <label htmlFor={key} className="text-[12px] text-muted-foreground">
                           {c.label}

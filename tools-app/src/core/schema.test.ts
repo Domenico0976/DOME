@@ -85,3 +85,37 @@ describe('blendMode + opacity preservation', () => {
     expect(p.stack[0].opacity).toBeUndefined()
   })
 })
+
+describe('schema v4 audio binding range', () => {
+  test('v3 project loads at SCHEMA_VERSION 4 with range undefined', () => {
+    const p = migrateProject({
+      schemaVersion: 3,
+      stack: [{
+        uid: 'a', toolId: 'solidColor', toolVersion: '1.0.0', params: {},
+        audio: [{ param: 'speed', source: 'bass', curve: 'linear', amount: 1 }],
+        automations: [], hidden: false,
+      }],
+    })
+    expect(p.schemaVersion).toBe(4)
+    const b = p.stack[0].audio[0]
+    expect(b.param).toBe('speed')
+    expect(b.amount).toBe(1)
+    expect(b.range).toBeUndefined()
+    expect(typeof b.id).toBe('string')
+  })
+
+  test('binding with range survives serialize → migrate round-trip', () => {
+    const project = migrateProject({
+      stack: [{
+        uid: 'a', toolId: 'solidColor', toolVersion: '1.0.0', params: {},
+        audio: [{ id: 'b_keep', param: 'speed', source: 'bass', curve: 'linear', amount: 1, range: { min: 0.2, max: 0.8 } }],
+        automations: [], hidden: false,
+      }],
+    })
+    const reloaded = migrateProject(JSON.parse(JSON.stringify(project)))
+    const b = reloaded.stack[0].audio[0]
+    expect(b.id).toBe('b_keep')
+    expect(b.range).toEqual({ min: 0.2, max: 0.8 })
+    expect(b.amount).toBe(1)
+  })
+})

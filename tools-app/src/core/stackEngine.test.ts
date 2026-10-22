@@ -162,7 +162,7 @@ describe('stack engine', () => {
     const item: StackItem = {
       uid: 'cmp', toolId: 'cmp', toolVersion: '1.0.0',
       params: { speed: 1 },
-      audio: [{ param: 'speed', source: 'bass', curve: 'linear', amount: 0.5 }],
+      audio: [{ id: 'b1', param: 'speed', source: 'bass', curve: 'linear', amount: 0.5 }],
       automations: [], hidden: false,
     }
     evaluateStack(ctx, frame, audio, [item])
@@ -192,7 +192,7 @@ describe('stack engine', () => {
     const item: StackItem = {
       uid: 'mute', toolId: 'mute', toolVersion: '1.0.0',
       params: { speed: 1 },
-      audio: [{ param: 'speed', source: 'bass', curve: 'linear', amount: 0.5 }],
+      audio: [{ id: 'b1', param: 'speed', source: 'bass', curve: 'linear', amount: 0.5 }],
       automations: [], hidden: false,
     }
     evaluateStack(ctx, frame, audio, [item], { muted: new Set(['mute-speed']) })

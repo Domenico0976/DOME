@@ -3,7 +3,6 @@ import { gsap } from 'gsap'
 import { Draggable } from 'gsap/Draggable'
 import { X, Grip } from 'lucide-react'
 import { NodeOptions } from './NodeOptions'
-import { cn } from '../lib/utils'
 import type { StackItem } from '../core/types'
 import { useProjectStore } from '../state/projectStore'
 import { resolveTool } from '../core/registry'
@@ -13,20 +12,18 @@ gsap.registerPlugin(Draggable)
 interface FloatingPanelProps {
   item: StackItem | null
   onClose: () => void
+  focusParam?: string | null
+  onFocusParamClear?: () => void
 }
 
 // ParamsPanel/Floating spec (.pen `TCY8O`): 290×496.
 const DEFAULT_WIDTH = 290
 const DEFAULT_HEIGHT = 496
-const SNAP_THRESHOLD = 100
 const MIN_SIZE = 200
 const VIEWPORT_CLAMP_MARGIN = 12
 
-export function FloatingPanel({ item, onClose }: FloatingPanelProps) {
+export function FloatingPanel({ item, onClose, focusParam, onFocusParamClear }: FloatingPanelProps) {
   const [size, setSize] = useState({ width: DEFAULT_WIDTH, height: DEFAULT_HEIGHT })
-  const [isSnapped, setIsSnapped] = useState(false)
-  const [snapSide, setSnapSide] = useState<'left' | 'right' | null>(null)
-  const [snapPreview, setSnapPreview] = useState<'left' | 'right' | null>(null)
 
   const panelRef = useRef<HTMLDivElement>(null)
   const headerRef = useRef<HTMLDivElement>(null)
@@ -41,38 +38,10 @@ export function FloatingPanel({ item, onClose }: FloatingPanelProps) {
     const d = Draggable.create(panelRef.current, {
       type: 'x,y',
       trigger: headerRef.current,
-      onDrag: () => {
-        const el = panelRef.current
-        if (!el) return
-        const rect = el.getBoundingClientRect()
-        if (rect.left < SNAP_THRESHOLD) {
-          setSnapPreview('left')
-        } else if (rect.left > window.innerWidth - rect.width - SNAP_THRESHOLD) {
-          setSnapPreview('right')
-        } else {
-          setSnapPreview(null)
-        }
-      },
       onDragEnd: () => {
         const current = draggableRef.current
-        const el = panelRef.current
-        if (!current || !el) return
-
-        const rect = el.getBoundingClientRect()
-        if (rect.left < SNAP_THRESHOLD) {
-          setIsSnapped(true)
-          setSnapSide('left')
-          setSnapPreview(null)
-          posRef.current = { x: 0, y: 0 }
-        } else if (rect.left > window.innerWidth - rect.width - SNAP_THRESHOLD) {
-          setIsSnapped(true)
-          setSnapSide('right')
-          setSnapPreview(null)
-          posRef.current = { x: 0, y: 0 }
-        } else {
-          posRef.current = { x: current.x, y: current.y }
-          setSnapPreview(null)
-        }
+        if (!current) return
+        posRef.current = { x: current.x, y: current.y }
       },
     })[0]
 
@@ -83,21 +52,6 @@ export function FloatingPanel({ item, onClose }: FloatingPanelProps) {
       draggableRef.current = null
     }
   }, [])
-
-  // Sync Draggable enabled state and position with snapped state
-  useEffect(() => {
-    const el = panelRef.current
-    const d = draggableRef.current
-    if (!el || !d) return
-
-    if (isSnapped) {
-      d.disable()
-      gsap.set(el, { x: 0, y: 0 })
-    } else {
-      gsap.set(el, { x: posRef.current.x, y: posRef.current.y })
-      d.enable()
-    }
-  }, [isSnapped])
 
   const handleResizeStart = useCallback(
     (e: React.MouseEvent) => {
@@ -126,20 +80,6 @@ export function FloatingPanel({ item, onClose }: FloatingPanelProps) {
     [size],
   )
 
-  const handleHeaderMouseDown = useCallback(() => {
-    if (!isSnapped) return
-    if (snapSide === 'left') {
-      posRef.current = { x: 0, y: 0 }
-    } else if (snapSide === 'right') {
-      posRef.current = {
-        x: typeof window !== 'undefined' ? window.innerWidth - size.width : 0,
-        y: 0,
-      }
-    }
-    setIsSnapped(false)
-    setSnapSide(null)
-  }, [isSnapped, snapSide, size.width])
-
   // Clamp position to viewport margins (12px)
   const clampPosition = useCallback((x: number, y: number, width: number, height: number): { x: number, y: number } => {
     const maxX = window.innerWidth - width - VIEWPORT_CLAMP_MARGIN
@@ -152,12 +92,12 @@ export function FloatingPanel({ item, onClose }: FloatingPanelProps) {
 
   // Clamp-only on selection change: full node-bbox avoidance needs the node screen rect, unavailable here.
   useEffect(() => {
-    if (isSnapped || !panelRef.current) return
+    if (!panelRef.current) return
     const rect = panelRef.current.getBoundingClientRect()
     const clamped = clampPosition(posRef.current.x, posRef.current.y, rect.width, rect.height)
     posRef.current = clamped
     gsap.set(panelRef.current, { x: clamped.x, y: clamped.y })
-  }, [selectedUid, isSnapped, clampPosition])
+  }, [selectedUid, clampPosition])
 
   // ESC close handler
   useEffect(() => {
@@ -219,7 +159,7 @@ export function FloatingPanel({ item, onClose }: FloatingPanelProps) {
   if (!item) return null
 
   // Dynamic header title — spec §2: `{toolLabel} · #{index}` with ellipsis + tooltip.
-  // Index 0 = front (zero-based, matching Stack/FloatingStack #N badges).
+  // Index 0 = front (zero-based, matching Stack #N badges).
   const index = stack.findIndex((i) => i.uid === item.uid)
   const def = resolveTool(item.toolId, item.toolVersion)
   const title = `${def?.label ?? 'Node'} · #${index}`
@@ -228,27 +168,10 @@ export function FloatingPanel({ item, onClose }: FloatingPanelProps) {
 
   return (
     <>
-      {/* Snap preview overlays */}
-      {snapPreview === 'left' && (
-        <div
-          className="pointer-events-none fixed left-0 top-0 bottom-0 w-80 bg-gray-500/30 z-40"
-          data-testid="snap-preview-left"
-        />
-      )}
-      {snapPreview === 'right' && (
-        <div
-          className="pointer-events-none fixed right-0 top-0 bottom-0 w-80 bg-gray-500/30 z-40"
-          data-testid="snap-preview-right"
-        />
-      )}
-
       <div
         ref={panelRef}
         style={{ width: size.width, height: size.height }}
-        className={cn(
-          'flex flex-col rounded-[12px] border border-border bg-surface-panel shadow-2xl',
-          isSnapped ? 'relative' : 'fixed z-50',
-        )}
+        className="flex flex-col rounded-[12px] border border-border bg-surface-panel shadow-2xl fixed z-50"
         data-testid="floating-panel"
         onKeyDown={handleKeyDown}
         tabIndex={0}
@@ -257,7 +180,6 @@ export function FloatingPanel({ item, onClose }: FloatingPanelProps) {
         <div
           ref={headerRef}
           className="flex h-10 items-center justify-between border-b border-border px-3 shrink-0 select-none cursor-move"
-          onMouseDown={handleHeaderMouseDown}
         >
           <div className="flex items-center gap-2 min-w-0">
             <Grip className="h-4 w-4 text-muted-foreground shrink-0" />
@@ -279,7 +201,7 @@ export function FloatingPanel({ item, onClose }: FloatingPanelProps) {
 
         {/* Content */}
         <div className="flex-1 min-h-0 overflow-hidden">
-          <NodeOptions item={item} />
+          <NodeOptions item={item} focusParam={focusParam} onFocusParamClear={onFocusParamClear} />
         </div>
 
         {/* Resize handle */}

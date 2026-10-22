@@ -1,49 +1,51 @@
 import { useId } from 'react'
-import { useCanvasPanZoom } from '../hooks/useCanvasPanZoom'
+import { useCanvasPanZoom, MIN_ZOOM, MAX_ZOOM, ZOOM_STEP } from '../hooks/useCanvasPanZoom'
 
 export interface CanvasAreaProps {
   children: React.ReactNode
   className?: string
   onKeyDown?: (e: React.KeyboardEvent) => void
+  zoom?: number
+  onZoomChange?: (z: number) => void
 }
 
-export function CanvasArea({ children, className, onKeyDown }: CanvasAreaProps) {
-  const {
-    pan,
-    zoom,
-    containerRef,
-    onMouseDown,
-    onMouseMove,
-    onMouseUp,
-    onMouseLeave,
-    onWheel,
-    onDoubleClick,
-    zoomIn,
-    zoomOut,
-    resetZoom,
-    onKeyDown: hookKeyDown,
-  } = useCanvasPanZoom()
+export function CanvasArea({ children, className, onKeyDown, zoom: zoomProp, onZoomChange }: CanvasAreaProps) {
+  const own = useCanvasPanZoom()
+  const zoom = zoomProp ?? own.zoom
 
   const gridId = `grid-${useId().replace(/:/g, '')}`
 
+  const handleWheel = (e: React.WheelEvent) => {
+    if (!onZoomChange) {
+      own.onWheel(e)
+      return
+    }
+    const delta = e.deltaY > 0 ? -1 : 1
+    const step = e.shiftKey ? 0.02 : ZOOM_STEP
+    onZoomChange(Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, zoom + delta * step)))
+  }
+
   return (
-      <div
-        ref={containerRef}
-        className={`relative flex-1 overflow-hidden bg-background select-none ${className ?? ''}`}
-        onMouseDown={onMouseDown}
-        onMouseMove={onMouseMove}
-        onMouseUp={onMouseUp}
-        onMouseLeave={onMouseLeave}
-        onWheel={onWheel}
-        onDoubleClick={onDoubleClick}
-        onKeyDown={(e) => {
-          hookKeyDown(e)
-          onKeyDown?.(e)
-        }}
-        role="application"
-        aria-label="Drag to pan canvas"
-        tabIndex={0}
-      >
+    <div
+      ref={own.containerRef}
+      className={`relative flex-1 overflow-hidden bg-background select-none ${className ?? ''}`}
+      onMouseDown={own.onMouseDown}
+      onMouseMove={own.onMouseMove}
+      onMouseUp={own.onMouseUp}
+      onMouseLeave={own.onMouseLeave}
+      onWheel={handleWheel}
+      onDoubleClick={() => {
+        onZoomChange?.(1)
+        own.onDoubleClick()
+      }}
+      onKeyDown={(e) => {
+        own.onKeyDown(e)
+        onKeyDown?.(e)
+      }}
+      role="application"
+      aria-label="Drag to pan canvas"
+      tabIndex={0}
+    >
       <svg className="absolute inset-0 h-full w-full pointer-events-none">
         <defs>
           <pattern id={gridId} width="20" height="20" patternUnits="userSpaceOnUse">
@@ -56,40 +58,10 @@ export function CanvasArea({ children, className, onKeyDown }: CanvasAreaProps) 
       <div
         className="absolute inset-0 flex items-center justify-center"
         style={{
-          transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
+          transform: `translate(${own.pan.x}px, ${own.pan.y}px) scale(${zoom})`,
         }}
       >
         {children}
-      </div>
-
-      <div className="absolute top-4 right-4 z-10 flex items-center gap-1 rounded-md border border-border bg-surface p-1 shadow-md">
-        <button
-          type="button"
-          onClick={zoomOut}
-          className="flex h-8 w-8 items-center justify-center rounded-sm text-sm font-medium text-foreground hover:bg-muted"
-          aria-label="Zoom out"
-        >
-          -
-        </button>
-        <span className="flex h-8 w-12 items-center justify-center select-none font-mono text-xs text-muted-foreground">
-          {Math.round(zoom * 100)}%
-        </span>
-        <button
-          type="button"
-          onClick={zoomIn}
-          className="flex h-8 w-8 items-center justify-center rounded-sm text-sm font-medium text-foreground hover:bg-muted"
-          aria-label="Zoom in"
-        >
-          +
-        </button>
-        <button
-          type="button"
-          onClick={resetZoom}
-          className="flex h-8 w-8 items-center justify-center rounded-sm text-xs font-medium text-foreground hover:bg-muted"
-          aria-label="Reset zoom"
-        >
-          Reset
-        </button>
       </div>
     </div>
   )

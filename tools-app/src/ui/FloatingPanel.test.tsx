@@ -98,4 +98,16 @@ describe('FloatingPanel', () => {
     fireEvent.keyDown(panel, { key: 'ArrowRight' })
     expect(panel.style.width).toBe('298px')
   })
+
+  test('forwards focusParam to NodeOptions and switches to Effects tab', () => {
+    const uid = useProjectStore.getState().stack[0].uid
+    useProjectStore.getState().addEffect(uid, 'glow')
+    const item = useProjectStore.getState().stack[0]
+    const effectUid = item.effects![0].uid
+    const { getByRole } = render(
+      <FloatingPanel item={item} onClose={() => {}} focusParam={`${effectUid}.intensity`} />,
+    )
+    const effectsTab = getByRole('tab', { name: /^Effects/ }) as HTMLElement
+    expect(effectsTab.getAttribute('aria-selected')).toBe('true')
+  })
 })

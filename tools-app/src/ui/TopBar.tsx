@@ -4,6 +4,7 @@ import type { ProjectState } from '../core/types'
 import { Templates } from './Templates'
 import { AuthModal } from './AuthModal'
 import { useToast } from './Toast'
+import { SettingsPanel } from './SettingsPanel'
 import { QuarantinePanel } from './QuarantinePanel'
 import {
   Select,
@@ -14,7 +15,7 @@ import {
 } from '../components/ui/select'
 import { Button } from '../components/ui/button'
 import { Badge } from '../components/ui/badge'
-import { Sparkles, Archive } from 'lucide-react'
+import { Sparkles, Archive, Sliders } from 'lucide-react'
 
 const QUALITY_LABELS: Record<ProjectState['canvas']['quality'], string> = {
   low: 'Low · 360p',
@@ -36,6 +37,7 @@ export function TopBar() {
   const markSaved = useProjectStore((s) => s.markSaved)
   const { toast } = useToast()
   const [panelOpen, setPanelOpen] = useState(false)
+  const [settingsOpen, setSettingsOpen] = useState(false)
 
   const save = () => {
     const state = useProjectStore.getState()
@@ -84,6 +86,16 @@ export function TopBar() {
 
       <div className={CLUSTER}>
         <Button
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8 rounded-[8px]"
+          aria-label="Settings"
+          onClick={() => setSettingsOpen((o) => !o)}
+        >
+          <Sliders className="h-4 w-4" />
+        </Button>
+
+        <Button
           variant={unsaved ? 'default' : 'outline'}
           size="sm"
           className="h-8 rounded-[8px] text-[13px]"
@@ -114,6 +126,11 @@ export function TopBar() {
 
         <AuthModal />
       </div>
+
+      <SettingsPanel
+        open={settingsOpen}
+        onClose={() => setSettingsOpen(false)}
+      />
       <QuarantinePanel open={panelOpen} onClose={() => setPanelOpen(false)} />
     </header>
   )

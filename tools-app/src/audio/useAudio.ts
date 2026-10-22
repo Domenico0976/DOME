@@ -1,4 +1,4 @@
-import { useCallback, useRef } from 'react'
+import { useCallback, useMemo, useRef } from 'react'
 import {
   AudioEngineError,
   attachMediaElement,
@@ -133,18 +133,21 @@ export function useAudio() {
     [],
   )
 
-  return {
-    enabled,
-    source,
-    fileName,
-    volume,
-    playing,
-    durationSec,
-    enableMic,
-    enableFile,
-    play,
-    pause,
-    seek,
-    readFrame,
-  }
+  return useMemo(
+    () => ({
+      enabled,
+      source,
+      fileName,
+      volume,
+      playing,
+      durationSec,
+      enableMic,
+      enableFile,
+      play,
+      pause,
+      seek,
+      readFrame,
+    }),
+    [enabled, source, fileName, volume, playing, durationSec, enableMic, enableFile, play, pause, seek, readFrame],
+  )
 }

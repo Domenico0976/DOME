@@ -352,16 +352,17 @@ type EffectInstance = {
 ### 8.2 Effect definition
 
 ```ts
-type EffectDefinition = {
-  type: string;
+type EffectPassDef = {
+  type: EffectType;
   label: string;
-  category: "color" | "light" | "distort" | "style" | "generate" | "audio";
-  defaultParams: Record<string, EffectParamValue>;
-  params: EffectParamSchema[];
-  supportsAudio: boolean;
-  render: (input: RenderInput) => RenderOutput;
+  defaultParams: Record<string, number>;
+  controls: ControlDef[];
+  fragment: string;
+  uniforms(p: Record<string, number>, frame: Frame): Record<string, number | number[]>;
 };
 ```
+
+La categoria **non** è un campo dell'effetto: è una mappatura esterna `EFFECT_CATEGORIES` (`src/engine/effects/index.ts`) che associa ogni `EffectType` a una stringa libera (`"light" | "texture" | "distort" | "style" | "color"`). Gli effetti non dichiarano la propria categoria; la UI legge la mappa. Fallback per tipi non registrati: `"other"`.
 
 ### 8.3 Param schema
 
@@ -536,45 +537,21 @@ type AudioAnalysisFrame = {
 
 ### 10.4 Audio binding
 
+La forma reale in `src/core/types.ts`:
+
 ```ts
 type AudioBinding = {
-  id: string;
-  enabled: boolean;
-  source: "track" | "microphone" | "system" | "custom";
-  feature: AudioFeature;
-  target: {
-    layerId: string;
-    effectId?: string;
-    paramKey: string;
-  };
-  mapping: AudioMapping;
-};
-
-type AudioFeature =
-  | "rms"
-  | "peak"
-  | "bass"
-  | "lowMid"
-  | "mid"
-  | "highMid"
-  | "treble"
-  | "beat.strength"
-  | "beat.phase"
-  | "spectrum.average";
-
-type AudioMapping = {
-  mode: "absolute" | "additive" | "multiply" | "override";
-  min: number;
-  max: number;
-  baseline: number;
-  sensitivity: number;
-  smoothing: number;
-  attack: number;
-  release: number;
-  invert: boolean;
-  quantizeSteps?: number;
+  id?: string;          // opzionale; id interno opaco (migration: "b_<timestamp>_<counter>"); il mute usa la key calcolata "<itemUid>-<param>" a runtime, non binding.id
+  param: string;        // chiave parametro su cui agisce ("scaleX", "intensity", …)
+  source: "bass" | "mid" | "treble" | "level" | "spectrum" | "bpm";
+  band?: number;        // indice banda per source "spectrum"
+  curve: "linear" | "invert";
+  amount: number;       // Sensitivity, tipico 0–2; moltiplica il valore normalizzato
+  range?: { min: number; max: number };  // Value range; se assente usa min/max del parametro dal ControlDef
 };
 ```
+
+Nota: il tipo legacy `mapping { mode, min, max, baseline, sensitivity, smoothing, attack, release, invert, quantizeSteps }` **non esiste nel codice** — è solo aspirazionale/documentazione storica. La modulazione effettiva è `base + sourceValue * amount` (con `curve: 'invert'` che nega il termine), calcolata in `src/engine/effects/index.ts` → `resolveEffectValue`, e clampata a `binding.range` se presente. I concetti di `baseline`, `attack`, `release`, `smoothing`, `mapping.mode` **non esistono nel codice** — §10.5–§10.7 sono aspirazionali. Il mute locale usa `audio.disabledAudioBindings: string[]` nel project store, non un campo `enabled` sul binding.
 
 ### 10.5 Formula di modulazione
 
@@ -658,6 +635,10 @@ Il BPM può essere:
 - Preso dai metadata del file audio.
 
 Nel progetto di esempio, la traccia `afrobeat.mp3` è associata a `115 BPM`. [1]
+
+### 10.9 Preset rows
+
+Una preset row è un `AudioBinding` serializzato come riga di tabella. La UI (`PresetTable`) mantiene un array di righe; ogni riga espone `id`, `param`, `source`, `curve`, `amount`, `range`. Le azioni disponibili su una riga sono: toggle mute (aggiunge/rimuove `<itemUid>-<param>` da `audio.disabledAudioBindings`), edit inline, delete, duplicate. La duplicazione a livello di layer usa `duplicateStackItem(itemUid)` del project store (deep copy con uid freschi).
 
 ---
 
@@ -771,6 +752,10 @@ Risultato: il video pulsa leggermente sui bassi.
 }
 ```
 
+### 11.6 Cascade menu
+
+Il cascade menu (`PresetMegaMenu`) è un pannello a cascata aperto da un pulsante nella toolbar: mostra le preset predefinite raggruppate per effetto; ogni voce, al click, applica una sequenza di binding preconfigurati allo stack corrente. Non è un pannello indipendente: è montato dentro `AudioReactPanel` e condivide lo stesso stato `megaOpen` del preset rail.
+
 ---
 
 ## 12. Pipeline di rendering
@@ -848,7 +833,7 @@ Salva:
   "project": {
     "id": "proj_123",
     "name": "Audio Visual 01",
-    "schemaVersion": 1,
+    "schemaVersion": 4,
     "settings": {},
     "sources": [],
     "layers": [],
@@ -857,6 +842,8 @@ Salva:
   }
 }
 ```
+
+`SCHEMA_VERSION` è `4` (`src/core/schema.ts`). Le migration sono additive: v3→v4 imposta `audio.bindings[].range` a `undefined` quando assente (lossless).
 
 ### 14.2 Asset
 
@@ -1028,3 +1015,17 @@ interface OutputAdapter {
 8. Gli asset sono separati dal project JSON.
 9. Ogni errore è isolato.
 10. Ogni nuova funzione si aggiunge tramite adapter o registry.
+11. L’audio-reactività si configura solo sulla PresetRail/PresetTable della soundbar; non creare pannelli audio duplicati altrove.
+
+---
+
+## 20. Soundbar anatomy
+
+La soundbar (`AudioReactPanel`) è il footer dell'app, montato come sibling di `<main>` nel flex-column di `App.tsx`.
+
+- **Altezza espansa**: 390px (44 header + 57 transport + 289 body). **Altezza collassata**: 101px (header + transport rimangono, body va a 0 con clip).
+- Il footer espone la CSS var `--soundbar-height` su `document.documentElement` (inline + `useEffect`), così `StackPanel` (dentro `<main>`, sibling) può usare `max-height: calc(100vh - var(--soundbar-height) - …)` per non sovrapporsi.
+- Token CSS in `globals.css`: `--soundbar-body: 289px` (default), `--soundbar-height` (esposta sul footer + `documentElement`). Costanti JS in `src/ui/AudioReactPanel.tsx`: `SOUNDBAR_COLLAPSED = 101`, `SOUNDBAR_BODY_MIN = 160`, `SOUNDBAR_BODY_MAX = 480` (altezze del solo body; totale = 101 + bodyHeight, quindi 261–581px durante il resize via ResizeHandle).
+- **PresetRail**: resta montato anche collassato (`h-0` + `overflow-hidden`); lo slot espanso è condizionato a `slotOpen`.
+- **MasterWaveform**: sempre montato; mostra overlay testuale "Load audio to see waveform" quando nessun sorgente è caricato (canvas vuoto + overlay DOM `pointer-events-none`).
+- **ZoomPanel** (`src/ui/ZoomPanel.tsx`): pannello zoom unico, montato come sibling di `StackPanel` dentro `<main id="main-content">` in `App.tsx`, `position: absolute; left: 12px; bottom: calc(var(--soundbar-height) + 12px)`, stile StackPanel (bg panel, border, radius 12, `min-w-[160px]`). Contenuto: percentuale zoom, zoom-out, zoom-in, reset. Wired a `App` zoom state → `CanvasArea` (`onZoomChange`). Il vecchio controllo zoom inline in `CanvasArea` e lo slider Zoom in `SettingsPanel` sono rimossi.

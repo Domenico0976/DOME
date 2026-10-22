@@ -17,7 +17,7 @@ function resolveItemParams(
     if (muted?.has(`${item.uid}-${binding.param}`)) continue
     const base = (item.params as Record<string, number | string | string[]>)[binding.param]
     if (typeof base !== 'number') continue
-    resolved[binding.param] = resolveEffectValue(base, [binding], binding.param, frame, audio)
+    resolved[binding.param] = resolveEffectValue(base, [binding], binding.param, frame, audio, undefined, undefined)
   }
   return resolved
 }

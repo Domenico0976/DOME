@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { ChevronDown, ChevronUp, Layers, Trash2 } from 'lucide-react'
 import { useProjectStore } from '../state/projectStore'
 import { resolveTool } from '../core/registry'
@@ -81,7 +81,7 @@ function ScopeControl({
   )
 }
 
-export function NodeOptions({ item }: { item: StackItem }) {
+export function NodeOptions({ item, focusParam, onFocusParamClear }: { item: StackItem; focusParam?: string | null; onFocusParamClear?: () => void }) {
   const updateParam = useProjectStore((s) => s.updateParam)
   const toggleSwitch = useProjectStore((s) => s.toggleSwitch)
   const setComponent = useProjectStore((s) => s.setComponent)
@@ -91,7 +91,12 @@ export function NodeOptions({ item }: { item: StackItem }) {
   if (!def) return <div className="node-options">Unknown tool</div>
 
   const [collapsed, setCollapsed] = useState(false)
+  const [componentOpen, setComponentOpen] = useState(true)
   const [tab, setTab] = useState('controls')
+
+  useEffect(() => {
+    if (focusParam) setTab('effects')
+  }, [focusParam])
 
   // Single source of truth for the UI lives in the Component group; loose fields
   // remain the rendering backing-store (read by stackEngine) for backwards compat.
@@ -102,14 +107,14 @@ export function NodeOptions({ item }: { item: StackItem }) {
   const blendLabel = BLEND_MODES.find((m) => m.value === blendMode)?.label ?? blendMode
 
   // Layer-stack identity header — index 0 = front, display #N zero-based
-  // (matching the #N badges already rendered by Stack / FloatingStack), total M = stack length.
+  // (matching the #N badges already rendered by Stack), total M = stack length.
   const stack = useProjectStore((s) => s.stack)
   const index = stack.findIndex((i) => i.uid === item.uid)
   const total = stack.length
   const subtitle = `Elemento · #${index} di ${total}`
 
   return (
-    <div className="flex h-full flex-col overflow-hidden rounded-lg border border-border bg-card shadow-2xl animate-in fade-in-0 zoom-in-95 duration-150">
+    <div className="flex h-full flex-col overflow-hidden">
       <div className="flex items-center gap-2 border-b border-border px-4 py-3 shrink-0">
         <div className="grid h-7 w-7 place-items-center rounded-sm bg-surface-2">
           <ToolIcon name={String(def.icon)} className="h-4 w-4" />
@@ -130,87 +135,103 @@ export function NodeOptions({ item }: { item: StackItem }) {
 
       {/* Component section — dedicated modal section above the tabs (single source of truth) */}
       <div className="border-b border-border px-4 py-3 shrink-0 space-y-3">
-        <div className="flex items-center gap-2">
+        <button
+          type="button"
+          onClick={() => setComponentOpen((o) => !o)}
+          aria-expanded={componentOpen}
+          aria-controls="component-section"
+          className="flex w-full items-center gap-2 rounded-sm px-0.5 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-300 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-2"
+        >
+          {componentOpen ? (
+            <ChevronDown className="h-4 w-4 text-muted-foreground" />
+          ) : (
+            <ChevronUp className="h-4 w-4 text-muted-foreground" />
+          )}
           <Layers className="h-4 w-4 text-muted-foreground" />
           <h4 className="text-[13px] font-semibold text-foreground">Component</h4>
-        </div>
+        </button>
 
-        {/* Blend mode — label-only, live value in trigger (select) + ValuePill */}
-        <div className="space-y-1.5">
-          <div className="flex items-center justify-between">
-            <label htmlFor="component-blend-mode" className="text-[12px] font-medium text-muted-foreground">
-              Blend mode
-            </label>
-            <ValuePill value={blendLabel} unit="" />
-          </div>
-          <select
-            id="component-blend-mode"
-            value={blendMode}
-            onChange={(e) => updateParam(item.uid, '_blendMode', e.target.value)}
-            className="h-7 w-full rounded-md border border-border bg-surface-2 px-2 text-[11px] text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-            aria-label="Blend mode"
-          >
-            {BLEND_MODES.map((m) => (
-              <option key={m.label} value={m.value}>
-                {m.label}
-              </option>
-            ))}
-          </select>
-        </div>
+        {componentOpen && (
+          <div id="component-section">
+            {/* Blend mode — label-only, live value in trigger (select) + ValuePill */}
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <label htmlFor="component-blend-mode" className="text-[12px] font-medium text-muted-foreground">
+                  Blend mode
+                </label>
+                <ValuePill value={blendLabel} unit="" />
+              </div>
+              <select
+                id="component-blend-mode"
+                value={blendMode}
+                onChange={(e) => updateParam(item.uid, '_blendMode', e.target.value)}
+                className="h-7 w-full rounded-md border border-border bg-surface-2 px-2 text-[11px] text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                aria-label="Blend mode"
+              >
+                {BLEND_MODES.map((m) => (
+                  <option key={m.label} value={m.value}>
+                    {m.label}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-        {/* Opacity — slider + ValuePill (mono live) + scope segmented control */}
-        <div className="space-y-1.5">
-          <div className="flex items-center justify-between">
-            <label htmlFor="component-opacity" title="Range 0–1" className="text-[12px] font-medium text-muted-foreground">
-              Opacity
-            </label>
-            <ValuePill value={opacity} unit="" />
-          </div>
-          <input
-            id="component-opacity"
-            type="range"
-            min={0}
-            max={1}
-            step={0.01}
-            value={opacity}
-            onChange={(e) => updateParam(item.uid, '_opacity', Number(e.target.value))}
-            className="w-full accent-[hsl(var(--primary))] cursor-pointer h-1 appearance-auto"
-            aria-valuetext={`Opacity: ${opacity}`}
-          />
-          <ScopeControl
-            value={scope}
-            onChange={(v) => setComponent(item.uid, { scope: v })}
-          />
-        </div>
-
-        {/* Hidden toggle — checkbox-styled (avoids duplicate role="switch" with the effect toggle) */}
-        <div className="flex items-center justify-between gap-2">
-          <span className="text-[12px] font-medium text-muted-foreground">Hidden</span>
-          <div className="flex items-center gap-2">
-            {hidden && <Badge variant="warning">Hidden</Badge>}
-            <span className="text-[11px] tabular-nums text-muted-foreground" aria-live="polite">
-              {hidden ? 'On' : 'Off'}
-            </span>
-            <button
-              type="button"
-              role="checkbox"
-              aria-checked={hidden}
-              aria-label="Hidden"
-              onClick={() => toggleSwitch(item.uid)}
-              className={cn(
-                'peer inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-300 focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50',
-                hidden ? 'bg-primary' : 'bg-surface-2',
-              )}
-            >
-              <span
-                className={cn(
-                  'pointer-events-none block h-4 w-4 rounded-full bg-background shadow-lg ring-0 transition-transform',
-                  hidden ? 'translate-x-4' : 'translate-x-0',
-                )}
+            {/* Opacity — slider + ValuePill (mono live) + scope segmented control */}
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <label htmlFor="component-opacity" title="Range 0–1" className="text-[12px] font-medium text-muted-foreground">
+                  Opacity
+                </label>
+                <ValuePill value={opacity} unit="" />
+              </div>
+              <input
+                id="component-opacity"
+                type="range"
+                min={0}
+                max={1}
+                step={0.01}
+                value={opacity}
+                onChange={(e) => updateParam(item.uid, '_opacity', Number(e.target.value))}
+                className="w-full accent-[hsl(var(--primary))] cursor-pointer h-1 appearance-auto"
+                aria-valuetext={`Opacity: ${opacity}`}
               />
-            </button>
+              <ScopeControl
+                value={scope}
+                onChange={(v) => setComponent(item.uid, { scope: v })}
+              />
+            </div>
+
+            {/* Hidden toggle — checkbox-styled (avoids duplicate role="switch" with the effect toggle) */}
+            <div className="flex items-center justify-between gap-2">
+              <span className="text-[12px] font-medium text-muted-foreground">Hidden</span>
+              <div className="flex items-center gap-2">
+                {hidden && <Badge variant="warning">Hidden</Badge>}
+                <span className="text-[11px] tabular-nums text-muted-foreground" aria-live="polite">
+                  {hidden ? 'On' : 'Off'}
+                </span>
+                <button
+                  type="button"
+                  role="checkbox"
+                  aria-checked={hidden}
+                  aria-label="Hidden"
+                  onClick={() => toggleSwitch(item.uid)}
+                  className={cn(
+                    'peer inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-300 focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50',
+                    hidden ? 'bg-primary' : 'bg-surface-2',
+                  )}
+                >
+                  <span
+                    className={cn(
+                      'pointer-events-none block h-4 w-4 rounded-full bg-background shadow-lg ring-0 transition-transform',
+                      hidden ? 'translate-x-4' : 'translate-x-0',
+                    )}
+                  />
+                </button>
+              </div>
+            </div>
           </div>
-        </div>
+        )}
+
       </div>
 
       <Tabs value={tab} onValueChange={setTab} className="flex min-h-0 flex-1 flex-col">
@@ -346,7 +367,7 @@ export function NodeOptions({ item }: { item: StackItem }) {
 
         {tab === 'effects' && (
         <TabsContent value="effects" className="mt-0 min-h-0 flex-1 overflow-hidden p-4">
-          <NodeOptionsEffects item={item} />
+          <NodeOptionsEffects item={item} focusParam={focusParam} onFocusParamClear={onFocusParamClear} />
         </TabsContent>)}
       </Tabs>
     </div>

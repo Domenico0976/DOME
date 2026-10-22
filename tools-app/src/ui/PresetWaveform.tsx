@@ -9,11 +9,20 @@ interface PresetWaveformProps {
   amount: number
   registerCanvas: (id: string, el: HTMLCanvasElement | null) => void
   onAmountChange: (amount: number) => void
+  className?: string
 }
 
 const clampAmount = (v: number) => Math.max(0, Math.min(2, Math.round(v / 0.05) * 0.05))
 
-export function PresetWaveform({ presetId, param, source, amount, registerCanvas, onAmountChange }: PresetWaveformProps) {
+export function PresetWaveform({
+  presetId,
+  param,
+  source,
+  amount,
+  registerCanvas,
+  onAmountChange,
+  className,
+}: PresetWaveformProps) {
   const dragRef = useRef<{ startX: number; startAmount: number; width: number } | null>(null)
 
   return (
@@ -28,8 +37,9 @@ export function PresetWaveform({ presetId, param, source, amount, registerCanvas
       aria-valuetext={`${Math.round(amount * 100)} percent`}
       title={`${source} live — drag to set amount`}
       className={cn(
-        'h-7 w-full cursor-ew-resize rounded bg-surface-2/60',
+        'h-4 w-full cursor-ew-resize rounded bg-surface-2/60',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+        className,
       )}
       onPointerDown={(e) => {
         const el = e.currentTarget as HTMLCanvasElement

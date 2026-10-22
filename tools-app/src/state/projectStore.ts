@@ -21,6 +21,7 @@ export interface ProjectStore extends ProjectState {
   selectTool: (uid: string | null) => void
   addTool: (toolId: string, version?: string) => void
   removeTool: (uid: string) => void
+  duplicateStackItem: (itemUid: string) => string
   moveTool: (uid: string, dir: 'up' | 'down') => void
   moveToolTo: (uid: string, toIndex: number) => void
   toggleSwitch: (uid: string) => void
@@ -392,5 +393,40 @@ export const useProjectStore = create<ProjectStore>((setOriginal, get) => {
         })
         return { stack, unsaved: true }
       }),
+    duplicateStackItem: (itemUid: string) => {
+      let newUid = itemUid
+      set((s) => {
+        const item = s.stack.find((i) => i.uid === itemUid)
+        if (!item) return {}
+        newUid = makeUid()
+        const newItem: StackItem = {
+          uid: newUid,
+          toolId: item.toolId,
+          toolVersion: item.toolVersion,
+          params: { ...item.params },
+          audio: item.audio.map((b) => ({
+            ...b,
+            id: makeUid(),
+          })),
+          automations: [...item.automations],
+          hidden: item.hidden,
+          effects: (item.effects ?? []).map((e) => ({
+            uid: makeUid(),
+            type: e.type,
+            enabled: e.enabled,
+            params: { ...e.params },
+          })),
+          blendMode: item.blendMode,
+          opacity: item.opacity,
+          component: item.component ? { ...item.component } : undefined,
+        }
+        return {
+          stack: [...s.stack, newItem],
+          unsaved: true,
+          selectedUid: newItem.uid,
+        }
+      })
+      return newUid
+    },
   }
 })

@@ -44,10 +44,23 @@ describe('effects framework', () => {
     const m = await import('./index')
     const frame = { timeSec: 0, dt: 0, bpm: 240 }
     const audio = { bass: 0.5, mid: 0, treble: 0, level: 1, spectrum: new Float32Array(0), bpm: 240 }
-    const bind = (source: NonNullable<AudioBinding['source']>, amount: number, curve: AudioBinding['curve'] = 'linear') => [{ param: 'k', source, curve, amount }]
+    const bind = (source: NonNullable<AudioBinding['source']>, amount: number, curve: AudioBinding['curve'] = 'linear') => [{ id: 'b_test', param: 'k', source, curve, amount }]
     expect(m.resolveEffectValue(1, bind('bass', 2), 'k', frame, audio)).toBe(2)
     expect(m.resolveEffectValue(1, bind('bass', 2, 'invert'), 'k', frame, audio)).toBe(0)
     expect(m.resolveEffectValue(1, bind('bpm', 1), 'k', frame, audio)).toBe(2)
+  })
+
+  test('resolveEffectValue: range clamps first, param bounds stay outer', async () => {
+    const m = await import('./index')
+    const frame = { timeSec: 0, dt: 0, bpm: 120 }
+    const audio = { bass: 1, mid: 0, treble: 0, level: 1, spectrum: new Float32Array(0), bpm: 120 }
+    const withRange = (range: { min: number; max: number }, amount = 10): AudioBinding[] => [
+      { id: 'b_range', param: 'k', source: 'bass', curve: 'linear', amount, range },
+    ]
+    expect(m.resolveEffectValue(1, withRange({ min: 0, max: 5 }), 'k', frame, audio)).toBe(5)
+    expect(m.resolveEffectValue(1, withRange({ min: 0, max: 100 }), 'k', frame, audio, 0, 3)).toBe(3)
+    expect(m.resolveEffectValue(0, withRange({ min: 0.4, max: 1 }, 0), 'k', frame, audio, 0, 1)).toBe(0.4)
+    expect(m.resolveEffectValue(1, [{ id: 'b_nr', param: 'k', source: 'bass', curve: 'linear', amount: 10 }], 'k', frame, audio, 0, 3)).toBe(11)
   })
 
   test('EFFECT_ORDER canonical sequence', () => {

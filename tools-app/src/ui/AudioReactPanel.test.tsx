@@ -17,7 +17,7 @@ describe('AudioReactPanel', () => {
     const { getByLabelText, container } = render(<AudioReactPanel />)
     expect(getByLabelText('Play/Pause')).toBeDefined()
     expect(getByLabelText('BPM')).toBeDefined()
-    expect(container.querySelector('canvas')).toBeDefined()
+    expect(container.querySelector('footer')).toBeTruthy()
   })
 
   test('toggles play/pause on the element', () => {
@@ -56,6 +56,28 @@ describe('AudioReactPanel', () => {
     expect((getByLabelText('Play/Pause') as HTMLButtonElement).disabled).toBe(true)
   })
 
+  test('Add Preset opens the cascade with id preset-cascade', () => {
+    useProjectStore.getState().reset()
+    useProjectStore.getState().addTool('text')
+    const { getByLabelText, queryByTestId } = render(<AudioReactPanel />)
+    const btn = getByLabelText('Add Preset') as HTMLButtonElement
+    expect(btn.getAttribute('aria-controls')).toBe('preset-cascade')
+    expect(btn.getAttribute('aria-expanded')).toBe('false')
+    expect(queryByTestId('preset-cascade')).toBeNull()
+    fireEvent.click(btn)
+    expect(queryByTestId('preset-cascade')).toBeTruthy()
+    expect(btn.getAttribute('aria-expanded')).toBe('true')
+  })
+
+  test('Add Preset is disabled when the stack is empty', () => {
+    useProjectStore.getState().reset()
+    expect(useProjectStore.getState().stack.length).toBe(0)
+    const { getByLabelText } = render(<AudioReactPanel />)
+    const btn = getByLabelText('Add Preset') as HTMLButtonElement
+    expect(btn.disabled).toBe(true)
+    expect(btn.title).toBe('Add a tool first')
+  })
+
   test('updates bpm', () => {
     useProjectStore.getState().reset()
     const { getByLabelText } = render(<AudioReactPanel />)
@@ -64,16 +86,17 @@ describe('AudioReactPanel', () => {
     expect(useProjectStore.getState().timeline.bpm).toBe(140)
   })
 
-  test('slider disabled when durationSec <= 0', () => {
+  test('master waveform renders empty state without a timeline slider', () => {
     useProjectStore.getState().reset()
     useProjectStore.setState((s) => ({
       ...s,
       timeline: { ...s.timeline, durationSec: 0 }
     }))
-    const { getByLabelText, getByText, container } = render(<AudioReactPanel />)
-    expect(getByLabelText('Timeline disabled, no audio loaded')).toBeTruthy()
-    expect(getByText('0.0s / 0.0s')).toBeTruthy()
-    expect(container.querySelector('[aria-label="Timeline"] [role="slider"]')).toBeNull()
+    const { container, getByText, queryByTestId } = render(<AudioReactPanel />)
+    expect(queryByTestId('master-waveform')).toBeTruthy()
+    expect(getByText('Load audio to see waveform')).toBeTruthy()
+    expect(container.querySelector('[aria-label="Timeline"]')).toBeNull()
+    expect(container.querySelector('[aria-label="Timeline disabled, no audio loaded"]')).toBeNull()
   })
 
   test('volume slider updates the store volume', () => {
@@ -95,15 +118,14 @@ describe('AudioReactPanel', () => {
     useProjectStore.getState().addTool('cx')
     const uid = useProjectStore.getState().stack[0].uid
     useProjectStore.getState().selectTool(uid)
-    const { getByLabelText, getByText } = render(<AudioReactPanel />)
-    fireEvent.click(getByLabelText('Add Preset'))
+    const { getByText } = render(<AudioReactPanel creatorOpen />)
     fireEvent.click(getByText('Add modulation'))
     const audio = useProjectStore.getState().stack[0].audio
     expect(audio).toHaveLength(1)
     expect(audio[0]).toMatchObject({ param: 'speed', source: 'bass', amount: 1 })
   })
 
-  test('creator warns when the target already has a different driver', () => {
+  test('creator shows read-only chip instead of the form when a binding already exists', () => {
     const tool: ToolDef = {
       id: 'cx', kind: 'generative', version: '1.0.0', label: 'Cx', icon: '', category: 'Generative',
       defaultParams: {}, controls: [{ param: 'speed', label: 'Speed', kind: 'slider', min: 0, max: 10, step: 1 }],
@@ -115,9 +137,10 @@ describe('AudioReactPanel', () => {
     const uid = useProjectStore.getState().stack[0].uid
     useProjectStore.getState().selectTool(uid)
     useProjectStore.getState().addAudioBinding(uid, { param: 'speed', source: 'mid', curve: 'linear', amount: 1 })
-    const { getByLabelText, getByText } = render(<AudioReactPanel />)
-    fireEvent.click(getByLabelText('Add Preset'))
-    expect(getByText(/Replaces existing mid → speed/)).toBeTruthy()
+    const { getByText, queryByText } = render(<AudioReactPanel creatorOpen />)
+    expect(getByText(/React to: mid · Sens 100%/)).toBeTruthy()
+    expect(queryByText('Add modulation')).toBeNull()
+    expect(queryByText(/Replaces existing/)).toBeNull()
   })
 
   test('preset mini-waveform adjusts amount with arrow keys', () => {    const tool: ToolDef = {
@@ -137,7 +160,7 @@ describe('AudioReactPanel', () => {
     expect(useProjectStore.getState().stack[0].audio[0].amount).toBeCloseTo(1.05)
   })
 
-  test('expanded preset row edits driver through shared fields', () => {
+  test('preset row edits driver through React To Panel', () => {
     const tool: ToolDef = {
       id: 'cx', kind: 'generative', version: '1.0.0', label: 'Cx', icon: '', category: 'Generative',
       defaultParams: {}, controls: [{ param: 'speed', label: 'Speed', kind: 'slider', min: 0, max: 10, step: 1 }],
@@ -149,7 +172,7 @@ describe('AudioReactPanel', () => {
     const uid = useProjectStore.getState().stack[0].uid
     useProjectStore.getState().addAudioBinding(uid, { param: 'speed', source: 'bass', curve: 'linear', amount: 1 })
     const { getByLabelText } = render(<AudioReactPanel />)
-    fireEvent.click(getByLabelText('Expand speed settings'))
+    fireEvent.click(getByLabelText('React to settings for bass'))
     const driver = getByLabelText('Audio driver') as HTMLSelectElement
     fireEvent.change(driver, { target: { value: 'mid' } })
     expect(useProjectStore.getState().stack[0].audio[0].source).toBe('mid')
@@ -157,8 +180,7 @@ describe('AudioReactPanel', () => {
 
   test('creator asks for a layer when nothing is selected', () => {
     useProjectStore.getState().reset()
-    const { getByLabelText, getByText } = render(<AudioReactPanel />)
-    fireEvent.click(getByLabelText('Add Preset'))
+    const { getByText } = render(<AudioReactPanel creatorOpen />)
     expect(getByText('Select a layer to create an audio modulation.')).toBeTruthy()
   })
 
@@ -291,19 +313,146 @@ describe('AudioReactPanel', () => {
     expect(footer).toBeTruthy()
     expect(footer.className).toContain('flex-col')
 
-    // Tips row — h-11 (44px)
     const tipsRow = footer.querySelector('.h-11') as HTMLElement
     expect(tipsRow).toBeTruthy()
 
-    // Main transport bar — 57px, directly below the tips row
     const mainBar = tipsRow?.nextElementSibling as HTMLElement
     expect(mainBar.className).toContain('h-[57px]')
 
-    // PanelSlot starts collapsed, so the resting bar totals 44 + 57 = 101px
+    expect(footer.style.getPropertyValue('--soundbar-height')).toBe('101px')
     const toggle = getByLabelText('Expand panel') as HTMLElement
     expect(toggle.getAttribute('aria-expanded')).toBe('false')
     fireEvent.click(toggle)
     const collapseToggle = getByLabelText('Collapse panel') as HTMLElement
     expect(collapseToggle.getAttribute('aria-expanded')).toBe('true')
+    expect(footer.style.getPropertyValue('--soundbar-height')).toBe('390px')
+    fireEvent.click(collapseToggle)
+    expect(footer.style.getPropertyValue('--soundbar-height')).toBe('101px')
+  })
+
+  test('expanded soundbar has ResizeHandle, 60/40 zones, and MasterWaveform', () => {
+    useProjectStore.getState().reset()
+    const { getByLabelText, queryByTestId } = render(
+      <ToastProvider>
+        <AudioReactPanel />
+      </ToastProvider>,
+    )
+    expect(queryByTestId('soundbar-resize')).toBeNull()
+    expect(queryByTestId('master-waveform')).toBeTruthy()
+    fireEvent.click(getByLabelText('Expand panel'))
+    const handle = queryByTestId('soundbar-resize')
+    expect(handle).toBeTruthy()
+    expect(handle?.className).toContain('cursor-row-resize')
+    expect(queryByTestId('master-waveform')).toBeTruthy()
+    const left = handle?.parentElement?.querySelector('.flex-\\[6\\]') as HTMLElement
+    const right = handle?.parentElement?.querySelector('.flex-\\[4\\]') as HTMLElement
+    expect(left).toBeTruthy()
+    expect(right).toBeTruthy()
+    expect(left.className).toContain('min-w-0')
+    expect(right.className).toContain('min-w-0')
+    const meters = handle?.parentElement?.querySelector('[aria-label^="Live audio levels"]') as HTMLElement
+    expect(meters).toBeTruthy()
+    expect(meters.className).toContain('w-[40px]')
+  })
+
+  test('preset table renders five frame columns with fr ratios', () => {
+    useProjectStore.getState().reset()
+    const { getByText } = render(<AudioReactPanel />)
+    expect(getByText('Presets')).toBeTruthy()
+    expect(getByText('React to')).toBeTruthy()
+    expect(getByText('Sensitivity')).toBeTruthy()
+    expect(getByText('Value range')).toBeTruthy()
+    expect(getByText('EQ')).toBeTruthy()
+    const header = getByText('Presets').parentElement as HTMLElement
+    expect(header.className).toContain('h-[40px]')
+    expect(header.style.gridTemplateColumns).toContain('200fr')
+    expect(header.style.gridTemplateColumns).toContain('150fr')
+    expect(header.style.gridTemplateColumns).toContain('130fr')
+    expect(header.style.gridTemplateColumns).toContain('120fr')
+    expect(header.style.gridTemplateColumns).toContain('200fr')
+  })
+
+  test('preset row kebab opens with Duplicate/Hide/Delete and Delete removes the row', async () => {
+    const tool: ToolDef = {
+      id: 'cx', kind: 'generative', version: '1.0.0', label: 'Cx', icon: '', category: 'Generative',
+      defaultParams: {}, controls: [{ param: 'speed', label: 'Speed', kind: 'slider', min: 0, max: 10, step: 1 }],
+      render() {},
+    }
+    registerTool(tool)
+    useProjectStore.getState().reset()
+    useProjectStore.getState().addTool('cx')
+    const uid = useProjectStore.getState().stack[0].uid
+    useProjectStore.getState().addAudioBinding(uid, { param: 'speed', source: 'bass', curve: 'linear', amount: 1 })
+    expect(useProjectStore.getState().stack[0].audio).toHaveLength(1)
+    const { getAllByLabelText, getByText } = render(<AudioReactPanel />)
+    const kebab = getAllByLabelText('Row actions')[0]
+    await act(async () => {
+      fireEvent.pointerDown(kebab)
+      fireEvent.click(kebab)
+    })
+    expect(getByText('Duplicate')).toBeTruthy()
+    expect(getByText('Hide')).toBeTruthy()
+    expect(getByText('Delete')).toBeTruthy()
+    await act(async () => {
+      fireEvent.click(getByText('Delete'))
+    })
+    expect(useProjectStore.getState().stack[0].audio).toHaveLength(0)
+  })
+
+  test('preset row Duplicate creates a new stack layer', async () => {
+    const tool: ToolDef = {
+      id: 'cx', kind: 'generative', version: '1.0.0', label: 'Cx', icon: '', category: 'Generative',
+      defaultParams: {}, controls: [{ param: 'speed', label: 'Speed', kind: 'slider', min: 0, max: 10, step: 1 }],
+      render() {},
+    }
+    registerTool(tool)
+    useProjectStore.getState().reset()
+    useProjectStore.getState().addTool('cx')
+    const uid = useProjectStore.getState().stack[0].uid
+    useProjectStore.getState().addAudioBinding(uid, { param: 'speed', source: 'bass', curve: 'linear', amount: 1 })
+    expect(useProjectStore.getState().stack.length).toBe(1)
+    const { getAllByLabelText, getByText } = render(<AudioReactPanel />)
+    const kebab = getAllByLabelText('Row actions')[0]
+    await act(async () => {
+      fireEvent.pointerDown(kebab)
+      fireEvent.click(kebab)
+    })
+    await act(async () => {
+      fireEvent.click(getByText('Duplicate'))
+    })
+    expect(useProjectStore.getState().stack.length).toBe(2)
+  })
+
+  test('React To Panel opens from the preset row', () => {
+    const tool: ToolDef = {
+      id: 'cx', kind: 'generative', version: '1.0.0', label: 'Cx', icon: '', category: 'Generative',
+      defaultParams: {}, controls: [{ param: 'speed', label: 'Speed', kind: 'slider', min: 0, max: 10, step: 1 }],
+      render() {},
+    }
+    registerTool(tool)
+    useProjectStore.getState().reset()
+    useProjectStore.getState().addTool('cx')
+    const uid = useProjectStore.getState().stack[0].uid
+    useProjectStore.getState().addAudioBinding(uid, { param: 'speed', source: 'bass', curve: 'linear', amount: 1 })
+    const { getByLabelText, getByText } = render(<AudioReactPanel />)
+    fireEvent.click(getByLabelText('React to settings for bass'))
+    expect(getByText('React To Panel')).toBeTruthy()
+  })
+
+  test('value range cell writes binding.range on edit', () => {
+    const tool: ToolDef = {
+      id: 'cx', kind: 'generative', version: '1.0.0', label: 'Cx', icon: '', category: 'Generative',
+      defaultParams: {}, controls: [{ param: 'speed', label: 'Speed', kind: 'slider', min: 0, max: 10, step: 1 }],
+      render() {},
+    }
+    registerTool(tool)
+    useProjectStore.getState().reset()
+    useProjectStore.getState().addTool('cx')
+    const uid = useProjectStore.getState().stack[0].uid
+    useProjectStore.getState().addAudioBinding(uid, { param: 'speed', source: 'bass', curve: 'linear', amount: 1 })
+    const { getByLabelText } = render(<AudioReactPanel />)
+    fireEvent.change(getByLabelText('Range min for speed'), { target: { value: '2' } })
+    fireEvent.change(getByLabelText('Range max for speed'), { target: { value: '5' } })
+    expect(useProjectStore.getState().stack[0].audio[0].range).toEqual({ min: 2, max: 5 })
   })
 })

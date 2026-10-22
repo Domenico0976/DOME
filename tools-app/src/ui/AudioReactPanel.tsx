@@ -47,11 +47,19 @@ import { Popover, PopoverContent, PopoverTrigger } from '../components/ui/popove
 import { AudioReactivePanel } from './AudioReactivePanel'
 import { PresetRail } from './PresetRail'
 import { PresetMegaMenu } from './PresetMegaMenu'
+import { MasterWaveform } from './MasterWaveform'
 import { useExportActions, computeRasterForced, computeGpuForced } from './exportActions'
 import { cn } from '../lib/utils'
 
+const SOUNDBAR_COLLAPSED = 101
+const SOUNDBAR_BODY_MIN = 160
+const SOUNDBAR_BODY_MAX = 480
+const SOUNDBAR_BODY_DEFAULT = 289
+
 interface AudioReactPanelProps {
   className?: string
+  onFocusParam?: (focus: string | null) => void
+  creatorOpen?: boolean
 }
 
 const METER_CONFIG = [
@@ -90,18 +98,6 @@ function formatDuration(totalSec: number): string {
   return `${m}:${String(s).padStart(2, '0')}`
 }
 
-function cssVarHsl(name: string, fallback: string): string {
-  if (typeof window === 'undefined' || !window.getComputedStyle) return fallback
-  const v = getComputedStyle(document.documentElement).getPropertyValue(name).trim()
-  return v ? `hsl(${v})` : fallback
-}
-
-function cssVarRaw(name: string, fallback: string): string {
-  if (typeof window === 'undefined' || !window.getComputedStyle) return fallback
-  const v = getComputedStyle(document.documentElement).getPropertyValue(name).trim()
-  return v || fallback
-}
-
 function isInteractiveOrEditable(el: HTMLElement | null): boolean {
   if (!el) return true
   if (el.isContentEditable) return true
@@ -113,12 +109,11 @@ function isInteractiveOrEditable(el: HTMLElement | null): boolean {
   return false
 }
 
-export function AudioReactPanel({ className }: AudioReactPanelProps) {
+export function AudioReactPanel({ className, onFocusParam, creatorOpen: creatorOpenProp }: AudioReactPanelProps) {
   const audio = useAudio()
   const { toast } = useToast()
   const { png, instagram, spotify, fullscreen, resetView } = useExportActions()
   const fileRef = useRef<HTMLInputElement>(null)
-  const canvasRef = useRef<HTMLCanvasElement>(null)
   const rafRef = useRef<number>(0)
   const footerRef = useRef<HTMLElement>(null)
   const metersRef = useRef<Record<MeterKey, HTMLDivElement | null>>({
@@ -131,7 +126,6 @@ export function AudioReactPanel({ className }: AudioReactPanelProps) {
   // Store state
   const source = useProjectStore((s) => s.audio.source)
   const fileName = useProjectStore((s) => s.audio.fileName)
-  const theme = useProjectStore((s) => s.theme)
   const quarantined = useProjectStore((s) => s.quarantined ?? [])
   const midiEnabled = useProjectStore((s) => s.audio.midi.enabled)
   const enableMidi = useProjectStore((s) => s.enableMidi)
@@ -141,7 +135,6 @@ export function AudioReactPanel({ className }: AudioReactPanelProps) {
   const setPlaying = useProjectStore((s) => s.setPlaying)
   const timeSec = useProjectStore((s) => s.timeline.timeSec)
   const durationSec = useProjectStore((s) => s.timeline.durationSec)
-  const setTime = useProjectStore((s) => s.setTime)
   const stack = useProjectStore((s) => s.stack)
   const selectedUid = useProjectStore((s) => s.selectedUid)
   const selectTool = useProjectStore((s) => s.selectTool)
@@ -158,10 +151,17 @@ export function AudioReactPanel({ className }: AudioReactPanelProps) {
   const [midiBusy, setMidiBusy] = useState(false)
   const [loop, setLoop] = useState(false)
   const [, setTapTimes] = useState<number[]>([])
-  const [creatorOpen, setCreatorOpen] = useState(false)
+  const [creatorOpen, setCreatorOpen] = useState(creatorOpenProp ?? false)
   const [megaOpen, setMegaOpen] = useState(false)
+  const megaRestoreRef = useRef<{
+    hoveredLayerUid?: string | null
+    hoveredEffectUid?: string | null
+    scrollTops?: { [key: string]: number }
+  }>({})
   const [panelOpen, setPanelOpen] = useState(false)
   const [slotOpen, setSlotOpen] = useState(false)
+  const [bodyHeight, setBodyHeight] = useState(SOUNDBAR_BODY_DEFAULT)
+  const dragRef = useRef<{ startY: number; startHeight: number } | null>(null)
   const [prevVolume, setPrevVolume] = useState(1)
   const [driver, setDriver] = useState<'bass' | 'mid' | 'treble' | 'level' | 'spectrum' | 'bpm'>('bass')
   const [targetParam, setTargetParam] = useState('')
@@ -170,12 +170,6 @@ export function AudioReactPanel({ className }: AudioReactPanelProps) {
   // Refs for rAF loop to avoid effect restarts
   const bpmRef = useRef(bpm)
   bpmRef.current = bpm
-  const timeSecRef = useRef(timeSec)
-  timeSecRef.current = timeSec
-  const durationSecRef = useRef(durationSec)
-  durationSecRef.current = durationSec
-  const sourceRef = useRef(source)
-  sourceRef.current = source
 
   // Live binding count for the Audio Reactive badge (row list lives in PresetRail)
   const bindingCount = stack.reduce((k, i) => k + i.audio.length, 0)
@@ -255,18 +249,34 @@ export function AudioReactPanel({ className }: AudioReactPanelProps) {
     })
   }, [setBpm])
 
-  const onCanvasClick = useCallback(
-    (e: React.MouseEvent<HTMLCanvasElement>) => {
-      const canvas = canvasRef.current
-      if (!canvas || durationSecRef.current <= 0) return
-      const rect = canvas.getBoundingClientRect()
-      const x = e.clientX - rect.left
-      const ratio = x / rect.width
-      const newTime = Math.max(0, Math.min(durationSecRef.current, ratio * durationSecRef.current))
-      audio.seek(newTime)
+  const onSeek = useCallback(
+    (t: number) => {
+      audio.seek(t)
     },
     [audio],
   )
+
+  const onResizePointerDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    e.preventDefault()
+    dragRef.current = { startY: e.clientY, startHeight: bodyHeight }
+    try {
+      e.currentTarget.setPointerCapture(e.pointerId)
+    } catch {}
+  }, [bodyHeight])
+
+  const onResizePointerMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    const d = dragRef.current
+    if (!d) return
+    const next = d.startHeight + (d.startY - e.clientY)
+    setBodyHeight(Math.max(SOUNDBAR_BODY_MIN, Math.min(SOUNDBAR_BODY_MAX, next)))
+  }, [])
+
+  const onResizePointerUp = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    dragRef.current = null
+    try {
+      e.currentTarget.releasePointerCapture(e.pointerId)
+    } catch {}
+  }, [])
 
   const handleStop = useCallback(() => {
     audio.pause()
@@ -287,8 +297,9 @@ export function AudioReactPanel({ className }: AudioReactPanelProps) {
       setTargetParam(param)
       setCreatorOpen(true)
       setMegaOpen(false)
+      onFocusParam?.(param)
     },
-    [selectTool],
+    [selectTool, onFocusParam],
   )
 
   // Footer-level keyboard shortcuts: Space = play/pause, L = loop toggle.
@@ -313,101 +324,39 @@ export function AudioReactPanel({ className }: AudioReactPanelProps) {
     [audio, playing, toast],
   )
 
-  // Animation loop for waveform and meters
   useEffect(() => {
-    const canvas = canvasRef.current
-    if (!canvas) return
-    const ctx = canvas.getContext('2d')
-    if (!ctx) return
-
-    const dpr = window.devicePixelRatio || 1
-    let width = 0
-    let height = 0
-
-    const resize = () => {
-      const rect = canvas.getBoundingClientRect()
-      width = rect.width
-      height = rect.height
-      canvas.width = width * dpr
-      canvas.height = height * dpr
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
-    }
-
-    resize()
-    window.addEventListener('resize', resize)
-    // The PanelSlot mounts at h-0, so the canvas measures 0-height here and no window
-    // resize fires on expand. Without this the waveform stays invisible until reload.
-    const ro = new ResizeObserver(resize)
-    ro.observe(canvas)
-
-    const barColor = cssVarRaw('--soundbar-waveform-bar', 'rgba(184, 217, 74, 0.45)')
-    const playedColor = cssVarRaw('--soundbar-waveform-played', '#b8d94a')
-    const playheadColor = cssVarHsl('--foreground', '#fff')
-    const emptyColor = cssVarHsl('--text-muted', '#888')
-
-    const draw = () => {
+    let cancelled = false
+    const tick = () => {
+      if (cancelled) return
       const frame = audio.readFrame(bpmRef.current)
-
-      // Update meters via refs (avoids React re-renders every frame)
       for (const meter of METER_CONFIG) {
         const el = metersRef.current[meter.key]
         if (el) {
           el.style.height = `${Math.min(100, frame[meter.key] * 100)}%`
         }
       }
-
-      ctx.clearRect(0, 0, width, height)
-
-      if (sourceRef.current === null) {
-        ctx.fillStyle = emptyColor
-        ctx.font = '12px sans-serif'
-        ctx.textAlign = 'center'
-        ctx.textBaseline = 'middle'
-        ctx.fillText('Load audio to see waveform', width / 2, height / 2)
-      } else {
-        const spectrum = frame.spectrum
-        const progressX = durationSecRef.current > 0 ? (timeSecRef.current / durationSecRef.current) * width : 0
-        if (spectrum.length > 0) {
-          const barWidth = width / spectrum.length
-          for (let i = 0; i < spectrum.length; i++) {
-            const value = spectrum[i]
-            const barHeight = value * height
-            const x = i * barWidth
-            const y = height - barHeight
-
-            ctx.fillStyle = x < progressX ? playedColor : barColor
-            ctx.fillRect(x, y, Math.max(barWidth - 0.5, 0.5), barHeight)
-          }
-        }
-      }
-
-      // Play position indicator line
-      if (durationSecRef.current > 0) {
-        const x = (timeSecRef.current / durationSecRef.current) * width
-        ctx.strokeStyle = playheadColor
-        ctx.lineWidth = 2
-        ctx.beginPath()
-        ctx.moveTo(x, 0)
-        ctx.lineTo(x, height)
-        ctx.stroke()
-      }
-
-      rafRef.current = requestAnimationFrame(draw)
+      rafRef.current = requestAnimationFrame(tick)
     }
-
-    rafRef.current = requestAnimationFrame(draw)
-
+    rafRef.current = requestAnimationFrame(tick)
     return () => {
-      window.removeEventListener('resize', resize)
-      ro.disconnect()
+      cancelled = true
       if (rafRef.current) cancelAnimationFrame(rafRef.current)
     }
-  }, [audio, theme])
+  }, [audio])
+
+  useEffect(() => {
+    const value = slotOpen ? `${SOUNDBAR_COLLAPSED + bodyHeight}px` : `${SOUNDBAR_COLLAPSED}px`
+    document.documentElement.style.setProperty('--soundbar-height', value)
+    return () => {
+      document.documentElement.style.removeProperty('--soundbar-height')
+    }
+  }, [slotOpen, bodyHeight])
 
   return (
     <footer
       ref={footerRef}
-      className={cn('flex shrink-0 flex-col border-t border-border bg-surface-panel', className)}
+      className={cn('relative flex shrink-0 flex-col border-t border-border bg-surface-panel', className)}
+      style={{ '--soundbar-height': slotOpen ? `${SOUNDBAR_COLLAPSED + bodyHeight}px` : `${SOUNDBAR_COLLAPSED}px` } as React.CSSProperties}
       aria-label="Audio Reactivity Panel"
       onKeyDown={onFooterKeyDown}
     >
@@ -468,20 +417,16 @@ export function AudioReactPanel({ className }: AudioReactPanelProps) {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" sideOffset={4} className="min-w-[200px]">
-              <DropdownMenuGroup>
-                <DropdownMenuLabel>Audio</DropdownMenuLabel>
-                <DropdownMenuItem onSelect={() => fileRef.current?.click()}>
-                  <Upload className="h-4 w-4" />
-                  Replace audio
-                </DropdownMenuItem>
-                <DropdownMenuItem onSelect={handleRemoveAudio}>
-                  <Trash2 className="h-4 w-4" />
-                  Remove audio
-                </DropdownMenuItem>
-                <DropdownMenuItem onSelect={() => setPanelOpen(true)}>
-                  <Music2 className="h-4 w-4" />
-                  Open Audio Reactive
-                </DropdownMenuItem>
+                <DropdownMenuGroup>
+                  <DropdownMenuLabel>Audio</DropdownMenuLabel>
+                  <DropdownMenuItem onSelect={() => fileRef.current?.click()}>
+                    <Upload className="h-4 w-4" />
+                    Replace audio
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onSelect={handleRemoveAudio}>
+                    <Trash2 className="h-4 w-4" />
+                    Remove audio
+                  </DropdownMenuItem>
               </DropdownMenuGroup>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -668,141 +613,155 @@ export function AudioReactPanel({ className }: AudioReactPanelProps) {
         </div>
       </div>
 
-      {/* PanelSlot — 0 collapsed, 148px expanded (waveform + meters + presets + volume) */}
       <div
         className={cn(
           'shrink-0 overflow-hidden border-t border-border transition-[height] duration-200',
-          slotOpen ? 'h-[148px]' : 'h-0 border-t-0',
+          slotOpen ? '' : 'h-0 border-t-0',
         )}
+        style={slotOpen ? { height: bodyHeight } : undefined}
       >
-        <div className="flex h-[148px] gap-3 px-3 pb-2">
-          <PresetRail
-            stack={stack}
-            selected={selected}
-            targetOptions={targetOptions}
-            driver={driver}
-            setDriver={setDriver}
-            targetParam={targetParam}
-            setTargetParam={setTargetParam}
-            amount={amount}
-            setAmount={setAmount}
-            creatorOpen={creatorOpen}
-            setCreatorOpen={setCreatorOpen}
-            onOpenMegaMenu={() => setMegaOpen(true)}
-            className="w-[340px] shrink-0"
-          />
-
-          <div className="flex min-w-0 flex-1 flex-col py-2">
-            <div className="mb-1 flex items-center justify-between">
-              <span className="text-[10px] uppercase tracking-wide text-muted-foreground">Waveform</span>
-              <span className="font-mono text-[11px] tabular-nums text-muted-foreground" aria-live="off">
-                {durationSec > 0 ? `${timeSec.toFixed(1)}s / ${durationSec.toFixed(1)}s` : `0.0s / 0.0s`}
-              </span>
+        <div className="flex flex-col" style={{ height: slotOpen ? bodyHeight : SOUNDBAR_BODY_DEFAULT }}>
+          {slotOpen && (
+            <div
+              data-testid="soundbar-resize"
+              role="separator"
+              aria-orientation="horizontal"
+              aria-label="Resize soundbar"
+              className="flex h-[10px] w-full shrink-0 cursor-row-resize items-center justify-center border-b border-border bg-surface-2"
+              onPointerDown={onResizePointerDown}
+              onPointerMove={onResizePointerMove}
+              onPointerUp={onResizePointerUp}
+            >
+              <div className="h-[2px] w-8 rounded-full bg-border" />
             </div>
-            <div className="relative min-h-0 flex-1 overflow-hidden rounded-[8px] border border-border bg-surface-2">
-              <canvas
-                ref={canvasRef}
-                className="absolute inset-0 h-full w-full cursor-pointer"
-                onClick={onCanvasClick}
+          )}
+          <div className="flex min-h-0 flex-1 gap-3 px-3 pb-2">
+            <div className="flex-[6] min-w-0">
+              <PresetRail
+                stack={stack}
+                selected={selected}
+                targetOptions={targetOptions}
+                driver={driver}
+                setDriver={setDriver}
+                targetParam={targetParam}
+                setTargetParam={setTargetParam}
+                amount={amount}
+                setAmount={setAmount}
+                creatorOpen={creatorOpen}
+                setCreatorOpen={setCreatorOpen}
+                megaOpen={megaOpen}
+                onOpenMegaMenu={(focus?: { hoveredLayerUid?: string; hoveredEffectUid?: string }) => {
+                  if (focus) megaRestoreRef.current = { ...megaRestoreRef.current, ...focus }
+                  setMegaOpen((v) => !v)
+                }}
+                onFocusParam={onFocusParam}
+                className="h-full"
               />
             </div>
-            <div className="mt-1 flex items-center gap-2">
-              <span aria-label="Timeline" className="flex-1">
-                {durationSec > 0 ? (
-                  <Slider
-                    min={0}
-                    max={durationSec}
-                    step={0.1}
-                    value={[timeSec]}
-                    onValueChange={(v) => setTime(v[0])}
-                    className="flex-1"
-                    aria-valuetext={`${timeSec.toFixed(1)}s of ${durationSec.toFixed(1)}s`}
-                  />
-                ) : (
-                  <div
-                    className="h-8 rounded-[8px] border border-border bg-surface-2"
-                    aria-label="Timeline disabled, no audio loaded"
-                  />
-                )}
-              </span>
-              {/* Volume (listen-only: never affects reactivity) */}
-              <div className="flex w-[150px] shrink-0 items-center gap-1.5">
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button variant="ghost" size="icon" className="h-7 w-7 shrink-0" aria-label="Volume settings">
-                      {volume === 0 ? (
-                        <VolumeX className="h-3.5 w-3.5 text-muted-foreground" />
-                      ) : (
-                        <Volume2 className="h-3.5 w-3.5 text-muted-foreground" />
-                      )}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent align="end" sideOffset={6} className="w-56">
-                    <div className="flex items-center justify-between">
-                      <span className="text-[12px] font-medium">Volume</span>
-                      <span className="font-mono text-[12px] tabular-nums text-muted-foreground" aria-live="polite">
-                        {Math.round(volume * 100)}%
-                      </span>
-                    </div>
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      className="mt-2 h-7 w-full text-[11px]"
-                      onClick={() => {
-                        if (volume === 0) setVolume(prevVolume || 1)
-                        else {
-                          setPrevVolume(volume)
-                          setVolume(0)
-                        }
-                      }}
-                    >
-                      {volume === 0 ? 'Unmute' : 'Mute'}
-                    </Button>
-                    <p className="mt-2 text-[11px] leading-tight text-muted-foreground">
-                      Listen-only: volume never affects audio reactivity.
-                    </p>
-                  </PopoverContent>
-                </Popover>
-                <Slider
-                  aria-label="Volume"
-                  min={0}
-                  max={100}
-                  step={1}
-                  value={[Math.round(volume * 100)]}
-                  onValueChange={([v]) => setVolume(v / 100)}
-                  className="min-w-0 flex-1"
-                />
-                <span className="w-[34px] shrink-0 text-right font-mono text-[11px] tabular-nums text-muted-foreground" aria-hidden="true">
-                  {Math.round(volume * 100)}%
+
+            <div className="flex min-w-0 flex-[4] flex-col py-2">
+              <div className="mb-1 flex items-center">
+                <span className="text-[10px] uppercase tracking-wide text-muted-foreground">
+                  Waveform
                 </span>
               </div>
-            </div>
-            <div className="mt-1 truncate font-mono text-[10px] text-muted-foreground" data-testid="audio-status">
-              {diag}
-            </div>
-          </div>
-
-          {/* Meters — always visible live levels */}
-          <div className="flex w-[40px] shrink-0 gap-1 py-2" role="img" aria-label="Live audio levels: bass, mid, treble, level">
-            {METER_CONFIG.map((meter) => (
-              <div key={meter.key} className="flex flex-1 flex-col items-center gap-0.5" title={meter.label}>
-                <div className="relative w-full flex-1 overflow-hidden rounded-sm bg-surface-2">
-                  <div
-                    ref={(el) => {
-                      metersRef.current[meter.key] = el
-                    }}
-                    className="absolute inset-x-0 bottom-0"
-                    style={{ height: '0%', background: `hsl(var(${meter.token}))` }}
+              <MasterWaveform
+                timeSec={timeSec}
+                durationSec={durationSec}
+                sourceLoaded={source !== null}
+                onSeek={onSeek}
+                className="min-h-0 shrink-0 overflow-hidden rounded-[8px] border border-border"
+              />
+              <div className="mt-1 flex items-center gap-2">
+                <div className="flex w-full items-center gap-1.5">
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button variant="ghost" size="icon" className="h-7 w-7 shrink-0" aria-label="Volume settings">
+                        {volume === 0 ? (
+                          <VolumeX className="h-3.5 w-3.5 text-muted-foreground" />
+                        ) : (
+                          <Volume2 className="h-3.5 w-3.5 text-muted-foreground" />
+                        )}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent align="end" sideOffset={6} className="w-56">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[12px] font-medium">Volume</span>
+                        <span className="font-mono text-[12px] tabular-nums text-muted-foreground" aria-live="polite">
+                          {Math.round(volume * 100)}%
+                        </span>
+                      </div>
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        className="mt-2 h-7 w-full text-[11px]"
+                        onClick={() => {
+                          if (volume === 0) setVolume(prevVolume || 1)
+                          else {
+                            setPrevVolume(volume)
+                            setVolume(0)
+                          }
+                        }}
+                      >
+                        {volume === 0 ? 'Unmute' : 'Mute'}
+                      </Button>
+                      <p className="mt-2 text-[11px] leading-tight text-muted-foreground">
+                        Listen-only: volume never affects audio reactivity.
+                      </p>
+                    </PopoverContent>
+                  </Popover>
+                  <Slider
+                    aria-label="Volume"
+                    min={0}
+                    max={100}
+                    step={1}
+                    value={[Math.round(volume * 100)]}
+                    onValueChange={([v]) => setVolume(v / 100)}
+                    className="min-w-0 flex-1"
                   />
+                  <span className="w-[34px] shrink-0 text-right font-mono text-[11px] tabular-nums text-muted-foreground" aria-hidden="true">
+                    {Math.round(volume * 100)}%
+                  </span>
                 </div>
-                <span className="text-[8px] uppercase text-muted-foreground" aria-hidden="true">{meter.short}</span>
               </div>
-            ))}
+              <div className="mt-1 truncate font-mono text-[10px] text-muted-foreground" data-testid="audio-status">
+                {diag}
+              </div>
+            </div>
+
+            <div className="flex w-[40px] shrink-0 gap-1 py-2" role="img" aria-label="Live audio levels: bass, mid, treble, level">
+              {METER_CONFIG.map((meter) => (
+                <div key={meter.key} className="flex flex-1 flex-col items-center gap-0.5" title={meter.label}>
+                  <div className="relative w-full flex-1 overflow-hidden rounded-sm bg-surface-2">
+                    <div
+                      ref={(el) => {
+                        metersRef.current[meter.key] = el
+                      }}
+                      className="absolute inset-x-0 bottom-0"
+                      style={{ height: '0%', background: `hsl(var(${meter.token}))` }}
+                    />
+                  </div>
+                  <span className="text-[8px] uppercase text-muted-foreground" aria-hidden="true">{meter.short}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
 
-      {megaOpen && <PresetMegaMenu onPick={handlePickMegaMenu} onClose={() => setMegaOpen(false)} />}
+      {megaOpen && (
+        <PresetMegaMenu
+          onPick={handlePickMegaMenu}
+          onClose={() => setMegaOpen(false)}
+          initialState={megaRestoreRef.current}
+          onHoverChange={(s) => {
+            megaRestoreRef.current = { ...megaRestoreRef.current, ...s }
+          }}
+          onSaveScroll={(scrollTops) => {
+            megaRestoreRef.current = { ...megaRestoreRef.current, scrollTops }
+          }}
+        />
+      )}
       {panelOpen && <AudioReactivePanel onClose={() => setPanelOpen(false)} />}
     </footer>
   )
