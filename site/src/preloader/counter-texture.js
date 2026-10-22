@@ -1,4 +1,4 @@
-// Counter texture — the "000"->"100" digits drawn on a 2D canvas at GRID
+// Counter texture — the "000"->"080" digits drawn on a 2D canvas at GRID
 // resolution (1 texel = 1 tile, sampled NEAREST in the shader) so the digits
 // read as chunky, grid-aligned pixels (the "Retro Bitrate" look).
 //
@@ -41,7 +41,7 @@ export function computeDigitTiles(value, gridW, gridH) {
   const dw = 3 * S
   const dh = 5 * S
   const gap = 1
-  const margin = 2
+  const margin = 1
   const totalW = str.length * dw + (str.length - 1) * gap
   const x0 = gridW - totalW - margin
   const y0 = gridH - dh - margin

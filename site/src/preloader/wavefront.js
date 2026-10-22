@@ -1,5 +1,7 @@
 // Wavefront profile — single source of truth for the disintegration front that
-// drives BOTH the counter-out sweep and the homepage reveal.
+// drives the wave-1 centre-out sweep (star first, digits last); wave 2 is the
+// cover radius over the same grid, driven by config.coverRadius, not by this
+// front (the front just parks at sweepFront(1) while the cover closes).
 //
 // A tile is only alive in a thin band AROUND the front: it materialises exactly
 // when the front reaches it and is gone a moment later, behind the front. With

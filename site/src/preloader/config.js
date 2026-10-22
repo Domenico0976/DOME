@@ -1,27 +1,49 @@
 // Preloader timing, easing and grid — single source of truth for the phased
-// animation.
+// animation. V3: ONE GL canvas holds ring + counter (scene.js composites the
+// ring through a render target); the tile shader owns BOTH waves.
 //
-//   boot    — the grey opening appears, counter at 000, no tile alive
-//   open    — the counter tracks real load progress while the front eats the
-//             first HALF of the canvas
-//   seal    — the counter is at 100 and the front completes the canvas
-//   reveal  — the same gesture again from the top-left corner: the homepage
-//             appears through the tiles
+//   standby — ring scrolling, counter hidden (it fades up from the click),
+//             front parked off the corner, scroll locked; the page waits
+//   count   — click-driven: the count chases the real load (creep-floored)
+//             toward 100 without ever parking while the front stays parked —
+//             the crumble has NOT started yet, the rolling number IS the
+//             motion. Crossing SEAL_TRIGGER starts the seal (if the load,
+//             the app and the fonts are ready)
+//   seal    — the wave-1 front is DRIVEN BY the count, not by the clock:
+//             front = SEAL_FRONT_END * ((shown - SEAL_AT) / (1 - SEAL_AT)),
+//             so the crumble tracks the rolling number with zero gap. The ring
+//             dies first, the huge digits last (they hug the far corner).
+//             Starts the moment the display crosses SEAL_TRIGGER (and only
+//             then); the count never parks there, it rolls straight through
+//   cover   — the SAME tile grid becomes a shrinking paper cover: the radius
+//             starts at COVER_START and eases to 0, dying edge -> centre, so
+//             the homepage composes through the same cells (no DOM mask)
 //
-// boot and the reveal are on the clock. open is NOT: it ends when the load is
-// actually settled, or at SETTLED_WAIT_CAP in index.js, whichever comes first —
-// so the front can still be mid-canvas when the timeline's nominal OPEN duration
-// has elapsed. The TIMELINE durations below shape the gesture; they no longer
-// decide when the site is uncovered.
+// seal is NOT on the clock: it starts only when the display crosses SEAL_TRIGGER
+// and the load is actually settled (or at SETTLED_WAIT_CAP in index.js), so the
+// preloader self-completes in sync with the chunks, the shader warm-up and the
+// mounted home — the pacing rule requested for V3.
 
 export const TILE_SIZE = 42
 
+export const FINAL_COUNT = 100
+
+export const SEAL_TRIGGER = 80
+
+export const SEAL_FRONT_END = 0.56
+
 export const TIMELINE = {
   BOOT: 200,
-  OPEN: 2400,
-  SEAL: 1000,
-  REVEAL: 2400,
+  DIGIT_RISE: 600,
+  OPEN: 4000,
+  SEAL: 2200,
+  REVEAL: 4000,
 }
+
+// Wave-2 cover: the radius (vr units — centre -> far corner = 0.5 of the
+// diagonal length) starts large enough to cover every corner with margin and
+// eases to 0, where the homepage's last cell appears at the exact centre.
+export const COVER_START = 0.52
 
 const clamp01 = (v) => (v < 0 ? 0 : v > 1 ? 1 : v)
 
@@ -31,6 +53,11 @@ const clamp01 = (v) => (v < 0 ? 0 : v > 1 ? 1 : v)
 export function easeFlow(t) {
   const x = clamp01(t)
   return x * 0.55 + x * x * (3 - 2 * x) * 0.45
+}
+
+export function easeOutCubic(t) {
+  const x = clamp01(t)
+  return 1 - (1 - x) * (1 - x) * (1 - x)
 }
 
 export const FOLLOW = { halfLife: 90 } // ms
@@ -48,18 +75,19 @@ export function followStep(current, target, dtMs, halfLife = FOLLOW.halfLife, sn
   return current + (target - current) * followFactor(dtMs, halfLife)
 }
 
-// While the app is still mounting the animation must not park: the target keeps
-// drifting so the glass band stays alive instead of the screen going static.
-export function idleFront(elapsedMs, from = 0.9, amp = 0.06, periodMs = 2400) {
-  return from + amp * Math.sin((elapsedMs / periodMs) * Math.PI * 2)
+// Wave-2 cover radius: large -> 0 as the reveal advances, so the cover dies
+// edge -> centre through the same tile cells wave 1 consumed. Monotone by
+// construction: easeOutCubic is monotone and COVER_START is clamped positive.
+export function coverRadius(p, { start = COVER_START } = {}) {
+  return start * (1 - easeOutCubic(p))
 }
 
+// Wave-1 front: the sweep runs in one gesture, from the bite at the CENTRE to
+// past the far corner. The count holds the front parked at sweepFront(0) and
+// seal alone drives the sweep. The cover wave has its own radius driver above.
 export function phaseFront(phase, p) {
-  const e = easeFlow(p)
-  if (phase === 'open') return e * 0.5
-  if (phase === 'seal') return 0.5 + e * 0.5
-  if (phase === 'reveal') return e
-  return 0
+  if (phase !== 'seal') return 0
+  return easeFlow(p)
 }
 
 // The reduced-motion gate from webgl-gate-audit: when motion is reduced we must
@@ -71,15 +99,17 @@ export function shouldMountGL(reducedMotion) {
 // Indeterminate-progress floor for the counter.
 //
 // Real byte progress is a staircase: long flat stretches while one large chunk
-// downloads, then a jump. A counter frozen at 47 for a second reads as broken
-// even when the number underneath it is honest, and "stuck" is the complaint this
-// exists to answer. So the displayed value is the greater of the real progress and
-// a creep that approaches — and never reaches — 100.
+// downloads, then a jump. A counter frozen mid-count reads as broken even when
+// the number underneath it is honest, so the displayed value is the greater of
+// real progress and a creep.
 //
-// It cannot lie in the direction that matters: the creep tops out below 1, so the
-// counter can never read 100 while work is outstanding, and the preloader only
-// prints 100 once the load is genuinely settled.
-export const CREEP = { ceiling: 0.92, tau: 2600 }
+// It cannot lie in the direction that matters: the creep tops out below 1, so
+// the counter cannot reach the seal trigger while work is outstanding. Note the
+// ceiling is against the FULL 0..1 progress — index.js scales the display to
+// FINAL_COUNT.
+// tau is deliberately long: after the click-gate the count is a timed gesture
+// that lasts as long as the sweep itself, not a chase after the network.
+export const CREEP = { ceiling: 0.92, tau: 5000 }
 
 export function creepProgress(elapsedMs, { ceiling = CREEP.ceiling, tau = CREEP.tau } = {}) {
   if (!(tau > 0)) return 0
@@ -89,30 +119,16 @@ export function creepProgress(elapsedMs, { ceiling = CREEP.ceiling, tau = CREEP.
 // The counter chases its target instead of snapping to it.
 //
 // The underlying value really is a step function — the last chunk either arrives
-// or it does not — so printing it raw made the number sit still and then jump to
-// 100 in a single frame. That reads as a glitch, not as progress.
-//
-// Two guarantees, and they are the reason this is not just decoration. It never
-// exceeds the target, so it cannot claim more than the load delivered; and it
-// never moves backwards, because the byte ratio feeding it can dip — a newly
-// observed resource raises the denominator before it finishes — and a counter
-// that walks back down reads as broken. The snap at the end is what guarantees a
-// definite 100 instead of an asymptote.
-export const PROGRESS_FOLLOW = { halfLife: 110 }
+// or it does not — so printing it raw made the number sit still and then jump in
+// a single frame. Two guarantees: it never exceeds the target (cannot claim more
+// than the load delivered) and never moves backwards (a newly observed resource
+// raises the byte denominator before it finishes). The snap at the end
+// guarantees a definite FINAL_COUNT instead of an asymptote.
+// Long half-life: the count must roll with the dissolve, one smooth gesture.
+export const PROGRESS_FOLLOW = { halfLife: 280 }
 
 export function displayProgress(current, target, dtMs, halfLife = PROGRESS_FOLLOW.halfLife) {
   const goal = Math.max(target, current)
   const next = followStep(current, goal, dtMs, halfLife)
   return goal - next < 0.001 ? goal : next
-}
-
-// Normalized reveal progress driven by elapsed time since revealStart.
-// Returns 0 before a valid revealStart is set and clamps to 1 on overshoot,
-// so a delayed reveal still runs the full TIMELINE.REVEAL duration.
-export function revealProgress(now, revealStart, duration = TIMELINE.REVEAL) {
-  if (!revealStart) return 0
-  const p = (now - revealStart) / duration
-  if (p < 0) return 0
-  if (p > 1) return 1
-  return p
 }

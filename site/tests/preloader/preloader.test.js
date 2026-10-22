@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 // Unit tests for the first-landing preloader. Lives in tests/preloader/ so the
 // whole plan can be wiped in one go without touching other plans' tests.
-import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { describe, it, expect, beforeEach } from 'vitest'
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { formatCounter, computeDigitTiles, shouldRedraw } from '../../src/preloader/counter-texture.js'
@@ -17,19 +17,17 @@ import {
 import {
   TILE_SIZE,
   TIMELINE,
+  FINAL_COUNT,
+  SEAL_TRIGGER,
+  SEAL_FRONT_END,
+  COVER_START,
+  coverRadius,
   phaseFront,
   easeFlow,
   shouldMountGL,
   followFactor,
   followStep,
-  idleFront,
 } from '../../src/preloader/config.js'
-import {
-  revealRadius,
-  revealMask,
-  revealMaskImage,
-  REVEAL_FEATHER,
-} from '../../src/preloader/reveal.js'
 import { fragmentShader } from '../../src/preloader/shader.js'
 import { creepProgress, displayProgress, CREEP } from '../../src/preloader/config.js'
 
@@ -61,9 +59,12 @@ describe('counter creep (indeterminate progress)', () => {
 
   it('makes visible progress over the window the preloader waits in', () => {
     // A second in, it must already read as moving; a creep that takes 3s to
-    // register would feel identical to the frozen counter it replaced.
-    expect(creepProgress(1000)).toBeGreaterThan(0.2)
-    expect(creepProgress(2000)).toBeGreaterThan(0.4)
+    // register would feel identical to the frozen counter it replaced. The
+    // window is longer than before (click-gated, slow by request), but the
+    // gesture still has to show up early.
+    expect(creepProgress(1000)).toBeGreaterThan(0.14)
+    expect(creepProgress(2000)).toBeGreaterThan(0.28)
+    expect(creepProgress(3000)).toBeGreaterThan(0.38)
   })
 
   it('survives a degenerate time constant instead of returning NaN', () => {
@@ -72,10 +73,10 @@ describe('counter creep (indeterminate progress)', () => {
   })
 })
 
-describe('counter damping (the jump to 100)', () => {
+describe('counter damping (the jump to FINAL_COUNT)', () => {
   it('never overshoots the target, so it cannot claim more than the load did', () => {
     // This is what makes the easing honest rather than cosmetic: a smoothed bar
-    // that can exceed 100 is lying, this one cannot.
+    // that can exceed the goal is lying, this one cannot.
     let v = 0
     for (let i = 0; i < 200; i++) {
       v = displayProgress(v, 1, 16)
@@ -94,7 +95,7 @@ describe('counter damping (the jump to 100)', () => {
 
   it('spreads the last stretch over several frames instead of snapping', () => {
     // The bug being pinned: the counter used to be assigned, so the frame after
-    // the load settled it went from wherever it was to a whole 100.
+    // the load settled it went from wherever it was to the whole count.
     let v = 0.9
     const first = displayProgress(v, 1, 16)
     expect(first).toBeLessThan(1)
@@ -109,15 +110,15 @@ describe('counter damping (the jump to 100)', () => {
     expect(steps).toBeGreaterThan(3)
   })
 
-  it('reaches exactly 100, never an asymptote', () => {
-    // seal ends on this number, so 99.9 forever is not an option.
+  it('reaches exactly 100%, never an asymptote', () => {
+    // seal ends on this number, so 079.9 forever is not an option.
     let v = 0
     for (let i = 0; i < 1000; i++) v = displayProgress(v, 1, 16)
     expect(v).toBe(1)
   })
 
-  it('gets there inside the seal phase, so the reveal never starts under 100', () => {
-    let v = 0.9
+  it('gets there inside the seal phase, so the cover never starts under the full count', () => {
+    let v = SEAL_TRIGGER / FINAL_COUNT
     for (let t = 0; t <= TIMELINE.SEAL; t += 16) v = displayProgress(v, 1, 16)
     expect(v).toBe(1)
   })
@@ -292,49 +293,50 @@ describe('upward swelling', () => {
 })
 
 describe('preloader shader tile contract', () => {
-  it('declares the wavefront + glass uniforms', () => {
-    for (const name of [
-      'uFront',
-      'uFrontMode',
-      'uShowTiles',
-      'uAberration',
-      'uGrain',
-      'uBand',
-      'uTrail',
-    ]) {
+  it('declares the wavefront and phase uniforms', () => {
+    for (const name of ['uFront', 'uPhase', 'uCoverR', 'uGrain', 'uTrail', 'uDigitGate']) {
       expect(fragmentShader).toContain(`uniform float ${name}`)
     }
   })
-  it('gates the glass contribution on uShowTiles (no tiles at 000)', () => {
-    expect(fragmentShader).toMatch(/showTiles\s*\*\s*frontGlass|frontGlass\s*\([^)]*\)\s*\*\s*showTiles/)
+  it('samples the pass-A ring render target (one canvas, ring + digits)', () => {
+    expect(fragmentShader).toContain('uniform sampler2D uContent')
+    expect(fragmentShader).toContain('texture2D(uContent, vUv)')
   })
-  it('keeps a per-tile flute and a chromatic split', () => {
-    expect(fragmentShader).toContain('flute')
-    expect(fragmentShader).toContain('uAberration')
+  it('the ring lives with its tiles: content is gated by alive', () => {
+    expect(fragmentShader).toContain('content.a * alive')
   })
-  it('swells the pane as the front crosses it', () => {
-    expect(fragmentShader).toContain('swell')
+  it('dies per tile in binary steps (no smoothstep anywhere, no grey gradient)', () => {
+    expect(fragmentShader).toContain('float alive = 1.0 - step(0.0, burn)')
+    expect(fragmentShader).toContain('step(burn, uTrail)')
+    expect(fragmentShader).not.toMatch(/smoothstep\s*\(/)
   })
-  it('paints the grey opening that the first wave consumes', () => {
-    expect(fragmentShader).toContain('uniform vec3  uGrey')
-    expect(fragmentShader).toContain('uGrey')
+  it('has no fluted glass and no chromatic split left (removed by request)', () => {
+    expect(fragmentShader).not.toContain('fluteSlope')
+    expect(fragmentShader).not.toContain('uAberration')
+    expect(fragmentShader).not.toContain('bend')
+    expect(fragmentShader).not.toContain('pane')
   })
-  it('has no hard step left on the cut edge', () => {
-    expect(fragmentShader).not.toMatch(/step\(\s*0\.0\s*,\s*cut\s*\)/)
-    expect(fragmentShader).not.toMatch(/step\(\s*cut\s*,\s*0\.0\s*\)/)
+  it('paints the paper opening and the ink counter digits', () => {
+    expect(fragmentShader).toContain('uniform vec3  uBG')
+    expect(fragmentShader).toContain('uniform vec3  uInk')
+    expect(fragmentShader).toContain('uInk')
   })
-  it('feathers the cut edge over uEdge', () => {
-    expect(fragmentShader).toContain('uniform float uEdge')
-    expect(fragmentShader).toContain('uEdge')
+  it('dissolves from the screen CENTRE, not a corner', () => {
+    expect(fragmentShader).toContain('uResolution * 0.5')
+    expect(fragmentShader).toContain('length(tileCenter - uResolution * 0.5)')
   })
-  it('lifts the pane off the ground and biases the growth upward', () => {
-    expect(fragmentShader).toContain('lift')
-    expect(fragmentShader).toContain('upBias')
+  it('keeps the counter hidden until the click gate opens (uDigitGate)', () => {
+    expect(fragmentShader).toContain('uDigitGate * alive')
+    expect(fragmentShader).toContain('1.0 - uDigitGate')
+  })
+  it('phase 1 is the cover: flat paper tiles with a flashing rim, no field grain', () => {
+    expect(fragmentShader).toContain('uPhase < 0.5')
+    expect(fragmentShader).toContain('mix(uBG, flashCol, flash), alive')
   })
 })
 
 describe('timeline', () => {
-  it('gives the opening and the reveal the same duration (one synchronised gesture twice)', () => {
+  it('gives the opening and the cover the same duration (one synchronised gesture twice)', () => {
     expect(TIMELINE.OPEN).toBe(TIMELINE.REVEAL)
   })
   it('uses slightly larger tiles than the original 36px grid', () => {
@@ -401,49 +403,83 @@ describe('follow (damped playhead)', () => {
   })
 })
 
-describe('idleFront', () => {
-  it('keeps moving while the app is still loading (no dead time)', () => {
-    const samples = new Set()
-    for (let t = 0; t <= 3000; t += 100) samples.add(idleFront(t).toFixed(5))
-    expect(samples.size).toBeGreaterThan(10)
-  })
-  it('stays in a sane band near the far corner', () => {
-    for (let t = 0; t <= 4000; t += 50) {
-      const v = idleFront(t)
-      expect(v).toBeGreaterThan(0.7)
-      expect(v).toBeLessThan(1.1)
+describe('phaseFront', () => {
+  it('sweeps the FULL canvas during seal (one continuous circle from the centre)', () => {
+    for (let i = 0; i <= 100; i++) {
+      const e = phaseFront('seal', i / 100)
+      expect(e).toBeGreaterThanOrEqual(0)
+      expect(e).toBeLessThanOrEqual(1)
     }
+    expect(phaseFront('seal', 0)).toBe(0)
+    expect(phaseFront('seal', 1)).toBe(1)
   })
-  it('is continuous, frame to frame', () => {
-    let prev = idleFront(0)
-    for (let t = 50; t <= 3000; t += 50) {
-      const v = idleFront(t)
-      expect(Math.abs(v - prev)).toBeLessThan(0.05)
-      prev = v
+  it('is dead for every other phase (count parks the front, cover has its own radius)', () => {
+    expect(phaseFront('open', 1)).toBe(0)
+    expect(phaseFront('reveal', 1)).toBe(0)
+    expect(phaseFront('boot', 1)).toBe(0)
+    expect(phaseFront('anything', 0.5)).toBe(0)
+  })
+  it('uses the easeFlow curve for the seal sweep, so both waves look identical', () => {
+    for (const p of [0, 0.25, 0.5, 0.75, 1]) {
+      expect(phaseFront('seal', p)).toBe(easeFlow(p))
     }
   })
 })
 
-describe('phaseFront', () => {
-  it('never lets the front past the half mark while counting', () => {
-    for (let i = 0; i <= 100; i++) {
-      expect(phaseFront('open', i / 100)).toBeLessThanOrEqual(0.5)
+describe('FINAL_COUNT and the pruned v2 API', () => {
+  it('counts all the way to 100 (the seal rolls 080 -> 100 while it crumbles)', () => {
+    expect(FINAL_COUNT).toBe(100)
+  })
+  it('starts the crumble at 080, mid-count (seal trigger below the final count)', () => {
+    expect(SEAL_TRIGGER).toBe(80)
+    expect(SEAL_TRIGGER).toBeLessThan(FINAL_COUNT)
+  })
+  it('ends the count-driven front past the far corner, so all tiles die at 100', () => {
+    expect(SEAL_FRONT_END).toBe(0.56)
+    expect(SEAL_FRONT_END).toBeGreaterThan(0.5 + FRONT_PROFILE.trail)
+  })
+  it('no longer exports the removed v2 helpers', async () => {
+    const cfg = await import('../../src/preloader/config.js')
+    expect('idleFront' in cfg).toBe(false)
+    expect('revealProgress' in cfg).toBe(false)
+  })
+})
+
+describe('coverRadius (wave 2)', () => {
+  it('starts past the far-corner radius and ends at zero', () => {
+    expect(coverRadius(0)).toBe(COVER_START)
+    expect(coverRadius(1)).toBe(0)
+    expect(COVER_START).toBeGreaterThan(0.5)
+  })
+  it('shrinks monotonically, edge -> centre', () => {
+    let prev = coverRadius(0)
+    for (let i = 1; i <= 100; i++) {
+      const v = coverRadius(i / 100)
+      expect(v).toBeLessThanOrEqual(prev)
+      prev = v
     }
   })
-  it('completes the canvas from the half mark during seal', () => {
-    expect(phaseFront('seal', 0)).toBeCloseTo(0.5, 6)
-    expect(phaseFront('seal', 1)).toBe(1)
+  it('accepts an explicit start override', () => {
+    expect(coverRadius(0, { start: 0.9 })).toBe(0.9)
+    expect(coverRadius(1, { start: 0.9 })).toBe(0)
   })
-  it('restarts from the top-left corner for the homepage reveal', () => {
-    expect(phaseFront('reveal', 0)).toBe(0)
-    expect(phaseFront('reveal', 1)).toBe(1)
+})
+
+describe('structural scene boundary', () => {
+  const sceneSource = readFileSync(
+    resolve(process.cwd(), 'src/preloader/scene.js'),
+    'utf8',
+  )
+
+  it('renders the shared hero ring in pass A, not a star rig', () => {
+    expect(sceneSource).toContain('./ring.js')
+    expect(sceneSource).not.toContain('./star.js')
+    expect(sceneSource).not.toContain('createStarRig')
   })
-  it('hands over with no gap and no overlap', () => {
-    expect(phaseFront('open', 1)).toBeCloseTo(phaseFront('seal', 0), 6)
-    expect(phaseFront('seal', 1)).toBe(phaseFront('reveal', 1))
-  })
-  it('is dead during boot, so 000 shows no tile at all', () => {
-    expect(phaseFront('boot', 1)).toBe(0)
+
+  it('paints the home paper, not a black field', () => {
+    expect(sceneSource).toContain('0.9608')
+    expect(sceneSource).not.toMatch(/new THREE\.Vector3\(0\.0, 0\.0, 0\.0\)/)
   })
 })
 
@@ -451,60 +487,6 @@ describe('shouldMountGL', () => {
   it('never mounts WebGL under reduced motion (the gate requires no canvas)', () => {
     expect(shouldMountGL(true)).toBe(false)
     expect(shouldMountGL(false)).toBe(true)
-  })
-})
-
-describe('homepage reveal', () => {
-  it('starts at zero radius and reaches past the far corner', () => {
-    expect(revealRadius(sweepFront(0), 1440, 900)).toBe(0)
-    expect(revealRadius(sweepFront(1), 1440, 900)).toBeGreaterThan(Math.hypot(1440, 900))
-  })
-  it('reveals nothing at radius zero and everything well past it', () => {
-    expect(revealMask(0, 0)).toBe(0)
-    expect(revealMask(0, 500)).toBe(1)
-  })
-  it('feathers the edge instead of cutting it', () => {
-    const r = 100
-    expect(REVEAL_FEATHER).toBeGreaterThan(0)
-    expect(revealMask(r - REVEAL_FEATHER, r)).toBe(1)
-    expect(revealMask(r, r)).toBe(0)
-    const mid = revealMask(r - REVEAL_FEATHER / 2, r)
-    expect(mid).toBeGreaterThan(0)
-    expect(mid).toBeLessThan(1)
-  })
-  it('builds a soft radial mask rather than a hard clip', () => {
-    const css = revealMaskImage(200)
-    expect(css).toContain('radial-gradient')
-    expect(css).toContain('circle')
-  })
-})
-
-describe('reveal progress', () => {
-  it('measures from revealStart, not from the start of the timeline', async () => {
-    const { revealProgress } = await import('../../src/preloader/config.js')
-    const sealEnd = TIMELINE.BOOT + TIMELINE.OPEN + TIMELINE.SEAL
-    const revealStart = sealEnd + 1500
-    const now = 6000
-    expect(revealProgress(now, revealStart)).toBeCloseTo(0.375, 9)
-  })
-
-  it('reaches exactly 1 at revealStart + TIMELINE.REVEAL', async () => {
-    const { revealProgress } = await import('../../src/preloader/config.js')
-    const sealEnd = TIMELINE.BOOT + TIMELINE.OPEN + TIMELINE.SEAL
-    const revealStart = sealEnd + 1500
-    expect(revealProgress(revealStart + TIMELINE.REVEAL, revealStart)).toBe(1)
-  })
-
-  it('is 0 before a valid revealStart', async () => {
-    const { revealProgress } = await import('../../src/preloader/config.js')
-    expect(revealProgress(1000, 0)).toBe(0)
-  })
-
-  it('clamps overshoot to 1', async () => {
-    const { revealProgress } = await import('../../src/preloader/config.js')
-    const sealEnd = TIMELINE.BOOT + TIMELINE.OPEN + TIMELINE.SEAL
-    const revealStart = sealEnd + 1500
-    expect(revealProgress(revealStart + TIMELINE.REVEAL + 500, revealStart)).toBe(1)
   })
 })
 
@@ -521,7 +503,19 @@ describe('structural preloader boundary', () => {
     expect(importSpecifiers.filter((specifier) => specifier.startsWith('./glass/'))).toEqual([])
   })
 
-  it('does not access glass through the preloader global', () => {
+  it('does not import the deleted DOM-mask reveal module', () => {
+    expect(importSpecifiers.filter((specifier) => specifier.includes('reveal'))).toEqual([])
+  })
+
+  it('does not use the removed v2 scene APIs or the star handle', () => {
+    expect(source).not.toContain('maskImage')
+    expect(source).not.toContain('setFrontMode')
+    expect(source).not.toContain('setShowTiles')
+    expect(source).not.toContain('revealRadius')
+    expect(source).not.toContain('createStarScene')
+  })
+
+  it('does not access the preloader through the glass global', () => {
     expect(source).not.toMatch(/__preloader\s*\.\s*glass/)
   })
 })
