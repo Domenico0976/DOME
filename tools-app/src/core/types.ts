@@ -14,7 +14,7 @@ export type ControlDef = {
 export type AudioBinding = {
   id?: string
   param: string
-  source: 'bass' | 'mid' | 'treble' | 'level' | 'spectrum' | 'bpm'
+  source: 'bass' | 'mid' | 'treble' | 'level' | 'spectrum' | 'bpm' | 'beat'
   band?: number
   curve: 'linear' | 'invert'
   amount: number
@@ -108,6 +108,8 @@ export type AudioFrame = {
   level: number
   spectrum: Float32Array
   bpm: number
+  /** Beat transient of this frame (T2). Optional: absent = no beat info, strength 0. */
+  beat?: { detected: boolean; strength: number }
 }
 
 export type StackRenderContext = { width: number; height: number; quality: 'low' | 'med' | 'high' | '4k' }

@@ -9,8 +9,10 @@ import { Slider } from '../components/ui/slider'
 import { X } from 'lucide-react'
 import { cn } from '../lib/utils'
 import type { AudioBinding } from '../core/types'
-
-const DRIVERS: Array<AudioBinding['source']> = ['bass', 'mid', 'treble', 'level', 'spectrum', 'bpm']
+import {
+  selectOptionsFor,
+  selectedOptionValue,
+} from '../audio/reactToOptions'
 
 export interface ReactToPanelProps {
   open: boolean
@@ -20,7 +22,9 @@ export interface ReactToPanelProps {
   rangeMin: number
   rangeMax: number
   rangeExplicit: boolean
-  onChangeSource: (s: AudioBinding['source']) => void
+  curve: 'linear' | 'invert'
+  onPickOption: (optionId: string) => void
+  onToggleCurve: () => void
   onChangeAmount: (v: number) => void
   onChangeRange: (min: number, max: number) => void
   triggerLabel?: string
@@ -31,9 +35,9 @@ export interface ReactToPanelProps {
 /**
  * ReactToPanel — self-contained Popover styled like the modular panel
  * (border, panel bg var, rounded, header row with title + X close).
- * Content per frame structure: 1 select row (source driver) + 2 slider rows
- * (sensitivity amount 0–2, value range min/max). The literal "React To Panel"
- * text is shown in the header + subtitle so it is visible while controls exist.
+ * Content: 1 select row (12 react-to sources), direction
+ * toggle (normal = loud→max, inverted = loud→min), then 2 slider rows
+ * (sensitivity amount 0–2, value range min/max = the gear).
  */
 export function ReactToPanel({
   open,
@@ -43,7 +47,9 @@ export function ReactToPanel({
   rangeMin,
   rangeMax,
   rangeExplicit,
-  onChangeSource,
+  curve,
+  onPickOption,
+  onToggleCurve,
   onChangeAmount,
   onChangeRange,
   triggerLabel,
@@ -51,6 +57,7 @@ export function ReactToPanel({
   param,
 }: ReactToPanelProps) {
   const close = useCallback(() => onOpenChange(false), [onOpenChange])
+  const options = selectOptionsFor(source)
 
   return (
     <Popover open={open} onOpenChange={onOpenChange}>
@@ -95,17 +102,31 @@ export function ReactToPanel({
               <span className="text-[10px] uppercase tracking-wide text-muted-foreground">React to</span>
               <select
                 aria-label="Audio driver"
-                value={source}
-                onChange={(e) => onChangeSource(e.target.value as AudioBinding['source'])}
+                value={selectedOptionValue(source)}
+                onChange={(e) => onPickOption(e.target.value)}
                 className="h-7 w-full rounded-md border border-border bg-surface-2 px-2 text-[12px] text-foreground"
               >
-                {DRIVERS.map((d) => (
-                  <option key={d} value={d}>
-                    {d}
+                {options.map((o) => (
+                  <option key={o.value} value={o.value} disabled={o.disabled} title={o.title}>
+                    {o.label}
                   </option>
                 ))}
               </select>
             </label>
+
+            <div className="flex items-center justify-between gap-2">
+              <span className="text-[10px] uppercase tracking-wide text-muted-foreground">Direction</span>
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-7 px-2 text-[11px]"
+                aria-label={`Direction for ${param ?? source}: ${curve === 'invert' ? 'inverted, loud maps to min' : 'normal, loud maps to max'}`}
+                title={curve === 'invert' ? 'Inverted: loud → min' : 'Normal: loud → max'}
+                onClick={onToggleCurve}
+              >
+                {curve === 'invert' ? 'Inverted' : 'Normal'}
+              </Button>
+            </div>
 
             <div className="flex flex-col gap-1">
               <div className="flex items-center justify-between">

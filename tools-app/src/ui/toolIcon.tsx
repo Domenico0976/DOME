@@ -1,8 +1,10 @@
 import {
   Atom,
   Aperture,
+  AudioWaveform,
   Brush,
   Camera,
+  ChartColumn,
   CircleDashed,
   Droplets,
   Gem,
@@ -56,6 +58,8 @@ const MAP: Record<string, LucideIcon> = {
   lightbulb: Lightbulb,
   triangle: Triangle,
   type: Type,
+  'audio-waveform': AudioWaveform,
+  'chart-column': ChartColumn,
 }
 
 export function ToolIcon({ name, className }: { name: string; className?: string }) {

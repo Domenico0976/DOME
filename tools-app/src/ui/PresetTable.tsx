@@ -8,14 +8,18 @@ import { Plus } from 'lucide-react'
 import { PresetWaveform } from './PresetWaveform'
 import { ReactToPanel } from './ReactToPanel'
 import { RowKebab } from './RowKebab'
+import { fromDomeBinding, REACT_TO_OPTIONS, toDomeBinding } from '../audio/reactToOptions'
 import { cn } from '../lib/utils'
 import type { AudioBinding, StackItem } from '../core/types'
 
 const HISTORY_LEN = 56
-const GRID = 'minmax(0,200fr) minmax(0,150fr) minmax(0,130fr) minmax(0,120fr) minmax(0,200fr)'
+const GRID =
+  'minmax(0,200fr) minmax(0,150fr) minmax(0,110fr) minmax(0,130fr) minmax(0,90fr) minmax(0,200fr)'
+const SPECTRUM_BANDS = 64
+const COLUMNS_TIP_KEY = 'dome-columns-tip'
 
 function sourceValue(
-  frame: { bass: number; mid: number; treble: number; level: number; spectrum: Float32Array; bpm: number },
+  frame: { bass: number; mid: number; treble: number; level: number; spectrum: Float32Array; bpm: number; beat?: { detected: boolean; strength: number } },
   source: AudioBinding['source'],
 ): number {
   switch (source) {
@@ -24,6 +28,8 @@ function sourceValue(
     case 'treble':
     case 'level':
       return Math.max(0, Math.min(1, frame[source] ?? 0))
+    case 'beat':
+      return Math.max(0, Math.min(1, frame.beat?.strength ?? 0))
     case 'spectrum': {
       const s = frame.spectrum
       if (!s || s.length === 0) return 0
@@ -59,6 +65,8 @@ interface PresetRow {
   reactTo: AudioBinding['source']
   sensitivity: number
   itemUid: string
+  curve: 'linear' | 'invert'
+  band?: number
   range?: { min: number; max: number }
   natural: { min: number; max: number } | null
 }
@@ -100,6 +108,8 @@ export function PresetTable({
           reactTo: binding.source,
           sensitivity: binding.amount,
           itemUid: item.uid,
+          curve: binding.curve,
+          band: binding.band,
           range: binding.range,
           natural: naturalRange(item, binding.param),
         })
@@ -173,18 +183,51 @@ export function PresetTable({
     addAudioBinding(itemUid, { ...current, ...patch })
   }
 
+  const [tipDismissed, setTipDismissed] = useState<boolean>(() => {
+    try {
+      return localStorage.getItem(COLUMNS_TIP_KEY) === '1'
+    } catch {
+      return false
+    }
+  })
+
+  const dismissTip = () => {
+    try {
+      localStorage.setItem(COLUMNS_TIP_KEY, '1')
+    } catch {
+      /* private mode: in-memory dismissal only */
+    }
+    setTipDismissed(true)
+  }
+
   return (
     <div className={cn('flex min-h-0 flex-col border border-border rounded-md bg-surface-2', className)}>
+      {!tipDismissed && (
+        <div className="flex shrink-0 items-center gap-2 border-b border-border px-2 py-1 text-[11px] text-muted-foreground">
+                      <span className="min-w-0 flex-1 truncate">
+                        Columns: pick React to, tune Sensitivity, set Value range (gear). Beat and BPM react live.
+                      </span>
+          <button
+            type="button"
+            aria-label="Dismiss columns tip"
+            className="shrink-0 rounded px-1 hover:text-foreground"
+            onClick={dismissTip}
+          >
+            ✕
+          </button>
+        </div>
+      )}
       {/* Header 40px with column titles */}
       <div
         className="grid h-[40px] shrink-0 items-center border-b border-border px-1 text-[11px] font-medium text-muted-foreground"
         style={{ gridTemplateColumns: GRID }}
       >
-        <div>Presets</div>
-        <div>React to</div>
-        <div>Sensitivity</div>
-        <div>Value range</div>
-        <div>EQ</div>
+        <div title="Audio-reactive rows — one per binding">Presets</div>
+        <div title="What drives this param — the 12 react-to sources">React to</div>
+        <div title="Gain on the normalized source, 0–2">Sensitivity</div>
+        <div title="Output floor/ceiling — the gear">Value range</div>
+        <div title="FFT band for the Frequency source">Frequency</div>
+        <div title="Live source value over the last seconds">Timeline</div>
       </div>
 
       {/* Rows 55px each */}
@@ -202,7 +245,7 @@ export function PresetTable({
                   className="grid h-[55px] shrink-0 items-center text-[11px]"
                   style={{ gridTemplateColumns: GRID }}
                 >
-                  {/* Cell 1: #N identity + param→source + sparkline */}
+                  {/* Cell 1: #N identity + param→source */}
                   <div className="flex min-w-0 flex-col gap-0.5 px-1 py-1">
                     <div className="flex min-w-0 items-center gap-1">
                       <button
@@ -223,19 +266,10 @@ export function PresetTable({
                     </div>
                     <div
                       className="truncate text-[10px] text-muted-foreground"
-                      title={`${preset.param} → ${preset.reactTo} (${pct}%)`}
+                      title={`${preset.param} → ${preset.reactTo} (${pct}%)${preset.curve === 'invert' ? ', inverted' : ''}`}
                     >
-                      {preset.param} → {preset.reactTo} ({pct}%)
+                      {preset.param} → {preset.reactTo} ({pct}%){preset.curve === 'invert' ? ' · inv' : ''}
                     </div>
-                    <PresetWaveform
-                      presetId={preset.id}
-                      param={preset.param}
-                      source={preset.reactTo}
-                      amount={preset.sensitivity}
-                      registerCanvas={registerCanvas}
-                      onAmountChange={(v) => updateBinding(preset.itemUid, preset.param, { amount: v })}
-                      className="h-4 w-full"
-                    />
                   </div>
 
                   {/* Cell 2: React to */}
@@ -248,12 +282,31 @@ export function PresetTable({
                       rangeMin={preset.range?.min ?? preset.natural?.min ?? 0}
                       rangeMax={preset.range?.max ?? preset.natural?.max ?? 1}
                       rangeExplicit={!!preset.range}
-                      onChangeSource={(s) => updateBinding(preset.itemUid, preset.param, { source: s })}
+                      curve={preset.curve}
+                      onPickOption={(id) => {
+                        const mapped = toDomeBinding(id, preset.band ?? 0)
+                        if (!mapped) return
+                        updateBinding(preset.itemUid, preset.param, {
+                          source: mapped.source,
+                          band: mapped.band,
+                        })
+                      }}
+                      onToggleCurve={() =>
+                        updateBinding(preset.itemUid, preset.param, {
+                          curve: preset.curve === 'invert' ? 'linear' : 'invert',
+                        })
+                      }
                       onChangeAmount={(v) => updateBinding(preset.itemUid, preset.param, { amount: v })}
                       onChangeRange={(min, max) =>
                         updateBinding(preset.itemUid, preset.param, { range: { min, max } })
                       }
-                      triggerLabel={preset.reactTo}
+                      triggerLabel={(() => {
+                        const found = REACT_TO_OPTIONS.find(
+                          (o) => o.id === fromDomeBinding(preset.reactTo),
+                        )
+                        const base = found ? found.label : `${preset.reactTo} (custom)`
+                        return preset.curve === 'invert' ? `${base} · inv` : base
+                      })()}
                       triggerClassName="w-full"
                       param={preset.param}
                     />
@@ -321,13 +374,48 @@ export function PresetTable({
                     />
                   </div>
 
-                  {/* Cell 5: EQ placeholder */}
-                  <div
-                    className="flex h-full items-center justify-center text-[11px] text-muted-foreground"
-                    title="EQ coming soon"
-                    aria-hidden="true"
-                  >
-                    —
+                  {/* Cell 5: Frequency (FFT band for the Frequency source) */}
+                  <div className="flex items-center px-1">
+                    {preset.reactTo === 'spectrum' ? (
+                      <input
+                        type="number"
+                        aria-label={`Frequency band for ${preset.param}`}
+                        title={`FFT band 0–${SPECTRUM_BANDS - 1}`}
+                        min={0}
+                        max={SPECTRUM_BANDS - 1}
+                        step={1}
+                        value={preset.band ?? 0}
+                        className="h-[22px] w-full rounded border border-border bg-surface-2 px-1 text-[11px] tabular-nums text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                        onChange={(e) => {
+                          const band = Math.floor(Number(e.target.value))
+                          if (!Number.isFinite(band)) return
+                          updateBinding(preset.itemUid, preset.param, {
+                            band: Math.max(0, Math.min(SPECTRUM_BANDS - 1, band)),
+                          })
+                        }}
+                      />
+                    ) : (
+                      <div
+                        className="flex h-full w-full items-center justify-center text-[11px] text-muted-foreground"
+                        title="Band applies to the Frequency source only"
+                        aria-hidden="true"
+                      >
+                        —
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Cell 6: Timeline (live source value) */}
+                  <div className="flex items-center px-1">
+                    <PresetWaveform
+                      presetId={preset.id}
+                      param={preset.param}
+                      source={preset.reactTo}
+                      amount={preset.sensitivity}
+                      registerCanvas={registerCanvas}
+                      onAmountChange={(v) => updateBinding(preset.itemUid, preset.param, { amount: v })}
+                      className="h-4 w-full"
+                    />
                   </div>
                 </div>
               )

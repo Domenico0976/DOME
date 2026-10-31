@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect, useCallback, useMemo } from 'react'
+import { useRef, useState, useEffect, useCallback } from 'react'
 import type { ChangeEvent } from 'react'
 import {
   Play,
@@ -41,17 +41,16 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '../components/ui/dropdown-menu'
-import { resolveTool } from '../core/registry'
-import { EFFECTS } from '../engine/effects'
 import { Popover, PopoverContent, PopoverTrigger } from '../components/ui/popover'
 import { AudioReactivePanel } from './AudioReactivePanel'
-import { PresetRail } from './PresetRail'
+import { PresetTable } from './PresetTable'
 import { PresetMegaMenu } from './PresetMegaMenu'
 import { MasterWaveform } from './MasterWaveform'
+import { megaPickBinding } from '../audio/presetCreator'
 import { useExportActions, computeRasterForced, computeGpuForced } from './exportActions'
 import { cn } from '../lib/utils'
 
-const SOUNDBAR_COLLAPSED = 101
+const SOUNDBAR_COLLAPSED = 57
 const SOUNDBAR_BODY_MIN = 160
 const SOUNDBAR_BODY_MAX = 480
 const SOUNDBAR_BODY_DEFAULT = 289
@@ -59,7 +58,6 @@ const SOUNDBAR_BODY_DEFAULT = 289
 interface AudioReactPanelProps {
   className?: string
   onFocusParam?: (focus: string | null) => void
-  creatorOpen?: boolean
 }
 
 const METER_CONFIG = [
@@ -109,7 +107,7 @@ function isInteractiveOrEditable(el: HTMLElement | null): boolean {
   return false
 }
 
-export function AudioReactPanel({ className, onFocusParam, creatorOpen: creatorOpenProp }: AudioReactPanelProps) {
+export function AudioReactPanel({ className, onFocusParam }: AudioReactPanelProps) {
   const audio = useAudio()
   const { toast } = useToast()
   const { png, instagram, spotify, fullscreen, resetView } = useExportActions()
@@ -136,7 +134,6 @@ export function AudioReactPanel({ className, onFocusParam, creatorOpen: creatorO
   const timeSec = useProjectStore((s) => s.timeline.timeSec)
   const durationSec = useProjectStore((s) => s.timeline.durationSec)
   const stack = useProjectStore((s) => s.stack)
-  const selectedUid = useProjectStore((s) => s.selectedUid)
   const selectTool = useProjectStore((s) => s.selectTool)
   const setAudioSource = useProjectStore((s) => s.setAudioSource)
   const setAudioFileName = useProjectStore((s) => s.setAudioFileName)
@@ -151,7 +148,6 @@ export function AudioReactPanel({ className, onFocusParam, creatorOpen: creatorO
   const [midiBusy, setMidiBusy] = useState(false)
   const [loop, setLoop] = useState(false)
   const [, setTapTimes] = useState<number[]>([])
-  const [creatorOpen, setCreatorOpen] = useState(creatorOpenProp ?? false)
   const [megaOpen, setMegaOpen] = useState(false)
   const megaRestoreRef = useRef<{
     hoveredLayerUid?: string | null
@@ -163,36 +159,31 @@ export function AudioReactPanel({ className, onFocusParam, creatorOpen: creatorO
   const [bodyHeight, setBodyHeight] = useState(SOUNDBAR_BODY_DEFAULT)
   const dragRef = useRef<{ startY: number; startHeight: number } | null>(null)
   const [prevVolume, setPrevVolume] = useState(1)
-  const [driver, setDriver] = useState<'bass' | 'mid' | 'treble' | 'level' | 'spectrum' | 'bpm'>('bass')
-  const [targetParam, setTargetParam] = useState('')
-  const [amount, setAmount] = useState(1)
 
   // Refs for rAF loop to avoid effect restarts
   const bpmRef = useRef(bpm)
   bpmRef.current = bpm
 
-  // Live binding count for the Audio Reactive badge (row list lives in PresetRail)
+  // Live binding count for the Audio Reactive badge (rows live in PresetTable)
   const bindingCount = stack.reduce((k, i) => k + i.audio.length, 0)
 
-  const selected = stack.find((i) => i.uid === selectedUid) ?? null
-  const targetOptions = useMemo(() => {
-    if (!selected) return [] as Array<{ key: string; label: string }>
-    const opts: Array<{ key: string; label: string }> = []
-    const def = resolveTool(selected.toolId, selected.toolVersion)
-    for (const c of def?.controls ?? []) {
-      if (c.kind !== 'slider') continue
-      opts.push({ key: c.param, label: `${def?.label ?? selected.toolId} · ${c.label}` })
-    }
-    for (const e of selected.effects ?? []) {
-      const edef = EFFECTS[e.type]
-      if (!edef) continue
-      for (const c of edef.controls) {
-        if (c.kind !== 'slider') continue
-        opts.push({ key: `${e.uid}.${c.param}`, label: `${edef.label} · ${c.label}` })
+  const handlePickMegaMenu = useCallback(
+    (itemUid: string, param: string) => {
+      const item = useProjectStore.getState().stack.find((i) => i.uid === itemUid)
+      const { binding, replaced } = megaPickBinding(
+        item?.audio.find((b) => b.param === param),
+        param,
+      )
+      selectTool(itemUid)
+      useProjectStore.getState().addAudioBinding(itemUid, binding)
+      if (replaced) {
+        toast(`Updated ${param}: new dB modulation (one modulation per parameter)`, { kind: 'warning' })
       }
-    }
-    return opts
-  }, [stack, selectedUid])
+      setMegaOpen(false)
+      onFocusParam?.(param)
+    },
+    [selectTool, onFocusParam, toast],
+  )
 
   const [diag, setDiag] = useState(() => computeAudioDiag())
   useEffect(() => {
@@ -291,17 +282,6 @@ export function AudioReactPanel({ className, onFocusParam, creatorOpen: creatorO
     toast('Audio removed — bindings are kept but silent', { kind: 'warning' })
   }, [audio, setPlaying, setAudioSource, setAudioFileName, toast])
 
-  const handlePickMegaMenu = useCallback(
-    (itemUid: string, param: string) => {
-      selectTool(itemUid)
-      setTargetParam(param)
-      setCreatorOpen(true)
-      setMegaOpen(false)
-      onFocusParam?.(param)
-    },
-    [selectTool, onFocusParam],
-  )
-
   // Footer-level keyboard shortcuts: Space = play/pause, L = loop toggle.
   // Focus guard: skip when the active element is an interactive/editable control.
   const onFooterKeyDown = useCallback(
@@ -332,7 +312,7 @@ export function AudioReactPanel({ className, onFocusParam, creatorOpen: creatorO
       for (const meter of METER_CONFIG) {
         const el = metersRef.current[meter.key]
         if (el) {
-          el.style.height = `${Math.min(100, frame[meter.key] * 100)}%`
+          el.style.width = `${Math.min(100, frame[meter.key] * 100)}%`
         }
       }
       rafRef.current = requestAnimationFrame(tick)
@@ -360,37 +340,8 @@ export function AudioReactPanel({ className, onFocusParam, creatorOpen: creatorO
       aria-label="Audio Reactivity Panel"
       onKeyDown={onFooterKeyDown}
     >
-      {/* Tips row — 44px */}
-      <div className="flex h-11 shrink-0 items-center justify-between px-4">
-        <span className="text-[13px] text-muted-foreground">Tips &amp; tricks</span>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="h-9 w-[100px] rounded-[8px] text-[13px]" aria-label="Get support">
-              <Info className="h-[18px] w-[18px]" />
-              Support
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Help &amp; resources</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <BookOpen className="h-4 w-4" />
-              Guides
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Video className="h-4 w-4" />
-              Video tutorials
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Users className="h-4 w-4" />
-              Community
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
-
-      {/* Main bar — 57px */}
-      <div className="relative flex h-[57px] shrink-0 items-center gap-2 border-t border-border px-4 py-2.5">
+      {/* Transport — 57px single dock bar */}
+      <div className="relative flex h-[57px] shrink-0 items-center gap-2 border-b border-border px-4 py-2.5">
         {/* LEFT — reactive access + overflow */}
         <div className="flex shrink-0 items-center gap-1">
           <input ref={fileRef} type="file" accept="audio/*" hidden onChange={onFile} />
@@ -520,9 +471,32 @@ export function AudioReactPanel({ className, onFocusParam, creatorOpen: creatorO
           </Button>
         </div>
 
-        {/* RIGHT — loop + export + slot toggle */}
-        <div className="flex shrink-0 items-center gap-1">
-          <Button
+      {/* RIGHT — support + loop + export + slot toggle */}
+      <div className="flex shrink-0 items-center gap-1">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0 rounded-[8px]" aria-label="Get support">
+              <Info className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Help &amp; resources</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>
+              <BookOpen className="h-4 w-4" />
+              Guides
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Video className="h-4 w-4" />
+              Video tutorials
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Users className="h-4 w-4" />
+              Community
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+        <Button
             variant={loop ? 'default' : 'ghost'}
             size="icon"
             className="h-8 w-8 shrink-0 rounded-[8px]"
@@ -636,114 +610,94 @@ export function AudioReactPanel({ className, onFocusParam, creatorOpen: creatorO
             </div>
           )}
           <div className="flex min-h-0 flex-1 gap-3 px-3 pb-2">
-            <div className="flex-[6] min-w-0">
-              <PresetRail
-                stack={stack}
-                selected={selected}
-                targetOptions={targetOptions}
-                driver={driver}
-                setDriver={setDriver}
-                targetParam={targetParam}
-                setTargetParam={setTargetParam}
-                amount={amount}
-                setAmount={setAmount}
-                creatorOpen={creatorOpen}
-                setCreatorOpen={setCreatorOpen}
-                megaOpen={megaOpen}
-                onOpenMegaMenu={(focus?: { hoveredLayerUid?: string; hoveredEffectUid?: string }) => {
-                  if (focus) megaRestoreRef.current = { ...megaRestoreRef.current, ...focus }
-                  setMegaOpen((v) => !v)
-                }}
-                onFocusParam={onFocusParam}
-                className="h-full"
-              />
-            </div>
+            <PresetTable
+              className="min-h-0 flex-1"
+              stack={stack}
+              megaOpen={megaOpen}
+              onOpenMegaMenu={(focus?: { hoveredLayerUid?: string; hoveredEffectUid?: string }) => {
+                if (focus) megaRestoreRef.current = { ...megaRestoreRef.current, ...focus }
+                setMegaOpen((v) => !v)
+              }}
+              onFocusParam={onFocusParam}
+            />
 
-            <div className="flex min-w-0 flex-[4] flex-col py-2">
-              <div className="mb-1 flex items-center">
-                <span className="text-[10px] uppercase tracking-wide text-muted-foreground">
-                  Waveform
-                </span>
-              </div>
+            <div className="flex w-[220px] shrink-0 flex-col gap-2 overflow-y-auto py-2">
               <MasterWaveform
                 timeSec={timeSec}
                 durationSec={durationSec}
                 sourceLoaded={source !== null}
                 onSeek={onSeek}
-                className="min-h-0 shrink-0 overflow-hidden rounded-[8px] border border-border"
+                className="h-[110px] shrink-0 overflow-hidden rounded-[8px] border border-border"
               />
-              <div className="mt-1 flex items-center gap-2">
-                <div className="flex w-full items-center gap-1.5">
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button variant="ghost" size="icon" className="h-7 w-7 shrink-0" aria-label="Volume settings">
-                        {volume === 0 ? (
-                          <VolumeX className="h-3.5 w-3.5 text-muted-foreground" />
-                        ) : (
-                          <Volume2 className="h-3.5 w-3.5 text-muted-foreground" />
-                        )}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent align="end" sideOffset={6} className="w-56">
-                      <div className="flex items-center justify-between">
-                        <span className="text-[12px] font-medium">Volume</span>
-                        <span className="font-mono text-[12px] tabular-nums text-muted-foreground" aria-live="polite">
-                          {Math.round(volume * 100)}%
-                        </span>
-                      </div>
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        className="mt-2 h-7 w-full text-[11px]"
-                        onClick={() => {
-                          if (volume === 0) setVolume(prevVolume || 1)
-                          else {
-                            setPrevVolume(volume)
-                            setVolume(0)
-                          }
-                        }}
-                      >
-                        {volume === 0 ? 'Unmute' : 'Mute'}
-                      </Button>
-                      <p className="mt-2 text-[11px] leading-tight text-muted-foreground">
-                        Listen-only: volume never affects audio reactivity.
-                      </p>
-                    </PopoverContent>
-                  </Popover>
-                  <Slider
-                    aria-label="Volume"
-                    min={0}
-                    max={100}
-                    step={1}
-                    value={[Math.round(volume * 100)]}
-                    onValueChange={([v]) => setVolume(v / 100)}
-                    className="min-w-0 flex-1"
-                  />
-                  <span className="w-[34px] shrink-0 text-right font-mono text-[11px] tabular-nums text-muted-foreground" aria-hidden="true">
-                    {Math.round(volume * 100)}%
-                  </span>
-                </div>
+              <div className="flex items-center gap-1.5">
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button variant="ghost" size="icon" className="h-7 w-7 shrink-0" aria-label="Volume settings">
+                      {volume === 0 ? (
+                        <VolumeX className="h-3.5 w-3.5 text-muted-foreground" />
+                      ) : (
+                        <Volume2 className="h-3.5 w-3.5 text-muted-foreground" />
+                      )}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent align="end" sideOffset={6} className="w-56">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[12px] font-medium">Volume</span>
+                      <span className="font-mono text-[12px] tabular-nums text-muted-foreground" aria-live="polite">
+                        {Math.round(volume * 100)}%
+                      </span>
+                    </div>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      className="mt-2 h-7 w-full text-[11px]"
+                      onClick={() => {
+                        if (volume === 0) setVolume(prevVolume || 1)
+                        else {
+                          setPrevVolume(volume)
+                          setVolume(0)
+                        }
+                      }}
+                    >
+                      {volume === 0 ? 'Unmute' : 'Mute'}
+                    </Button>
+                    <p className="mt-2 text-[11px] leading-tight text-muted-foreground">
+                      Listen-only: volume never affects audio reactivity.
+                    </p>
+                  </PopoverContent>
+                </Popover>
+                <Slider
+                  aria-label="Volume"
+                  min={0}
+                  max={100}
+                  step={1}
+                  value={[Math.round(volume * 100)]}
+                  onValueChange={([v]) => setVolume(v / 100)}
+                  className="min-w-0 flex-1"
+                />
+                <span className="w-[34px] shrink-0 text-right font-mono text-[11px] tabular-nums text-muted-foreground" aria-hidden="true">
+                  {Math.round(volume * 100)}%
+                </span>
               </div>
-              <div className="mt-1 truncate font-mono text-[10px] text-muted-foreground" data-testid="audio-status">
+              <div className="flex items-center gap-1.5" role="img" aria-label="Live audio levels: bass, mid, treble, level">
+                {METER_CONFIG.map((meter) => (
+                  <div key={meter.key} className="flex min-w-0 flex-1 flex-col gap-0.5" title={meter.label}>
+                    <div className="relative h-1.5 w-full overflow-hidden rounded-sm bg-surface-2">
+                      <div
+                        ref={(el) => {
+                          metersRef.current[meter.key] = el
+                        }}
+                        className="absolute inset-y-0 left-0"
+                        style={{ width: '0%', background: `hsl(var(${meter.token}))` }}
+                      />
+                    </div>
+                    <span className="text-[8px] uppercase text-muted-foreground" aria-hidden="true">{meter.short}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="truncate font-mono text-[10px] text-muted-foreground" data-testid="audio-status">
                 {diag}
               </div>
-            </div>
-
-            <div className="flex w-[40px] shrink-0 gap-1 py-2" role="img" aria-label="Live audio levels: bass, mid, treble, level">
-              {METER_CONFIG.map((meter) => (
-                <div key={meter.key} className="flex flex-1 flex-col items-center gap-0.5" title={meter.label}>
-                  <div className="relative w-full flex-1 overflow-hidden rounded-sm bg-surface-2">
-                    <div
-                      ref={(el) => {
-                        metersRef.current[meter.key] = el
-                      }}
-                      className="absolute inset-x-0 bottom-0"
-                      style={{ height: '0%', background: `hsl(var(${meter.token}))` }}
-                    />
-                  </div>
-                  <span className="text-[8px] uppercase text-muted-foreground" aria-hidden="true">{meter.short}</span>
-                </div>
-              ))}
             </div>
           </div>
         </div>

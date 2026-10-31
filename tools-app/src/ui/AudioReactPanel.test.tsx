@@ -107,7 +107,7 @@ describe('AudioReactPanel', () => {
     expect(useProjectStore.getState().audio.volume).toBeCloseTo(0.99)
   })
 
-  test('creator adds an Amount-first binding to the selected layer', () => {
+  test('mega menu pick creates a level binding directly', () => {
     const tool: ToolDef = {
       id: 'cx', kind: 'generative', version: '1.0.0', label: 'Cx', icon: '', category: 'Generative',
       defaultParams: {}, controls: [{ param: 'speed', label: 'Speed', kind: 'slider', min: 0, max: 10, step: 1 }],
@@ -118,14 +118,38 @@ describe('AudioReactPanel', () => {
     useProjectStore.getState().addTool('cx')
     const uid = useProjectStore.getState().stack[0].uid
     useProjectStore.getState().selectTool(uid)
-    const { getByText } = render(<AudioReactPanel creatorOpen />)
-    fireEvent.click(getByText('Add modulation'))
+    const { getByLabelText, getByRole } = render(<AudioReactPanel />)
+    fireEvent.click(getByLabelText('Add Preset'))
+    fireEvent.click(getByRole('button', { name: /Modulate / }))
     const audio = useProjectStore.getState().stack[0].audio
     expect(audio).toHaveLength(1)
-    expect(audio[0]).toMatchObject({ param: 'speed', source: 'bass', amount: 1 })
+    expect(audio[0]).toMatchObject({ param: 'speed', source: 'level', curve: 'linear', amount: 1 })
   })
 
-  test('creator shows read-only chip instead of the form when a binding already exists', () => {
+  test('mega menu pick replaces the driver with a warning toast', () => {
+    const tool: ToolDef = {
+      id: 'cx', kind: 'generative', version: '1.0.0', label: 'Cx', icon: '', category: 'Generative',
+      defaultParams: {}, controls: [{ param: 'speed', label: 'Speed', kind: 'slider', min: 0, max: 10, step: 1 }],
+      render() {},
+    }
+    registerTool(tool)
+    useProjectStore.getState().reset()
+    useProjectStore.getState().addTool('cx')
+    const uid = useProjectStore.getState().stack[0].uid
+    useProjectStore.getState().selectTool(uid)
+    useProjectStore.getState().addAudioBinding(uid, { param: 'speed', source: 'bass', curve: 'linear', amount: 1 })
+    const { getByLabelText, getByRole, getByText } = render(
+      <ToastProvider>
+        <AudioReactPanel />
+      </ToastProvider>,
+    )
+    fireEvent.click(getByLabelText('Add Preset'))
+    fireEvent.click(getByRole('button', { name: /Modulate / }))
+    expect(useProjectStore.getState().stack[0].audio[0].source).toBe('level')
+    expect(getByText(/one modulation per parameter/)).toBeTruthy()
+  })
+
+  test('preset trigger shows the mapped source label with custom fallback', () => {
     const tool: ToolDef = {
       id: 'cx', kind: 'generative', version: '1.0.0', label: 'Cx', icon: '', category: 'Generative',
       defaultParams: {}, controls: [{ param: 'speed', label: 'Speed', kind: 'slider', min: 0, max: 10, step: 1 }],
@@ -137,10 +161,8 @@ describe('AudioReactPanel', () => {
     const uid = useProjectStore.getState().stack[0].uid
     useProjectStore.getState().selectTool(uid)
     useProjectStore.getState().addAudioBinding(uid, { param: 'speed', source: 'mid', curve: 'linear', amount: 1 })
-    const { getByText, queryByText } = render(<AudioReactPanel creatorOpen />)
-    expect(getByText(/React to: mid · Sens 100%/)).toBeTruthy()
-    expect(queryByText('Add modulation')).toBeNull()
-    expect(queryByText(/Replaces existing/)).toBeNull()
+    const { getByLabelText } = render(<AudioReactPanel />)
+    expect(getByLabelText('React to settings for mid (custom)')).toBeTruthy()
   })
 
   test('preset mini-waveform adjusts amount with arrow keys', () => {    const tool: ToolDef = {
@@ -171,17 +193,32 @@ describe('AudioReactPanel', () => {
     useProjectStore.getState().addTool('cx')
     const uid = useProjectStore.getState().stack[0].uid
     useProjectStore.getState().addAudioBinding(uid, { param: 'speed', source: 'bass', curve: 'linear', amount: 1 })
-    const { getByLabelText } = render(<AudioReactPanel />)
-    fireEvent.click(getByLabelText('React to settings for bass'))
+    const { getByLabelText, getByRole } = render(<AudioReactPanel />)
+    fireEvent.click(getByLabelText('React to settings for Low freq'))
     const driver = getByLabelText('Audio driver') as HTMLSelectElement
-    fireEvent.change(driver, { target: { value: 'mid' } })
-    expect(useProjectStore.getState().stack[0].audio[0].source).toBe('mid')
+    fireEvent.change(driver, { target: { value: 'high-freq' } })
+    expect(useProjectStore.getState().stack[0].audio[0].source).toBe('treble')
+    const direction = getByRole('button', { name: /Direction for speed/ })
+    expect(direction.textContent).toBe('Normal')
+    fireEvent.click(direction)
+    expect(useProjectStore.getState().stack[0].audio[0].curve).toBe('invert')
   })
 
-  test('creator asks for a layer when nothing is selected', () => {
+  test('mega menu pick works without a selected layer', () => {
+    const tool: ToolDef = {
+      id: 'cx', kind: 'generative', version: '1.0.0', label: 'Cx', icon: '', category: 'Generative',
+      defaultParams: {}, controls: [{ param: 'speed', label: 'Speed', kind: 'slider', min: 0, max: 10, step: 1 }],
+      render() {},
+    }
+    registerTool(tool)
     useProjectStore.getState().reset()
-    const { getByText } = render(<AudioReactPanel creatorOpen />)
-    expect(getByText('Select a layer to create an audio modulation.')).toBeTruthy()
+    useProjectStore.getState().addTool('cx')
+    const { getByLabelText, getByRole } = render(<AudioReactPanel />)
+    fireEvent.click(getByLabelText('Add Preset'))
+    fireEvent.click(getByRole('button', { name: /Modulate / }))
+    const audio = useProjectStore.getState().stack[0].audio
+    expect(audio).toHaveLength(1)
+    expect(audio[0].param).toBe('speed')
   })
 
   test('audio status line renders binding count', () => {
@@ -302,9 +339,9 @@ describe('AudioReactPanel', () => {
     expect(queryByText('Raster output')).toBeNull()
   })
 
-  test('footer is two-tier (44px tips + 57px transport) with a collapsible panel slot', async () => {
+  test('footer is a single 57px dock with a collapsible panel slot', async () => {
     useProjectStore.getState().reset()
-    const { container, getByLabelText } = render(
+    const { container, getByLabelText, queryByText } = render(
       <ToastProvider>
         <AudioReactPanel />
       </ToastProvider>,
@@ -312,27 +349,25 @@ describe('AudioReactPanel', () => {
     const footer = container.querySelector('footer') as HTMLElement
     expect(footer).toBeTruthy()
     expect(footer.className).toContain('flex-col')
+    expect(queryByText('Tips & tricks')).toBeNull()
 
-    const tipsRow = footer.querySelector('.h-11') as HTMLElement
-    expect(tipsRow).toBeTruthy()
+    const mainBar = footer.querySelector('.h-\\[57px\\]') as HTMLElement
+    expect(mainBar).toBeTruthy()
 
-    const mainBar = tipsRow?.nextElementSibling as HTMLElement
-    expect(mainBar.className).toContain('h-[57px]')
-
-    expect(footer.style.getPropertyValue('--soundbar-height')).toBe('101px')
+    expect(footer.style.getPropertyValue('--soundbar-height')).toBe('57px')
     const toggle = getByLabelText('Expand panel') as HTMLElement
     expect(toggle.getAttribute('aria-expanded')).toBe('false')
     fireEvent.click(toggle)
     const collapseToggle = getByLabelText('Collapse panel') as HTMLElement
     expect(collapseToggle.getAttribute('aria-expanded')).toBe('true')
-    expect(footer.style.getPropertyValue('--soundbar-height')).toBe('390px')
+    expect(footer.style.getPropertyValue('--soundbar-height')).toBe('346px')
     fireEvent.click(collapseToggle)
-    expect(footer.style.getPropertyValue('--soundbar-height')).toBe('101px')
+    expect(footer.style.getPropertyValue('--soundbar-height')).toBe('57px')
   })
 
-  test('expanded soundbar has ResizeHandle, 60/40 zones, and MasterWaveform', () => {
+  test('expanded soundbar has ResizeHandle, full-width table and slim rail', () => {
     useProjectStore.getState().reset()
-    const { getByLabelText, queryByTestId } = render(
+    const { getByLabelText, getByText, queryByTestId } = render(
       <ToastProvider>
         <AudioReactPanel />
       </ToastProvider>,
@@ -344,31 +379,30 @@ describe('AudioReactPanel', () => {
     expect(handle).toBeTruthy()
     expect(handle?.className).toContain('cursor-row-resize')
     expect(queryByTestId('master-waveform')).toBeTruthy()
-    const left = handle?.parentElement?.querySelector('.flex-\\[6\\]') as HTMLElement
-    const right = handle?.parentElement?.querySelector('.flex-\\[4\\]') as HTMLElement
-    expect(left).toBeTruthy()
-    expect(right).toBeTruthy()
-    expect(left.className).toContain('min-w-0')
-    expect(right.className).toContain('min-w-0')
+    expect(getByText('Presets')).toBeTruthy()
+    expect(getByText('Frequency')).toBeTruthy()
     const meters = handle?.parentElement?.querySelector('[aria-label^="Live audio levels"]') as HTMLElement
     expect(meters).toBeTruthy()
-    expect(meters.className).toContain('w-[40px]')
+    expect(meters.className).toContain('items-center')
+    expect(meters.className).not.toContain('w-[40px]')
   })
 
-  test('preset table renders five frame columns with fr ratios', () => {
+  test('preset table renders six frame columns with fr ratios', () => {
     useProjectStore.getState().reset()
     const { getByText } = render(<AudioReactPanel />)
     expect(getByText('Presets')).toBeTruthy()
     expect(getByText('React to')).toBeTruthy()
     expect(getByText('Sensitivity')).toBeTruthy()
     expect(getByText('Value range')).toBeTruthy()
-    expect(getByText('EQ')).toBeTruthy()
+    expect(getByText('Frequency')).toBeTruthy()
+    expect(getByText('Timeline')).toBeTruthy()
     const header = getByText('Presets').parentElement as HTMLElement
     expect(header.className).toContain('h-[40px]')
     expect(header.style.gridTemplateColumns).toContain('200fr')
     expect(header.style.gridTemplateColumns).toContain('150fr')
+    expect(header.style.gridTemplateColumns).toContain('110fr')
     expect(header.style.gridTemplateColumns).toContain('130fr')
-    expect(header.style.gridTemplateColumns).toContain('120fr')
+    expect(header.style.gridTemplateColumns).toContain('90fr')
     expect(header.style.gridTemplateColumns).toContain('200fr')
   })
 
@@ -435,7 +469,7 @@ describe('AudioReactPanel', () => {
     const uid = useProjectStore.getState().stack[0].uid
     useProjectStore.getState().addAudioBinding(uid, { param: 'speed', source: 'bass', curve: 'linear', amount: 1 })
     const { getByLabelText, getByText } = render(<AudioReactPanel />)
-    fireEvent.click(getByLabelText('React to settings for bass'))
+    fireEvent.click(getByLabelText('React to settings for Low freq'))
     expect(getByText('React To Panel')).toBeTruthy()
   })
 

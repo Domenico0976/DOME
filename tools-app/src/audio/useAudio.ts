@@ -10,6 +10,7 @@ import {
   setVolume,
 } from '../audio/engine'
 import { getAudioRuntime } from '../audio/runtime'
+import { withBeat } from './beat'
 import { useProjectStore } from '../state/projectStore'
 import type { AudioFrame } from '../core/types'
 
@@ -118,17 +119,22 @@ export function useAudio() {
   const readFrame = useCallback(
     (bpm: number): AudioFrame => {
       if (!isInitialized()) {
-        return { bass: 0, mid: 0, treble: 0, level: 0, spectrum: new Float32Array(0), bpm }
+        return { bass: 0, mid: 0, treble: 0, level: 0, spectrum: new Float32Array(0), bpm, beat: { detected: false, strength: 0 } }
       }
       const bands = readBands()
-      return {
-        bass: bands.bass,
-        mid: bands.mid,
-        treble: bands.treble,
-        level: bands.level,
-        spectrum: bands.spectrum.data,
-        bpm,
-      }
+      // bpm comes from the store (manual always wins); the tracker only observes.
+      return withBeat(
+        {
+          bass: bands.bass,
+          mid: bands.mid,
+          treble: bands.treble,
+          level: bands.level,
+          spectrum: bands.spectrum.data,
+          bpm,
+        },
+        bands.bass,
+        performance.now() / 1000,
+      )
     },
     [],
   )

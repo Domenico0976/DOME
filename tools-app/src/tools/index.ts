@@ -18,6 +18,8 @@ import { moleculesTool } from './generative/molecules'
 import { doodleTool } from './generative/doodle'
 import { brutalistTool } from './generative/brutalist'
 import { shadersTool } from './generative/shaders'
+import { waveformTool } from './scopes/waveform'
+import { spectrumTool } from './scopes/spectrum'
 import { halftoneTool } from './filters/halftone'
 import { pixelatorTool } from './filters/pixelator'
 import { thermalTool } from './filters/thermal'
@@ -44,6 +46,8 @@ registerTool(moleculesTool)
 registerTool(doodleTool)
 registerTool(brutalistTool)
 registerTool(shadersTool)
+registerTool(waveformTool)
+registerTool(spectrumTool)
 registerTool(halftoneTool)
 registerTool(pixelatorTool)
 registerTool(thermalTool)

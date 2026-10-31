@@ -80,12 +80,14 @@ export function collectActiveEffects(stack: StackItem[], muted?: ReadonlySet<str
 }
 
 // base + source * amount, inverted when curve === 'invert'.
-// Sources: bass/mid/treble/level read the band, spectrum averages bins, bpm normalizes around 120 BPM.
+// Sources: bass/mid/treble/level read the band, spectrum averages bins,
+// bpm normalizes around 120 BPM, beat reads the transient strength (T2).
 export function resolveEffectValue(base: number, bindings: AudioBinding[], key: string, frame: Frame, audio: AudioFrame, paramMin?: number, paramMax?: number): number {
   const b = bindings.find((x) => x.param === key)
   if (!b) return base
   let src: number
-  if (b.source === 'bpm') src = frame.bpm / 120 - 1
+  if (b.source === 'beat') src = audio.beat?.strength ?? 0
+  else if (b.source === 'bpm') src = frame.bpm / 120 - 1
   else if (b.source === 'spectrum') {
     src = audio.spectrum.length ? Array.from(audio.spectrum).reduce((a, v) => a + v, 0) / audio.spectrum.length : 0
   } else src = audio[b.source]

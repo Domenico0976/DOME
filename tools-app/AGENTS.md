@@ -1015,7 +1015,7 @@ interface OutputAdapter {
 8. Gli asset sono separati dal project JSON.
 9. Ogni errore è isolato.
 10. Ogni nuova funzione si aggiunge tramite adapter o registry.
-11. L’audio-reactività si configura solo sulla PresetRail/PresetTable della soundbar; non creare pannelli audio duplicati altrove.
+11. L’audio-reactività si configura solo sulla PresetTable della soundbar; non creare pannelli audio duplicati altrove.
 
 ---
 
@@ -1023,9 +1023,9 @@ interface OutputAdapter {
 
 La soundbar (`AudioReactPanel`) è il footer dell'app, montato come sibling di `<main>` nel flex-column di `App.tsx`.
 
-- **Altezza espansa**: 390px (44 header + 57 transport + 289 body). **Altezza collassata**: 101px (header + transport rimangono, body va a 0 con clip).
+- **Altezza espansa**: 346px (57 transport + 289 body). **Altezza collassata**: 57px (solo transport, body va a 0 con clip).
 - Il footer espone la CSS var `--soundbar-height` su `document.documentElement` (inline + `useEffect`), così `StackPanel` (dentro `<main>`, sibling) può usare `max-height: calc(100vh - var(--soundbar-height) - …)` per non sovrapporsi.
-- Token CSS in `globals.css`: `--soundbar-body: 289px` (default), `--soundbar-height` (esposta sul footer + `documentElement`). Costanti JS in `src/ui/AudioReactPanel.tsx`: `SOUNDBAR_COLLAPSED = 101`, `SOUNDBAR_BODY_MIN = 160`, `SOUNDBAR_BODY_MAX = 480` (altezze del solo body; totale = 101 + bodyHeight, quindi 261–581px durante il resize via ResizeHandle).
-- **PresetRail**: resta montato anche collassato (`h-0` + `overflow-hidden`); lo slot espanso è condizionato a `slotOpen`.
+- Token CSS in `globals.css`: `--soundbar-body: 289px` (default), `--soundbar-height` (esposta sul footer + `documentElement`). Costanti JS in `src/ui/AudioReactPanel.tsx`: `SOUNDBAR_COLLAPSED = 57`, `SOUNDBAR_BODY_MIN = 160`, `SOUNDBAR_BODY_MAX = 480` (altezze del solo body; totale = 57 + bodyHeight, quindi 217–537px durante il resize via ResizeHandle).
+- **PresetTable**: unico corpo del dock (full-width, 6 colonne), resta montato anche collassato (`h-0` + `overflow-hidden`); lo slot espanso è condizionato a `slotOpen`. Niente creation form: le righe si creano dal mega menu ("Add Preset").
 - **MasterWaveform**: sempre montato; mostra overlay testuale "Load audio to see waveform" quando nessun sorgente è caricato (canvas vuoto + overlay DOM `pointer-events-none`).
 - **ZoomPanel** (`src/ui/ZoomPanel.tsx`): pannello zoom unico, montato come sibling di `StackPanel` dentro `<main id="main-content">` in `App.tsx`, `position: absolute; left: 12px; bottom: calc(var(--soundbar-height) + 12px)`, stile StackPanel (bg panel, border, radius 12, `min-w-[160px]`). Contenuto: percentuale zoom, zoom-out, zoom-in, reset. Wired a `App` zoom state → `CanvasArea` (`onZoomChange`). Il vecchio controllo zoom inline in `CanvasArea` e lo slider Zoom in `SettingsPanel` sono rimossi.
