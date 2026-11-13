@@ -1,5 +1,6 @@
 # Dependencies
 node_modules/
+tools-app/
 
 # Vite build output (built in CI, never committed)
 dist/
