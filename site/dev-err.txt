@@ -1,8 +1,6 @@
-[2m23:23:04[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[ImageTexture] Failed to load image
-  Requested URL: blob:http://localhost:8150/36ddee5d-1443-4d39-9d45-a52cfb5778d2
-  Path type: relative
-  Error: TypeError: Failed to fetch
-    at decodeImageSource (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:192024:25)
+[2m00:53:19[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31merror while updating dependencies:
+Error: EPERM: operation not permitted, rename 'C:\Users\Utente\Desktop\robbe\DOME\site\node_modules\.vite\deps_temp_2a6f2fdf' -> 'C:\Users\Utente\Desktop\robbe\DOME\site\node_modules\.vite\deps'[39m
+st:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:192024:25)
     at Object.load (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:207833:27)
     at http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191955:16
     at run (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191962:5)
@@ -354,3 +352,5 @@
     at renderFrameInternal (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252808:4)
     at renderFrame (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252874:28)
 [2m23:33:52[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mTHREE.WebGLProgram: Program Info Log: (103,1): warning X4000: use of potentially uninitialized variable (f_sampleTransition)
+[2m00:53:19[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31merror while updating dependencies:
+Error: EPERM: operation not permitted, rename 'C:\Users\Utente\Desktop\robbe\DOME\site\node_modules\.vite\deps_temp_8ac41469' -> 'C:\Users\Utente\Desktop\robbe\DOME\site\node_modules\.vite\deps'[39m
