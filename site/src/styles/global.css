@@ -105,9 +105,32 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   font-size: 18px; letter-spacing: -0.01em;
   color: var(--c-ink);
 }
-.brand__dot {
-  width: 6px; height: 6px; border-radius: 50%;
-  background: var(--c-accent);
+.brand__gif {
+  width: 22px; height: 22px;
+  object-fit: contain;
+  display: block;
+  flex-shrink: 0;
+}
+.brand__roulette {
+  position: relative;
+  display: inline-block;
+  height: 1.2em;
+  width: 16ch;
+  overflow: hidden;
+  vertical-align: middle;
+}
+.brand__text {
+  position: absolute;
+  top: 50%; left: 0;
+  transform: translateY(-50%);
+  width: 100%;
+  text-align: left;
+  white-space: nowrap;
+  will-change: transform, opacity;
+}
+.brand__char {
+  display: inline-block;
+  will-change: transform, opacity;
 }
 .nav__menu { display: flex; align-items: center; gap: 24px; }
 .nav__menu button, .nav__menu a {

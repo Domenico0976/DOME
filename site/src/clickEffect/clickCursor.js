@@ -1,6 +1,6 @@
 // Click ripple: spawns dome-curs.svg at the cursor on every click.
-// Keeps the svg's own SMIL animation (grow 0->1.11->0 = appear then
-// disappear) and only recolours the stroke to solid black; plays once.
+// Stroke is white with mix-blend-mode: difference so it reads as white on
+// dark backgrounds and black on light backgrounds.
 const SVG_URL = () => import.meta.env.BASE_URL + 'assets/favicon/dome-curs.svg'
 const SIZE = 80
 
@@ -11,7 +11,7 @@ function loadMarkup() {
   loading = true
   fetch(SVG_URL())
     .then((r) => r.text())
-    .then((t) => { markup = t.replace(/#bcbcbc/g, '#000000').replace(/repeatCount="indefinite"/g, 'repeatCount="1"') })
+    .then((t) => { markup = t.replace(/#bcbcbc/g, '#ffffff').replace(/repeatCount="indefinite"/g, 'repeatCount="1"') })
     .catch(() => { markup = null })
     .finally(() => { loading = false })
 }
@@ -34,6 +34,7 @@ export function initClickCursor({ target = document } = {}) {
     svg.style.top = (e.clientY - SIZE / 2) + 'px'
     svg.style.pointerEvents = 'none'
     svg.style.zIndex = '9999'
+    svg.style.mixBlendMode = 'difference'
 
     document.body.appendChild(svg)
 

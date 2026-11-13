@@ -1,0 +1,356 @@
+[2m23:23:04[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[ImageTexture] Failed to load image
+  Requested URL: blob:http://localhost:8150/36ddee5d-1443-4d39-9d45-a52cfb5778d2
+  Path type: relative
+  Error: TypeError: Failed to fetch
+    at decodeImageSource (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:192024:25)
+    at Object.load (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:207833:27)
+    at http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191955:16
+    at run (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191962:5)
+    at http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191974:3
+    at runCallbacks (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252775:4)
+    at Object.beforeRender (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252825:25)
+    at runFrameSequence (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:84603:6)
+    at renderFrameInternal (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252808:4)
+    at renderFrame (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252874:28)
+[2m23:23:04[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[ImageTexture] Failed to load image
+  Requested URL: blob:http://localhost:8150/36ddee5d-1443-4d39-9d45-a52cfb5778d2
+  Path type: relative
+  Error: TypeError: Failed to fetch
+    at decodeImageSource (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:192024:25)
+    at Object.load (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:207833:27)
+    at http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191955:16
+    at run (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191962:5)
+    at http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191974:3
+    at runCallbacks (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252775:4)
+    at Object.beforeRender (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252825:25)
+    at runFrameSequence (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:84603:6)
+    at renderFrameInternal (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252808:4)
+    at renderFrame (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252874:28)
+[2m23:23:04[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[ImageTexture] Failed to load image
+  Requested URL: blob:http://localhost:8150/d73a9114-105a-4361-a9ba-7043be004cb7
+  Path type: relative
+  Error: TypeError: Failed to fetch
+    at decodeImageSource (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:192024:25)
+    at Object.load (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:207833:27)
+    at http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191955:16
+    at run (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191962:5)
+    at http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191974:3
+    at runCallbacks (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252775:4)
+    at Object.beforeRender (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252825:25)
+    at runFrameSequence (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:84603:6)
+    at renderFrameInternal (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252808:4)
+    at renderFrame (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252874:28)
+[2m23:23:04[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[ImageTexture] Failed to load image
+  Requested URL: blob:http://localhost:8150/d73a9114-105a-4361-a9ba-7043be004cb7
+  Path type: relative
+  Error: TypeError: Failed to fetch
+    at decodeImageSource (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:192024:25)
+    at Object.load (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:207833:27)
+    at http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191955:16
+    at run (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191962:5)
+    at http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191974:3
+    at runCallbacks (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252775:4)
+    at Object.beforeRender (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252825:25)
+    at runFrameSequence (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:84603:6)
+    at renderFrameInternal (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252808:4)
+    at renderFrame (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252874:28)
+[2m23:23:04[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[ImageTexture] Failed to load image
+  Requested URL: blob:http://localhost:8150/a30a7623-994d-44f4-a968-795f91d31814
+  Path type: relative
+  Error: TypeError: Failed to fetch
+    at decodeImageSource (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:192024:25)
+    at Object.load (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:207833:27)
+    at http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191955:16
+    at run (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191962:5)
+    at http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191974:3
+    at runCallbacks (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252775:4)
+    at Object.beforeRender (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252825:25)
+    at runFrameSequence (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:84603:6)
+    at renderFrameInternal (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252808:4)
+    at renderFrame (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252874:28)
+[2m23:23:04[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[ImageTexture] Failed to load image
+  Requested URL: blob:http://localhost:8150/a30a7623-994d-44f4-a968-795f91d31814
+  Path type: relative
+  Error: TypeError: Failed to fetch
+    at decodeImageSource (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:192024:25)
+    at Object.load (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:207833:27)
+    at http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191955:16
+    at run (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191962:5)
+    at http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191974:3
+    at runCallbacks (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252775:4)
+    at Object.beforeRender (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252825:25)
+    at runFrameSequence (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:84603:6)
+    at renderFrameInternal (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252808:4)
+    at renderFrame (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252874:28)
+[2m23:23:04[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[ImageTexture] Failed to load image
+  Requested URL: blob:http://localhost:8150/4d114e12-b188-45a6-88f2-d97b440521b9
+  Path type: relative
+  Error: TypeError: Failed to fetch
+    at decodeImageSource (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:192024:25)
+    at Object.load (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:207833:27)
+    at http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191955:16
+    at run (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191962:5)
+    at http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191974:3
+    at runCallbacks (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252775:4)
+    at Object.beforeRender (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252825:25)
+    at runFrameSequence (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:84603:6)
+    at renderFrameInternal (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252808:4)
+    at renderFrame (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252874:28)
+[2m23:23:04[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[ImageTexture] Failed to load image
+  Requested URL: blob:http://localhost:8150/4d114e12-b188-45a6-88f2-d97b440521b9
+  Path type: relative
+  Error: TypeError: Failed to fetch
+    at decodeImageSource (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:192024:25)
+    at Object.load (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:207833:27)
+    at http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191955:16
+    at run (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191962:5)
+    at http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191974:3
+    at runCallbacks (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252775:4)
+    at Object.beforeRender (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252825:25)
+    at runFrameSequence (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:84603:6)
+    at renderFrameInternal (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252808:4)
+    at renderFrame (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252874:28)
+[2m23:23:04[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[ImageTexture] Failed to load image
+  Requested URL: blob:http://localhost:8150/272aff77-aa29-4dc7-9396-fb7c70362b6b
+  Path type: relative
+  Error: TypeError: Failed to fetch
+    at decodeImageSource (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:192024:25)
+    at Object.load (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:207833:27)
+    at http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191955:16
+    at run (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191962:5)
+    at http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191974:3
+    at runCallbacks (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252775:4)
+    at Object.beforeRender (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252825:25)
+    at runFrameSequence (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:84603:6)
+    at renderFrameInternal (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252808:4)
+    at renderFrame (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252874:28)
+[2m23:23:04[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[ImageTexture] Failed to load image
+  Requested URL: blob:http://localhost:8150/272aff77-aa29-4dc7-9396-fb7c70362b6b
+  Path type: relative
+  Error: TypeError: Failed to fetch
+    at decodeImageSource (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:192024:25)
+    at Object.load (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:207833:27)
+    at http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191955:16
+    at run (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191962:5)
+    at http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191974:3
+    at runCallbacks (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252775:4)
+    at Object.beforeRender (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252825:25)
+    at runFrameSequence (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:84603:6)
+    at renderFrameInternal (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252808:4)
+    at renderFrame (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252874:28)
+[2m23:23:05[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[ImageTexture] Failed to load image
+  Requested URL: blob:http://localhost:8150/bf5dca36-1f3f-40a9-8b53-1f569aa06d44
+  Path type: relative
+  Error: TypeError: Failed to fetch
+    at decodeImageSource (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:192024:25)
+    at Object.load (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:207833:27)
+    at http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191955:16
+    at run (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191962:5)
+    at http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191974:3
+    at runCallbacks (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252775:4)
+    at Object.beforeRender (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252825:25)
+    at runFrameSequence (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:84603:6)
+    at renderFrameInternal (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252808:4)
+    at renderFrame (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252874:28)
+[2m23:23:05[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[ImageTexture] Failed to load image
+  Requested URL: blob:http://localhost:8150/bf5dca36-1f3f-40a9-8b53-1f569aa06d44
+  Path type: relative
+  Error: TypeError: Failed to fetch
+    at decodeImageSource (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:192024:25)
+    at Object.load (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:207833:27)
+    at http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191955:16
+    at run (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191962:5)
+    at http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191974:3
+    at runCallbacks (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252775:4)
+    at Object.beforeRender (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252825:25)
+    at runFrameSequence (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:84603:6)
+    at renderFrameInternal (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252808:4)
+    at renderFrame (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252874:28)
+[2m23:23:05[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[ImageTexture] Failed to load image
+  Requested URL: blob:http://localhost:8150/78489502-b4c9-49e0-9a8a-232c03fe5c8c
+  Path type: relative
+  Error: TypeError: Failed to fetch
+    at decodeImageSource (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:192024:25)
+    at Object.load (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:207833:27)
+    at http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191955:16
+    at run (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191962:5)
+    at http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191974:3
+    at runCallbacks (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252775:4)
+    at Object.beforeRender (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252825:25)
+    at runFrameSequence (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:84603:6)
+    at renderFrameInternal (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252808:4)
+    at renderFrame (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252874:28)
+[2m23:23:05[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[ImageTexture] Failed to load image
+  Requested URL: blob:http://localhost:8150/78489502-b4c9-49e0-9a8a-232c03fe5c8c
+  Path type: relative
+  Error: TypeError: Failed to fetch
+    at decodeImageSource (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:192024:25)
+    at Object.load (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:207833:27)
+    at http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191955:16
+    at run (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191962:5)
+    at http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191974:3
+    at runCallbacks (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252775:4)
+    at Object.beforeRender (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252825:25)
+    at runFrameSequence (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:84603:6)
+    at renderFrameInternal (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252808:4)
+    at renderFrame (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252874:28)
+[2m23:23:05[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[ImageTexture] Failed to load image
+  Requested URL: blob:http://localhost:8150/bbda54db-6697-43b9-8aae-6c76d3ba5845
+  Path type: relative
+  Error: TypeError: Failed to fetch
+    at decodeImageSource (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:192024:25)
+    at Object.load (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:207833:27)
+    at http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191955:16
+    at run (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191962:5)
+    at http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191974:3
+    at runCallbacks (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252775:4)
+    at Object.beforeRender (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252825:25)
+    at runFrameSequence (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:84603:6)
+    at renderFrameInternal (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252808:4)
+    at renderFrame (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252874:28)
+[2m23:23:05[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[ImageTexture] Failed to load image
+  Requested URL: blob:http://localhost:8150/bbda54db-6697-43b9-8aae-6c76d3ba5845
+  Path type: relative
+  Error: TypeError: Failed to fetch
+    at decodeImageSource (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:192024:25)
+    at Object.load (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:207833:27)
+    at http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191955:16
+    at run (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191962:5)
+    at http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191974:3
+    at runCallbacks (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252775:4)
+    at Object.beforeRender (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252825:25)
+    at runFrameSequence (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:84603:6)
+    at renderFrameInternal (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252808:4)
+    at renderFrame (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252874:28)
+[2m23:23:05[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[ImageTexture] Failed to load image
+  Requested URL: blob:http://localhost:8150/09ca657b-8348-467a-a76c-da58cb9cfae6
+  Path type: relative
+  Error: TypeError: Failed to fetch
+    at decodeImageSource (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:192024:25)
+    at Object.load (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:207833:27)
+    at http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191955:16
+    at run (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191962:5)
+    at http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191974:3
+    at runCallbacks (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252775:4)
+    at Object.beforeRender (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252825:25)
+    at runFrameSequence (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:84603:6)
+    at renderFrameInternal (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252808:4)
+    at renderFrame (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252874:28)
+[2m23:23:05[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[ImageTexture] Failed to load image
+  Requested URL: blob:http://localhost:8150/0c0171e7-bfb0-4acf-960b-b90835187d77
+  Path type: relative
+  Error: TypeError: Failed to fetch
+    at decodeImageSource (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:192024:25)
+    at Object.load (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:207833:27)
+    at http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191955:16
+    at run (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191962:5)
+    at http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191974:3
+    at runCallbacks (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252775:4)
+    at Object.beforeRender (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252825:25)
+    at runFrameSequence (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:84603:6)
+    at renderFrameInternal (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252808:4)
+    at renderFrame (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252874:28)
+[2m23:23:06[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[ImageTexture] Failed to load image
+  Requested URL: blob:http://localhost:8150/1b8716c0-7b00-4385-bb48-d1ab7413f356
+  Path type: relative
+  Error: TypeError: Failed to fetch
+    at decodeImageSource (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:192024:25)
+    at Object.load (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:207833:27)
+    at http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191955:16
+    at run (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191962:5)
+    at http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191974:3
+    at runCallbacks (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252775:4)
+    at Object.beforeRender (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252825:25)
+    at runFrameSequence (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:84603:6)
+    at renderFrameInternal (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252808:4)
+    at renderFrame (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252874:28)
+[2m23:23:06[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[ImageTexture] Failed to load image
+  Requested URL: blob:http://localhost:8150/1b8716c0-7b00-4385-bb48-d1ab7413f356
+  Path type: relative
+  Error: TypeError: Failed to fetch
+    at decodeImageSource (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:192024:25)
+    at Object.load (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:207833:27)
+    at http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191955:16
+    at run (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191962:5)
+    at http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191974:3
+    at runCallbacks (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252775:4)
+    at Object.beforeRender (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252825:25)
+    at runFrameSequence (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:84603:6)
+    at renderFrameInternal (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252808:4)
+    at renderFrame (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252874:28)
+[2m23:23:06[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[ImageTexture] Failed to load image
+  Requested URL: blob:http://localhost:8150/e9cecac1-77a3-475f-b206-9ca8c2262071
+  Path type: relative
+  Error: TypeError: Failed to fetch
+    at decodeImageSource (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:192024:25)
+    at Object.load (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:207833:27)
+    at http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191955:16
+    at run (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191962:5)
+    at http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191974:3
+    at runCallbacks (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252775:4)
+    at Object.beforeRender (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252825:25)
+    at runFrameSequence (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:84603:6)
+    at renderFrameInternal (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252808:4)
+    at renderFrame (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252874:28)
+[2m23:23:06[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[ImageTexture] Failed to load image
+  Requested URL: blob:http://localhost:8150/e9cecac1-77a3-475f-b206-9ca8c2262071
+  Path type: relative
+  Error: TypeError: Failed to fetch
+    at decodeImageSource (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:192024:25)
+    at Object.load (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:207833:27)
+    at http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191955:16
+    at run (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191962:5)
+    at http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191974:3
+    at runCallbacks (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252775:4)
+    at Object.beforeRender (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252825:25)
+    at runFrameSequence (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:84603:6)
+    at renderFrameInternal (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252808:4)
+    at renderFrame (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252874:28)
+[2m23:28:19[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mError[22m: ResizeObserver loop completed with undelivered notifications.
+[39m > ../../../../../../@vite/client:539:50
+
+[2m23:28:23[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mTHREE.WebGLProgram: Program Info Log: (103,1): warning X4000: use of potentially uninitialized variable (f_sampleTransition)
+[2m23:31:56[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mTHREE.WebGLProgram: Program Info Log: (103,1): warning X4000: use of potentially uninitialized variable (f_sampleTransition)
+[2m23:33:15[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[ImageTexture] Failed to load image
+  Requested URL: blob:http://localhost:8150/7d3c2837-1a7f-4a76-9ff9-95cd43e9f7cd
+  Path type: relative
+  Error: TypeError: Failed to fetch
+    at decodeImageSource (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:192024:25)
+    at Object.load (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:207833:27)
+    at http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191955:16
+    at run (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191962:5)
+    at http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191974:3
+    at runCallbacks (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252775:4)
+    at Object.beforeRender (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252825:25)
+    at runFrameSequence (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:84603:6)
+    at renderFrameInternal (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252808:4)
+    at renderFrame (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252874:28)
+[2m23:33:15[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[ImageTexture] Failed to load image
+  Requested URL: blob:http://localhost:8150/7d3c2837-1a7f-4a76-9ff9-95cd43e9f7cd
+  Path type: relative
+  Error: TypeError: Failed to fetch
+    at decodeImageSource (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:192024:25)
+    at Object.load (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:207833:27)
+    at http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191955:16
+    at run (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191962:5)
+    at http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191974:3
+    at runCallbacks (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252775:4)
+    at Object.beforeRender (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252825:25)
+    at runFrameSequence (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:84603:6)
+    at renderFrameInternal (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252808:4)
+    at renderFrame (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252874:28)
+[2m23:33:15[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[ImageTexture] Failed to load image
+  Requested URL: blob:http://localhost:8150/4a6798fa-e1f0-4b86-ba44-e3e680753b86
+  Path type: relative
+  Error: TypeError: Failed to fetch
+    at decodeImageSource (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:192024:25)
+    at Object.load (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:207833:27)
+    at http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191955:16
+    at run (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191962:5)
+    at http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:191974:3
+    at runCallbacks (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252775:4)
+    at Object.beforeRender (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252825:25)
+    at runFrameSequence (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:84603:6)
+    at renderFrameInternal (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252808:4)
+    at renderFrame (http://localhost:8150/node_modules/.vite/deps/Shader-CVRyyjhY.js?v=1298d4e3:252874:28)
+[2m23:33:52[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mTHREE.WebGLProgram: Program Info Log: (103,1): warning X4000: use of potentially uninitialized variable (f_sampleTransition)
