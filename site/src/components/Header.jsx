@@ -1,9 +1,39 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useRef, useEffect } from 'react'
+
+const AMBIENT_URL = () => import.meta.env.BASE_URL + 'assets/audio/Ambient/Ambient-music.mp3'
 
 export default function Header() {
   const [muted, setMuted] = useState(true)
+  const audioRef = useRef(null)
 
-  const toggle = useCallback(() => setMuted(prev => !prev), [])
+  // Create the ambient audio once.
+  useEffect(() => {
+    const audio = new Audio(AMBIENT_URL())
+    audio.volume = 0.35
+    audio.loop = true
+    audio.preload = 'auto'
+    audioRef.current = audio
+    return () => {
+      audio.pause()
+      audio.src = ''
+      audioRef.current = null
+    }
+  }, [])
+
+  const toggle = useCallback(() => {
+    setMuted(prev => {
+      const next = !prev
+      const audio = audioRef.current
+      if (audio) {
+        if (next) {
+          audio.pause()
+        } else {
+          audio.play().catch(() => {})
+        }
+      }
+      return next
+    })
+  }, [])
 
   return (
     <header className="site-header">
@@ -18,7 +48,7 @@ export default function Header() {
             type="button"
             className={`sound${muted ? ' is-muted' : ''}`}
             aria-pressed={muted ? 'false' : 'true'}
-            aria-label="Toggle ambient sound (placeholder)"
+            aria-label={muted ? 'Play ambient sound' : 'Mute ambient sound'}
             onClick={toggle}
           >
             <span className="bar"></span>

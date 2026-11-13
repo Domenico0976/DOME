@@ -1362,6 +1362,84 @@ const ProjectExpanded = ({ project, isOpen, switchFromRef, panelElsRef }) => {
       st.timer = setTimeout(releaseViewHook, holdMs)
     }
 
+    // Pin: porta la riga a targetY con un glide morbido e poi la tiene lì
+    // sincronizzando lo scroll ESATTAMENTE alla sua posizione, frame per
+    // frame (immediate, non un chase con tween): quando il pannello che
+    // chiude sopra ridimensiona il layout, la riga si muove e lo scroll si
+    // muove della stessa quantità nello stesso frame — la riga resta ferma
+    // in view, senza lag e senza salti. Serve solo durante lo switch, finché
+    // il collasso non è finito: poi startOpen riprende con hookView su
+    // ancora statica (dove il chase funziona). Rilasciata da wheel/touch
+    // dell'utente, dal collasso finito e dalla cleanup dell'effect.
+    const createViewPin = (anchorEl) => {
+      const l = window.__lenis
+      if (!l || typeof l.scrollTo !== 'function') {
+        // Fallback senza Lenis: l'aggancio con chase già presente nel file.
+        hookView(anchorEl, 5000)
+        return { release: releaseViewHook }
+      }
+      // Un solo controller di scroll alla volta: l'eventuale chase di hookView
+      // da un'apertura precedente (hold fino a 1800ms) verrebbe a montarsi sul
+      // glide del pin e sul suo sync.
+      releaseViewHook()
+      const targetY = headerBottom() + 18
+      let raf = 0
+      let released = false
+      let lastSy = window.scrollY
+      let extStreak = 0
+      const release = () => {
+        if (released) return
+        released = true
+        cancelAnimationFrame(raf)
+        window.removeEventListener('wheel', onDrive)
+        window.removeEventListener('touchmove', onDrive)
+      }
+      const onDrive = () => release()
+      const destNow = () =>
+        Math.max(0, anchorEl.getBoundingClientRect().top + window.scrollY - targetY)
+      // Nessun glide separato: il collasso inizia subito e la riga si muove
+      // durante i primi frame, quindi un glide a target fisso (0.55s) lascia
+      // la riga libera di scappare e poi un singolo sync immediato la
+      // ricompone = sbalzo. Invece ogni frame sincronizziamo lo scroll alla
+      // posizione attuale della riga, limitando il passo per frame (MAX_STEP)
+      // perché una riga lontana si avvicini in modo fluido invece di
+      // teletrasportarsi. Il pin resta attivo finché il collasso non finisce.
+      const MAX_STEP = 60
+      window.addEventListener('wheel', onDrive, { passive: true })
+      window.addEventListener('touchmove', onDrive, { passive: true })
+      const step = () => {
+        if (released) return
+        raf = requestAnimationFrame(step)
+        if (!anchorEl.isConnected) { release(); return }
+        const sy = window.scrollY
+        // Scroll nativo (scrollbar): seguiamo passivamente solo mentre si muove;
+        // quando si ferma, sincronizziamo noi.
+        if (l.isScrolling === 'native' && Math.abs(sy - lastSy) > 2) {
+          lastSy = sy; extStreak = 0; return
+        }
+        // Un altro controller Lenis è in corso (hookView/chase): non
+        // interferire questo frame — il pin riprenderà al frame dopo.
+        if (l.isScrolling === 'smooth') { lastSy = sy; extStreak = 0; return }
+        // Scroll esterno non-Lenis: rilascio solo se persiste per due frame.
+        if (Math.abs(sy - lastSy) > 2) {
+          extStreak++
+          lastSy = sy
+          if (extStreak >= 2) release()
+          return
+        }
+        extStreak = 0
+        const dest = destNow()
+        const delta = dest - sy
+        if (Math.abs(delta) < 2) { lastSy = sy; return }
+        const stepSize = Math.min(Math.abs(delta), MAX_STEP)
+        const target = sy + (delta > 0 ? stepSize : -stepSize)
+        l.scrollTo(target, { immediate: true })
+        lastSy = target
+      }
+      raf = requestAnimationFrame(step)
+      return { release }
+    }
+
     if (isOpen) {
       const startOpen = () => {
       prevProject.current = project
@@ -1447,18 +1525,23 @@ const ProjectExpanded = ({ project, isOpen, switchFromRef, panelElsRef }) => {
       if (pending && pending !== project) {
         const closingEl = panelElsRef?.current?.[pending.name]
         if (closingEl && closingEl.isConnected && closingEl.offsetHeight > 1) {
-          // Fase 1: segui il div chiudente mentre collassa; fase 2 (al collasso)
-          // hook sul div entrante + startOpen. Il focus e sempre su chi si apre.
-          hookView(closingEl.previousElementSibling ?? closingEl)
+          // Fase 1: pin sulla RIGA ENTRANTE dal click. Mentre il pannello
+          // superiore si restringe lo scroll viene sincronizzato frame per
+          // frame alla posizione della riga (createViewPin): la riga resta
+          // ferma in view e il ridimensionamento del layout non produce
+          // salti. Nessun aggancio sul pannello che chiude. Al collasso
+          // finito il pin si rilascia e startOpen riprende con hookView.
+          const pin = createViewPin(el.previousElementSibling ?? el)
           const ro = new ResizeObserver(() => {
             if (!closingEl.isConnected || closingEl.offsetHeight < 1) {
               ro.disconnect()
+              pin.release()
               if (switchFromRef.current === pending) switchFromRef.current = null
               startOpen()
             }
           })
           ro.observe(closingEl)
-          return () => ro.disconnect()
+          return () => { ro.disconnect(); pin.release() }
         }
       }
       if (switchFromRef) switchFromRef.current = null
@@ -1487,7 +1570,11 @@ const ProjectExpanded = ({ project, isOpen, switchFromRef, panelElsRef }) => {
       // The split DOM survives the close render (no dangerouslySetInnerHTML), so
       // `inners` is populated and the line rise plays backward.
       isAnimating.current = true
-      hookView(el.previousElementSibling ?? el, 1400)
+      // Durante uno switch (switchFromRef.current === project) la vista NON si
+      // aggancia al pannello che chiude: lo scroll è solo del progetto che si
+      // apre. Alla chiusura singola (click sullo stesso progetto) l'aggancio
+      // resta com'era.
+      if (switchFromRef?.current !== project) hookView(el.previousElementSibling ?? el, 1400)
       gsap.killTweensOf(el)
       if (inners.length) gsap.killTweensOf(inners)
       if (!inners.length) {
@@ -1500,12 +1587,15 @@ const ProjectExpanded = ({ project, isOpen, switchFromRef, panelElsRef }) => {
       }
 
       gsap.set(inner, { scale: 1 })
-      const closeDelay = 0.7 + 0.07 * Math.max(0, inners.length - 1) + 0.05
+      // Chiusura leggermente più rapida (~18%): meno tempo con il layout in
+      // flusso durante lo switch. Il delay resta in sync con la fine dello
+      // reverse del testo (durata + stagger per numero di righe).
+      const closeDelay = 0.55 + 0.06 * Math.max(0, inners.length - 1) + 0.05
       gsap.to(inners, {
         yPercent: 110,
-        duration: 0.7,
+        duration: 0.55,
         ease: 'power3.in',
-        stagger: { each: 0.07, from: 'end' },
+        stagger: { each: 0.06, from: 'end' },
         overwrite: 'auto',
       })
       glItemsRef.current.forEach((it, idx) => {
@@ -1513,8 +1603,8 @@ const ProjectExpanded = ({ project, isOpen, switchFromRef, panelElsRef }) => {
         const rp = { v: it.mat.uniforms.uReveal.value }
         gsap.to(rp, {
           v: 0,
-          duration: 0.7,
-          delay: idx * 0.07,
+          duration: 0.55,
+          delay: idx * 0.06,
           ease: 'power3.inOut',
           overwrite: 'auto',
           onUpdate: () => { it.mat.uniforms.uReveal.value = rp.v; it.mediaEl.style.opacity = rp.v },
@@ -1527,7 +1617,7 @@ const ProjectExpanded = ({ project, isOpen, switchFromRef, panelElsRef }) => {
       gsap.to(el, {
         height: 0,
         opacity: 0,
-        duration: 0.35,
+        duration: 0.3,
         ease: 'power3.in',
         delay: closeDelay,
         onComplete: () => {

@@ -22,3 +22,9 @@ logs/
 .vscode/
 .idea/
 .DS_Store
+tools-app/
+site-old/*
+site/docs/
+tests/
+docs/
+
