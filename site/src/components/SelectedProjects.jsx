@@ -1273,6 +1273,7 @@ const ProjectExpanded = ({ project, isOpen, switchFromRef, panelElsRef }) => {
       try {
         if (it.isVideo && it.mediaEl) { it.mediaEl.pause() }
         it.renderer.dispose()
+        it.renderer.forceContextLoss()
         it.scene.traverse(o => {
           if (o.geometry) o.geometry.dispose()
           if (o.material) {

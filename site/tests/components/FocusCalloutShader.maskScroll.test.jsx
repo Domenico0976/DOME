@@ -260,10 +260,10 @@ describe('focus callout mask â€” no rebuild on scroll once the entrance has
       return contexts.get(this)
     })
 
-    // The encode counter. One toBlob == one mask rebuild attempt.
-    HTMLCanvasElement.prototype.toBlob = function (cb) {
+    // The encode counter. One toDataURL == one mask rebuild attempt.
+    HTMLCanvasElement.prototype.toDataURL = function () {
       h.encodes += 1
-      cb({ size: 4, type: 'image/png' })
+      return `data:image/png;base64,mock${h.encodes}`
     }
 
     // Must be unique per call: the component drops an encode whose URL is

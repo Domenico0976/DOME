@@ -311,6 +311,7 @@ export async function mountTorusKnot(canvas, options = {}) {
         startedAt = 0
         if (renderer) {
           renderer.dispose()
+          renderer.forceContextLoss()
           renderer = null
         }
       },
@@ -345,7 +346,7 @@ export async function mountTorusKnot(canvas, options = {}) {
       textLayer = null
     }
     if (envMap) envMap.dispose()
-    if (renderer) renderer.dispose()
+    if (renderer) { renderer.dispose(); renderer.forceContextLoss() }
     throw err
   }
 }
