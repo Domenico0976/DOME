@@ -65,16 +65,17 @@ function encodeMask(state, canvas, onUrl) {
 
   const commit = (url) => {
     // Superseded while we were encoding: a newer frame already won. Drop this one
-    // and leave currentUrl alone â€” the newer frame owns it.
+    // but do NOT revoke the blob URL here — ImageTexture may still be
+    // mid-decode on it, and revoking early fails that load noisily.
     if (seq !== state.encodeSeq) {
-      if (url.startsWith('blob:')) URL.revokeObjectURL(url)
       return false
     }
     if (!url || url === previous) return false
     state.currentUrl = url
-    // Revoke the replaced URL, not sooner: ImageTexture may still be mid-decode on
-    // it, and revoking early fails that load noisily.
-    if (previous.startsWith('blob:')) URL.revokeObjectURL(previous)
+    // Do NOT revoke the previous URL: ImageTexture (shaders/react) may still
+    // be mid-decode on it. Let the browser GC the blob once no references
+    // remain. Revoking early caused "Failed to fetch" on the blob URL and
+    // reformatted the callout text.
     onUrl(url)
     return true
   }
@@ -86,19 +87,21 @@ function encodeMask(state, canvas, onUrl) {
     encodeMask(state, canvas, onUrl)
   }
 
-  if (typeof canvas.toBlob !== 'function') {
-    commit(canvas.toDataURL('image/png'))
-    settle()
-    return
-  }
-  canvas.toBlob((blob) => {
-    if (blob) commit(URL.createObjectURL(blob))
-    settle()
-  }, 'image/png')
+  // Prefer toDataURL: it is synchronous, so the mask URL is available
+  // immediately and ImageTexture can load it without an async fetch that
+  // fails when the WebGL context is lost ("Too many active WebGL contexts").
+  // toBlob moves the encode off-thread but its async result can be lost
+  // when the context is forcibly reclaimed by the browser.
+  commit(canvas.toDataURL('image/png'))
+  settle()
+  return
 }
 
 function releaseMaskUrl(state) {
-  if (state.currentUrl.startsWith('blob:')) URL.revokeObjectURL(state.currentUrl)
+  // Don't revoke immediately: ImageTexture (shaders/react) may still be
+  // mid-decode on the blob URL, and revoking early fails that load noisily,
+  // which reformats the callout text. Let the browser GC the blob once no
+  // references remain (ImageTexture drops its reference on unmount/rebuild).
   state.currentUrl = ''
   state.encodeSeq++
 }
