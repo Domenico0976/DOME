@@ -38,11 +38,13 @@ export function createRingRig({ ink = 0x111111 } = {}) {
   camera.position.set(0, 0, 500)
 
   function resize(w, h) {
-    // On mobile/tablet, cap the ring to match the hero ring's responsive
-    // size (min(440px, 94vw)). On desktop, keep the original scale (1).
+    // Match the hero ring's responsive size on mobile/tablet.
+    // Hero ring CSS: width: min(440px, 94vw).
+    // Preloader ring screen diameter at scale 1 ≈ 0.864 * h.
+    // Scale so the ring matches the hero ring on mobile/tablet (< 768px).
     let scale = 1
     if (w < 768) {
-      const targetDiameter = Math.min(440, 0.94 * w)
+      const targetDiameter = Math.min(440, 0.94 * w) * 0.5
       const baseDiameter = 0.864 * h
       scale = Math.min(1, targetDiameter / baseDiameter)
     }
