@@ -37,13 +37,21 @@ export function computeDigitTiles(value, gridW, gridH) {
   if (gridW <= 0 || gridH <= 0) return cells
 
   const str = formatCounter(value)
-  const S = 2 // scale: each font pixel = S x S tiles
+  // Adaptive scale: on narrow viewports (mobile) the 2x scale overflows the
+  // grid, so drop to 1x to keep all three digits visible.
+  let S = 2
+  let totalW = str.length * (3 * S) + (str.length - 1) * 1
+  if (totalW + 2 * 1 > gridW) {
+    S = 1
+    totalW = str.length * (3 * S) + (str.length - 1) * 1
+  }
   const dw = 3 * S
   const dh = 5 * S
   const gap = 1
   const margin = 1
-  const totalW = str.length * dw + (str.length - 1) * gap
-  const x0 = gridW - totalW - margin
+  // If still too wide, center the digits.
+  let x0 = gridW - totalW - margin
+  if (x0 < margin) x0 = Math.max(margin, Math.floor((gridW - totalW) / 2))
   const y0 = gridH - dh - margin
 
   for (let i = 0; i < str.length; i++) {

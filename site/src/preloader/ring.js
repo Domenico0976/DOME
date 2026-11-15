@@ -38,13 +38,22 @@ export function createRingRig({ ink = 0x111111 } = {}) {
   camera.position.set(0, 0, 500)
 
   function resize(w, h) {
-    const halfH = RING_PX / 2
+    // On mobile/tablet, cap the ring to match the hero ring's responsive
+    // size (min(440px, 94vw)). On desktop, keep the original scale (1).
+    let scale = 1
+    if (w < 768) {
+      const targetDiameter = Math.min(440, 0.94 * w)
+      const baseDiameter = 0.864 * h
+      scale = Math.min(1, targetDiameter / baseDiameter)
+    }
+    const halfH = (RING_PX / 2) * scale
     const halfW = halfH * (w / Math.max(h, 1))
     camera.left = -halfW
     camera.right = halfW
     camera.top = halfH
     camera.bottom = -halfH
     camera.updateProjectionMatrix()
+    group.scale.setScalar(scale)
   }
 
   let px = 0

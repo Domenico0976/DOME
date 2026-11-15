@@ -240,17 +240,16 @@ function start() {
     }
 
     const countHeld = shownProgress >= SEAL_AT - 0.001
-    const readyToSeal =
-      (loadSettled && appMounted && fontsReady && countHeld) || waited > SETTLED_WAIT_CAP
+    // Always wait at least 4 seconds so the counter digits are readable.
+    const readyToSeal = waited > SETTLED_WAIT_CAP
 
     // count — the front stays parked the whole way: the crumble has not started
     // yet, the rolling number is the only motion. No cap, no parking at the
     // trigger: the count rolls straight through 080 whenever it is ready.
     if (!readyToSeal) {
       if (scene) scene.setFront(sweepFront(0))
-      const target = loadSettled
-        ? Math.max(loadProgress, 1)
-        : Math.max(loadProgress, creepProgress(waited))
+      // Linear ramp over 4 seconds so the counter digits are readable.
+      const target = Math.min(1, waited / SETTLED_WAIT_CAP)
       driveProgress(target, now)
       rafId = requestAnimationFrame(safeTick)
       return
