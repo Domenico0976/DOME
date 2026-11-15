@@ -67,7 +67,7 @@ export const TEXT_ROWS_MOBILE = [
   { text: '<i>Helloooo,</i>', behind: true, size: 0.65 },
   { text: '<i>I am Domenico</i>', behind: false, size: 0.70 },
   { text: 'This is my <span class="accent-anim"><i>portfolio</i></span>!', behind: true, size: 1.0 },
-  { text: '<span class="accent-anim"><i>UX|UI</i> + </span> <span class="accent-anim"><i>Service Designer</i></span> .', behind: true, size: 1.0 },
+  { text: '<span class="accent-anim"><i>UX|UI</i> +</span><span class="accent-anim"><i>Service Designer</i></span> .', behind: true, size: 1.0 },
   { text: '<i>I play with <span class="accent-anim">things</span></i>', behind: true, size: 1.0 },
   { text: '<span class="accent-anim">new ways</span>, no problems', behind: true, size: 1.0 },
 

@@ -39,7 +39,9 @@ const mergeDotSize = {
 // natural aspect.
 const heroSvgBox = {
   x: { value: 0, unit: 'px' },
-  y: { value: 92, unit: 'px' },
+  // Shifted down 52px total (was 92) together with the three.js ring so the logo
+  // sits slightly lower in the hero.
+  y: { value: 144, unit: 'px' },
   width: { value: 280, unit: 'px' },
   height: { value: 280, unit: 'px' },
   origin: 'top-center',
@@ -49,12 +51,16 @@ const heroSvgBox = {
 export default function HeroShaderStack({ onUnavailable }) {
   return (
     <div className="hero-shader-wrapper" aria-hidden="true">
+      {/* The DAY background is a separate DOM layer BELOW the shader canvas so it
+          can parallax on scroll while the logo (inside the shader) and the ring
+          stay fixed. It used to be the shader's base ImageTexture; it lives here
+          now so the two can move independently. */}
+      <div className="hero-bg-layer" aria-hidden="true" />
       <Shader
         className="hero-gl-canvas"
         disableTelemetry
         onUnavailable={onUnavailable}
       >
-        <ImageTexture url="/hero-day-opt.webp" objectFit="cover" />
         <DotGrid
           id="trailDots"
           density={35}

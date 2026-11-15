@@ -188,6 +188,24 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   will-change: transform;
   transform-origin: 50% 100%;
 }
+/* Day background on its own layer BELOW the shader canvas, so it can parallax
+   independently of the logo (in the canvas) and the ring. Overscanned with a
+   transform scale driven from shader-hero.jsx; `cover` keeps the framing. */
+.hero-bg-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url(/hero-day-opt.webp);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  will-change: transform;
+  transform-origin: 50% 50%;
+}
+.hero-region--split .hero-gl-canvas {
+  z-index: 1;
+}
 .hero-image {
   width: 100%;
   height: 100%;

@@ -1551,7 +1551,11 @@ const ProjectExpanded = ({ project, isOpen, switchFromRef, panelElsRef }) => {
       const textEl = inner.querySelector('.project-expanded__text')
       const inners = textEl ? Array.from(textEl.querySelectorAll('.project-expanded__text-line-inner')) : []
 
-      if (prefersReducedMotion || !el.style.height || (el.style.height === 'auto' && el.offsetHeight === 0)) {
+      // `el.offsetHeight === 0` also covers the freshly-mounted CLOSED panel
+      // (inline height:0). Without it the mount ran the close path and called
+      // hookView, which smooth-scrolled the page to a project row on every load
+      // — the "page loads slightly scrolled" bug.
+      if (prefersReducedMotion || !el.style.height || el.offsetHeight === 0 || (el.style.height === 'auto' && el.offsetHeight === 0)) {
         disposeWebGL()
         inner.style.visibility = ''
         // ponytail: restore base text — wipes split wrappers + tween styles so

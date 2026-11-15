@@ -148,38 +148,34 @@ export default function ShaderHero() {
     }
   }, [])
 
-  // Manual scroll-driven transform on the GL wrapper.
-  // Overrides any ScrollTrigger usage — this is a bare passive listener + rAF
-  // coalesce so it works alongside Lenis without interfering with GSAP scroll state.
+  // Background-only scroll parallax.
+  //
+  // The `.hero-bg-layer` is the day photo on its OWN DOM layer, behind the
+  // shader canvas — so we can drive it without touching the logo (inside the
+  // shader) or the ring (in `HeroTextRing`). They stay exactly at their default
+  // framing; only the photo drifts/overscans with the scroll.
+  //  - progress is 0 at the hero's rest position → default framing on load, no
+  //    first-scroll jump;
+  //  - translate + a small scale for overscan, so the drift never reveals a gap
+  //    at the layer's edges while the section height stays unchanged.
   useEffect(() => {
-    // Respect user's motion preference: no transforms if reduced motion is on.
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
-    if (mq.matches) return
-
-    const cfg = {
-      maxScale: 1.25,
-      maxRotateZ: .2,
-      maxTranslateY: -28,
-      progressStart: 0.15,
-      progressEnd: 0.85,
-    }
-
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
     const el = sectionRef.current
     if (!el) return
 
+    const MAX_Y = -34 // px the photo drifts up across the hero's exit
+    const SCALE = 0.10 // overscan headroom (10% at full progress)
+
     const tick = () => {
-      const wrapper = el.querySelector('.hero-shader-wrapper')
-      if (!wrapper) return
-
+      const layer = el.querySelector('.hero-bg-layer')
+      if (!layer) return
       const rect = el.getBoundingClientRect()
-      const vh = window.innerHeight
-      const raw = Math.max(0, Math.min(1, (vh - rect.top) / (vh + rect.height)))
-      const p = Math.max(0, Math.min(1, (raw - cfg.progressStart) / (cfg.progressEnd - cfg.progressStart)))
-      // smoothstep easing
-      const t = p * p * (3 - 2 * p)
-
-      // ASSIGN, never compound — each tick writes the full transform string.
-      wrapper.style.transform = `translate3d(0, ${cfg.maxTranslateY * t}px, 0) scale(${1 + (cfg.maxScale - 1) * t}) rotate(${cfg.maxRotateZ * t}deg)`
+      // 0 at the hero's rest position, 1 once it has scrolled out by its height.
+      const p = Math.max(0, Math.min(1, -rect.top / Math.max(1, rect.height)))
+      const t = p * p * (3 - 2 * p) // smoothstep
+      // Overscan surplus per edge = (SCALE*t*H)/2 must exceed |MAX_Y*t| so no
+      // edge gap shows: 0.05*945 ≈ 47px vs 34px. Safe at every t.
+      layer.style.transform = `translate3d(0, ${MAX_Y * t}px, 0) scale(${1 + SCALE * t})`
     }
 
     let rafId = 0
@@ -188,15 +184,30 @@ export default function ShaderHero() {
     }
     const onScroll = requestTick
     const onResize = requestTick
-
     window.addEventListener('scroll', onScroll, { passive: true })
     window.addEventListener('resize', onResize, { passive: true })
-    requestTick() // one initial tick so state is correct on mount
+
+    // Apply as soon as the layer exists (it is synchronous here, but keep the
+    // observer for safety if the stack mounts asynchronous content later).
+    let mo = null
+    if (el.querySelector('.hero-bg-layer')) {
+      requestTick()
+    } else if (typeof MutationObserver !== 'undefined') {
+      mo = new MutationObserver(() => {
+        if (el.querySelector('.hero-bg-layer')) {
+          requestTick()
+          mo.disconnect()
+          mo = null
+        }
+      })
+      mo.observe(el, { childList: true, subtree: true })
+    }
 
     return () => {
       if (rafId) cancelAnimationFrame(rafId)
       window.removeEventListener('scroll', onScroll)
       window.removeEventListener('resize', onResize)
+      if (mo) mo.disconnect()
     }
   }, [])
 

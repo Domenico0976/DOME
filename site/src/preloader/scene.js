@@ -16,7 +16,7 @@ import { vertexShader, fragmentShader } from './shader.js'
 import { createCounterTexture } from './counter-texture.js'
 import { createRingRig } from './ring.js'
 import { FRONT_PROFILE, sweepFront } from './wavefront.js'
-import { TILE_SIZE, COVER_START } from './config.js'
+import { COVER_START, tileSizeFor } from './config.js'
 import { pixelRatioFor } from '../utils/renderScale.js'
 
 const BG = new THREE.Vector3(0.9608, 0.9451, 0.9176) // paper field / cover colour
@@ -70,13 +70,14 @@ export function createPreloaderScene(parent) {
     uContent: { value: rt.texture },
     uCounter: { value: counterTex },
     uResolution: { value: new THREE.Vector2(1, 1) },
-    uTileSize: { value: TILE_SIZE },
+    uTileSize: { value: tileSizeFor(typeof window !== 'undefined' ? window.innerWidth : 0) },
+    uGrid: { value: new THREE.Vector2(1, 1) },
     // Parked off the corner: sweepFront(0) = -band, so with a fresh scene the
     // wave-1 front consumes nothing — exactly the standby look.
     uFront: { value: sweepFront(0) },
     uCoverR: { value: COVER_START },
     uPhase: { value: 0 },
-    uGrain: { value: 0.5 },
+    uGrain: { value: 0.8 },
     uTrail: { value: FRONT_PROFILE.trail },
     uBG: { value: BG },
     uInk: { value: INK },
@@ -106,8 +107,17 @@ export function createPreloaderScene(parent) {
     renderer.setPixelRatio(dprFor(w, h))
     renderer.setSize(w, h, false)
     uniforms.uResolution.value.set(w, h)
-    const gw = Math.max(1, Math.floor(w / TILE_SIZE))
-    const gh = Math.max(1, Math.floor(h / TILE_SIZE))
+    // Same grid math as desktop (square cells, one uTileSize for both axes);
+    // only the cell size shrinks responsively, so cells keep the desktop aspect
+    // ratio at a smaller size (like the ring's responsive scale).
+    // floor() keeps the grid INSIDE the viewport (no off-screen trailing row
+    // that pushes the counter against the bottom edge). The shader clamps the
+    // last partial tile to the final texel, so no black bar appears.
+    const ts = tileSizeFor(w)
+    uniforms.uTileSize.value = ts
+    const gw = Math.max(1, Math.floor(w / ts))
+    const gh = Math.max(1, Math.floor(h / ts))
+    uniforms.uGrid.value.set(gw, gh)
     counter.resize(gw, gh)
     counterTex.needsUpdate = true
     // RT to the actual drawing buffer: on a dpr-capped screen this keeps the

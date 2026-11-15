@@ -248,13 +248,17 @@ export async function mountTorusKnot(canvas, options = {}) {
       },
 
       // Visibility gate — no-op unless animated, so reduced-motion never
-      // gets a running loop back. Ignora toggle rapidi (<100ms): l'IO con
-      // margine spara true->false->true in scroll veloce e ogni toggle
-      // riavvia il loop GL a meta-frame = flicker.
+      // gets a running loop back. Debounce rapid PAUSE toggles (<100ms) because
+      // the margined IO fires true->false->true on fast scroll and each pause
+      // restart costs a frame. A RESUME is always honoured: skipping it (the old
+      // behaviour) could leave the loop stopped while the section was visible,
+      // and on mobile the discarded buffer then showed as a blank / re-appearing
+      // section. Resuming immediately re-renders, so a pause during transient
+      // off-screen never becomes a stuck blank.
       setPaused(paused) {
         if (isDisposed || !renderer || !animated) return
         const now = typeof performance !== 'undefined' ? performance.now() : 0
-        if (now - lastPauseToggle < 100) return
+        if (paused && now - lastPauseToggle < 100) return
         lastPauseToggle = now
         renderer.setAnimationLoop(paused ? null : frame)
       },

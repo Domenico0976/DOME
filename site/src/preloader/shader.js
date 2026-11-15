@@ -40,7 +40,8 @@ precision highp float;
 uniform sampler2D uContent;   // pass-A render target: the star rig, full-res
 uniform sampler2D uCounter;   // grid-res counter bitmap, NEAREST (1 texel = 1 tile)
 uniform vec2  uResolution;    // CSS px (canvas client size)
-uniform float uTileSize;      // ~42.0 px
+uniform float uTileSize;      // responsive tile size in px (square cells)
+uniform vec2  uGrid;          // counter grid dimensions (gw, gh) in tiles
 uniform float uFront;         // wave-1 front radius, parked off the corner
 uniform float uCoverR;        // wave-2 cover radius; 0 = fully open (home)
 uniform float uPhase;         // 0 = consume (wave 1), 1 = cover (wave 2)
@@ -60,9 +61,12 @@ float hash12(vec2 p) {
 }
 
 // Pixelate: centre tap on the grid-res counter bitmap -> chunky, aligned digits.
+// Map tile id -> texel id through the grid size (NOT px/uTileSize), so the
+// counter never drifts or stretches when uTileSize does not divide the viewport.
 float counterInk(vec2 px) {
   vec2 id = floor(px / uTileSize);
-  vec2 uv = ((id + 0.5) * uTileSize) / uResolution;
+  id = clamp(id, vec2(0.0), uGrid - 1.0);
+  vec2 uv = (id + 0.5) / uGrid;
   return texture2D(uCounter, vec2(uv.x, 1.0 - uv.y)).a;
 }
 

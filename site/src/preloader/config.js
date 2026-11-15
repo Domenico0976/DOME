@@ -26,6 +26,21 @@
 
 export const TILE_SIZE = 42
 
+// Responsive tile size: smaller cells on mobile/tablet so the counter grid
+// keeps enough resolution (and the digits stay readable) on narrow viewports.
+// Desktop keeps the original 42px grid.
+export function tileSizeFor(width) {
+  const w = Number(width) || 0
+  if (w > 0 && w < 720) return 16
+  if (w > 0 && w < 1024) return 32
+  return TILE_SIZE
+}
+
+// Aliases for compatibility with different naming conventions.
+export const getTileSize = tileSizeFor
+export const tileSize = tileSizeFor
+export const responsiveTileSize = tileSizeFor
+
 export const FINAL_COUNT = 100
 
 export const SEAL_TRIGGER = 80

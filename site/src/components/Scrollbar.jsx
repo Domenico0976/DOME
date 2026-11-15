@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 
 const MIN_THUMB = 48
 const TRACK_W = 20
@@ -240,50 +241,62 @@ export default function Scrollbar() {
     drive(posRef.current.scroll + dir * window.innerHeight * 0.8, false)
   }
 
-  return (
+  // The thumb is portalled to <body> on purpose. `mix-blend-mode: difference`
+  // blends only against the backdrop of its own stacking context, and ANY
+  // `position: fixed` ancestor (the track included) forms one — so a thumb
+  // nested inside the fixed track blended against the track's transparent
+  // backdrop and stayed plain white instead of inverting the page.
+  // As a direct child of <body> it blends with the real page: white on dark,
+  // black on light (white XOR backdrop).
+  const thumb = (
     <div
-      ref={trackRef}
-      aria-hidden="true"
-      onPointerDown={onTrackDown}
+      ref={thumbRef}
+      onPointerDown={onThumbDown}
+      onPointerMove={onThumbMove}
+      onPointerUp={onThumbUp}
+      onPointerCancel={onThumbUp}
       style={{
         position: 'fixed',
         top: trackTop,
-        right: 0,
-        width: TRACK_W,
-        height: `calc(100dvh - ${trackTop}px)`,
-        // Sopra ogni cosa (hero/textEntry/footer canvas, pendulum 9999):
-        // senza z-index il track sta sotto i layer con stacking proprio.
-        zIndex: 100000,
+        right: (TRACK_W - THUMB_W) / 2,
+        width: THUMB_W,
+        height: MIN_THUMB,
+        borderRadius: 999,
+        background: 'white',
+        mixBlendMode: 'difference',
+        zIndex: 100001,
         pointerEvents: revealed ? 'auto' : 'none',
         visibility: revealed ? 'visible' : 'hidden',
         opacity: revealed ? 1 : 0,
         transition: reduceMotion ? 'none' : `opacity ${FADE_MS}ms ease`,
+        touchAction: 'none',
+        cursor: 'grab',
       }}
-    >
+    />
+  )
+
+  return (
+    <>
       <div
-        ref={thumbRef}
-        onPointerDown={onThumbDown}
-        onPointerMove={onThumbMove}
-        onPointerUp={onThumbUp}
-        onPointerCancel={onThumbUp}
+        ref={trackRef}
+        aria-hidden="true"
+        onPointerDown={onTrackDown}
         style={{
-          position: 'absolute',
-          top: 0,
-          right: (TRACK_W - THUMB_W) / 2,
-          width: THUMB_W,
-          height: MIN_THUMB,
-          borderRadius: 999,
-          // Bianco + difference = |sfondo - bianco| = sfondo invertito: sempre
-          // visibile ovunque. Nero + difference darebbe |sfondo - 0| = sfondo
-          // = thumb invisibile (era il bug).
-          background: 'white',
-          mixBlendMode: 'difference',
-          zIndex: 99999,
+          position: 'fixed',
+          top: trackTop,
+          right: 0,
+          width: TRACK_W,
+          height: `calc(100dvh - ${trackTop}px)`,
+          // Sopra ogni cosa (hero/textEntry/footer canvas, pendulum 9999):
+          // senza z-index il track sta sotto i layer con stacking proprio.
+          zIndex: 100000,
           pointerEvents: revealed ? 'auto' : 'none',
-          touchAction: 'none',
-          cursor: 'grab',
+          visibility: revealed ? 'visible' : 'hidden',
+          opacity: revealed ? 1 : 0,
+          transition: reduceMotion ? 'none' : `opacity ${FADE_MS}ms ease`,
         }}
       />
-    </div>
+      {typeof document !== 'undefined' ? createPortal(thumb, document.body) : null}
+    </>
   )
 }

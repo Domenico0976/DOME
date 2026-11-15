@@ -60,6 +60,22 @@ export default function HeroTextRing() {
     let grx = 0
     let gry = 0
     let gHero = false
+    // Fixed default (rest) pose — frozen from the first measured layout so page
+    // scroll never changes it. Re-derived only on resize.
+    let defPx = 0
+    let defPy = 1
+    let defReady = false
+    // Timestamp of the last page scroll. While scrolling the ring holds its
+    // default pose (no gizmo tilt).
+    let lastScrollAt = -Infinity
+    const onScrollGuard = () => {
+      lastScrollAt = performance.now()
+    }
+    window.addEventListener('scroll', onScrollGuard, { passive: true })
+    const onResizeDefault = () => {
+      defReady = false
+    }
+    window.addEventListener('resize', onResizeDefault)
     const onGizmoMove = (e) => {
       const el = wrapRef.current
       if (!el) return
@@ -152,14 +168,21 @@ export default function HeroTextRing() {
           pos.needsUpdate = true
           amp = 0
         }
-        const rectNow = cachedRect || el.getBoundingClientRect()
-        const restPx = ((window.innerWidth / 2) - (rectNow.left + rectNow.width / 2)) / (window.innerWidth / 2)
-        const restPy = (window.innerHeight - (rectNow.top + rectNow.height / 2)) / (window.innerHeight / 2)
-        const engaged = gHero && visible
+        // Default (rest) pose, captured once from the mounted layout so scrolling
+        // the page can no longer rotate the ring. Recomputed only on resize.
+        if (!defReady && cachedRect) {
+          defPx = ((window.innerWidth / 2) - (cachedRect.left + cachedRect.width / 2)) / (window.innerWidth / 2)
+          defPy = (window.innerHeight - (cachedRect.top + cachedRect.height / 2)) / (window.innerHeight / 2)
+          defReady = true
+        }
+        // Gizmo tilt is live ONLY while the pointer moves inside the hero section
+        // and the page is not scrolling. Otherwise hold/restore the default pose.
+        const scrolling = now - lastScrollAt < 150
+        const engaged = gHero && visible && !scrolling
         const idleMs = gHas && engaged ? now - gLastT : Infinity
         const idle = Math.max(0, Math.min(1, (idleMs - 3000) / 900))
-        const epx = gpx + (restPx - gpx) * idle
-        const epy = gpy + (restPy - gpy) * idle
+        const epx = gpx + (defPx - gpx) * idle
+        const epy = gpy + (defPy - gpy) * idle
         const mag = Math.min(1, Math.hypot(epx, epy))
         const tk = Math.min(1, dt * 4)
         const tgx = reduceMotion ? 0 : epx * 0.7 * (0.25 + 0.75 * mag)
@@ -168,7 +191,7 @@ export default function HeroTextRing() {
         grx += (tgy - grx) * tk
         group.rotation.y = gry
         group.rotation.x = grx
-        if (!reduceMotion && gHero && visible) {
+        if (!reduceMotion && engaged) {
           const boost = Math.min(2400, Math.hypot(gvx, gvy)) / 600
           tex.offset.x -= SCROLL * boost * dt
         }
@@ -213,6 +236,8 @@ export default function HeroTextRing() {
       cancelAnimationFrame(raf)
       if (io) io.disconnect()
       window.removeEventListener('pointermove', onGizmoMove)
+      window.removeEventListener('scroll', onScrollGuard)
+      window.removeEventListener('resize', onResizeDefault)
       if (refreshRect) {
         window.removeEventListener('scroll', refreshRect)
         window.removeEventListener('resize', refreshRect)
@@ -239,7 +264,7 @@ export default function HeroTextRing() {
       style={{
         position: 'absolute',
         left: '50%',
-        top: 'calc(232px - min(440px, 94vw) / 2)',
+        top: 'calc(284px - min(440px, 94vw) / 2)',
         width: 'min(440px, 94vw)',
         aspectRatio: '1 / 1',
         transform: 'translateX(-50%)',

@@ -471,6 +471,12 @@ export default function FeaturedGallery() {
     if (!gridInView || glBuiltRef.current) return
     const grid = gridRef.current
     if (!grid) return
+    // Phones: do NOT open six per-card WebGL contexts. They push the page past the
+    // browser's context budget and the oldest surface (the hero ring / the
+    // hero-glass section, mounted earlier) gets reclaimed → those sections blank
+    // out. Phones keep the static posters (`is-ready` is never set, so the <img>
+    // shows), and a tap still opens MobileCanvas for the effect.
+    if (isMobile) return
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     if (!shouldEnableSectionWebGL({ isMobile, reduceMotion })) return
 
