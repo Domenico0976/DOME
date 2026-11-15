@@ -296,11 +296,14 @@ function buildGalleryGL(frames, cursorInput) {
         bu.uTime.value = t
         if (cursorInput.isTouch) {
           const r = it.frame.getBoundingClientRect()
-          const cur = cursorInput.cursorRef.current
-          // Mobile grid: conta la posizione parcheggiata anche da addormentata —
-          // e l'hover del cursor mobile, dissolve in griglia senza aprire canvas.
-          // Il gate AWAKE resta per tutti gli altri effetti (torus, callout...).
-          const active = !!cur
+          // Gate on the AWAKE mobile cursor and its PARKED position — NOT the live
+          // cursorRef. cursorRef is updated by every pointermove, so a bare-finger
+          // SCROLL over the grid used to dissolve the cards; the parked ref only
+          // moves while the cursor is deliberately grabbed, and `awake` is only
+          // true then. Same rule as the new-tab cursor gate.
+          const awake = cursorInput.isCursorAwake?.current
+          const cur = cursorInput.cursorParkedRef?.current
+          const active = !!awake && !!cur
             && cur.x >= r.left && cur.x <= r.right
             && cur.y >= r.top && cur.y <= r.bottom
           if (active) {
@@ -451,7 +454,7 @@ export default function FeaturedGallery() {
   const { isMobile, openCanvas, cursorRef } = useArchiveCursor()
   // buildGalleryGL is a plain function outside the component, so it cannot call the
   // hook itself; the gate is threaded in through cursorInput.
-  const { isTouch, isAwake } = useCursorGate()
+  const { isTouch, isAwake, parked } = useCursorGate()
   useEffect(() => { gridInViewRef.current = gridInView }, [gridInView])
 
   const handleImageTap = useCallback((image, alignX = 0.5, alignY = 0.5) => {
@@ -503,7 +506,7 @@ export default function FeaturedGallery() {
       // DOM elements persist, so the cached renderers are reused as-is.
       if (!galleryGL || galleryGL.frames[0] !== validFrames[0]) {
         if (galleryGL) galleryGL.disposeAll()
-        galleryGL = buildGalleryGL(validFrames, { isTouch, cursorRef, inViewRef: gridInViewRef, isCursorAwake: isAwake })
+        galleryGL = buildGalleryGL(validFrames, { isTouch, cursorRef, cursorParkedRef: parked, inViewRef: gridInViewRef, isCursorAwake: isAwake })
       }
       glBuiltRef.current = true
       galleryGL.startLoop()
@@ -584,7 +587,7 @@ export default function FeaturedGallery() {
   }, [handleImageTap])
 
   return (
-    <section className="featured-region" id="featured" aria-labelledby="featured-title">
+    <section className="featured-region" id="featured" data-hint-section="gallery" aria-labelledby="featured-title">
       <div className="container">
         <div className="section-head gsap-reveal">
           <h2 id="featured-title">UX\UI Design</h2>

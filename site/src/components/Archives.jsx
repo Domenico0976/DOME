@@ -346,7 +346,7 @@ export default function Archives() {
   }, [isNarrow])
 
   return (
-    <section className="archives-region" id="archives" aria-labelledby="archives-title" ref={sectionRef}>
+    <section className="archives-region" id="archives" data-hint-section="archives" aria-labelledby="archives-title" ref={sectionRef}>
       <div className="container">
         <div className="section-head">
           <h2 id="archives-title">Archives</h2>

@@ -58,7 +58,11 @@ export default function MobileSectionCanvas({
     else if (!isTiles) renderer.setClearColor(0x000000, 1)
 
     const scene = new THREE.Scene()
-    const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1)
+    // far=10, matching the desktop gallery camera. The dissolve's BACK layer sits
+    // at z=-0.1 (behind the front), and with far=1 its frustum ended at z=0, so the
+    // colour layer was clipped away entirely — the reveal only ever showed the B&W
+    // front (the "hovered image never gets its colour" bug).
+    const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 10)
     camera.position.z = 1
 
     const uniforms = {
@@ -192,6 +196,7 @@ export default function MobileSectionCanvas({
           dissState.revealTarget = wantReveal
           tweenDissolve(dissState, wantReveal)
         }
+
         const bu = backMat.uniforms
         bu.uTime.value = uniforms.uTime.value
         bu.uHover.value += (dissState.targetHover - bu.uHover.value) * 0.065

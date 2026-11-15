@@ -364,14 +364,19 @@ if (domLines.length) {
               rightColor="#f195d6"
               radius={isTouch ? 3.25 : 2.5}
               momentum={18}
-              intensity={effectOn ? 0.2 : 2.5}
+              // WebGL chromatic power. Desktop keeps the subtle 0.2 while engaged;
+              // on touch the engaged effect was almost invisible on the flutes, so
+              // it gets a strong boost (the inactive value stays 2.5 for the rest).
+              intensity={effectOn ? (isTouch ? 2.1 : 0.2) : 2.5}
             />
             <FlutedGlass
               shape="waves"
               angle={31}
               frequency={10}
               refraction={6}
-              aberration={effectOn ? 1.9 : 0.61}
+              // Mobile engaged: push the chromatic split so the colour reads on
+              // every flute, not just a faint fringe.
+              aberration={effectOn ? (isTouch ? 2.8 : 1.9) : 0.61}
               waveAmplitude={0.2}
               waveFrequency={0.2}
               speed={0.25}

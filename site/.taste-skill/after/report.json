@@ -1,0 +1,3429 @@
+{
+ "url": "http://localhost:4340/",
+ "at": "2026-11-15T20:02:11.679Z",
+ "allow": [],
+ "viewports": [
+  {
+   "width": 1440,
+   "height": 900,
+   "load": "load",
+   "screens": 8,
+   "filled": [
+    0.03,
+    0.06,
+    0.06,
+    0.13,
+    0.5,
+    0.19,
+    0.11,
+    0.01
+   ],
+   "motion": {
+    "elements": 219,
+    "css": 5,
+    "transitions": 13,
+    "scripted": 201,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 1440,
+     "h": 900
+    },
+    "page": {
+     "height": 6721,
+     "screens": 7.5,
+     "words": 298,
+     "img": 7,
+     "video": 0,
+     "canvas": 17,
+     "svg": 0,
+     "sections": 5,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 8,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [
+      "alfly-open.png",
+      "sisalfunclub-open.png",
+      "itour-open.png",
+      "ubank-open.png",
+      "policliMi-open.png",
+      "twitch-open.png"
+     ],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": [
+      "❤"
+     ],
+     "videosNoPoster": 0
+    },
+    "hero": null,
+    "h1": null,
+    "headings": [
+     {
+      "text": "UX\\UI Design",
+      "words": 2,
+      "chars": 12,
+      "lines": 1,
+      "size": 88,
+      "vw": 6.1,
+      "font": "Bricolage Grotesque",
+      "weight": 500,
+      "tracking": -0.037,
+      "leading": 1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.31,
+      "top": 1531,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "AlFly",
+      "words": 1,
+      "chars": 5,
+      "lines": 1,
+      "size": 36,
+      "vw": 2.5,
+      "font": "Bricolage Grotesque",
+      "weight": 600,
+      "tracking": -0.01,
+      "leading": 1.05,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.3,
+      "top": 2175,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "SISALFUNCLUB",
+      "words": 1,
+      "chars": 12,
+      "lines": 1,
+      "size": 36,
+      "vw": 2.5,
+      "font": "Bricolage Grotesque",
+      "weight": 600,
+      "tracking": -0.01,
+      "leading": 1.05,
+      "upper": true,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.3,
+      "top": 2175,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "iTour",
+      "words": 1,
+      "chars": 5,
+      "lines": 1,
+      "size": 36,
+      "vw": 2.5,
+      "font": "Bricolage Grotesque",
+      "weight": 600,
+      "tracking": -0.01,
+      "leading": 1.05,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "right",
+      "widthRatio": 0.3,
+      "top": 2175,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "uBank",
+      "words": 1,
+      "chars": 5,
+      "lines": 1,
+      "size": 36,
+      "vw": 2.5,
+      "font": "Bricolage Grotesque",
+      "weight": 600,
+      "tracking": -0.01,
+      "leading": 1.05,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.3,
+      "top": 2702,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "Policlinico di Milano",
+      "words": 3,
+      "chars": 21,
+      "lines": 1,
+      "size": 36,
+      "vw": 2.5,
+      "font": "Bricolage Grotesque",
+      "weight": 600,
+      "tracking": -0.01,
+      "leading": 1.05,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.3,
+      "top": 2702,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "Twitch",
+      "words": 1,
+      "chars": 6,
+      "lines": 1,
+      "size": 36,
+      "vw": 2.5,
+      "font": "Bricolage Grotesque",
+      "weight": 600,
+      "tracking": -0.01,
+      "leading": 1.05,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "right",
+      "widthRatio": 0.3,
+      "top": 2702,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "Music React",
+      "words": 2,
+      "chars": 11,
+      "lines": 1,
+      "size": 88,
+      "vw": 6.1,
+      "font": "Bricolage Grotesque",
+      "weight": 500,
+      "tracking": -0.037,
+      "leading": 1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.3,
+      "top": 2868,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "PARTICLES",
+      "words": 1,
+      "chars": 9,
+      "lines": 1,
+      "size": 70,
+      "vw": 4.9,
+      "font": "Bricolage Grotesque",
+      "weight": 400,
+      "tracking": -0.037,
+      "leading": 1.35,
+      "upper": true,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.87,
+      "top": 3143,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "ƒ Generator",
+      "words": 2,
+      "chars": 11,
+      "lines": 1,
+      "size": 70,
+      "vw": 4.9,
+      "font": "Bricolage Grotesque",
+      "weight": 400,
+      "tracking": -0.037,
+      "leading": 1.35,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.87,
+      "top": 3423,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "ISTOGram",
+      "words": 1,
+      "chars": 8,
+      "lines": 1,
+      "size": 70,
+      "vw": 4.9,
+      "font": "Bricolage Grotesque",
+      "weight": 400,
+      "tracking": -0.037,
+      "leading": 1.35,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.87,
+      "top": 3702,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "somebody say it's just music but what if could be different thinghs?",
+      "words": 12,
+      "chars": 68,
+      "lines": 5,
+      "size": 172.8,
+      "vw": 12,
+      "font": "Bricolage Grotesque",
+      "weight": 800,
+      "tracking": -0.02,
+      "leading": 0.66,
+      "upper": false,
+      "italic": true,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.92,
+      "top": 3932,
+      "tag": "div",
+      "kind": "heading"
+     },
+     {
+      "text": "Archives",
+      "words": 1,
+      "chars": 8,
+      "lines": 1,
+      "size": 88,
+      "vw": 6.1,
+      "font": "Bricolage Grotesque",
+      "weight": 500,
+      "tracking": -0.037,
+      "leading": 1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.21,
+      "top": 4818,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "AlFly",
+      "words": 1,
+      "chars": 5,
+      "lines": 1,
+      "size": 42,
+      "vw": 2.9,
+      "font": "Bricolage Grotesque",
+      "weight": 500,
+      "tracking": -0.01,
+      "leading": 1.15,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.27,
+      "top": 5037,
+      "tag": "td",
+      "kind": "heading"
+     },
+     {
+      "text": "Policlinico di Milano",
+      "words": 3,
+      "chars": 21,
+      "lines": 1,
+      "size": 42,
+      "vw": 2.9,
+      "font": "Bricolage Grotesque",
+      "weight": 500,
+      "tracking": -0.01,
+      "leading": 1.15,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.27,
+      "top": 5122,
+      "tag": "td",
+      "kind": "heading"
+     },
+     {
+      "text": "uBank",
+      "words": 1,
+      "chars": 5,
+      "lines": 1,
+      "size": 42,
+      "vw": 2.9,
+      "font": "Bricolage Grotesque",
+      "weight": 500,
+      "tracking": -0.01,
+      "leading": 1.15,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.27,
+      "top": 5208,
+      "tag": "td",
+      "kind": "heading"
+     },
+     {
+      "text": "SISALFUNCLUB",
+      "words": 1,
+      "chars": 12,
+      "lines": 1,
+      "size": 42,
+      "vw": 2.9,
+      "font": "Bricolage Grotesque",
+      "weight": 500,
+      "tracking": -0.01,
+      "leading": 1.15,
+      "upper": true,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.27,
+      "top": 5293,
+      "tag": "td",
+      "kind": "heading"
+     },
+     {
+      "text": "iTour",
+      "words": 1,
+      "chars": 5,
+      "lines": 1,
+      "size": 42,
+      "vw": 2.9,
+      "font": "Bricolage Grotesque",
+      "weight": 500,
+      "tracking": -0.01,
+      "leading": 1.15,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.27,
+      "top": 5378,
+      "tag": "td",
+      "kind": "heading"
+     },
+     {
+      "text": "CYP Wheels",
+      "words": 2,
+      "chars": 10,
+      "lines": 1,
+      "size": 42,
+      "vw": 2.9,
+      "font": "Bricolage Grotesque",
+      "weight": 500,
+      "tracking": -0.01,
+      "leading": 1.15,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.27,
+      "top": 5463,
+      "tag": "td",
+      "kind": "heading"
+     },
+     {
+      "text": "Dulcis in Fundo",
+      "words": 3,
+      "chars": 15,
+      "lines": 1,
+      "size": 42,
+      "vw": 2.9,
+      "font": "Bricolage Grotesque",
+      "weight": 500,
+      "tracking": -0.01,
+      "leading": 1.15,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.27,
+      "top": 5549,
+      "tag": "td",
+      "kind": "heading"
+     },
+     {
+      "text": "Collezione Cagnola",
+      "words": 2,
+      "chars": 18,
+      "lines": 1,
+      "size": 42,
+      "vw": 2.9,
+      "font": "Bricolage Grotesque",
+      "weight": 500,
+      "tracking": -0.01,
+      "leading": 1.15,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.27,
+      "top": 5634,
+      "tag": "td",
+      "kind": "heading"
+     },
+     {
+      "text": "Sielco",
+      "words": 1,
+      "chars": 6,
+      "lines": 1,
+      "size": 42,
+      "vw": 2.9,
+      "font": "Bricolage Grotesque",
+      "weight": 500,
+      "tracking": -0.01,
+      "leading": 1.15,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.27,
+      "top": 5719,
+      "tag": "td",
+      "kind": "heading"
+     },
+     {
+      "text": "Marabini Recuperi",
+      "words": 2,
+      "chars": 17,
+      "lines": 1,
+      "size": 42,
+      "vw": 2.9,
+      "font": "Bricolage Grotesque",
+      "weight": 500,
+      "tracking": -0.01,
+      "leading": 1.15,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.27,
+      "top": 5805,
+      "tag": "td",
+      "kind": "heading"
+     }
+    ],
+    "headingSummary": {
+     "count": 23,
+     "maxLines": 5,
+     "over2Lines": 1,
+     "statements": 6,
+     "centered": 0,
+     "medianWords": 1,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Darker Grotesque",
+       "share": 0.68,
+       "mono": false
+      },
+      {
+       "family": "Bricolage Grotesque",
+       "share": 0.31,
+       "mono": false
+      },
+      {
+       "family": "ui-sans-serif",
+       "share": 0.01,
+       "mono": false
+      }
+     ],
+     "familyCount": 3,
+     "sizes": [
+      11,
+      12,
+      14,
+      15,
+      16,
+      18,
+      36,
+      42,
+      70,
+      88,
+      173
+     ],
+     "sizeCount": 11,
+     "notLoaded": [],
+     "body": null,
+     "measureChars": null,
+     "max": {
+      "size": 172.8,
+      "vw": 12,
+      "font": "Bricolage Grotesque",
+      "text": "somebody say"
+     },
+     "monoShare": 0,
+     "monoProseShare": 0,
+     "monoFamilies": [],
+     "monoSamples": [],
+     "microLabels": 1,
+     "microLabelShare": 0.009,
+     "microSamples": [
+      "CLICK TO ENTER"
+     ],
+     "upperShare": 0.48,
+     "centerShare": 0.02,
+     "smallText": 1
+    },
+    "eyebrows": [
+     {
+      "text": "Archive",
+      "above": "PARTICLES",
+      "upper": true,
+      "tracked": true,
+      "mono": false,
+      "pill": false,
+      "size": 15.8,
+      "top": 3099
+     },
+     {
+      "text": "Reactive Archive",
+      "above": "ƒ Generator",
+      "upper": true,
+      "tracked": true,
+      "mono": false,
+      "pill": false,
+      "size": 15.8,
+      "top": 3378
+     },
+     {
+      "text": "Reactive Archive",
+      "above": "ISTOGram",
+      "upper": true,
+      "tracked": true,
+      "mono": false,
+      "pill": false,
+      "size": 15.8,
+      "top": 3658
+     },
+     {
+      "text": "N°",
+      "above": "AlFly",
+      "upper": true,
+      "tracked": true,
+      "mono": false,
+      "pill": false,
+      "size": 15.8,
+      "top": 4996
+     },
+     {
+      "text": "01",
+      "above": "Policlinico di Milano",
+      "upper": false,
+      "tracked": false,
+      "mono": false,
+      "pill": false,
+      "size": 15.8,
+      "top": 5037
+     },
+     {
+      "text": "02",
+      "above": "uBank",
+      "upper": false,
+      "tracked": false,
+      "mono": false,
+      "pill": false,
+      "size": 15.8,
+      "top": 5122
+     },
+     {
+      "text": "03",
+      "above": "SISALFUNCLUB",
+      "upper": false,
+      "tracked": false,
+      "mono": false,
+      "pill": false,
+      "size": 15.8,
+      "top": 5208
+     },
+     {
+      "text": "04",
+      "above": "iTour",
+      "upper": false,
+      "tracked": false,
+      "mono": false,
+      "pill": false,
+      "size": 15.8,
+      "top": 5293
+     },
+     {
+      "text": "05",
+      "above": "CYP Wheels",
+      "upper": false,
+      "tracked": false,
+      "mono": false,
+      "pill": false,
+      "size": 15.8,
+      "top": 5378
+     },
+     {
+      "text": "06",
+      "above": "Dulcis in Fundo",
+      "upper": false,
+      "tracked": false,
+      "mono": false,
+      "pill": false,
+      "size": 15.8,
+      "top": 5463
+     },
+     {
+      "text": "07",
+      "above": "Collezione Cagnola",
+      "upper": false,
+      "tracked": false,
+      "mono": false,
+      "pill": false,
+      "size": 15.8,
+      "top": 5549
+     },
+     {
+      "text": "08",
+      "above": "Sielco",
+      "upper": false,
+      "tracked": false,
+      "mono": false,
+      "pill": false,
+      "size": 15.8,
+      "top": 5634
+     },
+     {
+      "text": "09",
+      "above": "Marabini Recuperi",
+      "upper": false,
+      "tracked": false,
+      "mono": false,
+      "pill": false,
+      "size": 15.8,
+      "top": 5719
+     }
+    ],
+    "numbered": [
+     {
+      "text": "01",
+      "size": 15.8,
+      "top": 5037
+     },
+     {
+      "text": "02",
+      "size": 15.8,
+      "top": 5122
+     },
+     {
+      "text": "03",
+      "size": 15.8,
+      "top": 5208
+     },
+     {
+      "text": "04",
+      "size": 15.8,
+      "top": 5293
+     },
+     {
+      "text": "05",
+      "size": 15.8,
+      "top": 5378
+     },
+     {
+      "text": "06",
+      "size": 15.8,
+      "top": 5463
+     },
+     {
+      "text": "07",
+      "size": 15.8,
+      "top": 5549
+     },
+     {
+      "text": "08",
+      "size": 15.8,
+      "top": 5634
+     },
+     {
+      "text": "09",
+      "size": 15.8,
+      "top": 5719
+     }
+    ],
+    "color": {
+     "bodyBg": "#f5f1ea",
+     "bodyBgHsl": {
+      "h": 38,
+      "s": 0.35,
+      "l": 0.94
+     },
+     "dark": false,
+     "sectionBgs": [
+      {
+       "color": "#f5f1ea",
+       "top": 0,
+       "hsl": {
+        "h": 38,
+        "s": 0.35,
+        "l": 0.94
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#5c5c5c",
+       "share": 0.63
+      },
+      {
+       "color": "#111111",
+       "share": 0.31
+      },
+      {
+       "color": "#ffffff",
+       "share": 0.01
+      },
+      {
+       "color": "#101010",
+       "share": 0
+      }
+     ],
+     "button": {
+      "bg": "#111111",
+      "hsl": {
+       "h": 0,
+       "s": 0,
+       "l": 0.07
+      },
+      "fg": "#ffffff"
+     },
+     "lowContrast": []
+    },
+    "buttons": {
+     "count": 1,
+     "inHero": 1,
+     "radius": "pill",
+     "height": 39,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "Enter with sound"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 0,
+     "scrims": 0,
+     "gradientSamples": [],
+     "gradientText": 0,
+     "hairlines": 6,
+     "hairlineSamples": [
+      "header.site-header 1440px",
+      "section.selected-region 1440px",
+      "article.project-row 1325px",
+      "article.project-row 1325px",
+      "article.project-row 1325px"
+     ],
+     "outlinedBoxes": 0,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 0,
+     "boxRadius": 0,
+     "squareMedia": 24,
+     "roundedMedia": 0,
+     "mediaRadius": 0,
+     "textShadow": 0,
+     "cardRows": []
+    },
+    "heroMedia": [
+     {
+      "type": "canvas",
+      "ratio": 1
+     },
+     {
+      "type": "canvas",
+      "ratio": 1
+     },
+     {
+      "type": "bg-image",
+      "ratio": 0.93
+     },
+     {
+      "type": "bg-image",
+      "ratio": 0.93
+     }
+    ],
+    "nav": {
+     "links": 1,
+     "fixed": true,
+     "height": 64,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": [
+     "bricolage grotesque",
+     "darker grotesque",
+     "hedvig letters serif"
+    ]
+   },
+   "layout": {
+    "viewport": {
+     "w": 1440,
+     "h": 900
+    },
+    "pageH": 6721,
+    "margins": {
+     "left": 58,
+     "right": 57
+    },
+    "sections": [
+     {
+      "sel": "section.hero-region.hero-region--split",
+      "tag": "section",
+      "top": 64,
+      "height": 945,
+      "words": 0,
+      "media": 4,
+      "middle": 0,
+      "heading": null,
+      "left": 500,
+      "right": 500,
+      "textLeft": null,
+      "textRight": null,
+      "fullBleed": true,
+      "footer": false,
+      "hero": true,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section.text-entry",
+      "tag": "section",
+      "top": 820,
+      "height": 648,
+      "words": 0,
+      "media": 1,
+      "middle": 0,
+      "heading": null,
+      "left": null,
+      "right": null,
+      "textLeft": null,
+      "textRight": null,
+      "fullBleed": true,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section#featured.featured-region",
+      "tag": "section",
+      "top": 1468,
+      "height": 1310,
+      "words": 45,
+      "media": 6,
+      "middle": 12,
+      "heading": {
+       "text": "UX\\UI Design",
+       "size": 88,
+       "tag": "h2"
+      },
+      "left": 58,
+      "right": 57,
+      "textLeft": 58,
+      "textRight": 58,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section.selected-region",
+      "tag": "section",
+      "top": 2778,
+      "height": 1976,
+      "words": 46,
+      "media": 1,
+      "middle": 0,
+      "heading": {
+       "text": "Music React",
+       "size": 88,
+       "tag": "h2"
+      },
+      "left": 58,
+      "right": 58,
+      "textLeft": 58,
+      "textRight": 58,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section#archives.archives-region",
+      "tag": "section",
+      "top": 4754,
+      "height": 1163,
+      "words": 125,
+      "media": 0,
+      "middle": 180,
+      "heading": {
+       "text": "Archives",
+       "size": 88,
+       "tag": "h2"
+      },
+      "left": 58,
+      "right": 58,
+      "textLeft": 58,
+      "textRight": 58,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "footer.dotted-grid-footer",
+      "tag": "footer",
+      "top": 5917,
+      "height": 804,
+      "words": 12,
+      "media": 1,
+      "middle": 524,
+      "heading": null,
+      "left": 24,
+      "right": 24,
+      "textLeft": 24,
+      "textRight": 24,
+      "fullBleed": true,
+      "footer": true,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     }
+    ],
+    "gaps": [],
+    "h1s": [],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 58,
+      "n": 3
+     },
+     {
+      "x": 94,
+      "n": 3
+     }
+    ],
+    "leftBlocks": 6,
+    "bodySize": 16,
+    "stage": true,
+    "explains": false,
+    "slivers": [],
+    "voidShare": 0,
+    "voidBox": null
+   },
+   "app": null,
+   "consoleErrors": []
+  },
+  {
+   "width": 768,
+   "height": 1024,
+   "load": "load",
+   "screens": 8,
+   "filled": [
+    0.07,
+    0.06,
+    0.06,
+    0.22,
+    0.3,
+    0.24,
+    0.27,
+    0.08
+   ],
+   "motion": {
+    "elements": 157,
+    "css": 5,
+    "transitions": 13,
+    "scripted": 139,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 768,
+     "h": 1024
+    },
+    "page": {
+     "height": 7990,
+     "screens": 7.8,
+     "words": 308,
+     "img": 7,
+     "video": 0,
+     "canvas": 17,
+     "svg": 0,
+     "sections": 5,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 8,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [
+      "alfly-open.png",
+      "sisalfunclub-open.png",
+      "itour-open.png",
+      "ubank-open.png",
+      "policliMi-open.png",
+      "twitch-open.png"
+     ],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": [
+      "❤"
+     ],
+     "videosNoPoster": 0
+    },
+    "hero": null,
+    "h1": null,
+    "headings": [
+     {
+      "text": "UX\\UI Design",
+      "words": 2,
+      "chars": 12,
+      "lines": 1,
+      "size": 53.8,
+      "vw": 7,
+      "font": "Bricolage Grotesque",
+      "weight": 500,
+      "tracking": -0.037,
+      "leading": 1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.38,
+      "top": 1733,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "AlFly",
+      "words": 1,
+      "chars": 5,
+      "lines": 1,
+      "size": 36,
+      "vw": 4.7,
+      "font": "Bricolage Grotesque",
+      "weight": 600,
+      "tracking": -0.01,
+      "leading": 1.05,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.45,
+      "top": 2264,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "SISALFUNCLUB",
+      "words": 1,
+      "chars": 12,
+      "lines": 1,
+      "size": 36,
+      "vw": 4.7,
+      "font": "Bricolage Grotesque",
+      "weight": 600,
+      "tracking": -0.01,
+      "leading": 1.05,
+      "upper": true,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "right",
+      "widthRatio": 0.45,
+      "top": 2264,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "iTour",
+      "words": 1,
+      "chars": 5,
+      "lines": 1,
+      "size": 36,
+      "vw": 4.7,
+      "font": "Bricolage Grotesque",
+      "weight": 600,
+      "tracking": -0.01,
+      "leading": 1.05,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.45,
+      "top": 2704,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "uBank",
+      "words": 1,
+      "chars": 5,
+      "lines": 1,
+      "size": 36,
+      "vw": 4.7,
+      "font": "Bricolage Grotesque",
+      "weight": 600,
+      "tracking": -0.01,
+      "leading": 1.05,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "right",
+      "widthRatio": 0.45,
+      "top": 2704,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "Policlinico di Milano",
+      "words": 3,
+      "chars": 21,
+      "lines": 1,
+      "size": 36,
+      "vw": 4.7,
+      "font": "Bricolage Grotesque",
+      "weight": 600,
+      "tracking": -0.01,
+      "leading": 1.05,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.45,
+      "top": 3163,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "Twitch",
+      "words": 1,
+      "chars": 6,
+      "lines": 1,
+      "size": 36,
+      "vw": 4.7,
+      "font": "Bricolage Grotesque",
+      "weight": 600,
+      "tracking": -0.01,
+      "leading": 1.05,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "right",
+      "widthRatio": 0.45,
+      "top": 3163,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "Music React",
+      "words": 2,
+      "chars": 11,
+      "lines": 1,
+      "size": 53.8,
+      "vw": 7,
+      "font": "Bricolage Grotesque",
+      "weight": 500,
+      "tracking": -0.037,
+      "leading": 1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.36,
+      "top": 3346,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "PARTICLES",
+      "words": 1,
+      "chars": 9,
+      "lines": 1,
+      "size": 64,
+      "vw": 8.3,
+      "font": "Bricolage Grotesque",
+      "weight": 400,
+      "tracking": -0.037,
+      "leading": 1.35,
+      "upper": true,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.81,
+      "top": 3583,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "ƒ Generator",
+      "words": 2,
+      "chars": 11,
+      "lines": 1,
+      "size": 64,
+      "vw": 8.3,
+      "font": "Bricolage Grotesque",
+      "weight": 400,
+      "tracking": -0.037,
+      "leading": 1.35,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.81,
+      "top": 3846,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "ISTOGram",
+      "words": 1,
+      "chars": 8,
+      "lines": 1,
+      "size": 64,
+      "vw": 8.3,
+      "font": "Bricolage Grotesque",
+      "weight": 400,
+      "tracking": -0.037,
+      "leading": 1.35,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.81,
+      "top": 4109,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "somebody say it's just music but what if could be different thinghs?",
+      "words": 12,
+      "chars": 68,
+      "lines": 5,
+      "size": 92.2,
+      "vw": 12,
+      "font": "Bricolage Grotesque",
+      "weight": 800,
+      "tracking": -0.02,
+      "leading": 0.66,
+      "upper": false,
+      "italic": true,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.92,
+      "top": 4294,
+      "tag": "div",
+      "kind": "heading"
+     },
+     {
+      "text": "Archives",
+      "words": 1,
+      "chars": 8,
+      "lines": 1,
+      "size": 53.8,
+      "vw": 7,
+      "font": "Bricolage Grotesque",
+      "weight": 500,
+      "tracking": -0.037,
+      "leading": 1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.25,
+      "top": 4810,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "AlFly",
+      "words": 1,
+      "chars": 5,
+      "lines": 1,
+      "size": 64,
+      "vw": 8.3,
+      "font": "Bricolage Grotesque",
+      "weight": 400,
+      "tracking": -0.037,
+      "leading": 1.35,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.81,
+      "top": 5012,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "Policlinico di Milano",
+      "words": 3,
+      "chars": 21,
+      "lines": 1,
+      "size": 64,
+      "vw": 8.3,
+      "font": "Bricolage Grotesque",
+      "weight": 400,
+      "tracking": -0.037,
+      "leading": 1.35,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.81,
+      "top": 5249,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "uBank",
+      "words": 1,
+      "chars": 5,
+      "lines": 1,
+      "size": 64,
+      "vw": 8.3,
+      "font": "Bricolage Grotesque",
+      "weight": 400,
+      "tracking": -0.037,
+      "leading": 1.35,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.81,
+      "top": 5487,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "SISALFUNCLUB",
+      "words": 1,
+      "chars": 12,
+      "lines": 1,
+      "size": 64,
+      "vw": 8.3,
+      "font": "Bricolage Grotesque",
+      "weight": 400,
+      "tracking": -0.037,
+      "leading": 1.35,
+      "upper": true,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.81,
+      "top": 5725,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "iTour",
+      "words": 1,
+      "chars": 5,
+      "lines": 1,
+      "size": 64,
+      "vw": 8.3,
+      "font": "Bricolage Grotesque",
+      "weight": 400,
+      "tracking": -0.037,
+      "leading": 1.35,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.81,
+      "top": 5963,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "CYP Wheels",
+      "words": 2,
+      "chars": 10,
+      "lines": 1,
+      "size": 64,
+      "vw": 8.3,
+      "font": "Bricolage Grotesque",
+      "weight": 400,
+      "tracking": -0.037,
+      "leading": 1.35,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.81,
+      "top": 6201,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "Dulcis in Fundo",
+      "words": 3,
+      "chars": 15,
+      "lines": 1,
+      "size": 64,
+      "vw": 8.3,
+      "font": "Bricolage Grotesque",
+      "weight": 400,
+      "tracking": -0.037,
+      "leading": 1.35,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.81,
+      "top": 6438,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "Collezione Cagnola",
+      "words": 2,
+      "chars": 18,
+      "lines": 1,
+      "size": 64,
+      "vw": 8.3,
+      "font": "Bricolage Grotesque",
+      "weight": 400,
+      "tracking": -0.037,
+      "leading": 1.35,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.81,
+      "top": 6676,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "Sielco",
+      "words": 1,
+      "chars": 6,
+      "lines": 1,
+      "size": 64,
+      "vw": 8.3,
+      "font": "Bricolage Grotesque",
+      "weight": 400,
+      "tracking": -0.037,
+      "leading": 1.35,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.81,
+      "top": 6914,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "Marabini Recuperi",
+      "words": 2,
+      "chars": 17,
+      "lines": 1,
+      "size": 64,
+      "vw": 8.3,
+      "font": "Bricolage Grotesque",
+      "weight": 400,
+      "tracking": -0.037,
+      "leading": 1.35,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.81,
+      "top": 7152,
+      "tag": "h3",
+      "kind": "heading"
+     }
+    ],
+    "headingSummary": {
+     "count": 23,
+     "maxLines": 5,
+     "over2Lines": 1,
+     "statements": 6,
+     "centered": 0,
+     "medianWords": 1,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Darker Grotesque",
+       "share": 0.67,
+       "mono": false
+      },
+      {
+       "family": "Bricolage Grotesque",
+       "share": 0.32,
+       "mono": false
+      },
+      {
+       "family": "ui-sans-serif",
+       "share": 0.01,
+       "mono": false
+      }
+     ],
+     "familyCount": 3,
+     "sizes": [
+      11,
+      12,
+      14,
+      15,
+      18,
+      36,
+      54,
+      64,
+      92
+     ],
+     "sizeCount": 9,
+     "notLoaded": [],
+     "body": null,
+     "measureChars": null,
+     "max": {
+      "size": 92.2,
+      "vw": 12,
+      "font": "Bricolage Grotesque",
+      "text": "somebody say"
+     },
+     "monoShare": 0,
+     "monoProseShare": 0,
+     "monoFamilies": [],
+     "monoSamples": [],
+     "microLabels": 1,
+     "microLabelShare": 0.009,
+     "microSamples": [
+      "CLICK TO ENTER"
+     ],
+     "upperShare": 0.7,
+     "centerShare": 0.02,
+     "smallText": 3
+    },
+    "eyebrows": [
+     {
+      "text": "Archive",
+      "above": "PARTICLES",
+      "upper": true,
+      "tracked": true,
+      "mono": false,
+      "pill": false,
+      "size": 15,
+      "top": 3546
+     },
+     {
+      "text": "Reactive Archive",
+      "above": "ƒ Generator",
+      "upper": true,
+      "tracked": true,
+      "mono": false,
+      "pill": false,
+      "size": 15,
+      "top": 3810
+     },
+     {
+      "text": "Reactive Archive",
+      "above": "ISTOGram",
+      "upper": true,
+      "tracked": true,
+      "mono": false,
+      "pill": false,
+      "size": 15,
+      "top": 4073
+     },
+     {
+      "text": "01",
+      "above": "AlFly",
+      "upper": false,
+      "tracked": true,
+      "mono": false,
+      "pill": false,
+      "size": 15,
+      "top": 4968
+     },
+     {
+      "text": "02",
+      "above": "Policlinico di Milano",
+      "upper": false,
+      "tracked": true,
+      "mono": false,
+      "pill": false,
+      "size": 15,
+      "top": 5205
+     },
+     {
+      "text": "03",
+      "above": "uBank",
+      "upper": false,
+      "tracked": true,
+      "mono": false,
+      "pill": false,
+      "size": 15,
+      "top": 5443
+     },
+     {
+      "text": "04",
+      "above": "SISALFUNCLUB",
+      "upper": false,
+      "tracked": true,
+      "mono": false,
+      "pill": false,
+      "size": 15,
+      "top": 5681
+     },
+     {
+      "text": "05",
+      "above": "iTour",
+      "upper": false,
+      "tracked": true,
+      "mono": false,
+      "pill": false,
+      "size": 15,
+      "top": 5919
+     },
+     {
+      "text": "06",
+      "above": "CYP Wheels",
+      "upper": false,
+      "tracked": true,
+      "mono": false,
+      "pill": false,
+      "size": 15,
+      "top": 6157
+     },
+     {
+      "text": "07",
+      "above": "Dulcis in Fundo",
+      "upper": false,
+      "tracked": true,
+      "mono": false,
+      "pill": false,
+      "size": 15,
+      "top": 6394
+     },
+     {
+      "text": "08",
+      "above": "Collezione Cagnola",
+      "upper": false,
+      "tracked": true,
+      "mono": false,
+      "pill": false,
+      "size": 15,
+      "top": 6632
+     },
+     {
+      "text": "09",
+      "above": "Sielco",
+      "upper": false,
+      "tracked": true,
+      "mono": false,
+      "pill": false,
+      "size": 15,
+      "top": 6870
+     },
+     {
+      "text": "10",
+      "above": "Marabini Recuperi",
+      "upper": false,
+      "tracked": true,
+      "mono": false,
+      "pill": false,
+      "size": 15,
+      "top": 7108
+     }
+    ],
+    "numbered": [
+     {
+      "text": "01",
+      "size": 15,
+      "top": 4968
+     },
+     {
+      "text": "02",
+      "size": 15,
+      "top": 5205
+     },
+     {
+      "text": "03",
+      "size": 15,
+      "top": 5443
+     },
+     {
+      "text": "04",
+      "size": 15,
+      "top": 5681
+     },
+     {
+      "text": "05",
+      "size": 15,
+      "top": 5919
+     },
+     {
+      "text": "06",
+      "size": 15,
+      "top": 6157
+     },
+     {
+      "text": "07",
+      "size": 15,
+      "top": 6394
+     },
+     {
+      "text": "08",
+      "size": 15,
+      "top": 6632
+     },
+     {
+      "text": "09",
+      "size": 15,
+      "top": 6870
+     }
+    ],
+    "color": {
+     "bodyBg": "#f5f1ea",
+     "bodyBgHsl": {
+      "h": 38,
+      "s": 0.35,
+      "l": 0.94
+     },
+     "dark": false,
+     "sectionBgs": [
+      {
+       "color": "#f5f1ea",
+       "top": 0,
+       "hsl": {
+        "h": 38,
+        "s": 0.35,
+        "l": 0.94
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#5c5c5c",
+       "share": 0.64
+      },
+      {
+       "color": "#111111",
+       "share": 0.29
+      },
+      {
+       "color": "#101010",
+       "share": 0.01
+      },
+      {
+       "color": "#ffffff",
+       "share": 0.01
+      }
+     ],
+     "button": {
+      "bg": "#111111",
+      "hsl": {
+       "h": 0,
+       "s": 0,
+       "l": 0.07
+      },
+      "fg": "#ffffff"
+     },
+     "lowContrast": []
+    },
+    "buttons": {
+     "count": 1,
+     "inHero": 1,
+     "radius": "pill",
+     "height": 36,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "Enter with sound"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 0,
+     "scrims": 0,
+     "gradientSamples": [],
+     "gradientText": 0,
+     "hairlines": 16,
+     "hairlineSamples": [
+      "header.site-header 768px",
+      "section.selected-region 768px",
+      "article.project-row 707px",
+      "article.project-row 707px",
+      "article.project-row 707px"
+     ],
+     "outlinedBoxes": 0,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 0,
+     "boxRadius": 0,
+     "squareMedia": 24,
+     "roundedMedia": 0,
+     "mediaRadius": 0,
+     "textShadow": 0,
+     "cardRows": []
+    },
+    "heroMedia": [
+     {
+      "type": "canvas",
+      "ratio": 1
+     },
+     {
+      "type": "canvas",
+      "ratio": 1
+     },
+     {
+      "type": "bg-image",
+      "ratio": 0.94
+     },
+     {
+      "type": "bg-image",
+      "ratio": 0.94
+     }
+    ],
+    "nav": {
+     "links": 1,
+     "fixed": true,
+     "height": 64,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": [
+     "bricolage grotesque",
+     "darker grotesque",
+     "hedvig letters serif"
+    ]
+   },
+   "layout": {
+    "viewport": {
+     "w": 768,
+     "h": 1024
+    },
+    "pageH": 7990,
+    "margins": {
+     "left": 31,
+     "right": 31
+    },
+    "sections": [
+     {
+      "sel": "section.hero-region.hero-region--split",
+      "tag": "section",
+      "top": 64,
+      "height": 1075,
+      "words": 0,
+      "media": 4,
+      "middle": 0,
+      "heading": null,
+      "left": 164,
+      "right": 164,
+      "textLeft": null,
+      "textRight": null,
+      "fullBleed": true,
+      "footer": false,
+      "hero": true,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section.text-entry",
+      "tag": "section",
+      "top": 924,
+      "height": 737,
+      "words": 0,
+      "media": 1,
+      "middle": 0,
+      "heading": null,
+      "left": null,
+      "right": null,
+      "textLeft": null,
+      "textRight": null,
+      "fullBleed": true,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section#featured.featured-region",
+      "tag": "section",
+      "top": 1661,
+      "height": 1587,
+      "words": 45,
+      "media": 6,
+      "middle": 12,
+      "heading": {
+       "text": "UX\\UI Design",
+       "size": 54,
+       "tag": "h2"
+      },
+      "left": 31,
+      "right": 31,
+      "textLeft": 31,
+      "textRight": 31,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section.selected-region",
+      "tag": "section",
+      "top": 3248,
+      "height": 1490,
+      "words": 46,
+      "media": 1,
+      "middle": 0,
+      "heading": {
+       "text": "PARTICLES",
+       "size": 64,
+       "tag": "h3"
+      },
+      "left": 31,
+      "right": 31,
+      "textLeft": 31,
+      "textRight": 31,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section#archives.archives-region",
+      "tag": "section",
+      "top": 4738,
+      "height": 2638,
+      "words": 120,
+      "media": 0,
+      "middle": 1,
+      "heading": {
+       "text": "AlFly",
+       "size": 64,
+       "tag": "h3"
+      },
+      "left": 31,
+      "right": 31,
+      "textLeft": 31,
+      "textRight": 31,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "footer.dotted-grid-footer",
+      "tag": "footer",
+      "top": 7375,
+      "height": 615,
+      "words": 12,
+      "media": 1,
+      "middle": 193,
+      "heading": null,
+      "left": 24,
+      "right": 24,
+      "textLeft": 24,
+      "textRight": 24,
+      "fullBleed": true,
+      "footer": true,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     }
+    ],
+    "gaps": [],
+    "h1s": [],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 72,
+      "n": 13
+     },
+     {
+      "x": 31,
+      "n": 3
+     }
+    ],
+    "leftBlocks": 16,
+    "bodySize": 15,
+    "stage": true,
+    "explains": false,
+    "slivers": [],
+    "voidShare": 0,
+    "voidBox": null
+   },
+   "app": null,
+   "consoleErrors": []
+  },
+  {
+   "width": 390,
+   "height": 844,
+   "load": "load",
+   "screens": 11,
+   "filled": [
+    0.04,
+    0.16,
+    0.1,
+    0.08,
+    0.11,
+    0.24,
+    0.33,
+    0.28,
+    0.28,
+    0.12,
+    0.14
+   ],
+   "motion": {
+    "elements": 146,
+    "css": 7,
+    "transitions": 1,
+    "scripted": 138,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 390,
+     "h": 844
+    },
+    "page": {
+     "height": 8480,
+     "screens": 10,
+     "words": 285,
+     "img": 7,
+     "video": 0,
+     "canvas": 17,
+     "svg": 0,
+     "sections": 5,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 8,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [
+      "alfly-open.png",
+      "sisalfunclub-open.png",
+      "itour-open.png",
+      "ubank-open.png",
+      "policliMi-open.png",
+      "twitch-open.png"
+     ],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": [
+      "❤"
+     ],
+     "videosNoPoster": 0
+    },
+    "hero": null,
+    "h1": null,
+    "headings": [
+     {
+      "text": "UX\\UI Design",
+      "words": 2,
+      "chars": 12,
+      "lines": 1,
+      "size": 56.6,
+      "vw": 14.5,
+      "font": "Bricolage Grotesque",
+      "weight": 500,
+      "tracking": -0.051,
+      "leading": 1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.76,
+      "top": 1470,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "AlFly",
+      "words": 1,
+      "chars": 5,
+      "lines": 1,
+      "size": 31.2,
+      "vw": 8,
+      "font": "Bricolage Grotesque",
+      "weight": 600,
+      "tracking": -0.01,
+      "leading": 1.05,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.9,
+      "top": 2008,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "SISALFUNCLUB",
+      "words": 1,
+      "chars": 12,
+      "lines": 1,
+      "size": 31.2,
+      "vw": 8,
+      "font": "Bricolage Grotesque",
+      "weight": 600,
+      "tracking": -0.01,
+      "leading": 1.05,
+      "upper": true,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.9,
+      "top": 2446,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "iTour",
+      "words": 1,
+      "chars": 5,
+      "lines": 1,
+      "size": 31.2,
+      "vw": 8,
+      "font": "Bricolage Grotesque",
+      "weight": 600,
+      "tracking": -0.01,
+      "leading": 1.05,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.9,
+      "top": 2884,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "uBank",
+      "words": 1,
+      "chars": 5,
+      "lines": 1,
+      "size": 31.2,
+      "vw": 8,
+      "font": "Bricolage Grotesque",
+      "weight": 600,
+      "tracking": -0.01,
+      "leading": 1.05,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.9,
+      "top": 3341,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "Policlinico di Milano",
+      "words": 3,
+      "chars": 21,
+      "lines": 1,
+      "size": 31.2,
+      "vw": 8,
+      "font": "Bricolage Grotesque",
+      "weight": 600,
+      "tracking": -0.01,
+      "leading": 1.05,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.9,
+      "top": 3779,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "Twitch",
+      "words": 1,
+      "chars": 6,
+      "lines": 1,
+      "size": 31.2,
+      "vw": 8,
+      "font": "Bricolage Grotesque",
+      "weight": 600,
+      "tracking": -0.01,
+      "leading": 1.05,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.9,
+      "top": 4217,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "Music React",
+      "words": 2,
+      "chars": 11,
+      "lines": 1,
+      "size": 56.6,
+      "vw": 14.5,
+      "font": "Bricolage Grotesque",
+      "weight": 500,
+      "tracking": -0.051,
+      "leading": 1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.72,
+      "top": 4364,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "PARTICLES",
+      "words": 1,
+      "chars": 9,
+      "lines": 1,
+      "size": 40,
+      "vw": 10.3,
+      "font": "Bricolage Grotesque",
+      "weight": 400,
+      "tracking": -0.051,
+      "leading": 0.9,
+      "upper": true,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.72,
+      "top": 4596,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "ƒ Generator",
+      "words": 2,
+      "chars": 11,
+      "lines": 1,
+      "size": 40,
+      "vw": 10.3,
+      "font": "Bricolage Grotesque",
+      "weight": 400,
+      "tracking": -0.051,
+      "leading": 0.9,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.72,
+      "top": 4809,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "ISTOGram",
+      "words": 1,
+      "chars": 8,
+      "lines": 1,
+      "size": 40,
+      "vw": 10.3,
+      "font": "Bricolage Grotesque",
+      "weight": 400,
+      "tracking": -0.051,
+      "leading": 0.9,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.72,
+      "top": 5041,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "Music Are Genera tive",
+      "words": 4,
+      "chars": 21,
+      "lines": 4,
+      "size": 100,
+      "vw": 25.6,
+      "font": "Bricolage Grotesque",
+      "weight": 800,
+      "tracking": -0.02,
+      "leading": 0.66,
+      "upper": false,
+      "italic": true,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.9,
+      "top": 5200,
+      "tag": "div",
+      "kind": "heading"
+     },
+     {
+      "text": "Archives",
+      "words": 1,
+      "chars": 8,
+      "lines": 1,
+      "size": 56.6,
+      "vw": 14.5,
+      "font": "Bricolage Grotesque",
+      "weight": 500,
+      "tracking": -0.051,
+      "leading": 1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.51,
+      "top": 5699,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "AlFly",
+      "words": 1,
+      "chars": 5,
+      "lines": 1,
+      "size": 40,
+      "vw": 10.3,
+      "font": "Bricolage Grotesque",
+      "weight": 400,
+      "tracking": -0.051,
+      "leading": 0.9,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.72,
+      "top": 5896,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "Policlinico di Milano",
+      "words": 3,
+      "chars": 21,
+      "lines": 2,
+      "size": 40,
+      "vw": 10.3,
+      "font": "Bricolage Grotesque",
+      "weight": 400,
+      "tracking": -0.051,
+      "leading": 0.9,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.72,
+      "top": 6086,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "uBank",
+      "words": 1,
+      "chars": 5,
+      "lines": 1,
+      "size": 40,
+      "vw": 10.3,
+      "font": "Bricolage Grotesque",
+      "weight": 400,
+      "tracking": -0.051,
+      "leading": 0.9,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.72,
+      "top": 6312,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "SISALFUNCLUB",
+      "words": 1,
+      "chars": 12,
+      "lines": 1,
+      "size": 40,
+      "vw": 10.3,
+      "font": "Bricolage Grotesque",
+      "weight": 400,
+      "tracking": -0.051,
+      "leading": 0.9,
+      "upper": true,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.72,
+      "top": 6502,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "iTour",
+      "words": 1,
+      "chars": 5,
+      "lines": 1,
+      "size": 40,
+      "vw": 10.3,
+      "font": "Bricolage Grotesque",
+      "weight": 400,
+      "tracking": -0.051,
+      "leading": 0.9,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.72,
+      "top": 6692,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "CYP Wheels",
+      "words": 2,
+      "chars": 10,
+      "lines": 1,
+      "size": 40,
+      "vw": 10.3,
+      "font": "Bricolage Grotesque",
+      "weight": 400,
+      "tracking": -0.051,
+      "leading": 0.9,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.72,
+      "top": 6882,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "Dulcis in Fundo",
+      "words": 3,
+      "chars": 15,
+      "lines": 1,
+      "size": 40,
+      "vw": 10.3,
+      "font": "Bricolage Grotesque",
+      "weight": 400,
+      "tracking": -0.051,
+      "leading": 0.9,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.72,
+      "top": 7090,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "Collezione Cagnola",
+      "words": 2,
+      "chars": 18,
+      "lines": 2,
+      "size": 40,
+      "vw": 10.3,
+      "font": "Bricolage Grotesque",
+      "weight": 400,
+      "tracking": -0.051,
+      "leading": 0.9,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.72,
+      "top": 7299,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "Sielco",
+      "words": 1,
+      "chars": 6,
+      "lines": 1,
+      "size": 40,
+      "vw": 10.3,
+      "font": "Bricolage Grotesque",
+      "weight": 400,
+      "tracking": -0.051,
+      "leading": 0.9,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.72,
+      "top": 7543,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "Marabini Recuperi",
+      "words": 2,
+      "chars": 17,
+      "lines": 2,
+      "size": 40,
+      "vw": 10.3,
+      "font": "Bricolage Grotesque",
+      "weight": 400,
+      "tracking": -0.051,
+      "leading": 0.9,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.72,
+      "top": 7752,
+      "tag": "h3",
+      "kind": "heading"
+     }
+    ],
+    "headingSummary": {
+     "count": 23,
+     "maxLines": 4,
+     "over2Lines": 1,
+     "statements": 6,
+     "centered": 0,
+     "medianWords": 1,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Darker Grotesque",
+       "share": 0.69,
+       "mono": false
+      },
+      {
+       "family": "Bricolage Grotesque",
+       "share": 0.3,
+       "mono": false
+      },
+      {
+       "family": "ui-sans-serif",
+       "share": 0.01,
+       "mono": false
+      }
+     ],
+     "familyCount": 3,
+     "sizes": [
+      11,
+      12,
+      13,
+      14,
+      15,
+      18,
+      31,
+      40,
+      57,
+      100
+     ],
+     "sizeCount": 10,
+     "notLoaded": [],
+     "body": null,
+     "measureChars": null,
+     "max": {
+      "size": 100,
+      "vw": 25.6,
+      "font": "Bricolage Grotesque",
+      "text": "Music"
+     },
+     "monoShare": 0,
+     "monoProseShare": 0,
+     "monoFamilies": [],
+     "monoSamples": [],
+     "microLabels": 1,
+     "microLabelShare": 0.01,
+     "microSamples": [
+      "CLICK TO ENTER"
+     ],
+     "upperShare": 0.71,
+     "centerShare": 0.02,
+     "smallText": 2
+    },
+    "eyebrows": [
+     {
+      "text": "Archive",
+      "above": "PARTICLES",
+      "upper": true,
+      "tracked": true,
+      "mono": false,
+      "pill": false,
+      "size": 15,
+      "top": 4560
+     },
+     {
+      "text": "Reactive Archive",
+      "above": "ƒ Generator",
+      "upper": true,
+      "tracked": true,
+      "mono": false,
+      "pill": false,
+      "size": 15,
+      "top": 4774
+     },
+     {
+      "text": "Reactive Archive",
+      "above": "ISTOGram",
+      "upper": true,
+      "tracked": true,
+      "mono": false,
+      "pill": false,
+      "size": 15,
+      "top": 5006
+     },
+     {
+      "text": "01",
+      "above": "AlFly",
+      "upper": false,
+      "tracked": true,
+      "mono": false,
+      "pill": false,
+      "size": 15,
+      "top": 5853
+     },
+     {
+      "text": "02",
+      "above": "Policlinico di Milano",
+      "upper": false,
+      "tracked": true,
+      "mono": false,
+      "pill": false,
+      "size": 15,
+      "top": 6043
+     },
+     {
+      "text": "03",
+      "above": "uBank",
+      "upper": false,
+      "tracked": true,
+      "mono": false,
+      "pill": false,
+      "size": 15,
+      "top": 6269
+     },
+     {
+      "text": "04",
+      "above": "SISALFUNCLUB",
+      "upper": false,
+      "tracked": true,
+      "mono": false,
+      "pill": false,
+      "size": 15,
+      "top": 6459
+     },
+     {
+      "text": "05",
+      "above": "iTour",
+      "upper": false,
+      "tracked": true,
+      "mono": false,
+      "pill": false,
+      "size": 15,
+      "top": 6649
+     },
+     {
+      "text": "06",
+      "above": "CYP Wheels",
+      "upper": false,
+      "tracked": true,
+      "mono": false,
+      "pill": false,
+      "size": 15,
+      "top": 6839
+     },
+     {
+      "text": "07",
+      "above": "Dulcis in Fundo",
+      "upper": false,
+      "tracked": true,
+      "mono": false,
+      "pill": false,
+      "size": 15,
+      "top": 7048
+     },
+     {
+      "text": "08",
+      "above": "Collezione Cagnola",
+      "upper": false,
+      "tracked": true,
+      "mono": false,
+      "pill": false,
+      "size": 15,
+      "top": 7256
+     },
+     {
+      "text": "09",
+      "above": "Sielco",
+      "upper": false,
+      "tracked": true,
+      "mono": false,
+      "pill": false,
+      "size": 15,
+      "top": 7501
+     },
+     {
+      "text": "10",
+      "above": "Marabini Recuperi",
+      "upper": false,
+      "tracked": true,
+      "mono": false,
+      "pill": false,
+      "size": 15,
+      "top": 7709
+     }
+    ],
+    "numbered": [
+     {
+      "text": "01",
+      "size": 15,
+      "top": 5853
+     },
+     {
+      "text": "02",
+      "size": 15,
+      "top": 6043
+     },
+     {
+      "text": "03",
+      "size": 15,
+      "top": 6269
+     },
+     {
+      "text": "04",
+      "size": 15,
+      "top": 6459
+     },
+     {
+      "text": "05",
+      "size": 15,
+      "top": 6649
+     },
+     {
+      "text": "06",
+      "size": 15,
+      "top": 6839
+     },
+     {
+      "text": "07",
+      "size": 15,
+      "top": 7048
+     },
+     {
+      "text": "08",
+      "size": 15,
+      "top": 7256
+     },
+     {
+      "text": "09",
+      "size": 15,
+      "top": 7501
+     }
+    ],
+    "color": {
+     "bodyBg": "#f5f1ea",
+     "bodyBgHsl": {
+      "h": 38,
+      "s": 0.35,
+      "l": 0.94
+     },
+     "dark": false,
+     "sectionBgs": [
+      {
+       "color": "#f5f1ea",
+       "top": 0,
+       "hsl": {
+        "h": 38,
+        "s": 0.35,
+        "l": 0.94
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#5c5c5c",
+       "share": 0.65
+      },
+      {
+       "color": "#111111",
+       "share": 0.3
+      },
+      {
+       "color": "#ffffff",
+       "share": 0.03
+      },
+      {
+       "color": "#101010",
+       "share": 0.02
+      }
+     ],
+     "button": {
+      "bg": "#111111",
+      "hsl": {
+       "h": 0,
+       "s": 0,
+       "l": 0.07
+      },
+      "fg": "#ffffff"
+     },
+     "lowContrast": []
+    },
+    "buttons": {
+     "count": 1,
+     "inHero": 1,
+     "radius": "pill",
+     "height": 36,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "Enter with sound"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 1,
+     "shadowSamples": [],
+     "gradients": 0,
+     "scrims": 0,
+     "gradientSamples": [],
+     "gradientText": 0,
+     "hairlines": 16,
+     "hairlineSamples": [
+      "header.site-header 390px",
+      "section.selected-region 390px",
+      "article.project-row 350px",
+      "article.project-row 350px",
+      "article.project-row 350px"
+     ],
+     "outlinedBoxes": 0,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 0,
+     "boxRadius": 0,
+     "squareMedia": 24,
+     "roundedMedia": 0,
+     "mediaRadius": 0,
+     "textShadow": 0,
+     "cardRows": [
+      {
+       "count": 3,
+       "iconTopped": false,
+       "rounded": false,
+       "top": 4493
+      },
+      {
+       "count": 10,
+       "iconTopped": false,
+       "rounded": false,
+       "top": 5818
+      }
+     ]
+    },
+    "heroMedia": [
+     {
+      "type": "canvas",
+      "ratio": 1
+     },
+     {
+      "type": "canvas",
+      "ratio": 1
+     },
+     {
+      "type": "bg-image",
+      "ratio": 0.9
+     },
+     {
+      "type": "bg-image",
+      "ratio": 0.9
+     }
+    ],
+    "nav": {
+     "links": 1,
+     "fixed": true,
+     "height": 81,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": [
+     "bricolage grotesque",
+     "darker grotesque",
+     "hedvig letters serif"
+    ]
+   },
+   "layout": {
+    "viewport": {
+     "w": 390,
+     "h": 844
+    },
+    "pageH": 8480,
+    "margins": {
+     "left": 20,
+     "right": 20
+    },
+    "sections": [
+     {
+      "sel": "section.hero-region.hero-region--split",
+      "tag": "section",
+      "top": 81,
+      "height": 886,
+      "words": 0,
+      "media": 4,
+      "middle": 0,
+      "heading": null,
+      "left": 12,
+      "right": 12,
+      "textLeft": null,
+      "textRight": null,
+      "fullBleed": true,
+      "footer": false,
+      "hero": true,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section.text-entry",
+      "tag": "section",
+      "top": 790,
+      "height": 608,
+      "words": 0,
+      "media": 1,
+      "middle": 0,
+      "heading": null,
+      "left": null,
+      "right": null,
+      "textLeft": null,
+      "textRight": null,
+      "fullBleed": true,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section#featured.featured-region",
+      "tag": "section",
+      "top": 1398,
+      "height": 2867,
+      "words": 40,
+      "media": 6,
+      "middle": 0,
+      "heading": {
+       "text": "UX\\UI Design",
+       "size": 57,
+       "tag": "h2"
+      },
+      "left": 20,
+      "right": 20,
+      "textLeft": 20,
+      "textRight": 61,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section.selected-region",
+      "tag": "section",
+      "top": 4265,
+      "height": 1362,
+      "words": 38,
+      "media": 1,
+      "middle": 0,
+      "heading": {
+       "text": "Music React",
+       "size": 57,
+       "tag": "h2"
+      },
+      "left": 20,
+      "right": 20,
+      "textLeft": 20,
+      "textRight": 54,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section#archives.archives-region",
+      "tag": "section",
+      "top": 5626,
+      "height": 2333,
+      "words": 120,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Archives",
+       "size": 57,
+       "tag": "h2"
+      },
+      "left": 20,
+      "right": 54,
+      "textLeft": 20,
+      "textRight": 54,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "footer.dotted-grid-footer",
+      "tag": "footer",
+      "top": 7959,
+      "height": 521,
+      "words": 12,
+      "media": 1,
+      "middle": 4,
+      "heading": null,
+      "left": 24,
+      "right": 24,
+      "textLeft": 24,
+      "textRight": 24,
+      "fullBleed": true,
+      "footer": true,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     }
+    ],
+    "gaps": [],
+    "h1s": [],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 54,
+      "n": 13
+     },
+     {
+      "x": 20,
+      "n": 3
+     }
+    ],
+    "leftBlocks": 16,
+    "bodySize": 15,
+    "stage": true,
+    "explains": false,
+    "slivers": [],
+    "voidShare": 0,
+    "voidBox": null
+   },
+   "app": null,
+   "consoleErrors": []
+  }
+ ],
+ "findings": [
+  {
+   "level": "FAIL",
+   "id": "headline-lines",
+   "width": 1440,
+   "message": "1 headline(s) wrap past two lines at 1440px: \"somebody say it's just music but what if could b\" → 5 lines (12 words, 172.8px)",
+   "fix": "Cut words first (a headline is a title, not a sentence). Then give it a wider measure. Lower the size only as a last resort and never below the scale you chose. A real statement paragraph belongs in a <p> or <blockquote> at 36px or less."
+  },
+  {
+   "level": "FAIL",
+   "id": "eyebrow",
+   "width": 1440,
+   "message": "13 eyebrow/kicker label(s) above headings: \"Archive\" above \"PARTICLES\"; \"Reactive Archive\" above \"ƒ Generator\"; \"Reactive Archive\" above \"ISTOGram\"; \"N°\" above \"AlFly\"; \"01\" above \"Policlinico di Milano\"",
+   "fix": "Delete them. If the label carried real information, fold it into the headline or the supporting sentence.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "FAIL",
+   "id": "numbering",
+   "width": 1440,
+   "message": "Decorative index numbers: \"01\", \"02\", \"03\", \"04\", \"05\", \"06\"",
+   "fix": "Remove them. If order truly matters, write it into the words (\"First, …\") or use a real <ol>.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "WARN",
+   "id": "micro-label",
+   "width": 1440,
+   "message": "1 tiny uppercase letter-spaced label(s): \"CLICK TO ENTER\"",
+   "fix": "Prefer sentence case at body size.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "FAIL",
+   "id": "emoji",
+   "width": 1440,
+   "message": "Emoji in the page: ❤",
+   "fix": "Remove. Use words or real imagery.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "FAIL",
+   "id": "hairline",
+   "width": 1440,
+   "message": "6 thin rule(s)/divider line(s): header.site-header 1440px | section.selected-region 1440px | article.project-row 1325px | article.project-row 1325px",
+   "fix": "Delete. Separate with space, a tone change, or scale. Lines are only for real tables and form fields.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "WARN",
+   "id": "palette-cream",
+   "width": 1440,
+   "message": "Yellow-cream background (page background #f5f1ea, section #f5f1ea).",
+   "fix": "Use the drawn palette. If you want warmth, take a low-chroma stone or bone, not a yellow cream.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "WARN",
+   "id": "size-count",
+   "width": 1440,
+   "message": "11 different font sizes (11, 12, 14, 15, 16, 18, 36, 42, 70, 88, 173).",
+   "fix": "A page needs about five: display, heading, lead, body, small.",
+   "alsoAt": [
+    390
+   ]
+  },
+  {
+   "level": "WARN",
+   "id": "no-footage",
+   "width": 1440,
+   "message": "No video anywhere on the page.",
+   "fix": "Look for one honest clip with scripts/assets.mjs --video (the place, the material, the process) and use it as a muted loop with a poster frame. Defend its absence only if no clip fits the subject."
+  },
+  {
+   "level": "WARN",
+   "id": "small-text",
+   "width": 1440,
+   "message": "1 text block(s) under 13px.",
+   "fix": "Nothing meant to be read goes below 13px.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "WARN",
+   "id": "no-hero",
+   "width": 1440,
+   "message": "No headline found in the first viewport.",
+   "fix": "The first screen needs a clear focal statement or image.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "FAIL",
+   "id": "no-title",
+   "width": 1440,
+   "message": "The page has no visible h1.",
+   "fix": "Give the first screen a clear title in an h1 that says what this is (a name with what it does, the product with what it is for, the event with its date and place).",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "FAIL",
+   "id": "covered-text",
+   "width": 1440,
+   "message": "Large text lies under another element at some scroll position: \"UX\\UI Design\" (screen 2, 100% hidden); \"AlFly\" (screen 3, 100% hidden); \"SISALFUNCLUB\" (screen 3, 100% hidden); \"iTour\" (screen 3, 100% hidden)",
+   "fix": "Nothing may sit on top of a headline or statement. Move the picture, shorten the pinned run, or raise the text above it (z-index) and give it a ground.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "FAIL",
+   "id": "empty-screens",
+   "width": 1440,
+   "message": "7 of 8 desktop screens are almost empty ground (under 20% of the screen holds text, a picture or a colour field): screens 1, 2, 3, 4, 6, 7, 8.",
+   "fix": "An empty screen is a rest only once per page. Elsewhere it means the section is underbuilt: set its content larger, give it the full information, put it on a colour field, or cut it."
+  },
+  {
+   "level": "FAIL",
+   "id": "headline-lines",
+   "width": 768,
+   "message": "1 headline(s) wrap past two lines at 768px: \"somebody say it's just music but what if could b\" → 5 lines (12 words, 92.2px)",
+   "fix": "Cut words first (a headline is a title, not a sentence). Then give it a wider measure. Lower the size only as a last resort and never below the scale you chose. A real statement paragraph belongs in a <p> or <blockquote> at 32px or less."
+  },
+  {
+   "level": "FAIL",
+   "id": "headline-lines",
+   "width": 390,
+   "message": "1 headline(s) wrap past two lines at 390px: \"Music Are Genera tive\" → 4 lines (4 words, 100px)",
+   "fix": "Cut words first (a headline is a title, not a sentence). Then give it a wider measure. Lower the size only as a last resort and never below the scale you chose. A real statement paragraph belongs in a <p> or <blockquote> at 24px or less."
+  },
+  {
+   "level": "WARN",
+   "id": "card-rows",
+   "width": 390,
+   "message": "2 rows of identical boxed cards.",
+   "fix": "Vary the composition; not every section is a card grid."
+  }
+ ],
+ "images": [
+  {
+   "viewport": "desktop",
+   "width": 1440,
+   "fold": "C:\\Users\\Utente\\Desktop\\robbe\\DOME\\site\\.taste-skill\\after\\desktop-fold.jpg",
+   "pages": [
+    "C:\\Users\\Utente\\Desktop\\robbe\\DOME\\site\\.taste-skill\\after\\desktop-page-01.jpg",
+    "C:\\Users\\Utente\\Desktop\\robbe\\DOME\\site\\.taste-skill\\after\\desktop-page-02.jpg"
+   ],
+   "film": []
+  },
+  {
+   "viewport": "tablet",
+   "width": 768,
+   "fold": "C:\\Users\\Utente\\Desktop\\robbe\\DOME\\site\\.taste-skill\\after\\tablet-fold.jpg",
+   "pages": [
+    "C:\\Users\\Utente\\Desktop\\robbe\\DOME\\site\\.taste-skill\\after\\tablet-page-01.jpg",
+    "C:\\Users\\Utente\\Desktop\\robbe\\DOME\\site\\.taste-skill\\after\\tablet-page-02.jpg"
+   ],
+   "film": []
+  },
+  {
+   "viewport": "mobile",
+   "width": 390,
+   "fold": "C:\\Users\\Utente\\Desktop\\robbe\\DOME\\site\\.taste-skill\\after\\mobile-fold.jpg",
+   "pages": [
+    "C:\\Users\\Utente\\Desktop\\robbe\\DOME\\site\\.taste-skill\\after\\mobile-page-01.jpg",
+    "C:\\Users\\Utente\\Desktop\\robbe\\DOME\\site\\.taste-skill\\after\\mobile-page-02.jpg"
+   ],
+   "film": []
+  }
+ ]
+}

@@ -1869,7 +1869,7 @@ export default function SelectedProjects() {
   }, [isMobile])
 
   return (
-    <section ref={sectionRef} className="selected-region">
+    <section ref={sectionRef} className="selected-region" data-hint-section="selected">
       <div className="container">
         <div className="section-head">
           <h2>Music React</h2>
@@ -1885,7 +1885,7 @@ export default function SelectedProjects() {
           ))}
         </div>
 
-        <div className="focus-callout focus-callout--shader">
+        <div className="focus-callout focus-callout--shader" data-hint-section="callout">
           <Suspense fallback={null}>
             <FocusCalloutShader ref={calloutShaderRef} lines={calloutLines} />
           </Suspense>

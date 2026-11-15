@@ -35,6 +35,7 @@ import {
 } from './config.js'
 import { sweepFront } from './wavefront.js'
 import { onProgress, whenSettled, markDone } from '../load-progress.js'
+import { applyEntryChoice } from '../sound/entry.js'
 
 // Catastrophe cover: if the load never settles or the app never mounts, seal
 // and the count force anyway after this many ms since the click, trading one
@@ -162,8 +163,46 @@ function start() {
     root.classList.add('preloader--dissolve', 'preloader--counting')
   }
 
+  // ─── Entry choice ───────────────────────────────────────────────────────────
+  // Two doors, decided on POINTERDOWN in the capture phase: that lands before the
+  // click handlers elsewhere in the page, so the ambient cannot start on this same
+  // gesture and then be muted a frame later.
+  //   - clicking anywhere (including "CLICK TO ENTER"): the site starts muted,
+  //   - the "Enter with sound" chip: ambient, clicks and the hero water all on.
+  // The choice is not persisted: a visitor who entered quietly should not come
+  // back to a site that talks on its own.
+  let entryChosen = false
+  let soundChip = null
+  function chooseEntry(withSound) {
+    if (entryChosen) return
+    entryChosen = true
+    applyEntryChoice({ withSound })
+  }
+
+  function onPointerDown(e) {
+    if (phase !== 'standby') return
+    const target = e.target
+    const onChip = !!(target && target.closest && target.closest('#preloader-sound'))
+    chooseEntry(onChip)
+  }
+
+  function onGateClick(e) {
+    const target = e.target
+    if (target && target.closest && target.closest('#preloader-sound')) return
+    openGate()
+  }
+
+  function onChipClick(e) {
+    // The chip has its own door; it must not also trip the generic gate handler.
+    e.stopPropagation()
+    openGate()
+  }
+
   function onKeyDown(e) {
-    if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') openGate()
+    if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+      chooseEntry(false)
+      openGate()
+    }
   }
 
   function onResize() {
@@ -176,7 +215,9 @@ function start() {
     if (rafId) cancelAnimationFrame(rafId)
     window.removeEventListener('resize', onResize)
     window.removeEventListener('keydown', onKeyDown)
-    root.removeEventListener('click', openGate)
+    root.removeEventListener('click', onGateClick)
+    root.removeEventListener('pointerdown', onPointerDown, true)
+    if (soundChip) soundChip.removeEventListener('click', onChipClick)
     clearInterval(lenisPollId)
     if (scene) scene.dispose()
     if (lenisHandle) {
@@ -293,7 +334,10 @@ function start() {
     rafId = requestAnimationFrame(safeTick)
   }
 
-  root.addEventListener('click', openGate)
+  soundChip = root.querySelector('#preloader-sound')
+  root.addEventListener('pointerdown', onPointerDown, true)
+  root.addEventListener('click', onGateClick)
+  if (soundChip) soundChip.addEventListener('click', onChipClick)
   window.addEventListener('keydown', onKeyDown, { passive: true })
   window.addEventListener('resize', onResize)
 

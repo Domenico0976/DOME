@@ -1,5 +1,6 @@
 import React, { Suspense, lazy, useCallback, useState, useRef, useLayoutEffect, useEffect } from 'react'
 import { useIsMobile } from '../hooks/useIsMobile'
+import { useHeroWaterSound } from '../hooks/useHeroWaterSound.js'
 import { generateHeroEdgeMask, HERO_EDGE_CONFIG } from './HeroEdgeMask.js'
 
 // The shader stack is the only part that has to wait for the `shaders` package.
@@ -13,6 +14,11 @@ export default function ShaderHero() {
   const handleUnavailable = useCallback(() => setUnavailable(true), [])
   const isMobile = useIsMobile()
   const sectionRef = useRef(null)
+
+  // The hero is the water: moving over it makes the flow sound. Desktop mouse
+  // moves and the dragged mobile cursor only (see the hook) — a bare scroll is
+  // silent. Gated by the site-wide sound switch.
+  useHeroWaterSound(sectionRef)
 
   // `isMobile` selects the copy only. There used to be a second JSX tree for
   // mobile that differed from the desktop one by an aria-label and a comment while
@@ -215,6 +221,7 @@ export default function ShaderHero() {
     <section
       ref={sectionRef}
       className="hero-region hero-region--split"
+      data-hint-section="hero"
       aria-label={label}
       style={{
         position: 'relative',

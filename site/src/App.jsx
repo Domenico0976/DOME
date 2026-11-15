@@ -11,6 +11,9 @@ import Archives from './components/Archives.jsx'
 import Footer from './components/Footer.jsx'
 import CursorGlow from './components/CursorGlow.jsx'
 import MobileCanvas from './components/MobileCanvas.jsx'
+import MobileCursorHint from './components/MobileCursorHint.jsx'
+import GalleryTouchEffect from './components/GalleryTouchEffect.jsx'
+import SoundUnlockChip from './components/SoundUnlockChip.jsx'
 import Scrollbar from './components/Scrollbar.jsx'
 import { ArchiveCursorProvider } from './hooks/useArchiveCursor'
 import { useIsMobile } from './hooks/useIsMobile'
@@ -118,6 +121,9 @@ export default function App() {
         </main>
         <Footer />
         {isTouch && <MobileCanvas />}
+        {isTouch && <MobileCursorHint />}
+        {isTouch && <GalleryTouchEffect />}
+        <SoundUnlockChip />
         <Scrollbar />
       </>
     </ArchiveCursorProvider>

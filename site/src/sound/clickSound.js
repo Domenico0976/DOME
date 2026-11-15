@@ -1,3 +1,5 @@
+import { soundCore } from './core.js'
+
 // Always-on UI click sound: one preloaded Audio per variant, and a fresh
 // random roll on every click anywhere on the page.
 //
@@ -15,6 +17,10 @@
 // what browsers require: there is no permission prompt for HTML audio, only a
 // block on playback that starts before any gesture. play() rejections are
 // swallowed so a rare policy edge case never throws into the page.
+//
+// The site-wide switch (`sound/core.js`) has the final word: when the header
+// button is off, clicks are silent too — a "mute everything" that still let the
+// clicks through would not be a mute.
 export const CLICK_SOUNDS = [
   'click-ui-1.mp3',
   'click-ui-2.mp3',
@@ -34,6 +40,7 @@ export function initClickSound({ target = document, AudioCtor = Audio, random = 
 
   let lastIndex = -1
   const onClick = () => {
+    if (!soundCore.isEnabled()) return
     let index = Math.floor(random() * audios.length)
     // Never the same variant twice in a row when there is a choice: a plain
     // roll repeats often enough that the repeat reads as a bug, not as chance.
