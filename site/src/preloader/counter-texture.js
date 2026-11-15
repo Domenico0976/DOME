@@ -40,15 +40,27 @@ export function computeDigitTiles(value, gridW, gridH) {
   // Adaptive scale: on narrow viewports (mobile) the 2x scale overflows the
   // grid, so drop to 1x to keep all three digits visible.
   let S = 2
-  let totalW = str.length * (3 * S) + (str.length - 1) * 1
-  if (totalW + 2 * 1 > gridW) {
+  let gap = 1
+  let margin = 1
+  let totalW = str.length * (3 * S) + (str.length - 1) * gap
+  if (totalW + 2 * margin > gridW) {
     S = 1
-    totalW = str.length * (3 * S) + (str.length - 1) * 1
+    totalW = str.length * (3 * S) + (str.length - 1) * gap
+  }
+  // On very narrow grids (mobile) even 1x with gaps overflows, so drop the
+  // gaps and then the margin to keep all three digits on screen. Only drop
+  // the margin when there is vertical room for it, so tiny grids (e.g. 1x1)
+  // keep rendering nothing instead of a clipped digit.
+  if (totalW + 2 * margin > gridW) {
+    gap = 0
+    totalW = str.length * (3 * S) + (str.length - 1) * gap
+  }
+  if (totalW + 2 * margin > gridW && gridH >= 5 * S + 1) {
+    margin = 0
+    totalW = str.length * (3 * S) + (str.length - 1) * gap
   }
   const dw = 3 * S
   const dh = 5 * S
-  const gap = 1
-  const margin = 1
   // If still too wide, center the digits.
   let x0 = gridW - totalW - margin
   if (x0 < margin) x0 = Math.max(margin, Math.floor((gridW - totalW) / 2))

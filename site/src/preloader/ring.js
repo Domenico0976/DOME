@@ -37,18 +37,29 @@ export function createRingRig({ ink = 0x111111 } = {}) {
   const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, -1000, 1000)
   camera.position.set(0, 0, 500)
 
+  // Base (mobile-responsive) scale, preserved by setDock so the ring never
+  // jumps back to full size when the counter docks.
+  let baseScale = 1
+
   function resize(w, h) {
     // Match the hero ring's responsive size on mobile/tablet.
     // Hero ring CSS: width: min(440px, 94vw).
     // Preloader ring screen diameter at scale 1 ≈ 0.864 * h.
     // Scale so the ring matches the hero ring on mobile/tablet (< 768px).
+    // IMPORTANT: scale only the GROUP, not the camera frustum — otherwise the
+    // frustum and the group scale cancel out and the ring looks identical on
+    // every viewport (no visible resize).
     let scale = 1
-    if (w < 768) {
-      const targetDiameter = Math.min(440, 0.94 * w) * 0.5
+    // Resize on mobile AND tablet (w < 1024); desktop keeps scale 1.
+    if (w < 1024) {
+      const targetDiameter = Math.min(440, 0.94 * w)
       const baseDiameter = 0.864 * h
       scale = Math.min(1, targetDiameter / baseDiameter)
     }
-    const halfH = (RING_PX / 2) * scale
+    baseScale = scale
+    // Camera frustum stays full-viewport (scale 1) so the group scale actually
+    // changes the ring's on-screen size.
+    const halfH = RING_PX / 2
     const halfW = halfH * (w / Math.max(h, 1))
     camera.left = -halfW
     camera.right = halfW
@@ -89,7 +100,7 @@ export function createRingRig({ ink = 0x111111 } = {}) {
 
   function setDock(p) {
     const c = Math.max(0, Math.min(1, p))
-    group.scale.setScalar(1 - 0.5 * c)
+    group.scale.setScalar(baseScale * (1 - 0.5 * c))
     group.position.y = DOCK_LIFT * c
   }
 

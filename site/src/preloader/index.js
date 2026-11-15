@@ -41,7 +41,7 @@ import { onProgress, whenSettled, markDone } from '../load-progress.js'
 // imperfect reveal for the one thing the preloader exists to prevent — being
 // trapped on a gate. App mount is a separate signal from load end (the two
 // race — see App.jsx), so both must be observed here.
-const SETTLED_WAIT_CAP = 4000
+const SETTLED_WAIT_CAP = 2000
 const LENIS_POLL_MS = 200
 const LENIS_POLL_MAX_TRIES = 100
 
@@ -240,7 +240,7 @@ function start() {
     }
 
     const countHeld = shownProgress >= SEAL_AT - 0.001
-    // Always wait at least 4 seconds so the counter digits are readable.
+    // Always wait at least 2 seconds so the counter digits are readable.
     const readyToSeal = waited > SETTLED_WAIT_CAP
 
     // count — the front stays parked the whole way: the crumble has not started
@@ -248,7 +248,7 @@ function start() {
     // trigger: the count rolls straight through 080 whenever it is ready.
     if (!readyToSeal) {
       if (scene) scene.setFront(sweepFront(0))
-      // Linear ramp over 4 seconds so the counter digits are readable.
+      // Linear ramp over 2 seconds so the counter digits are readable.
       const target = Math.min(1, waited / SETTLED_WAIT_CAP)
       driveProgress(target, now)
       rafId = requestAnimationFrame(safeTick)
