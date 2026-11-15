@@ -40,7 +40,7 @@ function clamp01(value) {
 
 export function createAmbient({
   url,
-  volume = 0.35,
+  volume = 0.048,
   crossfadeMs = 1000,
   loopEnd: loopEndOption = 0,
   monitorMs = MONITOR_MS,

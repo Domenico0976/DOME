@@ -33,7 +33,7 @@ export const CLICK_SOUNDS = [
 export function initClickSound({ target = document, AudioCtor = Audio, random = Math.random } = {}) {
   const audios = CLICK_SOUNDS.map((name) => {
     const audio = new AudioCtor(import.meta.env.BASE_URL + 'assets/audio/' + name)
-    audio.volume = 0.45
+    audio.volume = 0.065
     audio.preload = 'auto'
     return audio
   })

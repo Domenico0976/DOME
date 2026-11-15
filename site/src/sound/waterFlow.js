@@ -21,7 +21,7 @@
 // drive it without a browser.
 
 export const WATER_FLOW = Object.freeze({
-  volume: 0.45,
+  volume: 0.06,
   // Pitch window. Below `speedSlow` px/s the water is low and heavy; above
   // `speedFast` it is the brightest it gets. Playback rate, not a filter: at this
   // pitch range it reads as a different flow, not as a chipmunk.
