@@ -6,6 +6,7 @@ import App from './App.jsx'
 import { initClickSound } from './sound/clickSound.js'
 import { bootWaterSound } from './sound/waterBoot.js'
 import { initClickCursor } from './clickEffect/clickCursor.js'
+import { startAscii, stopAscii, toggleAscii } from './console/consoleGif.js'
 import './styles/global.css'
 
 // Always-on click sound: once at module scope, outside React's lifecycle, so
@@ -17,6 +18,16 @@ initClickSound()
 // used to leave the water silent until an unrelated later click.
 bootWaterSound()
 initClickCursor()
+
+// Console banner: the site's GIF, printed once per load. No interval, no
+// console.clear(): the console stays usable for whoever opens it.
+if (typeof window !== 'undefined') {
+  window.dome = {
+    ...(window.dome || {}),
+    ascii: { start: startAscii, stop: stopAscii, toggle: toggleAscii },
+  }
+  startAscii()
+}
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

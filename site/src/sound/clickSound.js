@@ -30,10 +30,14 @@ export const CLICK_SOUNDS = [
   'click-ui-6.wav',
 ]
 
+// The click level is a tuned value, not a law: it is exported so the test reads
+// the same source of truth instead of a number copied into the test.
+export const CLICK_VOLUME = 0.065
+
 export function initClickSound({ target = document, AudioCtor = Audio, random = Math.random } = {}) {
   const audios = CLICK_SOUNDS.map((name) => {
     const audio = new AudioCtor(import.meta.env.BASE_URL + 'assets/audio/' + name)
-    audio.volume = 0.065
+    audio.volume = CLICK_VOLUME
     audio.preload = 'auto'
     return audio
   })
