@@ -358,6 +358,7 @@ export default function Archives() {
             {archives.map((a, i) => (
               <article
                 key={a.num}
+                id={`work-${a.num}`}
                 role="listitem"
                 className="project-row archive-row"
                 data-image={a.image ?? 'https://picsum.photos/400/300'}
@@ -402,6 +403,7 @@ export default function Archives() {
             {archives.map((a, i) => (
               <tr
                 key={a.num}
+                id={`work-${a.num}`}
                 data-image={a.image ?? 'https://picsum.photos/400/300'}
                 data-gradient={a.gradient ?? 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'}
                 data-hovered={hoveredRow?.num === a.num ? 'true' : 'false'}

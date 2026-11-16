@@ -55,7 +55,7 @@
 
 /* ============== Reset ============== */
 *,*::before,*::after { box-sizing: border-box; }
-html, body { margin:0; padding:0; }
+html, body { margin:0; padding:0; scroll-behavior: smooth; }
 html { -webkit-text-size-adjust: 100%; scrollbar-width: none; }
 html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; width: 0; height: 0; }
 body {
@@ -1192,6 +1192,15 @@ table.archives-table td {
   width: 100%;
   position: relative;
   overflow: hidden;
+  margin-top: 20dvh;
+}
+/* Wrapper del canvas: serve da containing block per l'hint, che ora sta
+   SOPRA il canvas e non più in fondo al footer (che ora è molto più alto). */
+.footer-canvas {
+  position: relative;
+  /* Nascosto temporaneamente su richiesta: il footer parte direttamente dal
+     pannello ink. Rimuovere questa riga per ripristinare il canvas a puntini. */
+  display: none;
 }
 #dotted-grid-bg {
   width: 100%;
@@ -1230,34 +1239,330 @@ table.archives-table td {
   color: var(--c-ink);
   white-space: nowrap;
 }
+
+/* --- footer block: ink panel + banda ditherata + riga legale -------------
+   Sostituisce la vecchia .dotted-grid-meta (due righe di testo).
+   Il blocco è content-sized: canvas + blocco insieme coprono la viewport.
+   La banda ha altezza fissa ancorata al ratio dell'asset, così il dither non
+   viene ingrandito. Gerarchia font del sito: --f-title (Bricolage) per il
+   display, --f-data (Darker Grotesque) per label, dati e paragrafi. */
 .dotted-grid-meta {
   display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
+  flex-direction: column;
   width: 100%;
-  justify-content: space-between;
-  align-items: center;
-  background: transparent;
-  padding: 10px 24px 12px 24px;
+  /* Nessun min-height:100svh qui. Era lui a gonfiare la banda a 498px su un
+     viewport da 900: l'immagine (1440x380) veniva ingrandita 1,31x e croppata
+     sui lati. Il footer riempie comunque la viewport: canvas 720 + meta 783
+     su desktop, canvas 439 + meta 1035 su mobile. */
+  background: var(--c-field);
   position: relative;
   z-index: 1;
-  margin-top: 30px;
 }
-.dotted-grid-line {
+.footer-panel {
+  display: grid;
+  gap: 32px 36px;
+  padding: 64px;
+  background: var(--c-ink);
+  color: var(--c-paper);
+}
+/* Su tablet/mobile i due wrapper spariscono dal layout: brand, nav e contact
+   diventano figli diretti del grid. Su desktop diventano flex (vedi media query). */
+.footer-main,
+.footer-nav { display: contents; }
+.footer-brand {
+  grid-area: brand;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.footer-wordmark {
+  margin: 0;
+  font-family: var(--f-title);
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1.25;
+  color: var(--c-paper);
+}
+.footer-tagline {
   margin: 0;
   font-family: var(--f-data);
-  font-size: var(--fs-year);
-  color: var(--c-ink);
-  font-weight: 600;
+  font-size: 16px;
+  line-height: 1.5;
+  color: rgba(245, 241, 234, 0.58);
 }
-.dotted-grid-line--strong {
+.footer-meta {
+  margin: 0;
   font-family: var(--f-data);
-  font-weight: 600;
-  font-size: var(--fs-year);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(245, 241, 234, 0.58);
 }
-.dotted-grid-meta .dotted-grid-line + .dotted-grid-line {
-  margin-top: 8px;
-  color: var(--c-ink-soft);
+.footer-col {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  align-items: flex-start;
+}
+.footer-col--index { grid-area: index; }
+.footer-col--work { grid-area: work; }
+.footer-col--elsewhere { grid-area: elsewhere; }
+.footer-col-label {
+  margin: 0;
+  font-family: var(--f-data);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(245, 241, 234, 0.58);
+}
+.footer-rule {
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: rgba(245, 241, 234, 0.18);
+}
+.footer-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.footer-link {
+  display: inline-block;
+  font-family: var(--f-data);
+  font-size: 20px;
+  line-height: 28px; /* 1.75 — entro il range 1.5–1.75 di ui-ux-pro-max */
+  color: var(--c-paper);
+  text-decoration: none;
+}
+.footer-link:hover { text-decoration: underline; text-underline-offset: 4px; }
+.footer-link:active { color: rgba(245, 241, 234, 0.58); }
+.footer-link:focus-visible { outline: 2px solid var(--c-paper); outline-offset: 3px; }
+/* --- roulette hover (stessa meccanica della brand roulette dell'header) ----
+   Ogni cella mostra un carattere e ne nasconde un duplicato sotto (stack alto
+   2lh, cella alta 1lh). Sull'hover lo stack trasla di -50% con un delay per
+   indice: i caratteri escono verso l'alto e rientrano dal basso con stagger.
+   La sottolineatura è un ::after statico sul link: non si muove col testo. */
+.footer-roulette { position: relative; text-decoration: none; }
+.footer-roulette::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0.1em;
+  height: 1px;
+  width: 100%;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.32s cubic-bezier(0.65, 0, 0.35, 1);
+}
+.footer-roulette:hover::after,
+.footer-roulette:focus-visible::after { transform: scaleX(1); }
+.rl-mask { display: inline-flex; overflow: hidden; vertical-align: top; }
+.rl-cell { display: block; overflow: hidden; height: 1lh; }
+.rl-stack {
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.38s cubic-bezier(0.65, 0, 0.35, 1);
+  transition-delay: calc(var(--i, 0) * var(--step, 15ms));
+  will-change: transform;
+}
+.footer-roulette:hover .rl-stack,
+.footer-roulette:focus-visible .rl-stack { transform: translateY(-50%); }
+.rl-char { display: block; height: 1lh; line-height: inherit; }
+@media (prefers-reduced-motion: reduce) {
+  .rl-stack { transition: none; }
+  .footer-roulette::after { transition: none; }
+}
+/* URL sociale non ancora inserita: ha l'aspetto di un link ma non è cliccabile. */
+.footer-link--pending { cursor: default; opacity: 0.72; }
+.footer-link--pending:hover { text-decoration: none; }
+.footer-contact {
+  grid-area: contact;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.footer-email {
+  font-family: var(--f-title);
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.5;
+  color: var(--c-paper);
+  text-decoration: none;
+  word-break: break-word;
+}
+.footer-email:hover { text-decoration: underline; text-underline-offset: 4px; }
+.footer-email:focus-visible { outline: 2px solid var(--c-paper); outline-offset: 3px; }
+/* La sottolineatura dei link roulette è lo ::after statico: niente
+   text-decoration che si muoverebbe insieme ai caratteri. */
+.footer-link.footer-roulette:hover,
+.footer-email.footer-roulette:hover,
+.footer-legal .footer-roulette:hover { text-decoration: none; }
+.footer-note {
+  margin: 0;
+  font-family: var(--f-data);
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(245, 241, 234, 0.58);
+}
+/* Altezza ancorata al ratio dell'asset (1440:380). Niente flex-grow: la banda
+   non deve allungarsi oltre la risoluzione con cui è stato ditherato il PNG. */
+.footer-band {
+  position: relative;
+  flex: 0 0 auto;
+  height: clamp(260px, 26.4vw, 490px);
+  overflow: hidden;
+  background: var(--c-field);
+}
+.footer-band-media {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+.footer-band-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+.footer-legal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 500;
+  gap: 24px;
+  padding: 18px 32px;
+  background: var(--c-field);
+  color: var(--c-ink);
+  font-family: var(--f-data);
+  font-size: var(--fs-meta);
+}
+.footer-legal p { margin: 0; }
+.footer-legal a {
+  color: var(--c-ink);
+  text-decoration: none;
+}
+.footer-legal a:hover { text-decoration: underline; text-underline-offset: 4px; }
+.footer-legal a:focus-visible { outline: 2px solid var(--c-accent); outline-offset: 3px; }
+
+/* Ancore dell'archivio: le righe 01-23, usate dal footer per i case study.
+   scroll-margin serve a non finire sotto l'header sticky. */
+[id^="work-"] { scroll-margin-top: 96px; }
+
+/* >= 1024: [brand ··· nav] ··· contact me, con space-between a due livelli.
+   .footer-main e .footer-nav passano da display:contents a flex. */
+@media (min-width: 1024px) {
+  .footer-panel {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 36px;
+  }
+  .footer-main {
+    display: flex;
+    flex: 1 1 auto;
+    /* Il tetto lascia spazio libero nel panel: senza di esso il gruppo
+       brand+nav si mangia tutto e il space-between verso "contact me"
+       si riduce al solo gap di 36px. */
+    max-width: 62%;
+    min-width: 0;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 36px;
+  }
+  .footer-nav {
+    display: flex;
+    flex: 1 1 auto;
+    min-width: 0;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 36px;
+  }
+  .footer-col--index,
+  .footer-col--work,
+  .footer-col--elsewhere { grid-area: auto; }
+  .footer-contact { flex: 0 0 400px; }
+}
+/* 768-1023: due righe — brand e contatto in alto, le tre colonne sotto.
+   Il nav torna a essere un grid vero (non display:contents). */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .footer-panel {
+    padding: 48px;
+    grid-template-columns: minmax(0, 240px) minmax(0, 1fr);
+    grid-template-areas:
+      "brand contact"
+      "nav nav";
+  }
+  .footer-brand { grid-area: brand; }
+  .footer-contact {
+    grid-area: contact;
+    justify-self: end;
+    width: min(400px, 100%);
+  }
+  .footer-nav {
+    grid-area: nav;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 36px;
+  }
+  .footer-nav > .footer-col { grid-area: auto; }
+  .footer-band { height: 300px; }
+}
+/* < 768: colonna singola, contatto subito sotto il brand. */
+@media (max-width: 767px) {
+  .footer-panel {
+    padding: 24px;
+    gap: 32px;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "brand brand"
+      "contact contact"
+      "nav nav";
+  }
+  .footer-brand { grid-area: brand; }
+  .footer-contact { grid-area: contact; }
+  .footer-nav {
+    grid-area: nav;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px 24px;
+  }
+  .footer-nav > .footer-col { grid-area: auto; }
+  .footer-col--elsewhere { grid-column: 1 / -1; }
+  .footer-band { height: 240px; }
+  .footer-wordmark { font-size: 28px; }
+  .footer-tagline { font-size: 16px; line-height: 1.5; }
+  .footer-email { font-size: 22px; }
+  .footer-social {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0;
+  }
+  .footer-social li + li::before {
+    content: "·";
+    margin: 0 8px;
+    color: rgba(245, 241, 234, 0.58);
+  }
+  .footer-legal {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 6px;
+    padding: 18px 24px;
+  }
+}
+/* Puntatore grossolano: ogni target ≥44px (regola touch-target-size). */
+@media (pointer: coarse) {
+  .footer-list { gap: 0; }
+  .footer-list .footer-link { padding: 9px 0; }
+  .footer-email { padding: 9px 0; }
+  .footer-legal a { padding: 12px 0; }
 }
 
 /* ============== Reveal animation (GSAP) ============== */
