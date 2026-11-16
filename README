@@ -1,0 +1,62 @@
+# DOME — SOMEBODYWANT3D
+
+**Portfolio of Domenico Fusto** — art direction, interaction design and UI.
+Live at [www.somebodywant3d.com](https://www.somebodywant3d.com).
+
+---
+
+## What it is
+
+A one-page portfolio for a designer who works between art direction, interaction
+design and front-end. It is a single continuous piece of motion rather than a
+stack of pages: one scroll, one visual language, everything reacting to the
+pointer.
+
+Everything on it is interactive, and the interaction is the content. Images
+dissolve under the cursor, type warps as you cross it, the hero moves like water
+when you drag through it — and the site sounds different depending on how fast
+you move.
+
+## What is inside
+
+- **Hero** — the DOME mark over a live water-and-rain shader, with a ring of
+  names turning around it.
+- **Entry** — the short introduction, typed out over glass.
+- **Featured gallery** — six covers (AlFly, SISALFUNCLUB, iTour, uBank,
+  Policlinico di Milano, Twitch) that dissolve into their colour version while
+  the cursor is on them.
+- **Selected projects** — three case studies: *PARTICLES* (2023),
+  *ƒ Generator* (2024), *ISTOGram* (2024).
+- **Archives** — ten older works (AlFly, Policlinico di Milano, uBank,
+  SISALFUNCLUB, iTour, CYP Wheels, Dulcis in Fundo, Collezione Cagnola, Sielco,
+  Marabini Recuperi), each with its own live preview.
+
+## The sound
+
+The site has a sound, and it is under your control: the **Sound** switch in the
+header turns everything on or off at once.
+
+- **Clicks** — a small, varied tick on every interaction.
+- **Ambient** — a bed that loops with a one-second crossfade, so the loop point
+  is never audible.
+- **Water** — in the hero, moving the cursor plays the flow; the faster you
+  move, the higher its pitch. Several strokes overlap and fade into each other.
+
+The browser only lets a page make noise after you have interacted with it, so on
+a first visit the site asks for that click in its own way — and you can always
+silence it from the header.
+
+## The console
+
+Open the developer console and the site says hello: its own animated GIF is
+printed once, with two lines of credit under it. Nothing else is logged, and the
+console is never cleared.
+
+## How it is made
+
+React and Vite, with Three.js and WebGPU for the real-time work, GSAP for the
+motion and Lenis for the scroll.
+
+```
+
+MIT Licence — Copyright (c) 2026 Domenico Fusto.
