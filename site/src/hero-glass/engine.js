@@ -12,6 +12,7 @@ import {
   LOGO_X_LIMIT,
   REDUCED_ROTATION,
   ROTATION,
+  TORUS_KNOT,
   layoutFor,
   logoLayoutFor,
   logoParallaxYFor,
@@ -24,6 +25,7 @@ import {
 } from './params.js'
 import { buildEnvironment, buildTorusKnot } from './geometry.js'
 import { buildLogoMesh, logoNaturalSize } from './logoMesh.js'
+import { createWireOverlay } from './wireOverlay.js'
 import { createBackdrop } from './backdrop.js'
 import { createTextLayer } from './textLayer.js'
 import { normalizeRows } from './textRows.js'
@@ -42,6 +44,11 @@ export async function mountTorusKnot(canvas, options = {}) {
   let envMap = null
   let torus = null
   let logo = null
+  // Wireframe rivelato dal cursore (uno per oggetto). Solo con la scena
+  // animata: a moto ridotto il loop è spento, la maschera resterebbe congelata
+  // al centro dell'oggetto invece di seguire il cursore.
+  let torusWire = null
+  let logoWire = null
   let logoGeometry = null
   let logoMaterial = null
   let logoSize = null
@@ -51,6 +58,43 @@ export async function mountTorusKnot(canvas, options = {}) {
   let lastScreen = null
   let isDisposed = false
   const pointer = { x: 0, y: 0 }
+  // Dimensione del DRAWING BUFFER (CSS × pixelRatio), non del box CSS:
+  // `gl_FragCoord` è in pixel del disegno, e su un display 2x una risoluzione
+  // CSS metterebbe la maschera al doppio delle coordinate.
+  const bufferSize = new THREE.Vector2(1, 1)
+  const pushWireView = () => {
+    if (!renderer) return
+    const s = renderer.getDrawingBufferSize(bufferSize)
+    torusWire?.setView(s.x, s.y)
+    logoWire?.setView(s.x, s.y)
+  }
+  // Rettangolo del canvas in coordinate viewport: il canvas scorre, il
+  // puntatore arriva in NDC del viewport. Senza questa conversione la maschera
+  // del wireframe apparirebbe spostata di quanto hai scrollato.
+  let canvasRect = null
+  const measureCanvas = () => {
+    try {
+      canvasRect = canvas.getBoundingClientRect()
+    } catch {
+      canvasRect = null
+    }
+  }
+  const pushPointerToWire = () => {
+    if (!torusWire && !logoWire) return
+    const rect = canvasRect || canvas.getBoundingClientRect()
+    const w = Math.max(1, rect.width)
+    const h = Math.max(1, rect.height)
+    const vw = typeof window === 'undefined' ? w : window.innerWidth || w
+    const vh = typeof window === 'undefined' ? h : window.innerHeight || h
+    // NDC viewport → px client (y in GIÙ: `pointer.y` è y in su, quindi si
+    // inverte) → NDC canvas (y in su come in gl_FragCoord).
+    const cx = (pointer.x * 0.5 + 0.5) * vw
+    const cy = (0.5 - pointer.y * 0.5) * vh
+    const u = (cx - rect.left) / w
+    const v = 1 - (cy - rect.top) / h
+    torusWire?.setPointer(u * 2 - 1, v * 2 - 1)
+    logoWire?.setPointer(u * 2 - 1, v * 2 - 1)
+  }
   let scrollProgress = 0
   let lastPauseToggle = 0
 
@@ -129,6 +173,15 @@ export async function mountTorusKnot(canvas, options = {}) {
     const built = buildTorusKnot()
     torus = built.mesh
     scene.add(torus)
+    if (animated) {
+      // Stesso colore per i due oggetti: è un segno tecnico, non un materiale.
+      // `cols`/`rows` = la griglia del knot, così il reticolo è a quad.
+      torusWire = createWireOverlay(torus, {
+        color: '#f166eb',
+        cols: TORUS_KNOT.tubularSegments,
+        rows: TORUS_KNOT.radialSegments,
+      })
+    }
 
     // The mark must never take the hero down: a bad SVG parse skips the logo
     // and the torus + text still mount.
@@ -140,6 +193,9 @@ export async function mountTorusKnot(canvas, options = {}) {
       logoMaterial = logoBuilt.material
       logoSize = logoNaturalSize(logoGeometry)
       scene.add(logo)
+      if (animated) {
+        logoWire = createWireOverlay(logo, { color: '#f166eb' })
+      }
     } catch (logoError) {
       console.warn('[hero-glass] logo skipped', logoError)
       logo = null
@@ -149,6 +205,9 @@ export async function mountTorusKnot(canvas, options = {}) {
     }
 
     applyFraming(window.innerWidth || canvas.width || 1)
+    pushWireView()
+    measureCanvas()
+    pushPointerToWire()
 
     backdrop = createBackdrop({ color: readSiteBackground() })
     backdrop.fitToViewport(camera)
@@ -213,6 +272,9 @@ export async function mountTorusKnot(canvas, options = {}) {
         camera.updateProjectionMatrix()
         applyFraming(window.innerWidth || w)
         backdrop.fitToViewport(camera)
+        pushWireView()
+        measureCanvas()
+        pushPointerToWire()
         lastScreen = { width: w, height: h }
         if (box) lastBox = box
         applyText()
@@ -239,12 +301,18 @@ export async function mountTorusKnot(canvas, options = {}) {
         if (isDisposed) return
         scrollProgress = progress
         applyFraming(window.innerWidth || 1)
+        // La sezione si è mossa: il rettangolo per la maschera va rimisurato.
+        measureCanvas()
+        pushPointerToWire()
         if (!animated) renderer.render(scene, camera)
       },
 
       setPointer(nx, ny) {
         pointer.x = nx
         pointer.y = ny
+        // Lo stesso punto comanda rotazione e maschera: il reticolo appare
+        // esattamente sotto il cursore.
+        pushPointerToWire()
       },
 
       // Visibility gate — no-op unless animated, so reduced-motion never
@@ -278,6 +346,16 @@ export async function mountTorusKnot(canvas, options = {}) {
         if (isDisposed) return
         isDisposed = true
         if (renderer) renderer.setAnimationLoop(null)
+        // Prima i wireframe: condividono la geometria del padre, quindi vanno
+        // staccati e liberati prima che quella venga distrutta.
+        if (torusWire) {
+          torusWire.dispose()
+          torusWire = null
+        }
+        if (logoWire) {
+          logoWire.dispose()
+          logoWire = null
+        }
         if (torus) {
           scene.remove(torus)
           torus.geometry.dispose()
@@ -321,6 +399,14 @@ export async function mountTorusKnot(canvas, options = {}) {
       },
     }
   } catch (err) {
+    if (torusWire) {
+      torusWire.dispose()
+      torusWire = null
+    }
+    if (logoWire) {
+      logoWire.dispose()
+      logoWire = null
+    }
     if (torus) {
       if (scene) scene.remove(torus)
       torus.geometry.dispose()

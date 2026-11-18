@@ -4,6 +4,11 @@ import { useIsMobile } from '../hooks/useIsMobile'
 import { useCursorGate } from '../hooks/useCursorGate'
 import { RING_PX, CYL_R, CYL_H, SCROLL, paintRingStrip } from './ringStrip.js'
 
+// Centro dell'anello dell'hero, in px dalla cima del viewport: è il `top` del
+// suo wrapper (`calc(284px - …)` più mezza altezza). Serve al footer per
+// riposare con la STESSA inclinazione dell'hero invece che con la sua.
+const HERO_REST_CENTER_Y = 284
+
 async function drawStripTexture() {
   const cv = document.createElement('canvas')
   await paintRingStrip(cv)
@@ -32,10 +37,33 @@ function preloaderGone() {
   })
 }
 
-export default function HeroTextRing() {
+export default function HeroTextRing({
+  size = RING_PX,
+  style,
+  // Regione che ha il diritto di muovere il ring col cursore. L'hero usa la
+  // sua sezione; il footer passa la banda nera.
+  region = '.hero-region',
+  // Normalizza il tilt sul riquadro della regione invece che sul viewport:
+  // serve quando la regione non è a tutta pagina (la banda del footer), o il
+  // ring risponderebbe solo a metà di lei.
+  regionBox = false,
+  // Posa di riposo dopo l'inattività (3s senza muovere il cursore):
+  //   'self' = formula storica sul riquadro dell'anello (l'hero: il suo centro
+  //            è in alto, quindi riposa inclinato indietro di ~39°);
+  //   'hero' = la STESSA inclinazione dell'hero, calcolata sul suo centro
+  //            (284px dalla cima). Serve al footer, il cui anello sta in fondo
+  //            alla pagina: la formula sul proprio rect darebbe un angolo
+  //            assurdo, ma l'angolo deve essere quello dell'hero.
+  restPose = 'self',
+} = {}) {
   const wrapRef = useRef(null)
   const isMobile = useIsMobile()
   const { isAwake, isOver } = useCursorGate()
+  // Geometry scales with the requested size; the hero passes nothing and keeps
+  // the exact current look (440px ring, 190/150 cylinder).
+  const ringPx = size
+  const cylR = (CYL_R * size) / RING_PX
+  const cylH = (CYL_H * size) / RING_PX
 
   useEffect(() => {
     let dead = false
@@ -60,6 +88,10 @@ export default function HeroTextRing() {
     let grx = 0
     let gry = 0
     let gHero = false
+    // Regione corrente del cursore e il suo riquadro (aggiornato qui e nello
+    // scroll, mai a ogni pointermove: sarebbe un layout per evento).
+    let gRegionEl = null
+    let gRegionRect = null
     // Fixed default (rest) pose — frozen from the first measured layout so page
     // scroll never changes it. Re-derived only on resize.
     let defPx = 0
@@ -76,10 +108,24 @@ export default function HeroTextRing() {
       defReady = false
     }
     window.addEventListener('resize', onResizeDefault)
+    // Normalizza su [-1, 1]: fuori dalla regione i valori possono uscire
+    // scala (la banda del footer sta in fondo alla pagina) e il ring andrebbe
+    // a rotazioni assurde.
+    const clamp1 = (v) => Math.max(-1, Math.min(1, v))
     const onGizmoMove = (e) => {
       const el = wrapRef.current
       if (!el) return
-      gHero = !!(e.target && e.target.closest && e.target.closest('.hero-region'))
+      // `region` è dove il cursore ha diritto di muovere il ring: l'hero per
+      // `.hero-region`, il footer per la sua banda nera (`.footer-panel`).
+      const target = e.target && e.target.closest ? e.target.closest(region) : null
+      gHero = !!target
+      // `regionBox`: il tilt si misura sul riquadro della regione e non sul
+      // viewport, così TUTTA la banda lo comanda (con la normalizzazione sul
+      // viewport solo la metà sinistra lo muoveva, il resto saturava).
+      if (target !== gRegionEl) {
+        gRegionEl = target
+        gRegionRect = target ? target.getBoundingClientRect() : null
+      }
       const rect = cachedRect || el.getBoundingClientRect()
       const now = performance.now()
       if (gHas && gLastT) {
@@ -90,8 +136,15 @@ export default function HeroTextRing() {
       gLastX = e.clientX
       gLastY = e.clientY
       gLastT = now
-      gpx = (e.clientX - (rect.left + rect.width / 2)) / (window.innerWidth / 2)
-      gpy = (e.clientY - (rect.top + rect.height / 2)) / (window.innerHeight / 2)
+      if (regionBox && gRegionRect) {
+        const hw = Math.max(1, gRegionRect.width / 2)
+        const hh = Math.max(1, gRegionRect.height / 2)
+        gpx = clamp1((e.clientX - (gRegionRect.left + hw)) / hw)
+        gpy = clamp1((e.clientY - (gRegionRect.top + hh)) / hh)
+      } else {
+        gpx = (e.clientX - (rect.left + rect.width / 2)) / (window.innerWidth / 2)
+        gpy = (e.clientY - (rect.top + rect.height / 2)) / (window.innerHeight / 2)
+      }
       gHas = true
     }
     window.addEventListener('pointermove', onGizmoMove, { passive: true })
@@ -114,14 +167,14 @@ export default function HeroTextRing() {
       }
       const dpr = Math.min(window.devicePixelRatio || 1, isMobile ? 1.5 : 2)
       renderer.setPixelRatio(dpr)
-      renderer.setSize(RING_PX, RING_PX)
+      renderer.setSize(ringPx, ringPx)
       renderer.domElement.style.display = 'block'
       renderer.domElement.style.width = '100%'
       renderer.domElement.style.height = '100%'
       el.appendChild(renderer.domElement)
       const scene = new THREE.Scene()
       const cam = new THREE.OrthographicCamera(
-        -RING_PX / 2, RING_PX / 2, RING_PX / 2, -RING_PX / 2, -1000, 1000,
+        -ringPx / 2, ringPx / 2, ringPx / 2, -ringPx / 2, -1000, 1000,
       )
       cam.position.set(0, 0, 500)
       mat = new THREE.MeshBasicMaterial({
@@ -129,7 +182,7 @@ export default function HeroTextRing() {
         side: THREE.FrontSide,
       })
       mesh = new THREE.Mesh(
-        new THREE.CylinderGeometry(CYL_R, CYL_R, CYL_H, 96, 1, true), mat,
+        new THREE.CylinderGeometry(cylR, cylR, cylH, 96, 1, true), mat,
       )
       group = new THREE.Group()
       group.add(mesh)
@@ -171,8 +224,16 @@ export default function HeroTextRing() {
         // Default (rest) pose, captured once from the mounted layout so scrolling
         // the page can no longer rotate the ring. Recomputed only on resize.
         if (!defReady && cachedRect) {
-          defPx = ((window.innerWidth / 2) - (cachedRect.left + cachedRect.width / 2)) / (window.innerWidth / 2)
-          defPy = (window.innerHeight - (cachedRect.top + cachedRect.height / 2)) / (window.innerHeight / 2)
+          if (restPose === 'hero') {
+            // Stessa inclinazione dell'hero: il suo anello è centrato in
+            // orizzontale e ha il centro a 284px dalla cima del viewport.
+            const half = Math.max(1, window.innerHeight / 2)
+            defPx = 0
+            defPy = (window.innerHeight - HERO_REST_CENTER_Y) / half
+          } else {
+            defPx = ((window.innerWidth / 2) - (cachedRect.left + cachedRect.width / 2)) / (window.innerWidth / 2)
+            defPy = (window.innerHeight - (cachedRect.top + cachedRect.height / 2)) / (window.innerHeight / 2)
+          }
           defReady = true
         }
         // Gizmo tilt is live ONLY while the pointer moves inside the hero section
@@ -212,9 +273,11 @@ export default function HeroTextRing() {
         requestAnimationFrame(() => {
           rectScheduled = false
           if (!dead && el.isConnected) cachedRect = el.getBoundingClientRect()
-          const section = el.closest('.hero-region')
+          const section = el.closest(region)
+          gRegionEl = section
+          gRegionRect = section ? section.getBoundingClientRect() : null
           if (section && gHas) {
-            const sr = section.getBoundingClientRect()
+            const sr = gRegionRect
             gHero =
               gLastX >= sr.left &&
               gLastX <= sr.right &&
@@ -255,7 +318,7 @@ export default function HeroTextRing() {
         while (el.firstChild) el.removeChild(el.firstChild)
       }
     }
-  }, [isMobile])
+  }, [isMobile, region, regionBox, restPose])
 
   return (
     <div
@@ -270,6 +333,7 @@ export default function HeroTextRing() {
         transform: 'translateX(-50%)',
         pointerEvents: 'none',
         zIndex: 2,
+        ...style,
       }}
     />
   )

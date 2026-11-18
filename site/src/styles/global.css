@@ -547,7 +547,9 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .section-head {
   display: flex; align-items: baseline; justify-content: space-between;
   gap: 16px; margin-bottom: clamp(40px, 6vh, 80px);
+  overflow: hidden;
 }
+
 .section-head h2 {
   font-family: var(--f-title);
   font-weight: 500;
@@ -1191,7 +1193,9 @@ table.archives-table td {
 .dotted-grid-footer {
   width: 100%;
   position: relative;
-  overflow: hidden;
+  /* Niente overflow:hidden: la targa credits esce dal bordo del media (sta
+     sotto l'immagine, non dentro) e un antenato che ritaglia la taglierebbe.
+     Il canvas a puntini è display:none e la banda ha la sua cornice. */
   margin-top: 20dvh;
 }
 /* Wrapper del canvas: serve da containing block per l'hint, che ora sta
@@ -1259,11 +1263,20 @@ table.archives-table td {
   z-index: 1;
 }
 .footer-panel {
+  background: var(--c-ink);
+  color: var(--c-paper);
+  /* Ancora del banner e suo strato: il visual viene dopo nel DOM e senza
+     z-index dipingerebbe sopra la parte di banner che scende sull'immagine. */
+  position: relative;
+  z-index: 2;
+}
+/* La cornice che ritaglia: il contenuto scorre dentro, il nero resta fermo e
+   non si aprono buchi. Il banner resta FUORI da qui, o verrebbe tagliato. */
+.footer-panel__clip { overflow: hidden; }
+.footer-panel__grid {
   display: grid;
   gap: 32px 36px;
   padding: 64px;
-  background: var(--c-ink);
-  color: var(--c-paper);
 }
 /* Su tablet/mobile i due wrapper spariscono dal layout: brand, nav e contact
    diventano figli diretti del grid. Su desktop diventano flex (vedi media query). */
@@ -1288,7 +1301,7 @@ table.archives-table td {
   margin: 0;
   font-family: var(--f-data);
   font-size: 16px;
-  line-height: 1.5;
+  line-height: 1;
   color: rgba(245, 241, 234, 0.58);
 }
 .footer-meta {
@@ -1336,7 +1349,7 @@ table.archives-table td {
   display: inline-block;
   font-family: var(--f-data);
   font-size: 20px;
-  line-height: 28px; /* 1.75 — entro il range 1.5–1.75 di ui-ux-pro-max */
+  line-height: 1.2;
   color: var(--c-paper);
   text-decoration: none;
 }
@@ -1349,18 +1362,7 @@ table.archives-table td {
    indice: i caratteri escono verso l'alto e rientrano dal basso con stagger.
    La sottolineatura è un ::after statico sul link: non si muove col testo. */
 .footer-roulette { position: relative; text-decoration: none; }
-.footer-roulette::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: 0.1em;
-  height: 1px;
-  width: 100%;
-  background: currentColor;
-  transform: scaleX(0);
-  transform-origin: left center;
-  transition: transform 0.32s cubic-bezier(0.65, 0, 0.35, 1);
-}
+
 .footer-roulette:hover::after,
 .footer-roulette:focus-visible::after { transform: scaleX(1); }
 .rl-mask { display: inline-flex; overflow: hidden; vertical-align: top; }
@@ -1377,7 +1379,6 @@ table.archives-table td {
 .rl-char { display: block; height: 1lh; line-height: inherit; }
 @media (prefers-reduced-motion: reduce) {
   .rl-stack { transition: none; }
-  .footer-roulette::after { transition: none; }
 }
 /* URL sociale non ancora inserita: ha l'aspetto di un link ma non è cliccabile. */
 .footer-link--pending { cursor: default; opacity: 0.72; }
@@ -1407,7 +1408,7 @@ table.archives-table td {
 .footer-note {
   margin: 0;
   font-family: var(--f-data);
-  font-size: 14px;
+  font-size: var(--fs-meta );
   line-height: 1.6;
   color: rgba(245, 241, 234, 0.58);
 }
@@ -1432,17 +1433,180 @@ table.archives-table td {
   object-position: center;
   display: block;
 }
+/* --- visual giorno/notte ---------------------------------------------------
+   Canvas UNICO (base giorno + notte WebGL, stessa altezza): fase 1 banda
+   bassa cropata (cover dall'alto), allo sblocco la stessa altezza cresce
+   fino all'aspect esatto dei file (8/5, 8/11 mobile: scena intera 1:1).
+   La legal è overlay al fondo del canvas in entrambe le fasi. */
+.footer-visual {
+  position: relative;
+  background: var(--c-field);
+  /* `clip` sull'asse X: contiene lo zoom d'ingresso dell'arte (1.06) senza
+     ritagliare in verticale, dove il pin la fa scorrere. */
+  overflow-x: clip;
+}
+/* La corsa della scala: 80vh di scroll senza contenuto, dopo l'immagine.
+   Il media si pinza e si restringe mentre questa passa. Il `+5rem` copre la
+   barra credits fissa, che altrimenti si mangia gli ultimi pixel di corsa. */
+.footer-runway { height: calc(80vh + 5rem); }
+.footer-media {
+  position: relative;
+  width: 100%;
+  /* Altezza di banda: la legge anche il JS (`--band-h`), perché allo sblocco
+     l'altezza cambia e la banda non c'è più da misurare. */
+  --band-h: 380px;
+  height: var(--band-h);
+  /* Niente overflow hidden: durante la scala l'arte viene traslata per
+     restare ferma mentre la corsa scorre, e il ritaglio la taglierebbe.
+     A riposo l'arte è inset:0, quindi non sborda comunque. */
+  overflow: visible;
+  background: var(--c-field);
+}
+.footer-daypic { position: absolute; inset: 0; display: block; }
+/* Wrapper dell'arte (day + canvas WebGL): pin e scala vivono qui, così legal
+   e banner restano sempre visibili e intatti.
+   `overflow: hidden` perché il canvas night è alto come l'immagine INTERA
+   (ancorata in alto) e sotto la banda sporge: qui viene ritagliato alla
+   finestra del media, che è esattamente ciò che si deve vedere. */
+.footer-art {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+/* Banner senza sfondo a cavallo della cucitura panel/canvas: vive nella
+   banda (per questo il panel ha z-index 2), ancorato al basso, e scende di
+   (altezza − 10px): 10px restano sulla banda, il resto si fonde
+   sull'immagine. Il pannello non ha overflow:hidden e quindi non lo taglia. */
+.footer-banner {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  transform: translateY(calc(100% - 10px));
+  z-index: 2;
+  pointer-events: none;
+}
+.footer-banner img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.footer-day {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Ancorata in alto: in banda si vede la parte alta dell'immagine e allo
+     sblocco si scopre il resto. Il night è registrato allo stesso modo (vedi
+     .footer-shader-wrapper), quindi i due layer combaciano in ogni fase. */
+  object-position: center top;
+  display: block;
+}
+.footer-shader-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  /* Il canvas deve coprire l'IMMAGINE INTERA, ancorata in alto, non il box.
+     Con il box (380px in banda) il `cover` del night ritagliava dal centro:
+     il water rivelava un'altra inquadratura rispetto al day. Il ratio
+     dell'asset dà al wrapper l'altezza giusta (W × W/1,79) e `.footer-art`
+     ritaglia lo sforamento, che è sempre sotto la targa o fuori viewport. */
+  aspect-ratio: 2752 / 1536;
+}
+.footer-gl-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+/* Chip "continue to scroll": fissa in basso, solo durante il blocco magnetico,
+   con barra di avanzamento come un leggero level loading. */
+.footer-chip {
+  position: fixed;
+  /* Sopra la chip audio del sito (fissa in basso al centro): niente
+     sovrapposizioni quando sono visibili insieme. */
+  bottom: 84px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 40;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 24px;
+  border-radius: 999px;
+  background: var(--c-ink);
+  color: var(--c-paper);
+  opacity: 0;
+  transition: opacity 0.3s ease-out;
+}
+.footer-chip-label {
+  font-family: var(--f-data);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.footer-chip-bar {
+  display: block;
+  width: 120px;
+  height: 2px;
+  border-radius: 2px;
+  background: rgba(245, 241, 234, 0.25);
+  overflow: hidden;
+}
+.footer-chip-bar span {
+  display: block;
+  height: 100%;
+  background: var(--c-paper);
+  transform: scaleX(0);
+  transform-origin: left center;
+}
 .footer-legal {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  z-index: 3;
+  /* Targa piena, non più overlay: barra bianca a tutta larghezza con testo
+     inchiostro. L'immagine si contiene SOPRA di lei, mai sotto.
+     La posizione la muove il JS con una traslazione continua (incollata al
+     bordo della banda, poi ferma al fondo): niente `position: fixed`, che
+     scattava al cambio di fase. */
+  background: #fff;
+  color: var(--c-ink);
+  font-family: var(--f-data);
+  font-size: var(--fs-meta);
+  /* Cornice: il contenuto entra dall'alto scorrendo dentro il clip. */
+  overflow: hidden;
+  /* Targa a forma di nota: carta, ombra morbida, leggera rotazione. */
+  box-shadow: 0 6px 24px rgba(17, 17, 17, 0.12), 0 2px 6px rgba(17, 17, 17, 0.08);
+  border-radius: 4px;
+  transform-origin: center bottom;
+}
+.footer-credits__drift {
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-weight: 500;
   gap: 24px;
   padding: 18px 32px;
-  background: var(--c-field);
-  color: var(--c-ink);
-  font-family: var(--f-data);
-  font-size: var(--fs-meta);
+}
+/* Testo solo per screen reader (h2 del brand sostituito dal ring 3D). */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
 }
 .footer-legal p { margin: 0; }
 .footer-legal a {
@@ -1459,7 +1623,7 @@ table.archives-table td {
 /* >= 1024: [brand ··· nav] ··· contact me, con space-between a due livelli.
    .footer-main e .footer-nav passano da display:contents a flex. */
 @media (min-width: 1024px) {
-  .footer-panel {
+  .footer-panel__grid {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
@@ -1493,8 +1657,8 @@ table.archives-table td {
 /* 768-1023: due righe — brand e contatto in alto, le tre colonne sotto.
    Il nav torna a essere un grid vero (non display:contents). */
 @media (min-width: 768px) and (max-width: 1023px) {
-  .footer-panel {
-    padding: 48px;
+  .footer-panel__grid {
+    padding: 24px 24px 80px 24px;
     grid-template-columns: minmax(0, 240px) minmax(0, 1fr);
     grid-template-areas:
       "brand contact"
@@ -1513,12 +1677,12 @@ table.archives-table td {
     gap: 36px;
   }
   .footer-nav > .footer-col { grid-area: auto; }
-  .footer-band { height: 300px; }
+  .footer-media { --band-h: 300px; }
 }
 /* < 768: colonna singola, contatto subito sotto il brand. */
 @media (max-width: 767px) {
-  .footer-panel {
-    padding: 24px;
+  .footer-panel__grid {
+    padding: 24px 24px 80px 24px;
     gap: 32px;
     grid-template-columns: 1fr 1fr;
     grid-template-areas:
@@ -1536,7 +1700,10 @@ table.archives-table td {
   }
   .footer-nav > .footer-col { grid-area: auto; }
   .footer-col--elsewhere { grid-column: 1 / -1; }
-  .footer-band { height: 240px; }
+  .footer-media { --band-h: 240px; }
+  /* Il crop mobile è verticale (800x1100): il canvas night deve avere lo
+     stesso ratio, o in banda rivelerebbe un'altra inquadratura. */
+  .footer-shader-wrapper { aspect-ratio: 800 / 1100; }
   .footer-wordmark { font-size: 28px; }
   .footer-tagline { font-size: 16px; line-height: 1.5; }
   .footer-email { font-size: 22px; }
@@ -1563,6 +1730,29 @@ table.archives-table td {
   .footer-list .footer-link { padding: 9px 0; }
   .footer-email { padding: 9px 0; }
   .footer-legal a { padding: 12px 0; }
+}
+/* Movimento ridotto: niente magnete, niente blocco, niente chip. Lo scroll
+   resta libero e il canvas mostra subito la scena intera statica. */
+@media (prefers-reduced-motion: reduce) {
+  .footer-chip { display: none; }
+  /* Nessuna corsa: senza movimento la scala non avviene, e 80vh di pagina
+     vuota sotto il footer sarebbero solo scroll sprecato. */
+  .footer-runway { display: none; }
+  /* La targa non deve coprire il fondo dell'immagine nemmeno qui: il media
+     tiene 60px di spazio sotto, e l'arte si ferma sopra quello spazio. */
+  .footer-media {
+    height: auto;
+    aspect-ratio: 2752 / 1536;
+    box-sizing: content-box;
+    padding-bottom: 60px;
+  }
+  .footer-art { bottom: 60px; }
+  /* Senza JS (reduced motion) la targa non ha traslazione: torna appoggiata
+     al fondo del visual, che qui coincide col fondo del media. */
+  .footer-legal { top: auto; bottom: 0; }
+}
+@media (prefers-reduced-motion: reduce) and (max-width: 767px) {
+  .footer-media { aspect-ratio: 8 / 11; }
 }
 
 /* ============== Reveal animation (GSAP) ============== */

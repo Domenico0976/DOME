@@ -1751,13 +1751,16 @@ export default function SelectedProjects() {
       const rows = sectionRef.current?.querySelectorAll('.project-row')
       const callout = sectionRef.current?.querySelector('.focus-callout--shader')
       const heading = sectionRef.current?.querySelector('.section-head')
+      const title = heading?.querySelector('h2')
 
-      if (heading) {
-        gsap.fromTo(heading,
-          { opacity: 0, y: 30 },
-          { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out',
+      if (title) {
+        gsap.fromTo(title,
+          { opacity: 0, yPercent: 110 },
+          { opacity: 1, yPercent: 0, duration: 0.9, ease: 'power3.out',
             scrollTrigger: { trigger: heading, start: 'top 85%', once: true } }
         )
+      }
+      if (heading) {
         gsap.to(heading, {
           y: -20,
           ease: 'none',

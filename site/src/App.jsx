@@ -1,5 +1,4 @@
 import React, { useEffect, useRef } from 'react'
-import Lenis from 'lenis'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Header from './components/Header.jsx'
@@ -30,42 +29,10 @@ export default function App() {
   const isMobile = useIsMobile()
   const isTouch = useIsTouch()
 
-  useEffect(() => {
-    const lenis = new Lenis()
-    window.__lenis = lenis
-
-    lenis.on('scroll', ScrollTrigger.update)
-
-    // Coalesce: fonts.ready, window.load e setTimeout(400ms) possono fire
-    // in rapida successione; il flag + rAF assicurano un SOLO refresh per frame.
-    let scheduled = false
-    const refresh = () => {
-      if (scheduled) return
-      scheduled = true
-      requestAnimationFrame(() => {
-        scheduled = false
-        ScrollTrigger.refresh()
-      })
-    }
-    if (document.fonts?.ready) document.fonts.ready.then(refresh).catch(() => refresh())
-    window.addEventListener('load', refresh)
-    const refreshSoon = setTimeout(refresh, 400)
-
-    let rafId
-    function lenisLoop(time) {
-      lenis.raf(time)
-      rafId = requestAnimationFrame(lenisLoop)
-    }
-    rafId = requestAnimationFrame(lenisLoop)
-
-    return () => {
-      cancelAnimationFrame(rafId)
-      lenis.destroy()
-      window.__lenis = null
-      window.removeEventListener('load', refresh)
-      clearTimeout(refreshSoon)
-    }
-  }, [])
+  // Lenis non si crea qui: vive in `src/smooth/lenisBoot.js`, chiamato una
+  // volta da main.jsx prima del mount. In un effetto React StrictMode lo
+  // distruggeva e ricreava, e `window.__lenis` restava null proprio quando
+  // footer, scrollbar e preloader lo leggono.
 
   // Mobile <-> desktop flip changes document height drastically (archives
   // table<->list, type scale), so trigger positions computed for one mode are

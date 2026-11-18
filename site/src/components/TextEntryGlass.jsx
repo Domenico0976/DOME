@@ -96,7 +96,11 @@ export default function TextEntryGlass() {
   const isMobile = useIsMobile()
   // Testo dedicato al mobile: righe corte + size maggiori, solo su mobile.
   const sourceRows = isMobile ? TEXT_ROWS_MOBILE : TEXT_ROWS
-  const { parked } = useCursorGate()
+  // Il cursore: su desktop lo ascoltiamo qui, su touch è quello trascinato.
+  // `parked` da solo non basta — si muove solo durante un trascinamento touch,
+  // quindi su desktop restava a (0,0) e la superficie era inchiodata in alto a
+  // sinistra (rotazione e maschera del wireframe comprese).
+  const { isTouch, parked } = useCursorGate()
   const { viewportRef } = useVisualViewport()
   const canvasRef = useRef(null)
   const engineRef = useRef(null)
@@ -285,8 +289,16 @@ export default function TextEntryGlass() {
   useEffect(() => {
     let raf = 0
     const smooth = { x: 0, y: 0 }
+    // Posizione del puntatore in px client. `pointermove` non fa layout: la
+    // lettura del viewport resta nella rAF.
+    const live = { x: 0, y: 0 }
+    const onMove = (e) => {
+      live.x = e.clientX
+      live.y = e.clientY
+    }
+    if (!isTouch) window.addEventListener('pointermove', onMove, { passive: true })
     const read = () => {
-      const p = parked.current
+      const p = isTouch ? parked.current : live
       const v = viewportRef.current
       const w = v.width || window.innerWidth || 1
       const h = v.height || window.innerHeight || 1
@@ -298,8 +310,11 @@ export default function TextEntryGlass() {
       raf = requestAnimationFrame(read)
     }
     raf = requestAnimationFrame(read)
-    return () => cancelAnimationFrame(raf)
-  }, [parked, viewportRef])
+    return () => {
+      cancelAnimationFrame(raf)
+      if (!isTouch) window.removeEventListener('pointermove', onMove)
+    }
+  }, [isTouch, parked, viewportRef])
 
   const rows = normalizeRows(sourceRows)
 

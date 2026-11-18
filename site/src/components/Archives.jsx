@@ -136,6 +136,22 @@ export default function Archives() {
     mq.addEventListener('change', on)
     return () => mq.removeEventListener('change', on)
   }, [])
+
+  useEffect(() => {
+    const section = sectionRef.current
+    if (!section) return
+    const title = section.querySelector('.section-head h2')
+    const heading = section.querySelector('.section-head')
+    if (!title) return
+    const ctx = gsap.context(() => {
+      gsap.fromTo(title,
+        { opacity: 0, yPercent: 110 },
+        { opacity: 1, yPercent: 0, duration: 0.9, ease: 'power3.out',
+          scrollTrigger: { trigger: heading || title, start: 'top 85%', once: true } }
+      )
+    }, section)
+    return () => ctx.revert()
+  }, [])
   const isNarrow = isMobile || isTabletLayout
 
   // `target` is the getter form on purpose: useInView's own comment says a plain ref

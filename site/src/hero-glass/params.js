@@ -59,6 +59,18 @@ export const REDUCED_ROTATION = { x: 0.06, y: 0.04, z: 0.1 }
 
 export const SITE_BG_FALLBACK = 'transparent'
 
+// Colore delle linee del wireframe: l'inchiostro, non la carta. Il campo del
+// sito è chiaro (#F5F1EA), quindi un segno bianco non si vedrebbe; l'inchiostro
+// legge come wireframe tecnico sia sul fondo sia sul vetro.
+export const SITE_INK_FALLBACK = '#111111'
+
+export function readSiteInk(el) {
+  const target = el || (typeof document !== 'undefined' ? document.documentElement : null)
+  if (!target) return SITE_INK_FALLBACK
+  const value = getComputedStyle(target).getPropertyValue('--c-ink').trim()
+  return value || SITE_INK_FALLBACK
+}
+
 // --- Framing ---
 
 export const BOUNDING_RADIUS = 0.25

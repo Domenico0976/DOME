@@ -449,6 +449,7 @@ function tweenDissolve(item, to) {
 
 export { tweenDissolve };
 export default function FeaturedGallery() {
+  const sectionRef = useRef(null)
   const [gridRef, gridInView] = useInView()
   const gridInViewRef = useRef(gridInView)
   const { isMobile, openCanvas, cursorRef } = useArchiveCursor()
@@ -456,6 +457,22 @@ export default function FeaturedGallery() {
   // hook itself; the gate is threaded in through cursorInput.
   const { isTouch, isAwake, parked } = useCursorGate()
   useEffect(() => { gridInViewRef.current = gridInView }, [gridInView])
+
+  useEffect(() => {
+    const section = sectionRef.current
+    if (!section) return
+    const title = section.querySelector('.section-head h2')
+    const heading = section.querySelector('.section-head')
+    if (!title) return
+    const ctx = gsap.context(() => {
+      gsap.fromTo(title,
+        { opacity: 0, yPercent: 110 },
+        { opacity: 1, yPercent: 0, duration: 0.9, ease: 'power3.out',
+          scrollTrigger: { trigger: heading || title, start: 'top 85%', once: true } }
+      )
+    }, section)
+    return () => ctx.revert()
+  }, [])
 
   const handleImageTap = useCallback((image, alignX = 0.5, alignY = 0.5) => {
     if (isTouch && !isAwake.current) {
@@ -587,7 +604,7 @@ export default function FeaturedGallery() {
   }, [handleImageTap])
 
   return (
-    <section className="featured-region" id="featured" data-hint-section="gallery" aria-labelledby="featured-title">
+    <section className="featured-region" id="featured" data-hint-section="gallery" aria-labelledby="featured-title" ref={sectionRef}>
       <div className="container">
         <div className="section-head gsap-reveal">
           <h2 id="featured-title">UX\UI Design</h2>
